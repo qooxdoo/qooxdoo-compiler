@@ -1,12 +1,14 @@
 {
   "info" : 
   {
-    "name" : "${name} Demo",
+    "name" : "${name}",
 
-    "summary" : "This is a demo of the ${namespace} library",
+    "summary" : "${summary}",
+    "description" : "${description}",
+    
+    "homepage" : "${homepage}",
 
     "license" : "${license}",
-
     "authors" : ${author_map},
 
     "version" : "${version}",
@@ -15,7 +17,7 @@
   
   "provides" : 
   {
-    "namespace"   : "${namespace}.demo",
+    "namespace"   : "${namespace}",
     "encoding"    : "utf-8",
     "class"       : "source/class",
     "resource"    : "source/resource",
