@@ -58,7 +58,7 @@ of "FontAwesome", you have to use `@Jipieh/<glyphname>` instead.
 The qooxdoo-compiler uses fontkit to read the content of the ttf file and will therefore
 automatically determine all the relevant css properties of the font, like fontFamily,
 fontWeight, fontStyle and even character names. For some icon fonts the character names are not properly
-stored or do may not match the names users expect to see based on popular css integrations of the font.
+stored or do not match the names users expect to see based on popular css integrations of the font.
 For these cases you you can provide a json fontmap file.
 
 ## Creating a map file
