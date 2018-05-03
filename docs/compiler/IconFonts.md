@@ -8,7 +8,7 @@ Additionally we use the information placed in the font (glyph names) to automati
 assign the font icon to virtual image names. If you for example include the [Ligature Symbols](http://kudakurage.com/ligature_symbols/),
 you can directly use this code
 
-```
+```javascript
 var image = new qx.ui.basic.Image('@Ligature/print');
 ```
 
@@ -23,7 +23,7 @@ address all the glyphs by their name/alias.
 
 Use the *Manifest.json* to define the icon font like shown in the example:
 
-```
+```json
 {
   ...
 
@@ -68,9 +68,9 @@ we can't generate the mapping for you and you've to provide an own mapping.
 
 The format of the mapping file is just JSON as shown here:
 
-```
+```json
 {
-  "glyphname": : "hex-codepoint",
+  "glyphname": "hex-codepoint",
   ...
 }
 ```
@@ -104,42 +104,18 @@ for (let key in res) {
 
 After adding the fonts to the Manifest, they will automatically get loaded and integrated
 into your qooxdoo appliaction. It is not necessary to add a separate entry via en entry via 
-`qx.Theme.define` to load the font. Font theme entries are still required
-though for creating "pre-sized" variants of a font.
+`qx.Theme.define` to load the icon font. 
 
-like this in your theme's `Font.js`:
-
-```
-qx.Theme.define("foobar.theme.Font",
-{
-  extend : qx.theme.indigo.Font,
-
-  fonts :
-  {
-    "FontAwesome80": {
-      size: 80,
-      family: ["Font Awesome 5 Free"],
-    }
-  }
-});
-```
-
-Note also that the linkage to the font is via its 'real' name in the family entry and not via the name
-you chose for the font in the `Manifest.js`.
-
-## Using Iconfonts
-
-To include a font icon somewhere, just use the ordinary image way (i.e. in an Image, Atom) and
-provide a virtual image name. It starts with an "@", followed by the defined font name, a slash
+The font icons can now be used in qooxdoo image widgets like Image or Atom. Just start the image name with a `@`, followed by the defined font name, a slash
 and the glyph name:
 
-```
+```javascript
 var atom = new qx.ui.basic.Atom("Look, I'm a font icon", "@FontAwesome/heart");
 ```
 
 If you don't have a glyph name (no map file and no definition in the font), you can also use the
 unicode codepoint (in hex) directly:
 
-```
+```javascript
 var atom = new qx.ui.basic.Atom("Look, I'm a font icon", "@FontAwesome/f004");
 ```
