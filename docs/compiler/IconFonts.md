@@ -34,12 +34,13 @@ Use the *Manifest.json* to define the icon font like shown in the example:
       {
         "name": "FontAwesome",              // mandatory
         "defaultSize": 40,                  // optional
-        "mapping": "fontawesome.map",       // optional - if you've a map file
+        "mapping": "path_relative_to_project_root/fontawesome-map.json",   // optional - if you've a map file
+        "comparisonString": "\uf26e\uf368", // string to test if font is loaded
         "resources": [
-          "foobar/fontawesome-webfont.ttf", // mandatory - we need one TTF file for parsing
-          "foobar/fontawesome-webfont.eot",
-          "foobar/fontawesome-webfont.woff2",
-          "foobar/fontawesome-webfont.woff"
+          "path_relative_to_sources_resource/fontawesome-webfont.ttf",  // mandatory - we need one TTF file for parsing
+          "path_relative_to_sources_resource/fontawesome-webfont.eot",
+          "path_relative_to_sources_resource/fontawesome-webfont.woff2",
+          "path_relative_to_sources_resource/fontawesome-webfont.woff"
         ]
       }
     ]
@@ -49,11 +50,16 @@ Use the *Manifest.json* to define the icon font like shown in the example:
 
 Please note that JSON does not support comments - you'll have to remove them first.
 
-Every map entry in the *webfonts* array needs to have at leasta _name_ and one
+Every map entry in the *webfonts* array needs to have at least a _name_ and one
 TTF _resources_ entry. Resources can be local files or HTTP URLs. The _name_ is
 used to reference the font in the virtual URLs. So if you name it "Jipieh" instead
 of "FontAwesome", you have to use `@Jipieh/<glyphname>` instead.
 
+The qooxdoo-compiler uses fontkit to read the content of the ttf file and will therefore
+automatically determine all the relevant css properties of the font, like fontFamily,
+fontWeight, fontStyle and even character names. For some icon fonts the character names are not properly
+stored or do may not match the names users expect to see based on popular css integrations of the font.
+For these cases you you can provide a json fontmap file.
 
 ## Creating a map file
 
@@ -64,21 +70,43 @@ The format of the mapping file is just JSON as shown here:
 
 ```
 {
-  'glyphname': codepoint,
+  "glyphname": : "hex-codepoint",
   ...
 }
 ```
 
-`glpyhname` is the name or alias of the character, `codepoint` is the decimal unicode
+`glpyhname` is the name or alias of the character, `codepoint` is the hexadecimal unicode
 number for that character in the font.
 
-In case of FontAwesome, you might want to use [a simple script](https://gist.github.com/cajus/b00bbeb629013fb73a1bd8431e88c18a)
-instead of creating such a file manually.
+In case of FontAwesome, for example you could use the following script to generate the maps
+for the 3 variants of the font from the `fa.yml` file provided on the fontawesome github repo:
 
+```javascript
+const yaml = require('js-yaml');
+const fs = require('fs');
+
+let res = {};
+let doc = yaml.safeLoad(fs.readFileSync('fa.yml', 'utf8'));
+for (let key in doc) {
+   doc[key].styles.forEach((style) => {
+      if (res[style] == undefined){
+         res[style]= {};
+      }
+      res[style][key] = doc[key].unicode;
+   });
+}
+for (let key in res) {
+    fs.writeFileSync('fa-' + key + '-map.json', JSON.stringify(res[key]));
+}
+```
 
 ## Using the icons
 
-For now, the font is not yet automatically added to the project. You have to do something
+After adding the fonts to the Manifest, they will automatically get loaded and integrated
+into your qooxdoo appliaction. It is not necessary to add a separate entry via en entry via 
+`qx.Theme.define` to load the font. Font theme entries are still required
+though for creating "pre-sized" variants of a font.
+
 like this in your theme's `Font.js`:
 
 ```
@@ -88,25 +116,18 @@ qx.Theme.define("foobar.theme.Font",
 
   fonts :
   {
-    "FontAwesome": {
-      size: 40,
-      lineHeight: 1,
-      comparisonString : "\uf1e3\uf1f7\uf11b\uf19d",
-      family: ["FontAwesome"],
-      sources: [
-        {
-          family: "FontAwesome",
-          source: [
-            "foobar/fontawesome-webfont.ttf"
-          ]
-        }
-      ]
+    "FontAwesome80": {
+      size: 80,
+      family: ["Font Awesome 5 Free"],
     }
   }
 });
 ```
 
-The need for it will go away until 6.0 will be ready for public use.
+Note also that the linkage to the font is via its 'real' name in the family entry and not via the name
+you chose for the font in the `Manifest.js`.
+
+## Using Iconfonts
 
 To include a font icon somewhere, just use the ordinary image way (i.e. in an Image, Atom) and
 provide a virtual image name. It starts with an "@", followed by the defined font name, a slash
