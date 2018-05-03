@@ -1,4 +1,4 @@
-# Using Icon Fonts
+# Icon Fonts
 
 Icon fonts in qooxdoo need some preprocessing, because the layout managers need to know the
 dimensions of 'images'. In this case, we're extracting this information from the glyph's
