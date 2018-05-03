@@ -34,13 +34,13 @@ Use the *Manifest.json* to define the icon font like shown in the example:
       {
         "name": "FontAwesome",              // mandatory
         "defaultSize": 40,                  // optional
-        "mapping": "path_relative_to_project_root/fontawesome-map.json",   // optional - if you've a map file
+        "mapping": "project/fontawesome-map.json",   // optional - if you've a map file
         "comparisonString": "\uf26e\uf368", // string to test if font is loaded
         "resources": [
-          "path_relative_to_sources_resource/fontawesome-webfont.ttf",  // mandatory - we need one TTF file for parsing
-          "path_relative_to_sources_resource/fontawesome-webfont.eot",
-          "path_relative_to_sources_resource/fontawesome-webfont.woff2",
-          "path_relative_to_sources_resource/fontawesome-webfont.woff"
+          "project/fontawesome-webfont.ttf",  // mandatory - we need one TTF file for parsing
+          "project/fontawesome-webfont.eot",
+          "project/fontawesome-webfont.woff2",
+          "project/fontawesome-webfont.woff"
         ]
       }
     ]
