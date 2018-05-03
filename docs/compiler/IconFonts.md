@@ -23,7 +23,7 @@ address all the glyphs by their name/alias.
 
 Use the *Manifest.json* to define the icon font like shown in the example:
 
-```json
+```json5
 {
   ...
 
@@ -68,7 +68,7 @@ we can't generate the mapping for you and you've to provide an own mapping.
 
 The format of the mapping file is just JSON as shown here:
 
-```json
+```json5
 {
   "glyphname": "hex-codepoint",
   ...
