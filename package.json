@@ -65,6 +65,7 @@
     "qooxdoo-sdk": "6.* || >6.0.0-alpha",
     "rimraf": "^2.6.2",
     "semver": "^5.3.0",
+    "soundplayer": "^1.1.1",
     "tmp": "0.0.33",
     "uglify-js": "^3.1.9",
     "upath": "^1.0.2",
