@@ -51,7 +51,7 @@ module.exports = function(argv, data){
     },  
     "namespace" : {
       "description" : "the namespace of the application",
-      "default" : argv.applicationnamespace.replace(/[-.]/g,"_")
+      "default" : argv.applicationnamespace
     },
     "out" : {
       "description" : "the output directory for the application content (use '.' if no subdirectory should be created)",
