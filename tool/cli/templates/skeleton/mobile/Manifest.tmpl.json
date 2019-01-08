@@ -30,9 +30,10 @@
           "${namespace}/css/custom.css"
         ]
   },
-  
   "requires": {
-    "qooxdoo-sdk"     : "${qooxdoo_range}",
-    "qooxdoo-compiler": "${compiler_range}"     
+    "qooxdoo-compiler": "${compiler_range}",
+    "libraries": {
+       "qx": "${qooxdoo_range}"
+     }
   }
 }

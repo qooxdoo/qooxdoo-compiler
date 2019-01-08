@@ -57,11 +57,12 @@ This is a sample file:
       "styles/style.css"
     ]
   },
-  "requires": 
-  {
-     "qooxdoo-sdk": "^6.0.0-alpha",
-     "qooxdoo-compiler": "^0.2.40",
-     "qooxdoo/contrib": "^0.1.1"
+  "requires": {
+    "qooxdoo-compiler": "^0.2.40",
+    "libraries": {
+      "qx": "^6.0.0-alpha",
+      "qxl.formdemo": "0.1.1"
+    }
   }
 }
 ```
@@ -95,9 +96,8 @@ This is a sample file:
   * **externalResources**: Static Javascript and CSS files that shall be always included without further processing by qooxdoo. All paths are relative to the resource folder stated in the "provides" section.
   * **script**: Array of javascript files.
   * **css**: Array of css files.
--   **requires**: a list of of needed libraries and contribs. Format is 
-     `contrib`: `needed_version` where `needed_version` is a semver compatible version description.
-     
-     Special handling for:
-     * qooxdoo-sdk: This checks the version of the used qooxdoo sdk.
-     * qooxdoo-compiler: This checks the version of the used qooxdoo compiler.
+*   **requires**: all required dependencies.
+  * qooxdoo-sdk: Version of compiler app can be compiled with
+  * libraries: List of needed namespaces. Special handling for `qx`, used as version of qooxdoo sdk
+    * `qx`: `needed_version` version of qooxdoo sdk, mandatory for contribs. Otherwise it will be not listed in the catalog.
+    * `contrib`: `needed_version` where `needed_version` is a semver compatible version description.
