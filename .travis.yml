@@ -3,9 +3,7 @@ node_js:
 - "stable"
 # - lts/* # once we support on-the-fly transpilation
 
-before_script:
-  - echo ${GH_TOKEN}
-  
+
 stages:
   - name: test
   - name: deploy
