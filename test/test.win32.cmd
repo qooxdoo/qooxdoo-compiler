@@ -5,7 +5,7 @@ cd myapp
 call qx compile -v --clean || EXIT /B 1
 call node source-output\myapp\myapp.js || EXIT /B 1
 :: test add contrib
-call qx contrib update -v || EXIT /B 1
+call qx contrib update --search -v || EXIT /B 1
 call qx contrib list -v || EXIT /B 1
 call qx contrib install oetiker/UploadWidget -v || EXIT /B 1
 call qx contrib install cboulanger/qx-contrib-Dialog -v || EXIT /B 1

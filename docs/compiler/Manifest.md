@@ -100,4 +100,4 @@ This is a sample file:
   * qooxdoo-sdk: Version of compiler app can be compiled with
   * libraries: List of needed namespaces. Special handling for `qx`, used as version of qooxdoo sdk
     * `qx`: `needed_version` version of qooxdoo sdk, mandatory for contribs. Otherwise it will be not listed in the catalog.
-    * `contrib`: `needed_version` where `needed_version` is a semver compatible version description.
+    * `namespace`: `needed_version` where `needed_version` is a semver compatible version description.

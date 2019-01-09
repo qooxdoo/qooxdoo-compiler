@@ -4,7 +4,8 @@ qx create myapp -I --type server -v || exit $?
 cd myapp
 qx compile -v --clean || exit $?
 node source-output/myapp/myapp.js || exit $?
-qx contrib update  -v|| exit $?
+qx config set github.token $GH_TOKEN || exit $?
+qx contrib update --search -v|| exit $?
 qx contrib list    -v|| exit $?
 qx contrib install oetiker/UploadWidget -v || exit $?
 qx contrib install cboulanger/qx-contrib-Dialog -v || exit $?
