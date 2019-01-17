@@ -1865,24 +1865,18 @@
         "event-emitter": "~0.3.5"
       }
     },
-    "es6-promise": {
-      "version": "2.3.0",
-      "resolved": "http://registry.npmjs.org/es6-promise/-/es6-promise-2.3.0.tgz",
-      "integrity": "sha1-lu258v2wGZWCKyY92KratnSBgbw="
-    },
-    "es6-promisify": {
-      "version": "github:pgaubatz/es6-promisify#3d8966c58bace65f762b7335e99e3f43b987bce4",
-      "from": "github:pgaubatz/es6-promisify",
-      "requires": {
-        "es6-promise": "^2.3.0"
-      }
-    },
     "es6-promisify-all": {
       "version": "0.1.0",
       "resolved": "https://registry.npmjs.org/es6-promisify-all/-/es6-promisify-all-0.1.0.tgz",
       "integrity": "sha1-RCuaHqjgCw/VsodyVVBY/eXp8gc=",
-      "requires": {
-        "es6-promisify": "github:pgaubatz/es6-promisify#3d8966c58bace65f762b7335e99e3f43b987bce4"
+      "dependencies": {
+        "es6-promisify": {
+          "version": "github:pgaubatz/es6-promisify#3d8966c58bace65f762b7335e99e3f43b987bce4",
+          "from": "github:pgaubatz/es6-promisify#3d8966c58bace65f762b7335e99e3f43b987bce4",
+          "requires": {
+            "es6-promise": "^2.3.0"
+          }
+        }
       }
     },
     "es6-set": {
