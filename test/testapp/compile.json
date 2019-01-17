@@ -2,15 +2,15 @@
 	"targets": [
 		{
 			"type": "source",
-			"outputPath": "source-output"
+			"outputPath": "output/source"
 		},
 		{
 			"type": "hybrid",
-			"outputPath": "hybrid-output"
+			"outputPath": "output/hybrid"
 		},
 		{
 			"type": "build",
-			"outputPath": "build-output"
+			"outputPath": "output/build"
 		}
 	],
 	
@@ -32,6 +32,11 @@
 		"test.someValue": "some"
 	},
 	
+    "bundle": {
+       "include": [ "qx.*" ],
+       "exclude": [ "qx.util.*" ]
+    },
+    
 	"parts": {
 		"boot": {
 			"include": [ "testapp.*" ]
@@ -43,10 +48,10 @@
             "include": [ "testapp.utils.*" ]
         },
         "pluginOne": {
-            "include": [ "testapp.plugins.PluginOne" ]
+            "include": [ "testapp.plugins.PluginOne", "testapp.plugins.One*" ]
         },
         "pluginTwo": {
-            "include": [ "testapp.plugins.PluginTwo" ]
+            "include": [ "testapp.plugins.PluginTwo", "testapp.plugins.Two*" ]
         }
 	}
 }

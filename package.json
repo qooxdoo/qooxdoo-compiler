@@ -66,7 +66,6 @@
     "node-fetch": "^1.7.3",
     "node-sass": "^4.10.0",
     "qooxdoo": "^6.0.0-alpha",
-    "qooxdoo-sdk": "^6.0.0-alpha-20181226-a3c2b0b",
     "rimraf": "^2.6.2",
     "semver": "^5.6.0",
     "tmp": "0.0.33",
