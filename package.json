@@ -16,7 +16,7 @@
     }
   },
   "author": "John Spackman (johnspackman), Christian Boulanger (cboulanger), Henner Kollmann (hkollmann), and others",
-  "version": "0.2.43",
+  "version": "0.2.45",
   "keywords": [
     "qooxdoo",
     "compiler",
@@ -66,7 +66,6 @@
     "node-fetch": "^1.7.3",
     "node-sass": "^4.10.0",
     "qooxdoo": "^6.0.0-alpha",
-    "qooxdoo-sdk": "^6.0.0-alpha-20181226-a3c2b0b",
     "rimraf": "^2.6.2",
     "semver": "^5.6.0",
     "tmp": "0.0.33",
@@ -78,7 +77,7 @@
   "devDependencies": {
     "cross-os": "^1.2.2",
     "dot": "^1.1.2",
-    "eslint-config-qx": "^0.1.0",
+    "eslint-config-qx": "^0.2.1",
     "jstransformer-dot": "^0.1.2",
     "metalsmith": "^2.3.0",
     "metalsmith-filenames": "^1.0.0",
