@@ -16,8 +16,8 @@ node compiled/source/myapp/myapp.js || exit $?
 # test qx contrib list
 qx contrib update  -v || exit $?
 qx contrib list    -v || exit $?
-qx contrib list --all --short --noheaders || exit $?
-qx contrib list --json --match==qooxdoo/ || exit $?
+qx contrib list --all --short --noheaders --match=qooxdoo/ || exit $?
+qx contrib list --json --installed || exit $?
 # test add contrib
 qx contrib install oetiker/UploadWidget -v --release v1.0.1 || exit $?
 qx contrib install cboulanger/qx-contrib-Dialog -v || exit $?
