@@ -14,7 +14,7 @@
     "$schema": {
       "type": "string",
       "description": "the json schema of the version of compile.json",
-      "pattern": "^https://github.com/qooxdoo/qooxdoo-compiler/schema/compile-1.0.0.json$"
+      "pattern": "^https://raw.githubusercontent.com/qooxdoo/qooxdoo-compiler/master/resource/compile-1.0.0.json$"
     },
     "application": {
       "type":"array",
