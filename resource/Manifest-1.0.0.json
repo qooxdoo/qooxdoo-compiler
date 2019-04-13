@@ -12,7 +12,7 @@
     "$schema": {
       "type": "string",
       "description": "the json schema of the version of Manifest.json",
-      "pattern": "^https://github.com/qooxdoo/qooxdoo-compiler/schema/Manifest-1.0.0.json$"
+      "pattern": "^https://raw.githubusercontent.com/qooxdoo/qooxdoo-compiler/master/resource/Manifest-1.0.0.json$"
     },
     "info": {
       "type": "object",
