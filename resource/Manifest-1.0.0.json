@@ -63,7 +63,7 @@
             "properties": {
               "name": {
                 "type": "string",
-                "pattern": "\(\S+\)$",
+                "pattern": "\\(\\S+\\)$",
                 "examples": [
                   "First Author (uid)"
                 ]
@@ -175,7 +175,7 @@
               "uniqueItems": true,
               "items": {
                 "type": "string",
-                "pattern": "\.css$"
+                "pattern": "\\.css$"
               }
             },
             "script": {
@@ -183,7 +183,7 @@
               "uniqueItems": true,
               "items": {
                 "type": "string",
-                "pattern": "\.js$"
+                "pattern": "\\.js$"
               }
             }
           }
@@ -194,7 +194,7 @@
       "description": "a list of of needed libraries and contribs. the keys `qooxdoo-sdk` and `qooxdoo-compiler` are also recognized to descript the respective versions of these components",
       "type": "object",
       "patternProperties": {
-        "^\S+$": {
+        "^\\S+$": {
           "description": "semver compatible range pattern",
           "type": "string"
         }
