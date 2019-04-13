@@ -114,47 +114,48 @@
         ],
         "additionalProperties": false,
         "properties": {
-        "type": {
-          "description": "Either `source`, `build`, or a class name in qooxdoo-compiler; using a class name is advanced usage, but ultimately the standard names just shortcuts to class names anyway (`source` is `qxcompiler.targets.SourceTarget`, etc)",
-          "type": "string"
-        },
-        "outputPath": {
-          "description": "The folder where the compilation outputs to, and will be created if it does not already exist",
-          "type": "string"
-        },
-        "targetClass": {
-          "description": "If you want to use more than the two default target types and/or use custom target classes, you can use the targetClass key to supply the name of the class as a string.",
-          "type": "string"
-        },
-        "uri": {
-          "description": "this sets the URI used to access the target output directory, i.e. the directory which will contain resources/ and transpiled/",
-          "type":"string"
-        },
-        "environment": {
-          "$ref": "#/properties/environment"
-        },
-        "writeCompileInfo": {
-          "description": "if true, the target will write a compile-info.json and resources.json into the application's output directory, containing the data structures required to generate an application",
-          "type":"boolean"
-        },
-        "typescript": {
-          "type": ["boolean","string"],
-          "description": "When true, output the typescript definition into ``./compiled/source/qooxdoo.d.ts`. If you use a string instead of true, the string is the name of the file which is generated inside the target output directory"
-        },
-        "minify": {
-          "description": "Determines the minification to be used for applications, if the target supports it; can be overridden on a per application basis. Can be off, minify, mangle, or beautify.",
-          "type": "string",
-          "pattern": "^(off|minify|mangle|beautify)$"
-        },
-        "addCreatedAt": {
-          "description": "If true, this will cause every object to have a hidden property called $$createdAt which points to an object containing filename, lineNumber, and column properties.",
-          "type": "boolean"
-        },
-        "babelOptions": {
-          "$ref": "#/properties/bableOptions"
-        },
-        "parts": {
-          "$ref": "#/properties/parts"
+          "type": {
+            "description": "Either `source`, `build`, or a class name in qooxdoo-compiler; using a class name is advanced usage, but ultimately the standard names just shortcuts to class names anyway (`source` is `qxcompiler.targets.SourceTarget`, etc)",
+            "type": "string"
+          },
+          "outputPath": {
+            "description": "The folder where the compilation outputs to, and will be created if it does not already exist",
+            "type": "string"
+          },
+          "targetClass": {
+            "description": "If you want to use more than the two default target types and/or use custom target classes, you can use the targetClass key to supply the name of the class as a string.",
+            "type": "string"
+          },
+          "uri": {
+            "description": "this sets the URI used to access the target output directory, i.e. the directory which will contain resources/ and transpiled/",
+            "type":"string"
+          },
+          "environment": {
+            "$ref": "#/properties/environment"
+          },
+          "writeCompileInfo": {
+            "description": "if true, the target will write a compile-info.json and resources.json into the application's output directory, containing the data structures required to generate an application",
+            "type":"boolean"
+          },
+          "typescript": {
+            "type": ["boolean","string"],
+            "description": "When true, output the typescript definition into ``./compiled/source/qooxdoo.d.ts`. If you use a string instead of true, the string is the name of the file which is generated inside the target output directory"
+          },
+          "minify": {
+            "description": "Determines the minification to be used for applications, if the target supports it; can be overridden on a per application basis. Can be off, minify, mangle, or beautify.",
+            "type": "string",
+            "pattern": "^(off|minify|mangle|beautify)$"
+          },
+          "addCreatedAt": {
+            "description": "If true, this will cause every object to have a hidden property called $$createdAt which points to an object containing filename, lineNumber, and column properties.",
+            "type": "boolean"
+          },
+          "babelOptions": {
+            "$ref": "#/properties/bableOptions"
+          },
+          "parts": {
+            "$ref": "#/properties/parts"
+          }
         }
       }
     },
@@ -173,21 +174,21 @@
       "description": "Each part has an include array which is a list of classes (including wildcards) that are to be included.",
       "type": "object",
       "patternProperties": {
-        "^\S+$": {
+        "^\\S+$": {
           "required": [
             "include"
           ],
           "additionalProperties": false,
           "properties": {
             "include": {
-              "description": "A list of class glob patterns to include in this part."
+              "description": "A list of class glob patterns to include in this part.",
               "type": "array",
               "items": {
                 "type": "string"
               }
             },
             "exclude": {
-              "description": "A list of class glob patterns to exclude from this part."
+              "description": "A list of class glob patterns to exclude from this part.",
               "type": "array",
               "items": {
                 "type": "string"
@@ -201,7 +202,7 @@
       "description": " generic means to locate files on disk inside the URI address space of the application",
       "type":"object",
       "patternProperties": {
-        "^\S+$": {
+        "^\\S+$": {
           "description": "virtual path as seen from the browser",
           "type": "string"
         }
@@ -220,7 +221,7 @@
       "items": {
         "type": "string",
         "minItems": 1,
-        "pattern": "^\S+$"
+        "pattern": "^\\S+$"
       }
     },
     "writeAllTranslations": {
@@ -240,7 +241,7 @@
     "environment": {
       "type": "object",
       "patternProperties": {
-        "^\S+$": {
+        "^\\S+$": {
           "description": "This will show up in `qx.core.Environment`"
         }
       }
