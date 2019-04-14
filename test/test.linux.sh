@@ -52,7 +52,7 @@ node compiled/source/myapp/myapp.js
 node compiled/source/myapp/myapp.js || exit $?
 ../qx package list --installed --short --noheaders
 # test add class and add script
-../qx add class myapp.Window --extend=./qx.ui.window.Window
+../qx add class myapp.Window --extend=qx.ui.window.Window
 ../qx add script ../testdata/npm/script/jszip.js --rename=zip.js
 cp ../testdata/npm/application/*.js source/class/myapp
 ../qx lint --fix --warnAsError
