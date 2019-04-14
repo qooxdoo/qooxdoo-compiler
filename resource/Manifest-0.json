@@ -54,8 +54,9 @@
             "properties": {
               "name": {
                 "type": "string",
+                "pattern": "\\(\\S+\\)$",
                 "examples": [
-                  "First Author"
+                  "First Author (uid)"
                 ]
               },
               "email": {
@@ -63,10 +64,6 @@
                 "examples": [
                   "first.author@site.domain"
                 ]
-              },
-              "user": {
-                "type": "string",
-                "description": "deprecated - user name"
               }
             }
           }
@@ -166,7 +163,7 @@
           "description": "Type of the project"
         },
         "application": {
-          "$ref": "./compile-0.json#/properties/applications/items"
+          "$ref": "./compile-1.json#/properties/applications/items"
         },
         "externalResources": {
           "type":"object",
@@ -192,7 +189,7 @@
         }
       }
     },
-    "requires": {
+    "required": {
       "description": "a list of of needed libraries and contribs. the keys `qooxdoo-sdk` and `qooxdoo-compiler` are also recognized to descript the respective versions of these components",
       "type": "object",
       "patternProperties": {

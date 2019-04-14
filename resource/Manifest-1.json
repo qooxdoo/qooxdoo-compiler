@@ -60,8 +60,9 @@
             "properties": {
               "name": {
                 "type": "string",
+                "pattern": "\\(\\S+\\)$",
                 "examples": [
-                  "First Author"
+                  "First Author (uid)"
                 ]
               },
               "email": {
@@ -69,30 +70,13 @@
                 "examples": [
                   "first.author@site.domain"
                 ]
-              },
-              "githubUser": {
-                "type": "string",
-                "pattern": "^\\S+$"
-              },
-              "gitlabUser": {
-                "type": "string",
-                "pattern": "^\\S+$"
-              },
-              "facebookUser": {
-                "type": "string",
-                "pattern": "^\\S+$"
-              },
-              "twitterHandle": {
-                "type": "string",
-                "pattern": "^@\\S+$"
               }
             }
           }
         },
        "version": {
           "type": "string",
-          "description": "a semver compatible version string",
-          "pattern": "^(\\d|[1-9]\\d*)\\.(\\d|[1-9]\\d*)\\.(\\d|[1-9]\\d*)(?:-([-\\dA-Za-z]+(?:\\.[\\dA-Za-z-]+)*))?(?:\\+([-\\dA-Za-z]+(?:\\.[-\\d0-9A-Za-z]+)*))?$"
+          "description": "ideally a semver compatible version string"
         },
         "sourceViewUri": {
           "type": "string",
@@ -203,7 +187,7 @@
         }
       }
     },
-    "requires": {
+    "required": {
       "description": "a list of of needed libraries and contribs. the keys `qooxdoo-sdk` and `qooxdoo-compiler` are also recognized to descript the respective versions of these components",
       "type": "object",
       "patternProperties": {
