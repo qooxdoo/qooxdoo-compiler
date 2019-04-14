@@ -25,7 +25,7 @@ node compiled/source/myapp/myapp.js
 ../qx contrib list --json --installed 
 # test add contrib
 ../qx contrib install oetiker/UploadWidget -v --release v1.0.1 
-../qx contrib install cboulanger/./qx-contrib-Dialog -v 
+../qx contrib install cboulanger/qx-contrib-Dialog -v 
 ../qx contrib install johnspackman/UploadMgr -v 
 ../qx contrib install ergobyte/qookery/qookeryace -v 
 ../qx contrib install ergobyte/qookery/qookerymaps -v 
