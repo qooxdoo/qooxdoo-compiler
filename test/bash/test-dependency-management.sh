@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 
 echo
 echo "Test 1: qxl.test1, latest version"
