@@ -188,7 +188,7 @@
         }
       }
     },
-    "required": {
+    "requires": {
       "description": "a list of of needed libraries and contribs. the keys `qooxdoo-sdk` and `qooxdoo-compiler` are also recognized to descript the respective versions of these components",
       "type": "object",
       "patternProperties": {
