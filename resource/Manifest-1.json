@@ -1,18 +1,19 @@
 {
   "title": "Manifest.json Schema",
   "$schema": "http://json-schema.org/draft-07/schema",
-  "$id": "https://raw.githubusercontent.com/qooxdoo/qooxdoo-compiler/master/resource/Manifest-1.0.0.json",
+  "$id": "https://raw.githubusercontent.com/qooxdoo/qooxdoo-compiler/master/resource/Manifest-1.json",
   "description": "qooxdoo's Manifest files serve to provide meta information for a library in a structured way. Their syntax is in JSON. They have a more informational part (keyed info), which is more interesting for human readers, a technical part (named provides) that is used in the processing of generator configurations, and a part named externalResources to include CSS and Javascript files.",
   "type": "object",
   "required": [
-    "provides"
+    "provides",
+    "$schema"
   ],
   "additionalProperties": false,
   "properties": {
     "$schema": {
       "type": "string",
       "description": "the json schema of the version of Manifest.json",
-      "pattern": "^https://raw.githubusercontent.com/qooxdoo/qooxdoo-compiler/master/resource/Manifest-1.0.0.json$"
+      "pattern": "^https://raw.githubusercontent.com/qooxdoo/qooxdoo-compiler/master/resource/Manifest-1.json$"
     },
     "info": {
       "type": "object",
@@ -44,12 +45,8 @@
           "description": "Homepage URL of the library."
         },
         "license": {
-          "type": "array",
-          "description": "License(s) of the library",
-          "uniqueItems": true,
-          "items": {
-            "type": "string"
-          }
+          "type": "string",
+          "description": "License(s) of the library"
         },
         "authors": {
           "description": "List of Authors",
@@ -77,9 +74,9 @@
             }
           }
         },
-        "qooxdoo-versions": {
-          "type": "array",
-          "description": "List of qooxdoo versions this library works with. Deprecated! User requires instead."
+       "version": {
+          "type": "string",
+          "description": "ideally a semver compatible version string"
         },
         "sourceViewUri": {
           "type": "string",
@@ -164,7 +161,7 @@
           "description": "Type of the project"
         },
         "application": {
-          "$ref": "./compile-1.0.0.json#/properties/applications/items"
+          "$ref": "./compile-1.json#/properties/applications/items"
         },
         "externalResources": {
           "type":"object",
@@ -199,6 +196,10 @@
           "type": "string"
         }
       }
+    },
+    "setup": {
+      "description": "Setup Section - used in Qooxdoo SDK Manifest.json ... do we need this still?",
+      "type": "object"
     }
   }
 }
