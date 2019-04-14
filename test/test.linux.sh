@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -x
+set -e
 
 echo "Testing qooxdoo-compiler version $(./qx --version)"
 echo
@@ -8,12 +9,12 @@ pushd test
 node test-deps.js
 popd
 
-./qx package update || exit $?
-bash test/test-dependency-management.sh || exit $?
+./qx package update
+bash test/test-dependency-management.sh
 
 rm -rf myapp
 # test create app
-./qx create myapp -I --type server -v || exit $?
+./qx create myapp -I --type server -v
 pushd myapp
 ../qx compile -v --clean || exit $?
 node compiled/source/myapp/myapp.js || exit $?
@@ -38,11 +39,11 @@ node compiled/source/myapp/myapp.js || exit $?
 node compiled/source/myapp/myapp.js
 ../qx package list -isH
 # test remove package
-../qx package remove oetiker/UploadWidget -v || exit $?
-../qx package remove ergobyte/qookery/qookeryace -v || exit $?
-../qx package remove ergobyte/qookery/qookerymaps -v || exit $?
-../qx compile -v --clean || exit $?
-node compiled/source/myapp/myapp.js || exit $?
+../qx package remove oetiker/UploadWidget -v
+../qx package remove ergobyte/qookery/qookeryace -v
+../qx package remove ergobyte/qookery/qookerymaps -v
+../qx compile -v --clean
+node compiled/source/myapp/myapp.js
 ../qx package list --installed --short --noheaders
 # test install without manifest
 ../qx clean -v || exit $?
@@ -51,10 +52,10 @@ node compiled/source/myapp/myapp.js || exit $?
 node compiled/source/myapp/myapp.js || exit $?
 ../qx package list --installed --short --noheaders
 # test add class and add script
-../qx add class myapp.Window --extend=./qx.ui.window.Window || exit $?
-../qx add script ../testdata/npm/script/jszip.js --rename=zip.js || exit $?
+../qx add class myapp.Window --extend=./qx.ui.window.Window
+../qx add script ../testdata/npm/script/jszip.js --rename=zip.js
 cp ../testdata/npm/application/*.js source/class/myapp
-../qx lint --fix --warnAsError ||  exit $?
-../qx compile -v --clean || exit $?
-node compiled/source/myapp/myapp.js || exit $?
+../qx lint --fix --warnAsError
+../qx compile -v --clean
+node compiled/source/myapp/myapp.js
 popd
