@@ -3,9 +3,10 @@ set -x
 echo "Testing qooxdoo-compiler version $(./qx --version)"
 echo
 
-cd test
+pushd test
 node test-deps.js
-cd ..
+popd
+
 ./qx package update || exit $?
 
 # disabled until it is fixed
@@ -14,7 +15,7 @@ cd ..
 rm -rf myapp
 # test create app
 ./qx create myapp -I --type server -v || exit $?
-cd myapp
+pushd myapp
 ../qx compile -v --clean || exit $?
 node compiled/source/myapp/myapp.js || exit $?
 # test qx package list
