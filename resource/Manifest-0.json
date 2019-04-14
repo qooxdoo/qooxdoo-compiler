@@ -163,7 +163,7 @@
           "description": "Type of the project"
         },
         "application": {
-          "$ref": "./compile-1.json#/properties/applications/items"
+          "$ref": "./compile-0.json#/properties/applications/items"
         },
         "externalResources": {
           "type":"object",
