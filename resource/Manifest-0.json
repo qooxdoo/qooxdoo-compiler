@@ -54,9 +54,8 @@
             "properties": {
               "name": {
                 "type": "string",
-                "pattern": "\\(\\S+\\)$",
                 "examples": [
-                  "First Author (uid)"
+                  "First Author"
                 ]
               },
               "email": {
@@ -64,6 +63,10 @@
                 "examples": [
                   "first.author@site.domain"
                 ]
+              },
+              "user": {
+                "type": "string",
+                "description": "deprecated - user name"
               }
             }
           }
