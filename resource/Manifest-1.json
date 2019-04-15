@@ -60,9 +60,8 @@
             "properties": {
               "name": {
                 "type": "string",
-                "pattern": "\\(\\S+\\)$",
                 "examples": [
-                  "First Author (uid)"
+                  "First Author"
                 ]
               },
               "email": {
@@ -70,6 +69,22 @@
                 "examples": [
                   "first.author@site.domain"
                 ]
+              },
+              "githubUser": {
+                "type": "string",
+                "pattern": "^\\S+$"
+              },
+              "gitlabUser": {
+                "type": "string",
+                "pattern": "^\\S+$"
+              },
+              "facebookUser": {
+                "type": "string",
+                "pattern": "^\\S+$"
+              },
+              "twitterHandle": {
+                "type": "string",
+                "pattern": "^@\\S+$"
               }
             }
           }
