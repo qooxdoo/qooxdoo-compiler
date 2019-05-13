@@ -9,7 +9,7 @@ cd myapp
 LIST=$(../qx package list --short --noheaders --installed --all)
 echo "$LIST"
 COUNTLINES=$(echo "$LIST" | wc -l | tr -d ' ')
-if [ "$COUNTLINES" != "3" ]; then echo "Installing dependencies failed"; exit 1; fi
+if [ "$COUNTLINES" != "4" ]; then echo "Installing dependencies failed"; exit 1; fi
 ../qx compile --feedback=false --warnAsError || exit 1
 cd ..
 
