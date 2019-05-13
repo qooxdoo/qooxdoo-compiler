@@ -7,7 +7,7 @@ cd test
 node test-deps.js
 cd ..
 
-./qx package update || exit $?
+./qx package update --search --all-versions || exit $?
 bash test/test-dependency-management.sh || exit $?
 
 rm -rf myapp
