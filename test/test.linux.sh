@@ -6,7 +6,6 @@ echo
 cd test
 node test-deps.js
 cd ..
-
 ./qx package update || exit $?
 
 # disabled until it is fixed
