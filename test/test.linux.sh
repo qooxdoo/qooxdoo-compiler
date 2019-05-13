@@ -6,8 +6,7 @@ echo
 cd test
 node test-deps.js
 cd ..
-./qx config set github.token ${GH_TOKEN}
-./qx package update --search --all-versions || exit $?
+./qx package update || exit $?
 bash test/test-dependency-management.sh || exit $?
 
 rm -rf myapp
