@@ -1,20 +1,14 @@
 {
   "title": "Manifest.json Schema",
   "$schema": "http://json-schema.org/draft-07/schema",
-  "$id": "https://raw.githubusercontent.com/qooxdoo/qooxdoo-compiler/master/resource/Manifest-1.json",
+  "$id": "https://raw.githubusercontent.com/qooxdoo/qooxdoo-compiler/master/resource/schema/v0/Manifest.json",
   "description": "qooxdoo's Manifest files serve to provide meta information for a library in a structured way. Their syntax is in JSON. They have a more informational part (keyed info), which is more interesting for human readers, a technical part (named provides) that is used in the processing of generator configurations, and a part named externalResources to include CSS and Javascript files.",
   "type": "object",
   "required": [
-    "provides",
-    "$schema"
+    "provides"
   ],
   "additionalProperties": false,
   "properties": {
-    "$schema": {
-      "type": "string",
-      "description": "the json schema of the version of Manifest.json",
-      "pattern": "^https://raw.githubusercontent.com/qooxdoo/qooxdoo-compiler/master/resource/Manifest-1.json$"
-    },
     "info": {
       "type": "object",
       "additionalProperties": false,
@@ -70,29 +64,24 @@
                   "first.author@site.domain"
                 ]
               },
-              "githubUser": {
+              "user": {
                 "type": "string",
-                "pattern": "^\\S+$"
-              },
-              "gitlabUser": {
-                "type": "string",
-                "pattern": "^\\S+$"
-              },
-              "facebookUser": {
-                "type": "string",
-                "pattern": "^\\S+$"
-              },
-              "twitterHandle": {
-                "type": "string",
-                "pattern": "^@\\S+$"
+                "description": "deprecated - user name"
               }
             }
           }
         },
-       "version": {
+        "qooxdoo-versions": {
+          "type": "array",
+          "description": "DEPRECATED: List of qooxdoo versions this library works with. Deprecated! User requires instead."
+        },
+        "qooxdoo-range": {
           "type": "string",
-          "description": "a semver compatible version string",
-          "pattern": "^(\\d|[1-9]\\d*)\\.(\\d|[1-9]\\d*)\\.(\\d|[1-9]\\d*)(?:-([-\\dA-Za-z]+(?:\\.[\\dA-Za-z-]+)*))?(?:\\+([-\\dA-Za-z]+(?:\\.[-\\d0-9A-Za-z]+)*))?$"
+          "description": "DEPRECATED: ideally a semver compatible version string"
+        },
+        "version": {
+          "type": "string",
+          "description": "ideally a semver compatible version string"
         },
         "sourceViewUri": {
           "type": "string",
@@ -177,7 +166,7 @@
           "description": "Type of the project"
         },
         "application": {
-          "$ref": "./compile-1.json#/properties/applications/items"
+          "$ref": "compile.json#/properties/applications/items"
         },
         "externalResources": {
           "type":"object",
