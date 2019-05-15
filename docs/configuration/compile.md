@@ -1,11 +1,20 @@
 # compile.json
 
-Compile.json controls the `qx compile` command, and while you can use command line parameters to compile an application, most applications will require one.
+Compile.json controls the `qx compile` command, and while you can use command
+line parameters to compile an application, most applications will require one.
 
 The key concepts of a compilation are that:
-- source code exists in **Libraries** (the Qooxdoo framework is a Library, as is any contribs you use, and also *your own application source code is a Library*)
-- source code is compiled into one or more **Applications** (ie something that the end-user interacts with using their web browser)
-- when an Application is compiled, it is compiled to **Target** a particular usage, EG the "source" Target is for debugging the source code, and the "build" Target is for production use and is optimised and minified
+
+- source code exists in **Libraries** (the Qooxdoo framework is a Library,
+qooxdoo packages contain one or more libraries, and also *your own application
+source code is a Library*)
+
+- source code is compiled into one or more **Applications** (ie something that
+the end-user interacts with using their web browser)
+
+- when an Application is compiled, it is compiled to **Target** a particular
+usage, EG the "source" Target is for debugging the source code, and the "build"
+Target is for production use and is optimised and minified
 
 These key concepts appear in every compile.json, for example:
 
@@ -84,7 +93,7 @@ A complete example is:
 
 ## Targets
 The `targets` key is an array of objects, one for each possible target that can be compiled.  Each object can contain:
-- `type` - this is either "source", "build", or a class name in `qooxdoo-compiler`; using a class name is advanced usage, but ultimately the standard names just shortcuts to class names anyway ("source" is `qxcompiler.targets.SourceTarget`, etc)
+- `type` - this is either "source", "build", or a class name in `@qooxdoo/compiler`; using a class name is advanced usage, but ultimately the standard names just shortcuts to class names anyway ("source" is `qxcompiler.targets.SourceTarget`, etc)
 - `outputPath` the folder where the compilation outputs to, and will be created if it does not already exist
 - `targetClass` - (**optional**) see below 
 - `uri` - (**optional**) this sets the URI used to access the target output directory, i.e. the directory which will contain `resources/` and `transpiled/`.  
@@ -192,7 +201,7 @@ You can override this by specifying a list of directories in the `libraries` key
     ],
 ```
 
-Unless you list it in the `libraries` key, the compiler will first check the `qx.libraryPath` setting (see `qx config set qx.libraryPath`), and if not will look first in your `node_modules` directory and then it's own `node_modules` directory for the `qooxdoo-sdk` npm module. 
+Unless you list it in the `libraries` key, the compiler will first check the `qx.libraryPath` setting (see `qx config set qx.libraryPath`), and if not will look first in your `node_modules` directory and then it's own `node_modules` directory for the `@qooxdoo/framework` npm module. 
 
 ## Parts
 Parts are supported by adding a `parts` object, either at the top level, inside a target object, or inside an application object.  It looks like this:

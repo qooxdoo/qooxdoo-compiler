@@ -1,11 +1,11 @@
 {
-  "info" : 
+  "info" :
   {
     "name" : "${name}",
 
     "summary" : "${summary}",
     "description" : "${description}",
-    
+
     "homepage" : "${homepage}",
 
     "license" : "${license}",
@@ -13,19 +13,18 @@
 
     "version" : "${version}"
   },
-  
-  "provides" : 
+
+  "provides" :
   {
     "namespace"   : "${namespace}",
     "encoding"    : "utf-8",
     "class"       : "source/class",
     "resource"    : "source/resource",
-    "translation" : "source/translation",
-    "type"        : "contribution"
+    "translation" : "source/translation"
   },
 
   "requires": {
-    "qooxdoo-sdk"     : "${qooxdoo_range}",
-    "qooxdoo-compiler": "${compiler_range}"
+    "@qooxdoo/framework": "${qooxdoo_range}",
+    "@qooxdoo/compiler" : "${compiler_range}"
   }
 }
