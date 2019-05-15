@@ -753,17 +753,12 @@
         }
       }
     },
-    "@qooxdoo/eslint-qx-plugins": {
-      "version": "1.0.2",
-      "resolved": "https://registry.npmjs.org/@qooxdoo/eslint-qx-plugins/-/eslint-qx-plugins-1.0.2.tgz",
-      "integrity": "sha512-hQ9YWn+5Ub3lGFfjfzLxX+LzERxmT1pcA+axXcE7ffvw5F/gJhC8Qy9T9f/s2A/G0/kMweoeO2fL62LL0FNtdg=="
-    },
-    "@qooxdoo/eslint-qx-rules": {
-      "version": "1.0.2",
-      "resolved": "https://registry.npmjs.org/@qooxdoo/eslint-qx-rules/-/eslint-qx-rules-1.0.2.tgz",
-      "integrity": "sha512-5PIAfUlMr+0/yIAQXOLPGQu1387WiKYzJrDwejAJ3/gR9PYL2Jg654YY54BAytUBOGgaxygXCnXTTcDyhiwCXQ==",
+    "@qooxdoo/eslint-config-qx": {
+      "version": "1.0.1",
+      "resolved": "https://registry.npmjs.org/@qooxdoo/eslint-config-qx/-/eslint-config-qx-1.0.1.tgz",
+      "integrity": "sha512-WwuffndV3V2WN9Psp7rXrSYHC0R/neSmztweclyWJ/rzvBorVA2ZgAkFbU7v26ECV0JLPkgfFERrPtvDv0vt4w==",
       "requires": {
-        "@qooxdoo/eslint-qx-plugins": "^1.0.0",
+        "@qooxdoo/eslint-plugin-qx": "^1.0.0",
         "eslint": "^3.19.0"
       },
       "dependencies": {
@@ -1044,6 +1039,11 @@
           }
         }
       }
+    },
+    "@qooxdoo/eslint-plugin-qx": {
+      "version": "1.0.1",
+      "resolved": "https://registry.npmjs.org/@qooxdoo/eslint-plugin-qx/-/eslint-plugin-qx-1.0.1.tgz",
+      "integrity": "sha512-ZekbrN8oe2tMbIjRVZoJcKiSLCrjI9x7q1vjDsN2uvtFk7B/lBYtxMHy00sMVd0h1NWDjJTyAigJqQHVZluVMg=="
     },
     "@qooxdoo/framework": {
       "version": "6.0.0-alpha-20190511-1022",
