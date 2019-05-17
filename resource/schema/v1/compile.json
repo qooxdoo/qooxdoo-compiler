@@ -15,7 +15,8 @@
     "$schema": {
       "type": "string",
       "description": "the json schema of the version of compile.json",
-      "pattern": "^https://raw.githubusercontent.com/qooxdoo/qooxdoo-compiler/master/resource/compile-1.json$"
+      "//pattern": "^https:[/][/]raw[.]githubusercontent[.]com[/]qooxdoo[/]qooxdoo-compiler[/]master[/]resource[/]v1[/]compile[.]json$",
+      "const": "https://raw.githubusercontent.com/qooxdoo/qooxdoo-compiler/master/resource/schema/v1/compile.json"
     },
     "applications": {
       "type":"array",
@@ -127,6 +128,9 @@
             "description": "If you want to use more than the two default target types and/or use custom target classes, you can use the targetClass key to supply the name of the class as a string.",
             "type": "string"
           },
+          "bundle": {
+            "$ref": "#/properties/bundle"
+          },
           "uri": {
             "description": "this sets the URI used to access the target output directory, i.e. the directory which will contain resources/ and transpiled/",
             "type":"string"
@@ -222,7 +226,7 @@
       "items": {
         "type": "string",
         "minItems": 1,
-        "pattern": "^\\S+$"
+        "//pattern": "^\\S+$"
       }
     },
     "writeAllTranslations": {
@@ -250,6 +254,26 @@
     "babelOptions": {
       "type": "object",
       "description": "Options given to @babel/preset-env. With this options the output type of babel can be defined. For details see here: <https://babeljs.io/docs/en/babel-preset-env#options>. They can be overridden per target."
+    },
+    "bundle": {
+      "description": "Allows you to use wildcards to select classes which are to be bundled together into as few files as possible",
+      "type": "object",
+      "properties": {
+        "include": {
+          "description": "An array of namespaces to include in the bundle. Can contain wildcards.",
+          "type": ["array","string"],
+          "items": {
+            "type": "string"
+          }
+        },
+        "exclude": {
+          "description": "An array of namespaces to exclude from the bundle. Can contain wildcards.",
+          "type": ["array","string"],
+          "items": {
+            "type": "string"
+          }
+        }
+      }
     }
   }
 }

@@ -24,7 +24,7 @@ const path = require("path");
 const fs = require("fs");
 
 /**
- * This module exports dynamic data on the variables used by the templates. 
+ * This module exports dynamic data on the variables used by the templates.
  * It returns a map. The keys are the names of the variables that are asked
  * from the user. Each key takes a map with the following keys:
  * - description (string) : the part of the question that follows "Please enter "
@@ -33,10 +33,10 @@ const fs = require("fs");
  * - default (mixed|function): the value's default. Can also be a function.
  * - optional (boolean) : whether the user needs to enter anything at all
  * - type (string) : the inquirer question 'type'
- * - choices (array||function): the inquirer "list" question's 'choices' data 
+ * - choices (array||function): the inquirer "list" question's 'choices' data
  * - validate (function) : a function that returns true if the argument passed to the function
  *   is a valid value
- *  
+ *
  * @param argv {Object} The calling command class' yargs argv object
  * @param data {Object} Additional data
  */
@@ -51,18 +51,18 @@ module.exports = function (argv, data) {
     },
     "namespace": {
       "description": "the namespace of the application",
-      "default": argv.applicationnamespace
+      "default": argv.applicationnamespace || argv.namespace
     },
     "out": {
       "description": "the output directory for the application content (use '.' if no subdirectory should be created)",
       "value": argv.out,
-      "default": path.join(process.cwd(), argv.applicationnamespace)
+      "default": path.join(process.cwd(), argv.applicationnamespace || argv.namespace)
     },
     "name": {
       "description": "the name of the application",
       "optional": true,
       "value": argv.name,
-      "default": argv.applicationnamespace,
+      "default": argv.applicationnamespace || argv.namespace,
     },
     "summary": {
       "description": "a short summary of what the application does",
