@@ -379,23 +379,85 @@ If you choose to use the optional web server by running `qx serve`, you can chan
 ```
 
 ## compile.js
-Configuration files do not support processes, job executions, or even macros - if you want to add basic processing (eg for macros), use a .js file to manipulate the data. 
-.js MUST return a function. This function MUST accept two arguments, one for the data (which will be null if there is no .json) and the second is the callback to call when complete; the callback takes an error object and the output configuration data.
+Configuration files do not support processes, job executions, or even macros - if you want to add basic processing (eg for macros), 
+use a .js file to manipulate the data.  When your `compile.js` is executed, there will be a global object called `compiler` which
+has properties called `inputData` (which is set to the contents of `compile.json`, if it exists).
 
-If you provide a .js file and there is also a .json, then it is loaded and parsed first. The function in the .js is called with the parsed data from the .json file as a parameter.
+When your configuration code completes, it can return a `Promise` or a function or an object; a Promise must resolve to an object,
+but the function is called with two parameters - the first is the `inputData` and the second is a callback function to be called 
+when the function has completed.  If the function returns a `Promise`, then the `callback` is *not* expected to be called because it
+is expected that the Promise will resolve to the configuration object.  
 
-Example:
+The "return" value from `compile.js` is the result of the last code evaluation, you don't actually use the `return` keyword (which 
+would be an error because you code is not inside a function).  This means that you could rename `compile.json` to `compile.js` and
+have it "just work".
 
-```javascript
-function compile(data, callback) {
-    console.log("I'm here");
-    let err = null;
-	callback(err, data);
-}
-
+For a more natural "return" semantics, a common pattern is to encapsulate your configuration in a function expression, eg: 
+```
+(function() {
+    if (someTestIsTrue) {
+        return {
+            /** Applications */
+            "applications": [
+                {
+                    "class": "demoapp.Application",
+                    "theme": "demoapp.theme.Theme",
+                    "name": "demoapp"
+                }
+            ] /* ... snip ... */
+        };
+        
+    } else {
+        return { /* ... snip ... */ };
+    }
+)();
 ```
 
-If err is not null loading of the config file is rejected.
+Or an example using callbacks:
+```
+function(inputData, cb) {
+    if (someTestIsTrue) {
+        cb(null, {
+            /** Applications */
+            "applications": [
+                {
+                    "class": "demoapp.Application",
+                    "theme": "demoapp.theme.Theme",
+                    "name": "demoapp"
+                }
+            ] /* ... snip ... */
+        });
+        return;
+        
+    } else {
+        cb(null, { /* ... snip ... */ });
+        return;
+    }
+}
+```
+
+
+Or a more advanced example using promises:
+```
+let process = require("process");
+
+new Promise((resolve, reject) => {
+    /* Do some work ... */
+    resolve({
+        "locales": [
+          "en",
+          "en_gb"
+        ],
+        "environment": {
+          "grasshopper.buildType": "source",
+          "qx.aspects": false
+        } /* ... snip ... */
+        );
+});
+``` 
+If you provide a .js file and there is also a .json, then it is loaded and parsed first. The code in the `compile.js` is called with the 
+parsed data from the `compile.json` in the global `compiler.inputData`.
+
 
 ### How to add sass call for mobile projects:
 
