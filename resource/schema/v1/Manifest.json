@@ -13,7 +13,8 @@
     "$schema": {
       "type": "string",
       "description": "the json schema of the version of Manifest.json",
-      "pattern": "^https://raw.githubusercontent.com/qooxdoo/qooxdoo-compiler/master/resource/Manifest-1.json$"
+      "//pattern": "^https:[/][/]raw[.]githubusercontent[.]com[/]qooxdoo[/]qooxdoo-compiler[/]master[/]resource[/]v1[/]Manifest[.]json$",
+      "const": "https://raw.githubusercontent.com/qooxdoo/qooxdoo-compiler/master/resource/schema/v1/Manifest.json"
     },
     "info": {
       "type": "object",
@@ -92,7 +93,7 @@
        "version": {
           "type": "string",
           "description": "a semver compatible version string",
-          "pattern": "^(\\d|[1-9]\\d*)\\.(\\d|[1-9]\\d*)\\.(\\d|[1-9]\\d*)(?:-([-\\dA-Za-z]+(?:\\.[\\dA-Za-z-]+)*))?(?:\\+([-\\dA-Za-z]+(?:\\.[-\\d0-9A-Za-z]+)*))?$"
+          "//pattern": "^(\\d|[1-9]\\d*)\\.(\\d|[1-9]\\d*)\\.(\\d|[1-9]\\d*)(?:-([-\\dA-Za-z]+(?:\\.[\\dA-Za-z-]+)*))?(?:\\+([-\\dA-Za-z]+(?:\\.[-\\d0-9A-Za-z]+)*))?$"
         },
         "sourceViewUri": {
           "type": "string",
@@ -177,7 +178,7 @@
           "description": "Type of the project"
         },
         "application": {
-          "$ref": "compile.json#/properties/applications/items"
+          "type":"object"
         },
         "externalResources": {
           "type":"object",
