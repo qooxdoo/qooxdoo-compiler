@@ -6,6 +6,7 @@ echo
 
 pushd test
 node test-deps.js
+node test-config-schemas.js
 popd
 
 ./qx package update || exit $?
@@ -19,14 +20,14 @@ rm -rf myapp
 pushd myapp
 ../qx compile -v --clean || exit $?
 node compiled/source/myapp/myapp.js || exit $?
-# test ./qx package list
+# test qx package list
 ../qx package update  -v || exit $?
 ../qx package list    -v || exit $?
 ../qx package list --all --short --noheaders --match=qooxdoo/ || exit $?
 ../qx package list --json --installed || exit $?
 # test add package
 ../qx package install oetiker/UploadWidget -v --release v1.0.1 || exit $?
-../qx package install cboulanger/./qx-contrib-Dialog -v || exit $?
+../qx package install cboulanger/qx-contrib-Dialog -v || exit $?
 ../qx package install johnspackman/UploadMgr -v || exit $?
 ../qx package install ergobyte/qookery/qookeryace -v || exit $?
 ../qx package install ergobyte/qookery/qookerymaps -v || exit $?
@@ -53,7 +54,7 @@ node compiled/source/myapp/myapp.js || exit $?
 node compiled/source/myapp/myapp.js || exit $?
 ../qx package list --installed --short --noheaders
 # test add class and add script
-../qx add class myapp.Window --extend=./qx.ui.window.Window || exit $?
+../qx add class myapp.Window --extend=qx.ui.window.Window || exit $?
 ../qx add script ../testdata/npm/script/jszip.js --rename=zip.js || exit $?
 cp ../testdata/npm/application/*.js source/class/myapp
 ../qx lint --fix --warnAsError ||  exit $?

@@ -2,29 +2,42 @@ require("../lib");
 const rimraf = require("rimraf");
 const fs = qx.tool.compiler.utils.Promisify.fs;
 const process = require("process");
+const assert = require("assert");
 
 const appNamespace = "testConfigSchemaApp";
+
 (async () => {
   try {
+    console.info("Running config file schema tests...");
     // delete existing app
     if (await fs.existsAsync(appNamespace) && await fs.statAsync(appNamespace)) {
       rimraf.sync(appNamespace);
     }
-    // create app
+    // create a test app
     const appConfig = {noninteractive:true, namespace:appNamespace, theme: "Indigo", icontheme: "Tango"};
     await (new qx.tool.cli.commands.Create(appConfig)).process();
-
     process.chdir(appNamespace);
-
+    // run tests
     const createInstance = qx.tool.compiler.utils.ConfigFile.getInstanceByType;
     const manifestConfig = await createInstance("manifest");
-    console.log(manifestConfig.getValue("provides"));
+
+    assert.strictEqual(manifestConfig.getValue("provides.namespace"), appNamespace);
+
+    manifestConfig.setValue("requires.@qooxdoo/framework", "^20.1.5");
+    assert.strictEqual(manifestConfig.getValue("requires.@qooxdoo/framework"), "^20.1.5");
+    // do something illegal according to the schema
+    assert.throws(() => manifestConfig.setValue("requires.@qooxdoo/framework", 42));
+    assert.throws(() => manifestConfig.setValue("foo", "bar"));
+
     const compilerConfig = await createInstance("compile");
-    console.info(compilerConfig.getValue("applications"));
+    assert.strictEqual(compilerConfig.getValue("applications.0.name"), appNamespace);
+
     // delete the test app
     process.chdir("..");
     rimraf.sync(appNamespace);
+    console.info("All tests passed.");
   } catch (e) {
     console.error(e.message);
+    process.exit(1);
   }
 })();
