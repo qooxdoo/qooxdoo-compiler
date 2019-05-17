@@ -20,11 +20,13 @@ const appNamespace = "testConfigSchemaApp";
     // run tests
     const createInstance = qx.tool.compiler.utils.ConfigFile.getInstanceByType;
     const manifestConfig = await createInstance("manifest");
-
+    // get a value
     assert.strictEqual(manifestConfig.getValue("provides.namespace"), appNamespace);
-
+    // change a value
     manifestConfig.setValue("requires.@qooxdoo/framework", "^20.1.5");
     assert.strictEqual(manifestConfig.getValue("requires.@qooxdoo/framework"), "^20.1.5");
+    // add new property
+    manifestConfig.setValue("requires.foo", "^1.0.0");
     // do something illegal according to the schema
     assert.throws(() => manifestConfig.setValue("requires.@qooxdoo/framework", 42));
     assert.throws(() => manifestConfig.setValue("foo", "bar"));
