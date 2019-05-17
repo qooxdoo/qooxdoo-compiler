@@ -381,7 +381,10 @@ If you choose to use the optional web server by running `qx serve`, you can chan
 ## compile.js
 Configuration files do not support processes, job executions, or even macros - if you want to add basic processing (eg for macros), 
 use a .js file to manipulate the data.  When your `compile.js` is executed, there will be a global object called `compiler` which
-has properties called `inputData` (which is set to the contents of `compile.json`, if it exists).
+has these properties:
+
+* `inputData` - set to the contents of `compile.json`, if it exists
+* `command` - the CLI command, derived from `qx.tool.cli.commands.Command`
 
 When your configuration code completes, it can return a `Promise` or a function or an object; a Promise must resolve to an object,
 but the function is called with two parameters - the first is the `inputData` and the second is a callback function to be called 
