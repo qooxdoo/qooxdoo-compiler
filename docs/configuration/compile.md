@@ -350,7 +350,7 @@ The qx lint command is configured by an eslintConfig section in compile.js:
       "JSZip": false
     }, 
     "extends": [
-      "qx/browser"          
+      "@qooxdoo/qx/browser"          
     ] 
   }
 ```
@@ -362,7 +362,7 @@ If you omit the eslintConfig section a default will be used:
 ```json5
   "eslintConfig": {
     "extends": [
-      "qx/browser"          
+      "@qooxdoo/qx/browser"          
     ] 
   }
 ```
