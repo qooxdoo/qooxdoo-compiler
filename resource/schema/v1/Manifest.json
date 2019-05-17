@@ -207,12 +207,14 @@
     "requires": {
       "description": "a list of of needed libraries and contribs. the keys `qooxdoo-sdk` and `qooxdoo-compiler` are also recognized to descript the respective versions of these components",
       "type": "object",
+      "required": ["@qooxdoo/framework","@qooxdoo/compiler"],
       "patternProperties": {
-        "^\\S+$": {
+        "^.*$": {
           "description": "semver compatible range pattern",
           "type": "string"
         }
-      }
+      },
+      "additionalProperties": false
     },
     "setup": {
       "description": "Setup Section - used in Qooxdoo SDK Manifest.json ... do we need this still?",
