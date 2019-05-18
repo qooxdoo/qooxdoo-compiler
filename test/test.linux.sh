@@ -1,20 +1,23 @@
 #!/usr/bin/env bash
 set -x
+
 echo "Testing qooxdoo-compiler version $(./qx --version)"
 echo
 
-cd test
+pushd test
 node test-deps.js
-cd ..
+node test-config-schemas.js
+popd
+
 ./qx package update || exit $?
 
 # disabled until it is fixed
-# bash test/test-dependency-management.sh || exit $?
+# test/test-dependency-management.sh || exit $?
 
 rm -rf myapp
 # test create app
 ./qx create myapp -I --type server -v || exit $?
-cd myapp
+pushd myapp
 ../qx compile -v --clean || exit $?
 node compiled/source/myapp/myapp.js || exit $?
 # test qx package list
@@ -57,4 +60,4 @@ cp ../testdata/npm/application/*.js source/class/myapp
 ../qx lint --fix --warnAsError ||  exit $?
 ../qx compile -v --clean || exit $?
 node compiled/source/myapp/myapp.js || exit $?
-
+popd
