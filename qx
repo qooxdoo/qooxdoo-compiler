@@ -1,5 +1,4 @@
 #!/usr/bin/env node
 
-require("./lib");
-
+require("./index");
 new qx.tool.cli.Cli().run();
