@@ -37,9 +37,11 @@ call ..\qx compile -v --clean || EXIT /B 1
 call node compiled\source\myapp\myapp.js || EXIT /B 1
 :: test add class and add script
 call ..\qx add class myapp.Window --extend=qx.ui.window.Window --force || EXIT /B 1
-call ..\qx add script ../testdata/npm/script/jszip.js --rename=zip.js || EXIT /B 1
-copy ..\testdata\npm\application\*.js source\class\myapp /Y
+call ..\qx add script ..\test\testdata\npm\script\jszip.js --rename=zip.js || EXIT /B 1
+copy ..\test\testdata\npm\application\*.js source\class\myapp /Y
 call ..\qx lint --fix --warnAsError || EXIT /B 1
 call ..\qx compile -v --clean || EXIT /B 1
 call node compiled\source\myapp\myapp.js || EXIT /B 1
-
+:: delete the app
+cd ..
+rmdir  /Q /S myapp

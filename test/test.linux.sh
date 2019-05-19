@@ -56,9 +56,11 @@ node compiled/source/myapp/myapp.js
 ../qx package list --installed --short --noheaders
 # test add class and add script
 ../qx add class myapp.Window --extend=qx.ui.window.Window
-../qx add script ../testdata/npm/script/jszip.js --rename=zip.js
-cp ../testdata/npm/application/*.js source/class/myapp
+../qx add script ../test/testdata/npm/script/jszip.js --rename=zip.js
+cp ../test/testdata/npm/application/*.js source/class/myapp
 ../qx lint --fix --warnAsError ||  exit $?
 ../qx compile -v --clean
 node compiled/source/myapp/myapp.js
 popd
+rm -rf myapp
+echo "CLI Tests finished successfully" 
