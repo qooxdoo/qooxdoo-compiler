@@ -127,11 +127,6 @@ qx.Class.define("qx.tool.utils.ConfigFile", {
     __schemaUri: null,
 
     /**
-     * The internal schema signature object
-     */
-    __schemaInfo: null,
-
-    /**
      * Information on the version of the schema, if any
      */
     __schemaVersion: null,
