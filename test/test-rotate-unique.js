@@ -1,10 +1,10 @@
 var test = require('tape');
 var fs = require("fs");
 var async = require("async");
-const {promisify, promisifyThis} = require("../lib/qx/tool/compiler/util");
+const {promisify, promisifyThis} = require("../source/class/qx/tool/utils");
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
-require("../lib");
+require("../index");
 
 test('Checks rotateUnique', (assert) => {
 

@@ -6,7 +6,7 @@
 
 var fs = require("fs");
 var async = require("async");
-var qxcompiler = require("../../lib/qxcompiler");
+var qxcompiler = require("../../source/class/qx/tool/compiler");
 
 var STARTTIME = new Date();
 
