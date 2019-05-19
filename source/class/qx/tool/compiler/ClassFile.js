@@ -24,7 +24,7 @@ var fs = require("fs");
 var babelCore = require("@babel/core");
 require("@qooxdoo/framework");
 var util = require("./util");
-var types = require("@babel/types/lib/index");
+var types = require("@babel/types");
 var babylon = require("@babel/parser");
 var async = require("async");
 var pathModule = require("path");

@@ -21,7 +21,7 @@ require("@qooxdoo/framework");
 const fs = require("fs");
 const path = require("upath");
 const process = require("process");
-const octokit = require("@octokit/rest/index")();
+const octokit = require("@octokit/rest")();
 const semver = require("semver");
 const inquirer = require("inquirer");
 const glob = require("glob");

@@ -154,7 +154,7 @@ module.exports = qx.Class.define("qx.tool.compiler.makers.Maker", {
         .then(() => {
           writeFile(path.join(this.getOutputDir(), "version.txt"), qx.tool.compiler.Version.VERSION, { encoding: "utf8" });
           let s = {};
-          s["index.js"] = qx.tool.compiler.Version.VERSION;
+          s["compiler"] = qx.tool.compiler.Version.VERSION;
           s.libraries = {};
           let libs = this.getAnalyser().getLibraries();
           libs.forEach(lib => {

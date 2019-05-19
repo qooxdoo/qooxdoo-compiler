@@ -23,11 +23,11 @@
  * *********************************************************************** */
 
 require("@qooxdoo/framework");
-const Ajv = require("ajv/lib/ajv");
+const Ajv = require("ajv");
 const betterAjvErrors = require("better-ajv-errors");
 const fs = qx.tool.utils.Promisify.fs;
 const JsonToAst = require("json-to-ast");
-const path = require("path");
+
 qx.Class.define("qx.tool.utils.Json", {
 
   statics: {
@@ -72,7 +72,7 @@ qx.Class.define("qx.tool.utils.Json", {
         return true;
       }
       if (warnOnly) {
-        const message = betterAjvErrors(schema.$id, json, ajv.errors, {format: "index.js", indent: 2});
+        const message = betterAjvErrors(schema.$id, json, ajv.errors, {format: "cli", indent: 2});
         console.warn("JSON data does not validate against "+ schema.$id + ":\n" + message);
         return false;
       }
