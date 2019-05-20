@@ -144,7 +144,7 @@ qx.Class.define("qx.tool.compiler.app.Library", {
       var t = this;
       let rootDir = loadFromDir;
 
-     qx.tool.compiler.files.Utils.correctCase(path.resolve(loadFromDir))
+     qx.tool.utils.files.Utils.correctCase(path.resolve(loadFromDir))
         .then(tmp => this.setRootDir(rootDir = tmp))
         .then(() => qx.tool.utils.Json.loadJsonAsync(rootDir + "/Manifest.json"))
         .then(data => {
@@ -159,7 +159,7 @@ qx.Class.define("qx.tool.compiler.app.Library", {
             if (!fs.existsSync(d)) {
               return dir;
             }
-            return qx.tool.compiler.files.Utils.correctCase(d)
+            return qx.tool.utils.files.Utils.correctCase(d)
               .then(correctedDir => {
                 if (correctedDir.substring(0, rootDir.length + 1) != rootDir + path.sep) {
                   t.warn(Console.decode("qx.tool.compiler.library.cannotCorrectCase", rootDir));

@@ -121,7 +121,7 @@ module.exports = qx.Class.define("qx.tool.compiler.makers.Maker", {
       if (pwd.startsWith(dir) && dir.length <= pwd.length) {
         throw new Error("Output directory (" + dir + ") is a parent directory of PWD");
       }
-      await qx.tool.compiler.files.Utils.deleteRecursive(this.getOutputDir());
+      await qx.tool.utils.files.Utils.deleteRecursive(this.getOutputDir());
     },
 
     /**

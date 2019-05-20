@@ -22,7 +22,6 @@ require("./Console");
 require("./Preprocess");
 require("./Version");
 require("./app");
-require("./files");
 require("./makers");
 require("./resources");
 require("./targets");

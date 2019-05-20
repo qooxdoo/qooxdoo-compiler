@@ -92,9 +92,9 @@ qx.Class.define("qx.tool.cli.Watch", {
             return;
           }
 
-          // On case insensitive (but case preserving) filing systems, qx.tool.compiler.files.Utils.correctCase
+          // On case insensitive (but case preserving) filing systems, qx.tool.utils.files.Utils.correctCase
           // is needed corrects because chokidar needs the correct case in order to detect changes.
-         qx.tool.compiler.files.Utils.correctCase(dir).then(dir => {
+         qx.tool.utils.files.Utils.correctCase(dir).then(dir => {
             confirmed.push(dir);
             resolve();
           });
@@ -160,7 +160,7 @@ qx.Class.define("qx.tool.cli.Watch", {
                 data.dependsOn[filename] = true;
               });
               var filename = path.resolve(data.application.getLoaderTemplate());
-              promises.push(qx.tool.compiler.files.Utils.correctCase(filename)
+              promises.push(qx.tool.utils.files.Utils.correctCase(filename)
                 .then(filename => data.dependsOn[filename] = true));
             });
             Promise.all(promises).then(() => {

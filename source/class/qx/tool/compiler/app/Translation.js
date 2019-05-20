@@ -88,7 +88,7 @@ module.exports = qx.Class.define("qx.tool.compiler.app.Translation", {
         return this.read();
       }
       var poFile = this.getPoFilename();
-      let stat = await qx.tool.compiler.files.Utils.safeStat(poFile);
+      let stat = await qx.tool.utils.files.Utils.safeStat(poFile);
       if (stat && this.__mtime == stat.mtime) {
         return undefined;
       }
