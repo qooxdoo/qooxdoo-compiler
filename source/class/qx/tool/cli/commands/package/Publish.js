@@ -327,6 +327,18 @@ qx.Class.define("qx.tool.cli.commands.package.Publish", {
         }
       }
 
+      // package.json
+      const package_json_path = path.join(process.cwd(), "package.json");
+      if (await fs.existsSync(package_json_path)) {
+        let data = await qx.tool.utils.Json.loadJsonAsync(package_json_path);
+        data.version = new_version;
+        if (argv.dryrun) {
+          console.info("Dry run: Not changing package.json version...");
+        } else {
+          await qx.tool.utils.Json.saveJsonAsync(package_json_path,data);
+        }
+      }
+
       if (argv.dryrun) {
         if (!argv.quiet) {
           console.info(`Dry run: not creating tag and release '${tag}' of ${repo_name}...`);
