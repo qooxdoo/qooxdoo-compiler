@@ -49,7 +49,7 @@ qx.Class.define("qx.tool.cli.Watch", {
       if (this.__runningPromise) {
         throw new Error("Cannot start watching more than once");
       }
-      this.__runningPromise =qx.tool.compiler.Utils.newExternalPromise();
+      this.__runningPromise = qx.tool.utils.Utils.newExternalPromise();
 
       var dirs = [ ];
       var analyser = this.__maker.getAnalyser();
@@ -165,7 +165,7 @@ qx.Class.define("qx.tool.cli.Watch", {
             });
             Promise.all(promises).then(() => {
               var endTime = new Date().getTime();
-              Console.print("qx.tool.cli.watch.compiledClasses", t.__stats.classesCompiled,qx.tool.compiler.Utils.formatTime(endTime - startTime));
+              Console.print("qx.tool.cli.watch.compiledClasses", t.__stats.classesCompiled, qx.tool.utils.Utils.formatTime(endTime - startTime));
               t.__making = false;
               t.fireEvent("made");
             });
