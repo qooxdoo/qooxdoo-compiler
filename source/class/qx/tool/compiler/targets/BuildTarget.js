@@ -206,12 +206,12 @@ module.exports = qx.Class.define("qx.tool.compiler.targets.BuildTarget", {
         var partSourceMap = null;
         p = p
           .then(() => fs.readFileAsync(partJs, "utf8").then(data => partSourceCode = data))
-          .then(() => qx.tool.compiler.files.Utils.safeUnlink(partJs + ".unminified"))
-          .then(() => qx.tool.compiler.files.Utils.safeRename(partJs, partJs + ".unminified"))
+          .then(() => qx.tool.utils.files.Utils.safeUnlink(partJs + ".unminified"))
+          .then(() => qx.tool.utils.files.Utils.safeRename(partJs, partJs + ".unminified"))
 
           .then(() => fs.readFileAsync(partJs + ".map", "utf8").then(data => partSourceMap = data))
-          .then(() => qx.tool.compiler.files.Utils.safeUnlink(partJs + ".unminified.map"))
-          .then(() => qx.tool.compiler.files.Utils.safeRename(partJs + ".map", partJs + ".unminified.map"))
+          .then(() => qx.tool.utils.files.Utils.safeUnlink(partJs + ".unminified.map"))
+          .then(() => qx.tool.utils.files.Utils.safeRename(partJs + ".map", partJs + ".unminified.map"))
 
           .then(() => {
             t.fireDataEvent("minifyingApplication", { application: application, part: pkgId, filename: "part-" + pkgId + ".js" });

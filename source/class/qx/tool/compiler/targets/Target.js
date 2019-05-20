@@ -211,7 +211,7 @@ module.exports = qx.Class.define("qx.tool.compiler.targets.Target", {
         var queue = async.queue(
             function (asset, cb) {
               var library = analyser.findLibrary(asset.libraryName);
-              qx.tool.compiler.files.Utils.sync(
+              qx.tool.utils.files.Utils.sync(
                   library.getRootDir() + "/" + library.getResourcePath() + "/" + asset.filename,
                   path.join(t.getOutputDir(), "resource", asset.filename))
                   .then(() => cb())
@@ -805,7 +805,7 @@ module.exports = qx.Class.define("qx.tool.compiler.targets.Target", {
 
       const src = path.join(require.resolve("@babel/polyfill"), "../../dist/polyfill.js");
       const dest = path.join(appRootDir, t.getScriptPrefix() + "polyfill.js");
-      await qx.tool.compiler.files.Utils.copyFile(src, dest);
+      await qx.tool.utils.files.Utils.copyFile(src, dest);
 
       await qx.Promise.all([
         writeBootJs(),
@@ -897,10 +897,10 @@ module.exports = qx.Class.define("qx.tool.compiler.targets.Target", {
           "</html>\n";
 
       var bootDir = application.getBootPath();
-      var stats = bootDir && (await qx.tool.compiler.files.Utils.safeStat(bootDir));
+      var stats = bootDir && (await qx.tool.utils.files.Utils.safeStat(bootDir));
       let indexHtml = null;
       if (stats && stats.isDirectory()) {
-        await qx.tool.compiler.files.Utils.sync(bootDir, resDir, (from, to) => {
+        await qx.tool.utils.files.Utils.sync(bootDir, resDir, (from, to) => {
           if (!from.endsWith(".html")) {
             return true;
           }

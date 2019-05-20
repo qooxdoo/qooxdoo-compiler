@@ -264,7 +264,7 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
 
 
     __loadJs: async function(aPath, inputData) {
-      if (!await qx.tool.compiler.files.Utils.safeStat(aPath)) {
+      if (!await qx.tool.utils.files.Utils.safeStat(aPath)) {
         return false;
       }
       var src = await fs.readFileAsync(aPath, {encoding: "utf8"});

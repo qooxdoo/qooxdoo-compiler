@@ -92,7 +92,7 @@ qx.Class.define("qx.tool.compiler.targets.SourceCodeCopier", {
      * Opens the output
      */
     async open() {
-      let stat = await qx.tool.compiler.files.Utils.safeStat(this.__outputFilename);
+      let stat = await qx.tool.utils.files.Utils.safeStat(this.__outputFilename);
       if (stat) {
         let hash = crypto.createHash("sha256");
         hash.setEncoding("hex");
@@ -131,7 +131,7 @@ qx.Class.define("qx.tool.compiler.targets.SourceCodeCopier", {
         }
       }
 
-      let stat = await qx.tool.compiler.files.Utils.safeStat(jsMapFilename);
+      let stat = await qx.tool.utils.files.Utils.safeStat(jsMapFilename);
       if (stat) {
         let source = jsUri || jsFilename;
         data = await fs.readFileAsync(jsMapFilename, "utf8");

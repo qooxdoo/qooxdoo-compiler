@@ -314,8 +314,8 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
 
       if (this.argv["clean"]) {
         await maker.eraseOutputDir();
-        await qx.tool.compiler.files.Utils.safeUnlink(maker.getAnalyser().getDbFilename());
-        await qx.tool.compiler.files.Utils.safeUnlink(maker.getAnalyser().getResDbFilename());
+        await qx.tool.utils.files.Utils.safeUnlink(maker.getAnalyser().getDbFilename());
+        await qx.tool.utils.files.Utils.safeUnlink(maker.getAnalyser().getResDbFilename());
       }
       var analyser = maker.getAnalyser();
       var target = maker.getTarget();
@@ -365,7 +365,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
       analyser.addListener("saveDatabase", e => this.dispatchEvent(e.clone()));
       target.addListener("checkEnvironment", e => this.dispatchEvent(e.clone()));
 
-      var p = qx.tool.compiler.files.Utils.safeStat("source/index.html")
+      var p = qx.tool.utils.files.Utils.safeStat("source/index.html")
         .then(stat => stat && qx.tool.compiler.Console.print("qx.tool.cli.compile.legacyFiles", "source/index.html"));
 
       // Simple one of make
@@ -588,7 +588,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
       if (defaultApp) {
         defaultApp.setWriteIndexHtmlToRoot(true);
       } else {
-        qx.tool.compiler.files.Utils.safeUnlink(target.getOutputDir() + target.getScriptPrefix() + "index.html");
+        qx.tool.utils.files.Utils.safeUnlink(target.getOutputDir() + target.getScriptPrefix() + "index.html");
       }
 
       maker.getAnalyser().addListener("compiledClass", function(evt) {

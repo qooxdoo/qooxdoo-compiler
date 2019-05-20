@@ -23,3 +23,4 @@ require("./LogManager");
 require("./Values");
 require("./ConfigFile");
 require("./Utils.js");
+require("./files");

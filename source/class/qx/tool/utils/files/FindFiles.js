@@ -24,7 +24,7 @@ var fs = require("fs");
 var async = require("async");
 require("@qooxdoo/framework");
 
-qx.Class.define("qx.tool.compiler.files.FindFiles", {
+qx.Class.define("qx.tool.utils.files.FindFiles", {
   extend: qx.core.Object,
 
   construct: function(root) {
@@ -92,4 +92,4 @@ qx.Class.define("qx.tool.compiler.files.FindFiles", {
 
 });
 
-module.exports = qx.tool.compiler.files.FindFiles;
+module.exports = qx.tool.utils.files.FindFiles;

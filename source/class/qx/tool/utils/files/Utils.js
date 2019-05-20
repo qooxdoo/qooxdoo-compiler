@@ -21,7 +21,7 @@
  * *********************************************************************** */
 
 const fs = qx.tool.utils.Promisify.fs;
-const util = require("../util");
+const util = require("../../compiler/util");
 require("@qooxdoo/framework");
 const rimraf = require("rimraf");
 
@@ -30,7 +30,7 @@ const mkdir = util.promisify(fs.mkdir);
 const readdir = util.promisify(fs.readdir);
 const rename = util.promisify(fs.rename);
 
-qx.Class.define("qx.tool.compiler.files.Utils", {
+qx.Class.define("qx.tool.utils.files.Utils", {
   extend: qx.core.Object,
 
   statics: {
@@ -308,4 +308,4 @@ qx.Class.define("qx.tool.compiler.files.Utils", {
   }
 });
 
-module.exports = qx.tool.compiler.files.Utils;
+module.exports = qx.tool.utils.files.Utils;
