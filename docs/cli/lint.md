@@ -19,7 +19,7 @@ Options:
 
 Configuration is done in the `compile.json` file, see here [here](compile-json.md).
 
-If no special lint configuration is given in `compile.json` the configuration `qx/browser` from
-[eslint-config-qx](https://github.com/qooxdoo/eslint-config-qx/blob/master/README.md) is used.
+If no special lint configuration is given in `compile.json` the configuration `@qooxdoo/qx/browser` from
+[eslint-qx-rules](https://github.com/qooxdoo/eslint-qx-rules/blob/master/README.md) is used.
 
 If `compile.json` does not exist, `qx lint` tries to use `.eslintrc`.
