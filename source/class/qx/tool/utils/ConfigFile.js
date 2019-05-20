@@ -34,7 +34,7 @@ qx.Class.define("qx.tool.utils.ConfigFile", {
     $$instances: null,
 
     /**
-     * Factory function to create singletons of a config file model
+     * Factory function to create singletons of a config file model in a specific directory
      * @param {String} type
      * @param {Boolean} doNotLoad If true, don't load the model yet. Default: false
      * @return {Promise<qx.tool.utils.ConfigFile>}
@@ -65,7 +65,7 @@ qx.Class.define("qx.tool.utils.ConfigFile", {
   },
 
   /**
-   * Constructor
+   * Constructor. Does not load or check any data.
    * @param {String} dataPath
    * @param {String} schemaUri
    *    URI that uniquely identifies the schema.
@@ -265,7 +265,7 @@ qx.Class.define("qx.tool.utils.ConfigFile", {
           break;
         // throw otherwise
         default:
-          throw new Error(`Configuration file schema version mismatch: expected v${schemaMjVer}, found v${dataMjVer}!`);
+          throw new Error(`Configuration file schema version mismatch: expected v${schemaMjVer}, found v${dataMjVer}. Could not migrate data.`);
       }
       this.setDirty(true);
       return data;
@@ -290,7 +290,7 @@ qx.Class.define("qx.tool.utils.ConfigFile", {
      * @return {qx.tool.utils.ConfigFile} Returns the instance for chaining
      */
     setValue(prop_path, value, options) {
-      let originalValue = this.getValue(prop_path);
+      let originalValue = this.getValue(prop_path, options);
       set_value(this.getData(), prop_path, value, options);
       try {
         this.validate();
@@ -311,14 +311,15 @@ qx.Class.define("qx.tool.utils.ConfigFile", {
      * @param transformFunc {Function}
      *    The transformation function, which receives the value of the property
      *    and returns the transformed value, which then is validated and saved.
+     * @param options {*?} See https://github.com/jonschlinkert/get-value#options
      * @return {qx.tool.utils.ConfigFile} Returns the instance for chaining
      */
-    transform(prop_path, transformFunc) {
-      let transformedValue = transformFunc(this.getValue(prop_path));
+    transform(prop_path, transformFunc, options) {
+      let transformedValue = transformFunc(this.getValue(prop_path, options));
       if (transformedValue === undefined) {
         throw new Error("Return value of transformation fuction must be undefined.");
       }
-      this.setValue(prop_path, transformedValue);
+      this.setValue(prop_path, transformedValue, options);
       return this;
     },
 
