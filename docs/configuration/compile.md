@@ -383,104 +383,32 @@ Unlike the python generator's config.json, compile.json does not support process
 basic processing (eg for macros), you can use a `compile.js` file to manipulate the data in `compile.json`, or even replace `compile.json`
 altogether.  
 
-If you provide a `compile.js`, the compiler will first load the `compile.json` (if there is one) and then run the code in `compile.js`; when
-`compile.js` is executed, the compiler will pass the contents of `compile.json` so that it can be manipulated and returned (of course, you
-could chose to construct a brand new object instead). 
+If you provide a `compile.js`, the compiler will first load the `compile.json` (if there is one) and then load the code in `compile.js` as
+though it is a normal node module; the module is required to export either the configuration data as an object, or a single function which 
+is called to create the configuration object.
+ 
+When this function in `compile.js` is executed, the compiler will pass the contents of `compile.json` so that it can be manipulated and 
+returned (of course, you could chose to construct a brand new object instead). 
 
-When `compile.js` is executed, there will be a global object called `compiler` which you can use to interact with the compiler.  The global 
-`compiler` object has these properties:
+When `compile.js` is executed, the first parameter is an object (typically called called `compiler`) which you can use to interact with the 
+compiler; this object has these properties:
 
 * `inputData` - set to the contents of `compile.json`, if it exists
 * `command` - the CLI command, derived from `qx.tool.cli.commands.Command`
 
-When your configuration code completes, it can return one of: 
+When your configuration function completes, it can return one of: 
 
 * Object - This means that you could rename compile.json to compile.js and have it "just work".
-* Promise - the promise must resolve to an object which is the configuration for the compiler to use; 
-* Function - this function will be called with a single parameter which is a callback function, and either (a) that callback
-function must be called with error and data (eg `callback(null, myConfigData)`), or (b) the function returns a Promise, which resolves
-to a configuration object.  Note that if the function returns a `Promise`, then the `callback` is *not* expected to be called because 
-it is expected that the Promise will resolve to the configuration object.
+* Promise - the promise must resolve to an object which is the configuration for the compiler to use;
+* `undefined` - in which case the callback is expected 
 
-Because your code in `compile.js` is not a function, how to actually go about "returning a value" needs some explanation - you can do this 
-either by explicitly returning a value, otherwise the compiler will try to detect it from an implicit return value. 
+The second parameter to your function is a callback function, but this is only to be used if your function returns `undefined`.
 
-### Explicitly Returning a Value
-The global `compiler` object also supports a property called `configuration`, which you can set to the value you want to return - in much 
-the same way that a nodejs module would have code such as `module.exports = { ... }`, this allows you be explicit about the configuration being
-exported.  This is the clearest and easiest mechanism to return a value, and is the recommended approach.
 
-**Example**
+**Example - using an object**
+This is just a plain configuration, perhaps created by simply renaming `compile.json` to `compile.js` (and adding the `module.exports=` prefix) 
 ```
-if (someTestIsTrue) {
-    compiler.configuration = {
-        /** Applications */
-        "applications": [
-            {
-                "class": "demoapp.Application",
-                "theme": "demoapp.theme.Theme",
-                "name": "demoapp"
-            }
-        ] /* ... snip ... */
-    };
-    
-} else {
-    compiler.configuration = { /* ... snip ... */ };
-}
-```
-
-**Example - using promises**
-```
-compiler.configuration = new Promise((resolve, reject) => {
-    if (someTestIsTrue) {
-        resolve({
-            /** Applications */
-            "applications": [
-                {
-                    "class": "demoapp.Application",
-                    "theme": "demoapp.theme.Theme",
-                    "name": "demoapp"
-                }
-            ] /* ... snip ... */
-        });
-        
-    } else {
-        resolve({ /* ... snip ... */ });
-    }
-});
-```
-
-**Example - using callbacks**
-```
-compiler.configuration = cb => {
-    if (someTestIsTrue) {
-        cb(null, {
-            /** Applications */
-            "applications": [
-                {
-                    "class": "demoapp.Application",
-                    "theme": "demoapp.theme.Theme",
-                    "name": "demoapp"
-                }
-            ] /* ... snip ... */
-        });
-        
-    } else {
-        cb(null, { /* ... snip ... */ });
-    }
-});
-```
-
-
-### Implicitly Returning a Value (last code evaluation)
-If you do not set the global `compiler.configuration` property, then the "return" value from `compile.js` is the result of the last code 
-evaluation - you don't actually use the `return` keyword (which would be an error because your code is not inside a function).  This is 
-convenient because it also means that you could rename `compile.json` to `compile.js` and have it "just work".
-
-**Example - using implicit return**
-This is just a plain configuration, perhaps created by simply renaming `compile.json` to `compile.js` 
-```
-{
+module.exports = {
     /** Applications */
     "applications": [
         {
@@ -492,53 +420,9 @@ This is just a plain configuration, perhaps created by simply renaming `compile.
 } 
 ```
 
-**Example - using implicit return, but an unclear style**
-This example also uses an implicit return value, but it's a pretty confusing style - it looks like `result` is being assigned a value
-that is never used!  
-```
-var result;
-if (someTestIsTrue) {
-    result = {
-        /** Applications */
-        "applications": [
-            {
-                "class": "demoapp.Application",
-                "theme": "demoapp.theme.Theme",
-                "name": "demoapp"
-            }
-        ] /* ... snip ... */
-    };
-    
-} else {
-    result = { /* ... snip ... */ };
-}
-```
-
-** Example - using implicit return, but using the `return` keyword**
-For a more natural "return" semantics, a common pattern is to encapsulate your configuration in a function expression, eg: 
-```
-(function() {
-    if (someTestIsTrue) {
-        return {
-            /** Applications */
-            "applications": [
-                {
-                    "class": "demoapp.Application",
-                    "theme": "demoapp.theme.Theme",
-                    "name": "demoapp"
-                }
-            ] /* ... snip ... */
-        };
-        
-    } else {
-        return { /* ... snip ... */ };
-    }
-)();
-```
-
 **Example - using callbacks**
 ```
-function(cb) {
+module.exports = function(compiler, cb) {
     if (someTestIsTrue) {
         cb(null, {
             /** Applications */
@@ -559,31 +443,30 @@ function(cb) {
 }
 ```
 
-
-Or a more advanced example using promises:
+**Example - using promises**
 ```
-let process = require("process");
-
-new Promise((resolve, reject) => {
-    /* Do some work ... */
-    resolve({
-        "locales": [
-          "en",
-          "en_gb"
-        ],
-        "environment": {
-          "grasshopper.buildType": "source",
-          "qx.aspects": false
-        } /* ... snip ... */
-        );
-});
+module.exports = function(compiler) {
+    return new Promise((resolve, reject) => {
+        /* Do some work ... */
+        resolve({
+            "locales": [
+              "en",
+              "en_gb"
+            ],
+            "environment": {
+              "grasshopper.buildType": "source",
+              "qx.aspects": false
+            } /* ... snip ... */
+            );
+    });
+}
 ``` 
 
 
 ### How to add sass call for mobile projects:
 
 ```javascript
-async function compile(data, callback) {
+module.exports = async function compile(compiler) {
   /**
  * Adds sass support for current project.
  * Needed for qx.mobile projects.
@@ -592,12 +475,13 @@ async function compile(data, callback) {
  *    - add dependency to project package.json: "runscript": "^1.3.0"
  *    - run npm install in project dir.
  *  
- * @param {*} data       : config data from compile.json
+ * @param {*} data       : compiler interface
  * @param {*} callback   : callback for qxcli.  
  */
   debugger;
   const runscript = require('runscript');
   const util = require('util');
+  let data = compiler.inputData;
   runScript = async function (cmd) {
     return new Promise((resolve) => runscript(cmd, {
         stdio: 'pipe'
@@ -622,13 +506,11 @@ async function compile(data, callback) {
   let cmd = 'sass -C -t compressed -I %1/source/resource/qx/mobile/scss -I %1/source/resource/qx/scss --%3 source/theme/%2/scss:source/resource/%2/css';
   cmd = qx.lang.String.format(cmd, [data.libraries[0], data.applications[0].name]);
   if (!this.argv.watch) {
-     cmd = qx.lang.String.format(cmd, ["", "", "update"]);
-     await runScript(cmd);
+    cmd = qx.lang.String.format(cmd, ["", "", "update"]);
   } else {
     cmd = qx.lang.String.format(cmd, ["", "", "watch"]);
-    runScript(cmd);
   }       
-  callback(null, data);
+  return await runScript(cmd);
 }
 
 ```
@@ -637,14 +519,14 @@ You can run special code on various steps of the build process if you add an eve
 Example:
 
 ```
-function compile(data, callback) {
+function compile(compiler, callback) {
   debugger;
   this.addListener("made",  e => new qx.Promise((fullfiled) => {
       debugger;
       your_special_code;
       fullfiled();
     }));
-    callback(null, data);
+  callback(null, compiler.inputData);
 }
 ```
 Here is a list of possible events, taken from `lib/qx/tool/cli/commands/Compile.js`:
