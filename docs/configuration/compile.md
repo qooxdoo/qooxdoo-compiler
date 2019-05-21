@@ -466,7 +466,7 @@ module.exports = function(compiler) {
 ### How to add sass call for mobile projects:
 
 ```javascript
-async function compile(data, callback) {
+module.exports = async function compile(compiler) {
   /**
  * Adds sass support for current project.
  * Needed for qx.mobile projects.
@@ -475,12 +475,13 @@ async function compile(data, callback) {
  *    - add dependency to project package.json: "runscript": "^1.3.0"
  *    - run npm install in project dir.
  *  
- * @param {*} data       : config data from compile.json
+ * @param {*} data       : compiler interface
  * @param {*} callback   : callback for qxcli.  
  */
   debugger;
   const runscript = require('runscript');
   const util = require('util');
+  let data = compiler.inputData;
   runScript = async function (cmd) {
     return new Promise((resolve) => runscript(cmd, {
         stdio: 'pipe'
@@ -505,13 +506,11 @@ async function compile(data, callback) {
   let cmd = 'sass -C -t compressed -I %1/source/resource/qx/mobile/scss -I %1/source/resource/qx/scss --%3 source/theme/%2/scss:source/resource/%2/css';
   cmd = qx.lang.String.format(cmd, [data.libraries[0], data.applications[0].name]);
   if (!this.argv.watch) {
-     cmd = qx.lang.String.format(cmd, ["", "", "update"]);
-     await runScript(cmd);
+    cmd = qx.lang.String.format(cmd, ["", "", "update"]);
   } else {
     cmd = qx.lang.String.format(cmd, ["", "", "watch"]);
-    runScript(cmd);
   }       
-  callback(null, data);
+  return await runScript(cmd);
 }
 
 ```
@@ -520,14 +519,14 @@ You can run special code on various steps of the build process if you add an eve
 Example:
 
 ```
-function compile(data, callback) {
+function compile(compiler, callback) {
   debugger;
   this.addListener("made",  e => new qx.Promise((fullfiled) => {
       debugger;
       your_special_code;
       fullfiled();
     }));
-    callback(null, data);
+  callback(null, compiler.inputData);
 }
 ```
 Here is a list of possible events, taken from `lib/qx/tool/cli/commands/Compile.js`:
