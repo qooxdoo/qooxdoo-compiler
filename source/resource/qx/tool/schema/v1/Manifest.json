@@ -178,28 +178,6 @@
         },
         "application": {
           "type":"object"
-        },
-        "externalResources": {
-          "type":"object",
-          "description": "Static Javascript and CSS files that shall be always included without further processing by qooxdoo. All paths are relative to the resource folder stated in the 'provides' section.",
-          "properties": {
-            "css": {
-              "type": "array",
-              "uniqueItems": true,
-              "items": {
-                "type": "string",
-                "pattern": "\\.css$"
-              }
-            },
-            "script": {
-              "type": "array",
-              "uniqueItems": true,
-              "items": {
-                "type": "string",
-                "pattern": "\\.js$"
-              }
-            }
-          }
         }
       }
     },
@@ -214,6 +192,28 @@
         }
       },
       "additionalProperties": false
+    },
+    "externalResources": {
+      "type":"object",
+      "description": "Static Javascript and CSS files that shall be always included without further processing by qooxdoo. All paths are relative to the resource folder stated in the 'provides' section.",
+      "properties": {
+        "css": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "[.]css$"
+          }
+        },
+        "script": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "[.]js$"
+          }
+        }
+      }
     },
     "setup": {
       "description": "Setup Section - used in Qooxdoo SDK Manifest.json ... do we need this still?",

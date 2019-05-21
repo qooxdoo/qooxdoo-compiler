@@ -75,10 +75,6 @@ qx.Class.define("qx.tool.cli.commands.add.Script", {
       let resource_file_path = path.join(resource_dir_path, this.argv.rename || script_name);
       let external_res_path = path.join(this.argv.resourcedir, this.argv.rename || script_name);
       // validate file paths
-      let manifest_path = path.join(process.cwd(), qx.tool.ConfigSchemas.manifest.filename);
-      if (!await fs.existsAsync(manifest_path)) {
-        throw new qx.tool.utils.Utils.UserError("No Manifest.json file in this directory. Please go to the your project root.");
-      }
       if (!script_path.endsWith(".js")) {
         throw new qx.tool.utils.Utils.UserError("File doesn't seem to be a javascript file.");
       }
@@ -100,19 +96,12 @@ qx.Class.define("qx.tool.cli.commands.add.Script", {
         }
       }
       // check manifest structure
-      let manifest = await this.parseJsonFile(manifest_path);
-      if (!qx.lang.Type.isObject(manifest.externalResources)) {
-        manifest.externalResources = {};
-      }
-      if (!qx.lang.Type.isArray(manifest.externalResources.script)) {
-        manifest.externalResources.script = [];
-      }
-
-      let script_list = manifest.externalResources.script;
+      let manifestModel = await qx.tool.utils.ConfigFile.getInstanceByType("manifest");
+      let script_list = manifestModel.getValue("externalResources.script") || [];
       if (this.argv.undo) {
         // undo, i.e. remove file from resource folder and Manifest
         if (script_list.includes(external_res_path)) {
-          manifest.externalResources.script = script_list.filter(elem => elem != external_res_path);
+          script_list = script_list.filter(elem => elem !== external_res_path);
         }
         if (await fs.existsAsync(resource_file_path)) {
           await fs.unlinkAsync(resource_file_path);
@@ -124,12 +113,14 @@ qx.Class.define("qx.tool.cli.commands.add.Script", {
         }
         await fs.copyFileAsync(script_path, resource_file_path);
         if (!script_list.includes(external_res_path)) {
-          manifest.externalResources.script.push(external_res_path);
+          script_list.push(external_res_path);
         }
       }
       // save
-      let manifest_content = JSON.stringify(manifest, null, 2);
-      fs.writeFileSync(manifest_path, manifest_content, "utf-8");
+      console.debug(script_list);
+      manifestModel
+        .setValue("externalResources.script", script_list)
+        .save();
     }
   }
 });
