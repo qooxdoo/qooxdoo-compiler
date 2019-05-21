@@ -1,9 +1,9 @@
 var test = require('tape');
 var fs = require("fs");
 var async = require("async");
-const {promisify, promisifyThis} = require("../lib/qx/tool/compiler/util");
+const {promisify, promisifyThis} = require("../source/class/qx/tool/utils");
 const readFile = promisify(fs.readFile);
-require("../lib");
+require("../index");
 
 test('Checks jsdoc @param parser', (assert) => {
 
@@ -17,7 +17,7 @@ test('Checks jsdoc @param parser', (assert) => {
     "type": "Boolean",
     "description": ", the new value of the widget"
   });
-  
+
   var pdoc = { name: "@param", body: "cellInfo {Map}\nInformation about the cell being renderered, including:\n<ul>\n<li>state</li>\n<li>rowDiv</li>\n<li>stylesheet</li>\n<li>element</li>\n<li>dataIndex</li>\n<li>cellData</li>\n<li>height</li>\n</ul>" };
   parser.parseCommand(pdoc, "abc.def.Ghi", null);
   delete pdoc.name;
@@ -27,7 +27,7 @@ test('Checks jsdoc @param parser', (assert) => {
     "type": "Map",
     "description": "\nInformation about the cell being renderered, including:\n<ul>\n<li>state</li>\n<li>rowDiv</li>\n<li>stylesheet</li>\n<li>element</li>\n<li>dataIndex</li>\n<li>cellData</li>\n<li>height</li>\n</ul>"
   });
-  
+
   assert.end();
 });
 

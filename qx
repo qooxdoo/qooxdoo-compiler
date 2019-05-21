@@ -1,5 +1,4 @@
 #!/usr/bin/env node --max-old-space-size=8192
 
-require("./lib");
-
+require("./index");
 new qx.tool.cli.Cli().run();

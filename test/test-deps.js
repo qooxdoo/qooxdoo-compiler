@@ -1,12 +1,11 @@
-var test = require('tape');
+var test = require("tape");
 var fs = require("fs");
 var async = require("async");
-const {promisify, promisifyThis} = require("../lib/qx/tool/compiler/util");
+const {promisify} = require("util");
 const readFile = promisify(fs.readFile);
-require("../lib");
+require("../index");
 
 async function createMaker() {
-
   var STARTTIME = new Date();
   var QOOXDOO_PATH = "../node_modules/@qooxdoo/framework";
 
@@ -56,23 +55,24 @@ async function createMaker() {
 
   return new Promise((resolve, reject) => {
     maker.addLibrary("testapp", function (err) {
-      if (err)
-        return reject(err);
+      if (err) {
+ return reject(err);
+}
       maker.addLibrary(QOOXDOO_PATH + "/framework", function (err) {
-        if (err)
-          reject(err);
-        else
-          resolve(maker);
+        if (err) {
+reject(err);
+} else {
+ resolve(maker);
+}
       });
     });
   });
 }
 
-test('Checks dependencies and environment settings', (assert) => {
-
+test("Checks dependencies and environment settings", assert => {
   function readJson(filename) {
     return readFile(filename, {encoding: "utf8"})
-        .then((str) => JSON.parse(str));
+        .then(str => JSON.parse(str));
   }
 
   function readCompileInfo() {
@@ -84,17 +84,11 @@ test('Checks dependencies and environment settings', (assert) => {
   }
 
   function hasClassDependency(compileInfo, classname) {
-    return compileInfo.Parts.some((part) => {
-      return part.classes.indexOf(classname) > -1;
-    });
+    return compileInfo.Parts.some(part => part.classes.indexOf(classname) > -1);
   }
 
   function hasPackageDependency(compileInfo, packageName) {
-    return compileInfo.Parts.some((part) => {
-      return part.classes.some((classname) => {
-        return classname.indexOf(packageName) == 0;
-      });
-    });
+    return compileInfo.Parts.some(part => part.classes.some(classname => classname.indexOf(packageName) == 0));
   }
 
   var maker;
@@ -105,7 +99,7 @@ test('Checks dependencies and environment settings', (assert) => {
   var expected;
   deleteRecursive("unit-tests-output")
       .then(() => createMaker())
-      .then((_maker) => {
+      .then(_maker => {
         maker = _maker;
         app = maker.getApplications()[0];
         return maker.make()
@@ -118,7 +112,7 @@ test('Checks dependencies and environment settings', (assert) => {
             }
           });
       })
-      .then(() => readCompileInfo().then((tmp) => compileInfo = tmp))
+      .then(() => readCompileInfo().then(tmp => compileInfo = tmp))
       .then(() => {
         // qx.util.format.DateFormat is included manually later on, so this needs to be not included automatically now
         assert.ok(!hasClassDependency(compileInfo, "qx.util.format.DateFormat"), "qx.util.format.DateFormat is automatically included");
@@ -132,7 +126,7 @@ test('Checks dependencies and environment settings', (assert) => {
         app.setInclude(["qx.util.format.DateFormat"]);
         return maker.make();
       })
-      .then(() => readCompileInfo().then((tmp) => compileInfo = tmp))
+      .then(() => readCompileInfo().then(tmp => compileInfo = tmp))
       .then(() => {
         assert.ok(!hasPackageDependency(compileInfo, "qx.ui.layout"), "qx.ui.layout.* was not excluded");
         assert.ok(hasClassDependency(compileInfo, "qx.util.format.DateFormat"), "qx.util.format.DateFormat is not included");
@@ -143,17 +137,17 @@ test('Checks dependencies and environment settings', (assert) => {
         app.setInclude([]);
         return maker.make();
       })
-      .then(() => readCompileInfo().then((tmp) => compileInfo = tmp))
-      .then(() => readDbJson().then((tmp) => db = tmp))
-      .then(() => readJson("unit-tests-output/transpiled/testapp/Application.json").then((tmp) => meta = tmp))
+      .then(() => readCompileInfo().then(tmp => compileInfo = tmp))
+      .then(() => readDbJson().then(tmp => db = tmp))
+      .then(() => readJson("unit-tests-output/transpiled/testapp/Application.json").then(tmp => meta = tmp))
 
       /*
        * Test class references in the property definition, eg annotation
        */
       .then(() => {
         var ci = db.classInfo["testapp.Application"];
-        assert.ok(!!ci.dependsOn["testapp.anno.MyAnno"], "missing dependency on testapp.anno.MyAnno");
-        assert.ok(!!ci.dependsOn["testapp.anno.MyAnno"].load, "dependency on testapp.anno.MyAnno is not a load dependency");
+        assert.ok(Boolean(ci.dependsOn["testapp.anno.MyAnno"]), "missing dependency on testapp.anno.MyAnno");
+        assert.ok(Boolean(ci.dependsOn["testapp.anno.MyAnno"].load), "dependency on testapp.anno.MyAnno is not a load dependency");
       })
 
       /*
@@ -169,8 +163,7 @@ test('Checks dependencies and environment settings', (assert) => {
       /*
        * Test environment settings
        */
-      .then(() => {
-        return readFile("unit-tests-output/transpiled/testapp/Application.js", "utf8")
+      .then(() => readFile("unit-tests-output/transpiled/testapp/Application.js", "utf8")
             .then(src => {
               assert.ok(!src.match(/ELIMINATION_FAILED/), "Code elimination");
               assert.ok(src.match(/TEST_OVERRIDDEN_1/), "Overridden environment vars #1");
@@ -190,61 +183,59 @@ test('Checks dependencies and environment settings', (assert) => {
               assert.ok(src.match(/var addNumbers = 138;/), "merging binary expressions: addNumbers");
               assert.ok(src.match(/var multiplyNumbers = 2952;/), "merging binary expressions: multiplyNumbers");
               assert.ok(src.match(/qx.core.Environment.get\("qx.promise"\)/), "override default env setting");
-            });
-      })
-      .then(() => {
-        return readFile("unit-tests-output/transpiled/testapp/MMyMixin.js", "utf8")
+            }))
+      .then(() => readFile("unit-tests-output/transpiled/testapp/MMyMixin.js", "utf8")
             .then(src => {
               assert.ok(src.match(/mixedInIsTrue/), "Conditional Mixin part 1");
               assert.ok(!src.match(/mixedInIsFalse/), "Conditional Mixin part 2");
-            });
-      })
-      .then(() => {
-        return readFile("unit-tests-output/transpiled/testapp/TestThat1.js", "utf8")
+            }))
+      .then(() => readFile("unit-tests-output/transpiled/testapp/TestThat1.js", "utf8")
             .then(src => {
               assert.ok(src.match(/testapp\.TestThat1\.prototype\.toHashCode\.base\.call\(other\)/), "Aliased this");
-            });
-      })
-      .then(() => {
-        return readFile("unit-tests-output/transpiled/testapp/TestThat2.js", "utf8")
+            }))
+      .then(() => readFile("unit-tests-output/transpiled/testapp/TestThat2.js", "utf8")
             .then(src => {
               assert.ok(src.match(/testapp\.TestThat2\.prototype\.toHashCode\.base\.call\(other\)/), "Aliased this");
-            });
-      })
+            }))
 
       .then(() => assert.end())
-      .catch((err) => assert.end(err));
+      .catch(err => assert.end(err));
 });
 
 async function deleteRecursive(name) {
   return new Promise((resolve, reject) => {
     fs.exists(name, function (exists) {
-      if (!exists)
-        return resolve();
-      deleteRecursiveImpl(name, (err) => {
-        if (err)
-          reject(err);
-        else
-          resolve(err);
+      if (!exists) {
+ return resolve();
+}
+      deleteRecursiveImpl(name, err => {
+        if (err) {
+ reject(err);
+} else {
+resolve(err);
+}
       });
     });
 
     function deleteRecursiveImpl(name, cb) {
       fs.stat(name, function (err, stat) {
-        if (err)
-          return cb && cb(err);
+        if (err) {
+return cb && cb(err);
+}
 
         if (stat.isDirectory()) {
           fs.readdir(name, function (err, files) {
-            if (err)
-              return cb && cb(err);
+            if (err) {
+return cb && cb(err);
+}
             async.each(files,
                 function (file, cb) {
                   deleteRecursiveImpl(name + "/" + file, cb);
                 },
                 function (err) {
-                  if (err)
-                    return cb && cb(err);
+                  if (err) {
+ return cb && cb(err);
+}
                   fs.rmdir(name, cb);
                 });
           });
