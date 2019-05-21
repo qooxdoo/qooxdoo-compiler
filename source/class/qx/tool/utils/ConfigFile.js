@@ -317,7 +317,7 @@ qx.Class.define("qx.tool.utils.ConfigFile", {
     transform(prop_path, transformFunc, options) {
       let transformedValue = transformFunc(this.getValue(prop_path, options));
       if (transformedValue === undefined) {
-        throw new Error("Return value of transformation fuction must be undefined.");
+        throw new Error("Return value of transformation fuction must not be undefined.");
       }
       this.setValue(prop_path, transformedValue, options);
       return this;
