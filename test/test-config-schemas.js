@@ -44,9 +44,7 @@ const appNamespace = "testConfigSchemaApp";
     // do something illegal according to the schema
     assert.throws(() => manifestConfig.setValue("requires.@qooxdoo/framework", 42));
     assert.throws(() => manifestConfig.setValue("foo", "bar"));
-    delete manifestConfig.getData().foo;
     await manifestConfig.save();
-
     /**
      * compile.json
      */

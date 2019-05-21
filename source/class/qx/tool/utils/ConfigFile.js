@@ -320,8 +320,12 @@ qx.Class.define("qx.tool.utils.ConfigFile", {
       try {
         this.validate();
       } catch (e) {
-        // revert value
-        set_value(this.getData(), prop_path, originalValue, options);
+        // revert change
+        if (originalValue === undefined) {
+          unset_value(this.getData(),prop_path);
+        } else {
+          set_value(this.getData(), prop_path, originalValue, options);
+        }
         // throw
         throw e;
       }
