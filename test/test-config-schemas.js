@@ -1,6 +1,6 @@
-require("../lib");
+require("../index");
 const rimraf = require("rimraf");
-const fs = qx.tool.compiler.utils.Promisify.fs;
+const fs = qx.tool.utils.Promisify.fs;
 const process = require("process");
 const assert = require("assert");
 
@@ -18,7 +18,7 @@ const appNamespace = "testConfigSchemaApp";
     await (new qx.tool.cli.commands.Create(appConfig)).process();
     process.chdir(appNamespace);
     // run tests
-    const createInstance = qx.tool.compiler.utils.ConfigFile.getInstanceByType;
+    const createInstance = qx.tool.utils.ConfigFile.getInstanceByType;
     /**
      * Manifest.json
      */
@@ -58,7 +58,7 @@ const appNamespace = "testConfigSchemaApp";
     rimraf.sync(appNamespace);
     console.info("All tests passed.");
   } catch (e) {
-    console.error(e.message);
+    console.error(e);
     process.exit(1);
   }
 })();
