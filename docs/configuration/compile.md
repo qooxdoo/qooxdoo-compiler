@@ -418,7 +418,7 @@ For a more natural "return" semantics, a common pattern is to encapsulate your c
 
 Or an example using callbacks:
 ```
-function(inputData, cb) {
+function(cb) {
     if (someTestIsTrue) {
         cb(null, {
             /** Applications */
