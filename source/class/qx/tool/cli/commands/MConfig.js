@@ -277,21 +277,10 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
       if (!await qx.tool.utils.files.Utils.safeStat(aPath)) {
         return false;
       }
-      var src = await fs.readFileAsync(aPath, {encoding: "utf8"});
       
       try {
-        const script = new vm.Script(src);
-        
         let p = new Promise((resolve, reject) => {
-          const contextData = {
-              require: require,
-              compiler: {
-                command: this,
-                inputData,
-                configuration: null
-              }
-            };
-          const context = new vm.createContext(contextData);
+          const script = require(path.resolve(aPath));
 
           function onResolve(data) {
             if (data) {
@@ -301,46 +290,33 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
             }
           }
           
-          try {
-            let result = script.runInContext(context,  {
-              lineOffset: 0,
-              displayErrors: true,
-            });
-            
-            if (contextData.compiler.configuration) {
-              result = contextData.compiler.configuration; 
-            }
-            
-            if (result === undefined) {
-              // If result is undefined, and there is a single extra global which is a function, then
-              //  let's call that function.  This is 
-              let globals = Object.keys(context).filter(name => name != "require" && name != "compiler");
-              if (globals.length == 1 && typeof context[globals[0]] == "function") {
-                result = context[globals[0]];
-              }
-            }
-            
-            if (result instanceof Promise) {
-              result.then(onResolve).catch(reject);
-              
-            } else if (typeof result == "function") {
-              let fnResult = result((err, data) => {
-                if (err) {
+          if (typeof script == "function") {
+            try {
+              let result = script({
+                command: this,
+                inputData
+              }, (err, data) => {
+                if (err)
                   reject(err);
-                }
-                onResolve(data);
+                else
+                  onResolve(data);
               });
-              if (fnResult instanceof Promise) {
-                fnResult.then(onResolve).catch(reject);
+              
+              if (result instanceof Promise) {
+                result.then(onResolve).catch(reject);
+                
+              } else if (result) {
+                onResolve(result);
               }
               
-            } else {
-              onResolve(result);
+            }catch(ex) {
+              reject(ex);
             }
             
-          }catch(ex) {
-            reject(ex);
+          } else {
+            onResolve(script);
           }
+            
         });
         
         return await p;
