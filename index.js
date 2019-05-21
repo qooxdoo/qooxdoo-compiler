@@ -20,6 +20,7 @@ require("@qooxdoo/framework");
 if (qx.tool === undefined) {
   qx.tool = {
     $$rootDir: __dirname,
+    $$classPath: __dirname + "/source/class",
     $$sourceDir: __dirname + "/source/class/qx/tool",
     $$resourceDir: __dirname + "/source/resource/qx/tool"
   };

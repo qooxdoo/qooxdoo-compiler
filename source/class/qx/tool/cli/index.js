@@ -31,7 +31,6 @@ require("./commands/Create.js");
 require("./commands/Lint.js");
 require("./commands/MConfig.js");
 require("./commands/Serve.js");
-require("./commands/Migrate.js");
 require("./commands/add/Class.js");
 require("./commands/add/Script.js");
 require("./commands/package/Install.js");
