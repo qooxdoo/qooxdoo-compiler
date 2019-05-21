@@ -379,22 +379,142 @@ If you choose to use the optional web server by running `qx serve`, you can chan
 ```
 
 ## compile.js
-Configuration files do not support processes, job executions, or even macros - if you want to add basic processing (eg for macros), 
-use a .js file to manipulate the data.  When your `compile.js` is executed, there will be a global object called `compiler` which
-has these properties:
+Unlike the python generator's config.json, compile.json does not support processes, job executions, or even macros.  If you want to add 
+basic processing (eg for macros), you can use a `compile.js` file to manipulate the data in `compile.json`, or even replace `compile.json`
+altogether.  
+
+If you provide a `compile.js`, the compiler will first load the `compile.json` (if there is one) and then run the code in `compile.js`; when
+`compile.js` is executed, the compiler will pass the contents of `compile.json` so that it can be manipulated and returned (of course, you
+could chose to construct a brand new object instead). 
+
+When `compile.js` is executed, there will be a global object called `compiler` which you can use to interact with the compiler.  The global 
+`compiler` object has these properties:
 
 * `inputData` - set to the contents of `compile.json`, if it exists
 * `command` - the CLI command, derived from `qx.tool.cli.commands.Command`
 
-When your configuration code completes, it can return a `Promise` or a function or an object; a Promise must resolve to an object,
-but the function is also called a single parameter which is a callback function to be called when the function has completed.  
-If the function returns a `Promise`, then the `callback` is *not* expected to be called because it is expected that the Promise 
-will resolve to the configuration object.  
+When your configuration code completes, it can return one of: 
 
-The "return" value from `compile.js` is the result of the last code evaluation, you don't actually use the `return` keyword (which 
-would be an error because you code is not inside a function).  This means that you could rename `compile.json` to `compile.js` and
-have it "just work".
+* Object - This means that you could rename compile.json to compile.js and have it "just work".
+* Promise - the promise must resolve to an object which is the configuration for the compiler to use; 
+* Function - this function will be called with a single parameter which is a callback function, and either (a) that callback
+function must be called with error and data (eg `callback(null, myConfigData)`), or (b) the function returns a Promise, which resolves
+to a configuration object.  Note that if the function returns a `Promise`, then the `callback` is *not* expected to be called because 
+it is expected that the Promise will resolve to the configuration object.
 
+Because your code in `compile.js` is not a function, how to actually go about "returning a value" needs some explanation - you can do this 
+either by explicitly returning a value, otherwise the compiler will try to detect it from an implicit return value. 
+
+### Explicitly Returning a Value
+The global `compiler` object also supports a property called `configuration`, which you can set to the value you want to return - in much 
+the same way that a nodejs module would have code such as `module.exports = { ... }`, this allows you be explicit about the configuration being
+exported.  This is the clearest and easiest mechanism to return a value, and is the recommended approach.
+
+**Example**
+```
+if (someTestIsTrue) {
+    compiler.configuration = {
+        /** Applications */
+        "applications": [
+            {
+                "class": "demoapp.Application",
+                "theme": "demoapp.theme.Theme",
+                "name": "demoapp"
+            }
+        ] /* ... snip ... */
+    };
+    
+} else {
+    compiler.configuration = { /* ... snip ... */ };
+}
+```
+
+**Example - using promises**
+```
+compiler.configuration = new Promise((resolve, reject) => {
+    if (someTestIsTrue) {
+        resolve({
+            /** Applications */
+            "applications": [
+                {
+                    "class": "demoapp.Application",
+                    "theme": "demoapp.theme.Theme",
+                    "name": "demoapp"
+                }
+            ] /* ... snip ... */
+        });
+        
+    } else {
+        resolve({ /* ... snip ... */ });
+    }
+});
+```
+
+**Example - using callbacks**
+```
+compiler.configuration = cb => {
+    if (someTestIsTrue) {
+        cb(null, {
+            /** Applications */
+            "applications": [
+                {
+                    "class": "demoapp.Application",
+                    "theme": "demoapp.theme.Theme",
+                    "name": "demoapp"
+                }
+            ] /* ... snip ... */
+        });
+        
+    } else {
+        cb(null, { /* ... snip ... */ });
+    }
+});
+```
+
+
+### Implicitly Returning a Value (last code evaluation)
+If you do not set the global `compiler.configuration` property, then the "return" value from `compile.js` is the result of the last code 
+evaluation - you don't actually use the `return` keyword (which would be an error because your code is not inside a function).  This is 
+convenient because it also means that you could rename `compile.json` to `compile.js` and have it "just work".
+
+**Example - using implicit return**
+This is just a plain configuration, perhaps created by simply renaming `compile.json` to `compile.js` 
+```
+{
+    /** Applications */
+    "applications": [
+        {
+            "class": "demoapp.Application",
+            "theme": "demoapp.theme.Theme",
+            "name": "demoapp"
+        }
+    ] /* ... snip ... */
+} 
+```
+
+**Example - using implicit return, but an unclear style**
+This example also uses an implicit return value, but it's a pretty confusing style - it looks like `result` is being assigned a value
+that is never used!  
+```
+var result;
+if (someTestIsTrue) {
+    result = {
+        /** Applications */
+        "applications": [
+            {
+                "class": "demoapp.Application",
+                "theme": "demoapp.theme.Theme",
+                "name": "demoapp"
+            }
+        ] /* ... snip ... */
+    };
+    
+} else {
+    result = { /* ... snip ... */ };
+}
+```
+
+** Example - using implicit return, but using the `return` keyword**
 For a more natural "return" semantics, a common pattern is to encapsulate your configuration in a function expression, eg: 
 ```
 (function() {
@@ -416,7 +536,7 @@ For a more natural "return" semantics, a common pattern is to encapsulate your c
 )();
 ```
 
-Or an example using callbacks:
+**Example - using callbacks**
 ```
 function(cb) {
     if (someTestIsTrue) {
@@ -458,8 +578,6 @@ new Promise((resolve, reject) => {
         );
 });
 ``` 
-If you provide a .js file and there is also a .json, then it is loaded and parsed first. The code in the `compile.js` is called with the 
-parsed data from the `compile.json` in the global `compiler.inputData`.
 
 
 ### How to add sass call for mobile projects:
