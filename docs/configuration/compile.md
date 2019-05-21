@@ -387,9 +387,9 @@ has these properties:
 * `command` - the CLI command, derived from `qx.tool.cli.commands.Command`
 
 When your configuration code completes, it can return a `Promise` or a function or an object; a Promise must resolve to an object,
-but the function is called with two parameters - the first is the `inputData` and the second is a callback function to be called 
-when the function has completed.  If the function returns a `Promise`, then the `callback` is *not* expected to be called because it
-is expected that the Promise will resolve to the configuration object.  
+but the function is also called a single parameter which is a callback function to be called when the function has completed.  
+If the function returns a `Promise`, then the `callback` is *not* expected to be called because it is expected that the Promise 
+will resolve to the configuration object.  
 
 The "return" value from `compile.js` is the result of the last code evaluation, you don't actually use the `return` keyword (which 
 would be an error because you code is not inside a function).  This means that you could rename `compile.json` to `compile.js` and
