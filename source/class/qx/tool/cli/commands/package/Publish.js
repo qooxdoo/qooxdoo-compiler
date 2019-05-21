@@ -329,7 +329,7 @@ qx.Class.define("qx.tool.cli.commands.package.Publish", {
 
       // package.json
       const package_json_path = path.join(process.cwd(), "package.json");
-      if (await fs.existsSync(package_json_path)) {
+      if (await fs.existsAsync(package_json_path)) {
         let data = await qx.tool.utils.Json.loadJsonAsync(package_json_path);
         data.version = new_version;
         if (argv.dryrun) {
