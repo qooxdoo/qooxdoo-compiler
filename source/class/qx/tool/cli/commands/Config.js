@@ -84,7 +84,7 @@ qx.Class.define("qx.tool.cli.commands.Config", {
           if (!value) {
             return undefined;
           }
-          if (!await fs.existsAsync(path.join(value, qx.tool.ConfigSchemas.manifest.filename))) {
+          if (!await fs.existsAsync(path.join(value, qx.tool.config.Manifest.getInstance().getFileName()))) {
             if (await fs.existsAsync(path.join(value, "framework/Manifest.json"))) {
               value = path.join(value, "framework");
             } else {

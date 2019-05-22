@@ -5,21 +5,27 @@
    http://qooxdoo.org
 
    Copyright:
-     2017 Zenesis Ltd
+     2019 The qooxdoo developers
 
    License:
      MIT: https://opensource.org/licenses/MIT
      See the LICENSE file in the project's top-level directory for details.
 
    Authors:
-     * John Spackman (john.spackman@zenesis.com, @johnspackman)
+     * Christian Boulanger (info@bibliograph.org, @cboulanger)
 
 ************************************************************************ */
 
-require("./Promisify");
-require("./Json");
-require("./Logger");
-require("./LogManager");
-require("./Values");
-require("./Utils.js");
-require("./files");
+/**
+ * A model for the compile.json file
+ */
+qx.Class.define("qx.tool.config.Compile", {
+  extend: qx.tool.config.Abstract,
+  type: "singleton",
+  construct: function() {
+    this.base(arguments, {
+      fileName: "compile.json",
+      version: "1"
+    });
+  }
+});

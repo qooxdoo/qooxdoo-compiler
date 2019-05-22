@@ -112,7 +112,7 @@ qx.Class.define("qx.tool.cli.commands.package.List", {
       let repos_cache = this.getCache().repos;
 
       // implicit qx package update
-      if (repos_cache.list.length === 0 || this.getCache().version !== qx.tool.ConfigSchemas.lockfile.version) {
+      if (repos_cache.list.length === 0 || this.getCache().version !== qx.tool.config.Lockfile.getInstance().getVersion()) {
         //await (new qx.tool.cli.commands.package.Update({quiet:true})).process();
       }
 
@@ -308,7 +308,7 @@ qx.Class.define("qx.tool.cli.commands.package.List", {
         let libData = await this.getLockfileData();
         for (let lib of libData.libraries) {
           if (!lib.repo_name) {
-            let manifest_path = path.join(process.cwd(), lib.path, qx.tool.ConfigSchemas.manifest.filename);
+            let manifest_path = path.join(process.cwd(), lib.path, qx.tool.config.Manifest.getInstance().getFileName());
             let manifest = await qx.tool.utils.Json.loadJsonAsync(manifest_path);
             let info = manifest.info;
             this.__libraries[localPathRepoName].push({

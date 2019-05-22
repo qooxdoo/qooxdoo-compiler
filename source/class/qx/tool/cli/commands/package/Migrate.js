@@ -32,7 +32,10 @@ qx.Class.define("qx.tool.cli.commands.package.Migrate", {
      * Flag to prevent recursive call to process()
      */
     migrationInProcess: false,
-
+    /**
+     * Return the Yargs configuration object
+     * @return {{}}
+     */
     getYargsCommand: function() {
       return {
         command: "migrate",
@@ -77,8 +80,8 @@ qx.Class.define("qx.tool.cli.commands.package.Migrate", {
       let cwd = process.cwd();
       let migrateFiles = [
         [
-          path.join(cwd, qx.tool.ConfigSchemas.lockfile.filename),
-          path.join(cwd, qx.tool.ConfigSchemas.lockfile.legacy_filename)
+          path.join(cwd, pkg.lockfile.filename),
+          path.join(cwd, pkg.lockfile.legacy_filename)
         ],
         [
           path.join(cwd, pkg.cache_dir),
@@ -90,11 +93,11 @@ qx.Class.define("qx.tool.cli.commands.package.Migrate", {
         ]
       ];
       if (this.checkFilesToRename(migrateFiles).length) {
-        let replaceInFiles = {
+        let replaceInFiles = [{
           files: path.join(cwd, ".gitignore"),
           from: pkg.legacy_cache_dir + "/",
           to: pkg.cache_dir + "/"
-        };
+        }];
         await this.migrate(migrateFiles, replaceInFiles, announceOnly);
         if (!announceOnly) {
           if (!this.argv.quiet) {
@@ -105,7 +108,7 @@ qx.Class.define("qx.tool.cli.commands.package.Migrate", {
           change = true;
         }
       }
-      const manifestModel = await qx.tool.utils.ConfigFile.getInstanceByType("manifest", false, true);
+      const manifestModel = await qx.tool.config.Manifest.getInstance().set({warnOnly: true}).load();
       if (!manifestModel.getValue("requires.@qooxdoo/compiler") || !manifestModel.getValue("requires.@qooxdoo/framework")) {
         if (announceOnly) {
           console.info("*** Framework and/or compiler dependencies in Manifest need to be updated.");
@@ -114,6 +117,9 @@ qx.Class.define("qx.tool.cli.commands.package.Migrate", {
           manifestModel
             .setValue("requires.@qooxdoo/compiler", "^" + qx.tool.compiler.Version.VERSION)
             .setValue("requires.@qooxdoo/framework", "^" + await this.getLibraryVersion(await this.getGlobalQxPath()))
+            .unset("info.qooxdoo-versions")
+            .unset("info.qooxdoo-range")
+            .unset("provides.type")
             .unset("requires.qxcompiler")
             .unset("requires.qooxdoo-sdk")
             .unset("requires.qooxdoo-compiler")

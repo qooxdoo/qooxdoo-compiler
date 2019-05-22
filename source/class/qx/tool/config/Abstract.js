@@ -25,79 +25,46 @@ const set_value = require("set-value");
 const unset_value = require("unset-value");
 
 /**
- * A model for config files
+ * An abstract model for config files
  */
-qx.Class.define("qx.tool.utils.ConfigFile", {
+qx.Class.define("qx.tool.config.Abstract", {
   extend: qx.core.Object,
 
   statics: {
-
-    $$instances: null,
-
     /**
-     * Factory function to create singletons of a config file model in a specific directory
-     * @param {String} type
-     *    The name of the static property of in qx.tool.ConfigSchemas containing
-     *    metadata on the config file.
-     * @param {Boolean} doNotLoad
-     *    If true, don't load the model yet. Default: false. Ignored when model
-     *    has already been instantiated.
-     * @param {Boolean} warnOnly
-     *    If true, don't throw an error if validation fails. Default: false
-     * @return {Promise<qx.tool.utils.ConfigFile>}
+     * The base URL of all json schema definitions
      */
-    async getInstanceByType(type, doNotLoad=false, warnOnly=false) {
-      if (!qx.tool.utils.ConfigFile.$$instances) {
-        qx.tool.utils.ConfigFile.$$instances = [];
-      }
-      let instances = qx.tool.utils.ConfigFile.$$instances;
-      let id = process.cwd() + "|" + type;
-      let instance;
-      if (instances[id] === undefined) {
-        let typeInfo = qx.tool.ConfigSchemas[type];
-        if (typeInfo === undefined) {
-          throw new Error(`Config file type '${type} is not defined.`);
-        }
-        let filePath = path.join(process.cwd(), typeInfo.filename);
-        let commonPath = `/v${typeInfo.version}/${typeInfo.filename}`;
-        let schemaUri = qx.tool.ConfigSchemas.schemaBaseUrl + commonPath;
-        let schemaPath = path.join(qx.tool.ConfigSchemas.schemaBaseDir, commonPath);
-        instance = new qx.tool.utils.ConfigFile(filePath, schemaUri, schemaPath, typeInfo.version);
-        instance.setWarnOnly(warnOnly);
-        if (!doNotLoad) {
-          await instance.load();
-        }
-        instances[id] = instance;
-      } else {
-        instance = instances[id];
-        instance.setWarnOnly(warnOnly);
-      }
-      return instance;
-    }
+    schemaBaseUrl: "https://raw.githubusercontent.com/qooxdoo/qooxdoo-compiler/master/resource/schema"
   },
 
-  /**
-   * Constructor. Does not load or check any data.
-   * @param {String} dataPath
-   * @param {String} schemaUri
-   *    URI that uniquely identifies the schema.
-   *    Should be an URL from which the schema JSON can be downloaded.
-   * @param {String|undefined} schemaPath
-   *    Path to a local copy of the schema json.
-   * @param {String|undefined} schemaVersion
-   *    The version of the schema
-   */
-  construct: function(dataPath, schemaUri, schemaPath, schemaVersion) {
-    if (!dataPath || !schemaUri || !schemaPath || !schemaVersion) {
-      throw new Error("Missing parameter.");
+  construct: function(config) {
+    this.base(arguments);
+    if (qx.lang.Type.isObject(config)) {
+      this.set(config);
     }
-    this.__dataPath = dataPath;
-    this.__schemaUri = schemaUri;
-    this.__schemaPath = schemaPath;
-    this.__schemaVersion = schemaVersion;
+    for (let prop of ["fileName", "version"]) {
+      if (!this.get(prop)) {
+        throw new Error(`Property ${prop} must be set when instantiating ${this.classname}`);
+      }
+    }
   },
 
   properties: {
+
+    /**
+     * Name of the config file
+     */
+    fileName: {
+      check: "String"
+    },
+
+    /**
+     * Schema version of the config file
+     */
+    version: {
+      check: "String"
+    },
+
     /**
      * The config data
      */
@@ -137,25 +104,6 @@ qx.Class.define("qx.tool.utils.ConfigFile", {
   },
 
   members: {
-    /**
-     * The path to the configuration file
-     */
-    __dataPath: null,
-
-    /**
-     * The URL of the json-schema
-     */
-    __schemaUri: null,
-
-    /**
-     * Information on the version of the schema, if any
-     */
-    __schemaVersion: null,
-
-    /**
-     * Path to the local copy of the schema json file
-     */
-    __schemaPath: null,
 
     /**
      * The json-schema object
@@ -172,13 +120,13 @@ qx.Class.define("qx.tool.utils.ConfigFile", {
       if (!this.__schema) {
         throw new Error(`Cannot validate - no schema available! Please load the model first.`);
       }
-      if (data.$schema !== this.__schemaUri) {
-        throw new Error(`Invalid schema: expected ${this.__schemaUri}, got ${data.$schema}`);
+      if (data.$schema !== this.getSchemaUri()) {
+        throw new Error(`Invalid schema: expected ${this.getSchemaUri()}, got ${data.$schema}`);
       }
       try {
         qx.tool.utils.Json.validate(data, this.__schema);
       } catch (e) {
-        let msg = `Error validating data for ${this.__dataPath}: ${e.message}`;
+        let msg = `Error validating data for ${this.getDataPath()}: ${e.message}`;
         if (this.isWarnOnly()) {
           console.warn(msg);
         } else {
@@ -188,11 +136,27 @@ qx.Class.define("qx.tool.utils.ConfigFile", {
     },
 
     /**
-     * Returns the path to the config file
+     * The path to the configuration file
      * @return {String}
      */
-    getPath() {
-      return this.__dataPath;
+    getDataPath() {
+      return path.join(process.cwd(), this.getFileName());
+    },
+
+    /**
+     * Path to the local copy of the schema json file
+     * @return {String}
+     */
+    getSchemaPath() {
+      return path.join(qx.tool.$$resourceDir, "schema", "v" + this.getVersion(), this.getFileName());
+    },
+
+    /**
+     * Returns the URL of the JSON schema
+     * @return {String}
+     */
+    getSchemaUri() {
+      return qx.tool.config.Abstract.schemaBaseUrl + path.join("/v" + this.getVersion(), this.getFileName());
     },
 
     /**
@@ -204,61 +168,52 @@ qx.Class.define("qx.tool.utils.ConfigFile", {
     },
 
     /**
-     * Returns the URL of the JSON schema
-     * @return {String}
-     */
-    getSchemaUrl() {
-      return this.__schemaUri;
-    },
-
-    /**
-     * Returns the version of the JSON schema
-     * @return {String}
-     */
-    getSchemaVersion() {
-      return this.__schemaVersion;
-    },
-
-    /**
      * Returns true if the config file exists, false if not
      * @return {Promise<Boolean>}
      */
     async exists() {
-      return await fs.existsAsync(this.__dataPath);
+      return await fs.existsAsync(this.getDataPath());
     },
 
     /**
-     * Loads the config data into the model. If no argument is given, load from
-     * the file given when the instance was created. If an json object is passed,
-     * use that data. In both cases, the data is validated against the schema
-     * that the model has been initialized with, unless it is missing schema
-     * information (for backwards-compatibility).
-     * Returns the instance for chaining
-     * @param {Object|undefined} data
-     * @return {qx.tool.utils.ConfigFile} Returns the instance for chaining
+     * This method can be used to get the config model singleton in a initialized
+     * state. It loads the config data into the model, unless data has already been
+     * loaded. If no argument is given, load from the file specified when the
+     * instance was created. If an json object is passed, use that data. In both
+     * cases, the data is validated against the schema that the model has been
+     * initialized with, unless it is missing schema information (for
+     * backwards-compatibility). Returns the instance for chaining. To reload
+     * the data, set the "loaded" property to false first.
+     *
+     * @param {Object|undefined} data The json data
+     * @return {qx.tool.config.Abstract} Returns the instance for chaining
      */
     async load(data=undefined) {
       // load data
       if (data === undefined) {
-        if (!await fs.existsAsync(this.__dataPath)) {
-          throw new Error(`Cannot load config file: ${this.__dataPath} does not exist. Are you in the library root?`);
+        if (this.isLoaded()) {
+          // don't load again
+          return this;
         }
-        data = qx.tool.utils.Json.parseJson(await fs.readFileAsync(this.__dataPath, "utf8"));
+        if (!await fs.existsAsync(this.getDataPath())) {
+          throw new Error(`Cannot load config file: ${this.getDataPath()} does not exist. Are you in the library root?`);
+        }
+        data = qx.tool.utils.Json.parseJson(await fs.readFileAsync(this.getDataPath(), "utf8"));
       }
       // load schema
       if (!this.__schema) {
-        if (!fs.existsSync(this.__schemaPath)) {
-          throw new Error(`No schema file exists at ${this.__schemaPath}`);
+        if (!fs.existsSync(this.getSchemaPath())) {
+          throw new Error(`No schema file exists at ${this.getSchemaPath()}`);
         }
-        this.__schema = await qx.tool.utils.Json.loadJsonAsync(this.__schemaPath);
+        this.__schema = await qx.tool.utils.Json.loadJsonAsync(this.getSchemaPath());
       }
       // check initial data
       let dataSchemaInfo = qx.tool.utils.Json.getSchemaInfo(data);
       if (!dataSchemaInfo) {
-        throw new Error(`Invalid data: must conform to json schema at ${this.__schemaUri}!`);
+        throw new Error(`Invalid data: must conform to json schema at ${this.getSchemaUri()}!`);
       }
       let dataVersion = semver.coerce(dataSchemaInfo.version);
-      let schemaVersion = semver.coerce(this.__schemaVersion);
+      let schemaVersion = semver.coerce(this.getVersion());
       if (dataVersion !== schemaVersion) {
         // migrate the data if possible
         data = this._migrateData(data, dataVersion, schemaVersion);
@@ -286,7 +241,7 @@ qx.Class.define("qx.tool.utils.ConfigFile", {
           return data;
         // 0->1: add schema id
         case (dataMjVer === 0 && schemaMjVer === 1):
-          data.$schema = this.__schemaUri;
+          data.$schema = this.getSchemaUri();
           break;
         // throw otherwise
         default:
@@ -312,7 +267,7 @@ qx.Class.define("qx.tool.utils.ConfigFile", {
      * @param prop_path {String|Array} The property path. See https://github.com/jonschlinkert/set-value#usage
      * @param value {*}
      * @param options {*?} See https://github.com/jonschlinkert/get-value#options
-     * @return {qx.tool.utils.ConfigFile} Returns the instance for chaining
+     * @return {qx.tool.config.Abstract} Returns the instance for chaining
      */
     setValue(prop_path, value, options) {
       let originalValue = this.getValue(prop_path, options);
@@ -337,7 +292,7 @@ qx.Class.define("qx.tool.utils.ConfigFile", {
      * Unsets a property from the configuration map and validates the model
      * @param prop_path {String|Array} The property path. See https://github.com/jonschlinkert/set-value#usage
      * @param options {*?} See https://github.com/jonschlinkert/get-value#options
-     * @return {qx.tool.utils.ConfigFile} Returns the instance for chaining
+     * @return {qx.tool.config.Abstract} Returns the instance for chaining
      */
     unset(prop_path, options) {
       let originalValue = this.getValue(prop_path, options);
@@ -362,7 +317,7 @@ qx.Class.define("qx.tool.utils.ConfigFile", {
      *    The transformation function, which receives the value of the property
      *    and returns the transformed value, which then is validated and saved.
      * @param options {*?} See https://github.com/jonschlinkert/get-value#options
-     * @return {qx.tool.utils.ConfigFile} Returns the instance for chaining
+     * @return {qx.tool.config.Abstract} Returns the instance for chaining
      */
     transform(prop_path, transformFunc, options) {
       let transformedValue = transformFunc(this.getValue(prop_path, options));
@@ -387,7 +342,7 @@ qx.Class.define("qx.tool.utils.ConfigFile", {
      */
     async save() {
       this.validate();
-      await qx.tool.utils.Json.saveJsonAsync(this.__dataPath, this.getData());
+      await qx.tool.utils.Json.saveJsonAsync(this.getDataPath(), this.getData());
     }
   }
 });

@@ -230,7 +230,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
 
     _onTaskQueueDrain: function() {
       var cbs = this.__taskQueueDrain;
-      this.this.__taskQueueDrain = [];
+      this.__taskQueueDrain = [];
       cbs.forEach(function(cb) {
         cb();
       });
@@ -1252,7 +1252,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
                 if (path.node.arguments.length != 2 ||
                     path.node.arguments[0].type != "StringLiteral" ||
                     path.node.arguments[1].type != "ObjectExpression") {
-                  return;
+
                 }
               } else if (name == "qx.core.Environment.add") {
                 let arg = path.node.arguments[0];

@@ -48,6 +48,13 @@ qx.Class.define("qx.tool.cli.commands.Package", {
      */
     legacy_package_cache_name: "contrib-cache.json",
     /**
+     * The lockfile with library versions etc.
+     */
+    lockfile: {
+      filename: "qx-lock.json",
+      legacy_filename: "contrib.json"
+    },
+    /**
      * The URL of the cached repository data
      */
     repository_cache_url: "https://raw.githubusercontent.com/qooxdoo/qx-contrib/master/cache.json",
@@ -89,7 +96,7 @@ qx.Class.define("qx.tool.cli.commands.Package", {
      * @return {String}
      */
     getLockfilePath: function() {
-      return path.join(process.cwd(), qx.tool.ConfigSchemas.lockfile.filename);
+      return path.join(process.cwd(), qx.tool.config.Lockfile.getInstance().getFileName());
     },
 
     /**
@@ -108,7 +115,7 @@ qx.Class.define("qx.tool.cli.commands.Package", {
       let lockfile_path = this.getLockfilePath();
       if (!await fs.existsAsync(lockfile_path)) {
         return {
-          version: qx.tool.ConfigSchemas.lockfile.version,
+          version: qx.tool.config.Lockfile.getInstance().getVersion(),
           libraries: []
         };
       }

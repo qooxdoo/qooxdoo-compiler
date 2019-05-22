@@ -96,7 +96,7 @@ qx.Class.define("qx.tool.cli.commands.add.Script", {
         }
       }
       // check manifest structure
-      let manifestModel = await qx.tool.utils.ConfigFile.getInstanceByType("manifest");
+      let manifestModel = await qx.tool.config.Manifest.getInstance().load();
       let script_list = manifestModel.getValue("externalResources.script") || [];
       if (this.argv.undo) {
         // undo, i.e. remove file from resource folder and Manifest

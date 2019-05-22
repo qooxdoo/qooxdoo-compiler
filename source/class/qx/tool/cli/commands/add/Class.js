@@ -90,7 +90,7 @@ qx.Class.define("qx.tool.cli.commands.add.Class", {
       let argv = this.argv;
 
       // read Manifest.json
-      let manifestConfig = await qx.tool.utils.ConfigFile.getInstanceByType("manifest");
+      let manifestConfig = await qx.tool.config.Manifest.getInstance().load();
       let manifestData = manifestConfig.getData();
 
       // prepare template vars

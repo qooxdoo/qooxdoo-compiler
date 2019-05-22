@@ -173,7 +173,7 @@ qx.Class.define("qx.tool.cli.commands.package.Publish", {
         }
         libraries = index.libraries || index.contribs;
         for (let library of libraries) {
-          manifest_path = path.join(process.cwd(), library.path, qx.tool.ConfigSchemas.manifest.filename);
+          manifest_path = path.join(process.cwd(), library.path, qx.tool.config.Manifest.getInstance().getFileName());
           if (!fs.existsSync(manifest_path)) {
             throw new qx.tool.utils.Utils.UserError(`Invalid path in qooxdoo.json: ${library.path}/Manifest.json does not exist.`);
           }
@@ -186,7 +186,7 @@ qx.Class.define("qx.tool.cli.commands.package.Publish", {
         }
       } else {
         // read Manifest.json
-        manifest_path = path.join(process.cwd(), qx.tool.ConfigSchemas.manifest.filename);
+        manifest_path = path.join(process.cwd(), qx.tool.config.Manifest.getInstance().getFileName());
         if (!fs.existsSync(manifest_path)) {
           throw new qx.tool.utils.Utils.UserError("Cannot find Manifest.json - are you in the project directory?");
         }
@@ -271,7 +271,7 @@ qx.Class.define("qx.tool.cli.commands.package.Publish", {
 
       // update Manifest(s)
       for (let library of libraries) {
-        manifest_path = path.join(process.cwd(), library.path, qx.tool.ConfigSchemas.manifest.filename);
+        manifest_path = path.join(process.cwd(), library.path, qx.tool.config.Manifest.getInstance().getFileName());
         manifest = qx.tool.utils.Json.parseJson(fs.readFileSync(manifest_path, "utf-8"));
 
         manifest.info.version = new_version;
@@ -407,7 +407,7 @@ qx.Class.define("qx.tool.cli.commands.package.Publish", {
      * @private
      */
     __createIndexFile: async () => new Promise((resolve, reject) => {
-        glob(qx.tool.ConfigSchemas.manifest.filename, {matchBase: true}, async (err, files) => {
+        glob(qx.tool.config.Manifest.getInstance().getFileName(), {matchBase: true}, async (err, files) => {
           if (err) {
             reject(err);
           }

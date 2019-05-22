@@ -8,6 +8,7 @@ echo
 pushd test
 node test-deps.js
 node test-config-schemas.js
+node test-pkg-migrate.js
 node test-commands.js
 popd
 

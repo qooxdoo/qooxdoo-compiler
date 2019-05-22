@@ -21,8 +21,8 @@ const appNamespace = "testCommandsApp";
     process.chdir(appNamespace);
     // run tests
     let actual, expected;
-    const createInstance = qx.tool.utils.ConfigFile.getInstanceByType;
-    const manifestModel = await createInstance("manifest");
+
+    const manifestModel = await qx.tool.config.Manifest.getInstance().load();
 
     // qx add script --rename=y.js test/testdata/x.js
     let filename = "x.js";
@@ -35,6 +35,7 @@ const appNamespace = "testCommandsApp";
     assert.strictEqual(actual, expected);
     let filePath = path.join(process.cwd(), "source/resource", expected);
     assert.ok(await fs.existsAsync(filePath), "File was not copied.");
+
     // qx add script --undo --rename=y.js test/testdata/x.js
     args.undo = true;
     await (new commands.add.Script(args)).process();

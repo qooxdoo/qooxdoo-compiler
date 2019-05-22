@@ -74,15 +74,15 @@ qx.Class.define("qx.tool.cli.commands.Command", {
      * application folder. If no project data can be determined, resolves to an empty map.
      */
     getProjectData : async function() {
-      let qooxdooJsonPath = path.join(process.cwd(), qx.tool.ConfigSchemas.registry.filename);
+      let qooxdooJsonPath = path.join(process.cwd(), qx.tool.config.Registry.getInstance().getFileName());
       let data = {};
       if (await fs.existsAsync(qooxdooJsonPath)) {
         data = await this.parseJsonFile(qooxdooJsonPath);
       } else {
-        if (await fs.existsAsync(path.join(process.cwd(), qx.tool.ConfigSchemas.manifest.filename))) {
+        if (await fs.existsAsync(path.join(process.cwd(), qx.tool.config.Manifest.getInstance().getFileName()))) {
           data.libraries = [{path : "."}];
         }
-        if (await fs.existsAsync(path.join(process.cwd(), qx.tool.ConfigSchemas.compile.filename))) {
+        if (await fs.existsAsync(path.join(process.cwd(), qx.tool.config.Compile.getInstance().getFileName()))) {
           data.applications = [{path : "."}];
         }
       }
@@ -141,7 +141,7 @@ qx.Class.define("qx.tool.cli.commands.Command", {
      * @return {Promise<String>} Promise that resolves with the path {String}
      */
     getAppQxPath : async function() {
-      let compileConfig = await qx.tool.utils.ConfigFile.getInstanceByType("compile", true);
+      let compileConfig = await qx.tool.config.Compile.getInstance(); // don't load it
       if (await compileConfig.exists()) {
         if (!compileConfig.isLoaded()) {
           await compileConfig.load();
@@ -155,7 +155,7 @@ qx.Class.define("qx.tool.cli.commands.Command", {
             if (!path.isAbsolute(somepath)) {
               manifestPath = path.join(appPath, manifestPath);
             }
-            manifestPath = path.join(manifestPath, qx.tool.ConfigSchemas.manifest.filename);
+            manifestPath = path.join(manifestPath, qx.tool.config.Manifest.getInstance().getFileName());
             let manifest = await this.parseJsonFile(manifestPath);
             try {
               if (manifest.provides && manifest.provides.namespace === "qx") {
@@ -180,13 +180,13 @@ qx.Class.define("qx.tool.cli.commands.Command", {
       let cfg = await qx.tool.cli.ConfigDb.getInstance();
       let dir = cfg.db("qx.library");
       if (dir) {
-        let manifestPath = path.join(dir, qx.tool.ConfigSchemas.manifest.filename);
+        let manifestPath = path.join(dir, qx.tool.config.Manifest.getInstance().getFileName());
         if (await fs.existsAsync(manifestPath)) {
           return dir;
         }
       }
       // This project's node_modules
-      if (await fs.existsAsync("node_modules/@qooxdoo/framework/" + qx.tool.ConfigSchemas.manifest.filename)) {
+      if (await fs.existsAsync("node_modules/@qooxdoo/framework/" + qx.tool.config.Manifest.getInstance().getFileName())) {
         return path.resolve("node_modules/@qooxdoo/framework");
       }
 
@@ -222,7 +222,7 @@ qx.Class.define("qx.tool.cli.commands.Command", {
      * @return {String} Version
      */
     getLibraryVersion : async function(libPath) {
-      let manifestPath = path.join(libPath, qx.tool.ConfigSchemas.manifest.filename);
+      let manifestPath = path.join(libPath, qx.tool.config.Manifest.getInstance().getFileName());
       let manifest = await this.parseJsonFile(manifestPath);
       let version;
       try {
@@ -341,12 +341,15 @@ qx.Class.define("qx.tool.cli.commands.Command", {
 
     /**
      * Migrate files/schemas or announces the migration.
-     * @param {[]} fileList Array containing arrays of [new name, old name]
-     * @param {{}} replaceInFiles Option object compatible with https://github.com/adamreisnz/replace-in-file
-     * @param {Boolean} annouceOnly If true, annouce the migration. If false (default), just apply it.
+     * @param {[]} fileList
+     *    Array containing arrays of [new name, old name]
+     * @param {[]} replaceInFilesArr
+     *    Optional array containing objects compatible with https://github.com/adamreisnz/replace-in-file
+     * @param {Boolean} annouceOnly
+     *    If true, annouce the migration. If false (default), just apply it.
      * @private
      */
-    async migrate(fileList, replaceInFiles, annouceOnly=false) {
+    async migrate(fileList, replaceInFilesArr=[], annouceOnly=false) {
       let quiet = this.argv.quiet;
       if (qx.lang.Type.isArray(fileList)) {
         let filesToRename = this.checkFilesToRename(fileList);
@@ -373,20 +376,22 @@ qx.Class.define("qx.tool.cli.commands.Command", {
           }
         }
       }
-      if (replaceInFiles) {
-        if (annouceOnly) {
-          console.warn(`*** In the file(s) ${replaceInFiles.files}, '${replaceInFiles.from}' will be changed to '${replaceInFiles.to}'.`);
-          return;
-        }
-        try {
-          let results = await replace_in_file(replaceInFiles);
-          if (!quiet) {
-            let files = results.filter(result => result.hasChanged).map(result => result.file);
-            console.info(`The following files were changed: ${files.join(", ")}`);
+      if (qx.lang.Type.isArray(replaceInFilesArr) && replaceInFilesArr.length) {
+        for (let replaceInFiles of replaceInFilesArr) {
+          if (annouceOnly) {
+            console.warn(`*** In the file(s) ${replaceInFiles.files}, '${replaceInFiles.from}' will be changed to '${replaceInFiles.to}'.`);
+            return;
           }
-        } catch (e) {
-          console.error(`Error replacing in files: ${e.message}`);
-          process.exit(1);
+          try {
+            let results = await replace_in_file(replaceInFiles);
+            if (!quiet) {
+              let files = results.filter(result => result.hasChanged).map(result => result.file);
+              console.info(`The following files were changed: ${files.join(", ")}`);
+            }
+          } catch (e) {
+            console.error(`Error replacing in files: ${e.message}`);
+            process.exit(1);
+          }
         }
       }
     }
