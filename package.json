@@ -74,6 +74,7 @@
     "set-value": "^3.0.0",
     "tmp": "0.0.33",
     "uglify-es": "^3.3.9",
+    "unset-value": "^1.0.0",
     "upath": "^1.1.0",
     "update-notifier": "^2.5.0",
     "xml2js": "^0.4.19",

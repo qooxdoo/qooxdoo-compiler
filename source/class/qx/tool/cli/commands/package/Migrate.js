@@ -28,6 +28,11 @@ qx.Class.define("qx.tool.cli.commands.package.Migrate", {
   extend: qx.tool.cli.commands.Package,
 
   statics: {
+    /**
+     * Flag to prevent recursive call to process()
+     */
+    migrationInProcess: false,
+
     getYargsCommand: function() {
       return {
         command: "migrate",
@@ -55,15 +60,20 @@ qx.Class.define("qx.tool.cli.commands.package.Migrate", {
   },
 
   members: {
-
     /**
      * Announces or applies a migration
      * @param {Boolean} announceOnly If true, announce the migration without
      * applying it.
      */
     process: async function(announceOnly=false) {
+      const self = qx.tool.cli.commands.package.Migrate;
+      if (self.migrationInProcess) {
+        return;
+      }
+      self.migrationInProcess = true;
+      let change = false;
       // do not call this.base(arguments) here!
-      let self = qx.tool.cli.commands.Package;
+      let pkg = qx.tool.cli.commands.Package;
       let cwd = process.cwd();
       let migrateFiles = [
         [
@@ -71,44 +81,56 @@ qx.Class.define("qx.tool.cli.commands.package.Migrate", {
           path.join(cwd, qx.tool.ConfigSchemas.lockfile.legacy_filename)
         ],
         [
-          path.join(cwd, self.cache_dir),
-          path.join(cwd, self.legacy_cache_dir)
+          path.join(cwd, pkg.cache_dir),
+          path.join(cwd, pkg.legacy_cache_dir)
         ],
         [
-          path.join(qx.tool.cli.ConfigDb.getDirectory(), self.package_cache_name),
-          path.join(qx.tool.cli.ConfigDb.getDirectory(), self.legacy_package_cache_name)
+          path.join(qx.tool.cli.ConfigDb.getDirectory(), pkg.package_cache_name),
+          path.join(qx.tool.cli.ConfigDb.getDirectory(), pkg.legacy_package_cache_name)
         ]
       ];
       if (this.checkFilesToRename(migrateFiles).length) {
         let replaceInFiles = {
           files: path.join(cwd, ".gitignore"),
-          from: self.legacy_cache_dir + "/",
-          to: self.cache_dir + "/"
+          from: pkg.legacy_cache_dir + "/",
+          to: pkg.cache_dir + "/"
         };
         await this.migrate(migrateFiles, replaceInFiles, announceOnly);
-        if (announceOnly) {
-          console.error(`*** Please run 'qx package migrate' to apply the changes. If you don't want this, downgrade to a previous version of the compiler.`);
-          process.exit(1);
-        }
-        if (!this.argv.quiet) {
-          console.info("Fixing path names in the lockfile...");
+        if (!announceOnly) {
+          if (!this.argv.quiet) {
+            console.info("Fixing path names in the lockfile...");
+          }
           this.argv.reinstall = true;
           await (new qx.tool.cli.commands.package.Upgrade(this.argv)).process();
+          change = true;
         }
-        let manifest_file = qx.tool.ConfigSchemas.manifest.filename;
-        let manifest = await qx.tool.utils.Json.loadJsonAsync(manifest_file);
-        manifest.requires = manifest.requires || {};
-        manifest.requires["@qooxdoo/compiler"] = "^" + qx.tool.compiler.Version.VERSION;
-        delete manifest.requires.qxcompiler;
-        manifest.requires["@qooxdoo/framework"] = "^" + await this.getLibraryVersion(await this.getGlobalQxPath());
-        delete manifest.requires["qooxdoo-sdk"];
-        delete manifest.requires["qooxdoo"];
-        delete manifest.requires["qooxdoo-compiler"];
-        await qx.tool.utils.Json.saveJsonAsync(manifest_file, manifest);
-        if (!this.argv.quiet) {
-          console.info("Updated dependencies in Manifest.");
-          console.info("Migration is completed.");
+      }
+      const manifestModel = await qx.tool.utils.ConfigFile.getInstanceByType("manifest", false, true);
+      if (!manifestModel.getValue("requires.@qooxdoo/compiler") || !manifestModel.getValue("requires.@qooxdoo/framework")) {
+        if (announceOnly) {
+          console.info("*** Framework and/or compiler dependencies in Manifest need to be updated.");
+        } else {
+          change = true;
+          manifestModel
+            .setValue("requires.@qooxdoo/compiler", "^" + qx.tool.compiler.Version.VERSION)
+            .setValue("requires.@qooxdoo/framework", "^" + await this.getLibraryVersion(await this.getGlobalQxPath()))
+            .unset("requires.qxcompiler")
+            .unset("requires.qooxdoo-sdk")
+            .unset("requires.qooxdoo-compiler")
+            .unset("requires.qooxdoo-sdk");
+          manifestModel.setWarnOnly(false);
+          // now model should validate
+          await manifestModel.save();
+          if (!this.argv.quiet) {
+            console.info("Updated dependencies in Manifest.");
+            console.info("Migration is completed.");
+          }
         }
+      }
+      self.migrationInProcess = false;
+      if (change && announceOnly) {
+        console.error(`*** Please run 'qx package migrate' to apply the changes. If you don't want this, downgrade to a previous version of the compiler.`);
+        process.exit(1);
       }
     }
   }

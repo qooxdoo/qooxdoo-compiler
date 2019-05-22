@@ -18,6 +18,7 @@
 
 require("@qooxdoo/framework");
 require("../ConfigSchemas");
+const path = require("path");
 
 /**
  * Entry point for the CLI
@@ -62,8 +63,7 @@ qx.Class.define("qx.tool.cli.Cli", {
           "Contrib", // deprecated
           "Create",
           "Lint",
-          "Serve",
-          "Migrate"
+          "Serve"
         ],
         "qx.tool.cli.commands");
       return yargs
@@ -95,7 +95,7 @@ qx.Class.define("qx.tool.cli.Cli", {
         }
       });
       classNames.forEach(cmd => {
-        require("../../../" + packageName.replace(/\./g, "/") + "/" + cmd);
+        require(path.join(qx.tool.$$classPath, packageName.replace(/\./g, "/"),cmd));
         let data = pkg[cmd].getYargsCommand();
         if (data) {
           yargs.command(data);

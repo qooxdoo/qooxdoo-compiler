@@ -6879,7 +6879,7 @@
       "dependencies": {
         "source-map": {
           "version": "0.4.4",
-          "resolved": "http://registry.npmjs.org/source-map/-/source-map-0.4.4.tgz",
+          "resolved": "https://registry.npmjs.org/source-map/-/source-map-0.4.4.tgz",
           "integrity": "sha1-66T12pwNyZneaAMti092FzZSA2s=",
           "requires": {
             "amdefine": ">=0.0.4"
@@ -7922,6 +7922,11 @@
         "isobject": "^3.0.0"
       },
       "dependencies": {
+        "get-value": {
+          "version": "2.0.6",
+          "resolved": "https://registry.npmjs.org/get-value/-/get-value-2.0.6.tgz",
+          "integrity": "sha1-3BXKHGcjh8p2vTesCjlbogQqLCg="
+        },
         "has-value": {
           "version": "0.3.1",
           "resolved": "https://registry.npmjs.org/has-value/-/has-value-0.3.1.tgz",
@@ -7932,11 +7937,6 @@
             "isobject": "^2.0.0"
           },
           "dependencies": {
-            "get-value": {
-              "version": "2.0.6",
-              "resolved": "https://registry.npmjs.org/get-value/-/get-value-2.0.6.tgz",
-              "integrity": "sha1-3BXKHGcjh8p2vTesCjlbogQqLCg="
-            },
             "isobject": {
               "version": "2.1.0",
               "resolved": "https://registry.npmjs.org/isobject/-/isobject-2.1.0.tgz",
