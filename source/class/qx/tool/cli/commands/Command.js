@@ -141,7 +141,7 @@ qx.Class.define("qx.tool.cli.commands.Command", {
      * @return {Promise<String>} Promise that resolves with the path {String}
      */
     getAppQxPath : async function() {
-      let compileConfig = await qx.tool.config.Compile.getInstance(); // don't load it
+      let compileConfig = qx.tool.config.Compile.getInstance(); // don't load it
       if (await compileConfig.exists()) {
         if (!compileConfig.isLoaded()) {
           await compileConfig.load();
