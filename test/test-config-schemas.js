@@ -30,23 +30,28 @@ const appNamespace = "testConfigSchemaApp";
     assert.strictEqual(manifestConfig.getValue("requires.@qooxdoo/framework"), "^20.1.5");
     // add new property
     manifestConfig.setValue("requires.foo", "^1.0.0");
+    assert.strictEqual(manifestConfig.getValue("requires.foo"), "^1.0.0");
+    // remove property
+    manifestConfig.unset("requires.foo");
+    assert.strictEqual(manifestConfig.getValue("requires.foo"), undefined);
     // transform a property
     assert.ok(manifestConfig.getValue("info.authors").length === 0);
     manifestConfig.transform("info.authors", authors => {
       authors.push({name: "John Doe", email:"john@acme.com"});
       return authors;
     });
-    assert.ok(manifestConfig.getValue("info.authors").length === 1);
+    manifestConfig.transform("info.authors", authors => {
+      return authors.concat({name: "Bob Schultz", email:"bob@acme.com"});
+    });
+    assert.ok(manifestConfig.getValue("info.authors").length === 2);
     // manipulating the data outside the api requires manual validation
     manifestConfig.getValue("info.authors").push({name: "Jane Miller", email:"jane@acme.com"});
     manifestConfig.validate();
-    assert.ok(manifestConfig.getValue("info.authors").length === 2);
+    assert.ok(manifestConfig.getValue("info.authors").length === 3);
     // do something illegal according to the schema
     assert.throws(() => manifestConfig.setValue("requires.@qooxdoo/framework", 42));
     assert.throws(() => manifestConfig.setValue("foo", "bar"));
-    delete manifestConfig.getData().foo;
     await manifestConfig.save();
-
     /**
      * compile.json
      */

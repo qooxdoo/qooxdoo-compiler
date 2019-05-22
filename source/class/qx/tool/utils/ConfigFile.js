@@ -22,6 +22,7 @@ const path = require("path");
 const semver = require("semver");
 const get_value = require("get-value");
 const set_value = require("set-value");
+const unset_value = require("unset-value");
 
 /**
  * A model for config files
@@ -36,15 +37,22 @@ qx.Class.define("qx.tool.utils.ConfigFile", {
     /**
      * Factory function to create singletons of a config file model in a specific directory
      * @param {String} type
-     * @param {Boolean} doNotLoad If true, don't load the model yet. Default: false
+     *    The name of the static property of in qx.tool.ConfigSchemas containing
+     *    metadata on the config file.
+     * @param {Boolean} doNotLoad
+     *    If true, don't load the model yet. Default: false. Ignored when model
+     *    has already been instantiated.
+     * @param {Boolean} warnOnly
+     *    If true, don't throw an error if validation fails. Default: false
      * @return {Promise<qx.tool.utils.ConfigFile>}
      */
-    async getInstanceByType(type, doNotLoad=false) {
+    async getInstanceByType(type, doNotLoad=false, warnOnly=false) {
       if (!qx.tool.utils.ConfigFile.$$instances) {
         qx.tool.utils.ConfigFile.$$instances = [];
       }
       let instances = qx.tool.utils.ConfigFile.$$instances;
       let id = process.cwd() + "|" + type;
+      let instance;
       if (instances[id] === undefined) {
         let typeInfo = qx.tool.ConfigSchemas[type];
         if (typeInfo === undefined) {
@@ -54,13 +62,17 @@ qx.Class.define("qx.tool.utils.ConfigFile", {
         let commonPath = `/v${typeInfo.version}/${typeInfo.filename}`;
         let schemaUri = qx.tool.ConfigSchemas.schemaBaseUrl + commonPath;
         let schemaPath = path.join(qx.tool.ConfigSchemas.schemaBaseDir, commonPath);
-        let instance = new qx.tool.utils.ConfigFile(filePath, schemaUri, schemaPath, typeInfo.version);
+        instance = new qx.tool.utils.ConfigFile(filePath, schemaUri, schemaPath, typeInfo.version);
+        instance.setWarnOnly(warnOnly);
         if (!doNotLoad) {
           await instance.load();
         }
         instances[id] = instance;
+      } else {
+        instance = instances[id];
+        instance.setWarnOnly(warnOnly);
       }
-      return instances[id];
+      return instance;
     }
   },
 
@@ -112,6 +124,15 @@ qx.Class.define("qx.tool.utils.ConfigFile", {
       check: "Boolean",
       init: false,
       event: "changeLoaded"
+    },
+
+    /**
+     * Whether to throw an Error if validation fails (false, default),
+     * or to simply output a warning to the console (true)
+     */
+    warnOnly: {
+      check: "Boolean",
+      init: false
     }
   },
 
@@ -158,7 +179,11 @@ qx.Class.define("qx.tool.utils.ConfigFile", {
         qx.tool.utils.Json.validate(data, this.__schema);
       } catch (e) {
         let msg = `Error validating data for ${this.__dataPath}: ${e.message}`;
-        throw new Error(msg);
+        if (this.isWarnOnly()) {
+          console.warn(msg);
+        } else {
+          throw new Error(msg);
+        }
       }
     },
 
@@ -292,6 +317,31 @@ qx.Class.define("qx.tool.utils.ConfigFile", {
     setValue(prop_path, value, options) {
       let originalValue = this.getValue(prop_path, options);
       set_value(this.getData(), prop_path, value, options);
+      try {
+        this.validate();
+      } catch (e) {
+        // revert change
+        if (originalValue === undefined) {
+          unset_value(this.getData(),prop_path);
+        } else {
+          set_value(this.getData(), prop_path, originalValue, options);
+        }
+        // throw
+        throw e;
+      }
+      this.setDirty(true);
+      return this;
+    },
+
+    /**
+     * Unsets a property from the configuration map and validates the model
+     * @param prop_path {String|Array} The property path. See https://github.com/jonschlinkert/set-value#usage
+     * @param options {*?} See https://github.com/jonschlinkert/get-value#options
+     * @return {qx.tool.utils.ConfigFile} Returns the instance for chaining
+     */
+    unset(prop_path, options) {
+      let originalValue = this.getValue(prop_path, options);
+      unset_value(this.getData(), prop_path);
       try {
         this.validate();
       } catch (e) {
