@@ -108,11 +108,76 @@ qx.Class.define("qx.tool.cli.commands.Package", {
     },
 
     /**
-     * Returns the lockfile data
+     * Returns the lockfile data. Deprecated. Use {@link qx.tool.cli.commands.Package#getLockfileModel}
+     * @deprecated
      * @return {Object}
      */
-    getLockfileData: async function() {
-      return (await qx.tool.config.Lockfile.getInstance().load()).getData();
+    async getLockfileData() {
+      return (await this.getLockfileModel()).getData();
+    },
+
+    /**
+     * Returns the model of the lockfile
+     * @return {Promise<qx.tool.config.Lockfile>}
+     */
+    async getLockfileModel() {
+      return qx.tool.config.Lockfile.getInstance().load();
+    },
+
+    /**
+     * Returns the model of the compiler config
+     * @return {Promise<qx.tool.config.Compile>}
+     */
+    async getCompileConfigModel() {
+      return qx.tool.config.Compile.getInstance().load();
+    },
+
+    /**
+     * Returns the model of the manifest
+     * @return {Promise<qx.tool.config.Manifest>}
+     */
+    async getManifestModel() {
+      return qx.tool.config.Lockfile.getInstance().load();
+    },
+
+    /**
+     * Convenience method to return all config file models as an array
+     * @return {Promise<[{qx.tool.config.Manifest}, {qx.tool.config.Lockfile}, {qx.tool.config.Compile}]>}
+     * @private
+     */
+    async _getConfigData() {
+      return [
+        await this.getManifestModel(),
+        await this.getLockfileModel(),
+        await this.getCompileConfigModel()
+      ];
+    },
+
+    /**
+     * Save configuration data if their content has changed
+     * @return {Promise<void>}
+     * @private
+     */
+    async _saveConfigData() {
+      const [manifestModel, lockfileModel, compileConfigModel] = await this._getConfigData();
+      if (this.argv.save && manifestModel.isDirty()) {
+        await manifestModel.save();
+        if (this.argv.verbose) {
+          console.info(`>>> Saved dependency data to ${manifestModel.getDataPath()}`);
+        }
+      }
+      if (lockfileModel.isDirty()) {
+        await lockfileModel.save();
+        if (this.argv.verbose) {
+          console.info(`>>> Saved library data to ${lockfileModel.getDataPath()}`);
+        }
+      }
+      if (compileConfigModel.isDirty()) {
+        await compileConfigModel.save();
+        if (this.argv.verbose) {
+          console.info(`>>> Saved compile config data to ${compileConfigModel.getDataPath()}`);
+        }
+      }
     },
 
     /**
@@ -122,8 +187,10 @@ qx.Class.define("qx.tool.cli.commands.Package", {
      * @param {String} library_name
      * @return {String|false}
      */
-    getInstalledLibraryTag : async function(repo_name, library_name) {
-      let library = (await this.getLockfileData()).libraries.find(lib => lib.repo_name === repo_name && lib.library_name === library_name);
+    async getInstalledLibraryTag(repo_name, library_name) {
+      let library = (await this.getLockfileModel())
+        .getValue("libraries")
+        .find(lib => lib.repo_name === repo_name && lib.library_name === library_name);
       return library ? library.repo_tag : false;
     },
 
@@ -133,8 +200,10 @@ qx.Class.define("qx.tool.cli.commands.Package", {
      * @param {String} library_name
      * @return {Object|false}
      */
-    getInstalledLibraryData : async function(library_name) {
-      return (await this.getLockfileData()).libraries.find(lib => lib.library_name === library_name);
+    async getInstalledLibraryData(library_name) {
+      return (await this.getLockfileModel())
+        .getValue("libraries")
+        .find(lib => lib.library_name === library_name);
     },
 
     /**
@@ -156,6 +225,7 @@ qx.Class.define("qx.tool.cli.commands.Package", {
     /**
      * Returns the cache object, retrieving it from a local file if necessary
      * @return {Object}
+     * @todo use config model API for cache file
      */
     getCache : function(readFromFile = false) {
       if (!readFromFile && this.__cache && typeof this.__cache == "object") {

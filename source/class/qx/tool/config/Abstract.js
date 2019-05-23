@@ -47,6 +47,9 @@ qx.Class.define("qx.tool.config.Abstract", {
         throw new Error(`Property ${prop} must be set when instantiating ${this.classname}`);
       }
     }
+    if (!config.baseDir) {
+      this.setBaseDir(process.cwd());
+    }
   },
 
   properties: {
@@ -55,6 +58,14 @@ qx.Class.define("qx.tool.config.Abstract", {
      * Name of the config file
      */
     fileName: {
+      check: "String"
+    },
+
+    /**
+     * The path to the directory containing the config file
+     * Defaults to process.cwd()
+     */
+    baseDir: {
       check: "String"
     },
 
@@ -174,7 +185,7 @@ qx.Class.define("qx.tool.config.Abstract", {
      * @return {String}
      */
     getDataPath() {
-      return path.join(process.cwd(), this.getFileName());
+      return path.join(this.getBaseDir(), this.getFileName());
     },
 
     /**
@@ -234,7 +245,7 @@ qx.Class.define("qx.tool.config.Abstract", {
           data = qx.tool.utils.Json.parseJson(await fs.readFileAsync(this.getDataPath(), "utf8"));
         } else if (this.isCreateIfNotExists()) {
           // we're supposed to create it, make sure we're in the library root
-          if (qx.tool.config.Manifest.getInstance().exists()) {
+          if (await qx.tool.config.Manifest.getInstance().exists()) {
             // but only if we have a template
             let templateFunction = this.getTemplateFunction();
             if (templateFunction) {

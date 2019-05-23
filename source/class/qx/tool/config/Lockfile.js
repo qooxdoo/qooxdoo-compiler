@@ -23,8 +23,8 @@ const version = "2.1";
 qx.Class.define("qx.tool.config.Lockfile", {
   extend: qx.tool.config.Abstract,
   type: "singleton",
-  construct: function() {
-    this.base(arguments, {
+  statics: {
+    config: {
       fileName: qx.tool.cli.commands.Package.lockfile.filename,
       version,
       validate: false,
@@ -33,6 +33,9 @@ qx.Class.define("qx.tool.config.Lockfile", {
         libraries: [],
         version
       })
-    });
+    }
+  },
+  construct: function() {
+    this.base(arguments, this.self(arguments).config);
   }
 });

@@ -20,6 +20,7 @@ require("../Package");
 require("@qooxdoo/framework");
 const process = require("process");
 const path = require("upath");
+const semver = require("semver");
 
 /**
  * Installs a package
@@ -109,6 +110,28 @@ qx.Class.define("qx.tool.cli.commands.package.Migrate", {
         }
       }
       const manifestModel = await qx.tool.config.Manifest.getInstance().set({warnOnly: true}).load();
+      // fix deprecated properties etc.
+      manifestModel
+        .transform("info.authors", authors => {
+          if (authors === "") {
+            return [];
+          } else if (qx.lang.Type.isString(authors)) {
+            return [{name: authors}];
+          } else if (qx.lang.Type.isObject(authors)) {
+            return authors;
+          }
+          return [];
+        })
+        .transform("info.version", version => String(semver.coerce(version)))
+        .unset("info.qooxdoo-versions")
+        .unset("info.qooxdoo-range")
+        .unset("provides.type")
+        .unset("requires.qxcompiler")
+        .unset("requires.qooxdoo-sdk")
+        .unset("requires.qooxdoo-compiler")
+        .unset("requires.qooxdoo-sdk");
+
+      // update dependencies
       if (!manifestModel.getValue("requires.@qooxdoo/compiler") || !manifestModel.getValue("requires.@qooxdoo/framework")) {
         if (announceOnly) {
           console.info("*** Framework and/or compiler dependencies in Manifest need to be updated.");
@@ -116,23 +139,16 @@ qx.Class.define("qx.tool.cli.commands.package.Migrate", {
           change = true;
           manifestModel
             .setValue("requires.@qooxdoo/compiler", "^" + qx.tool.compiler.Version.VERSION)
-            .setValue("requires.@qooxdoo/framework", "^" + await this.getLibraryVersion(await this.getGlobalQxPath()))
-            .unset("info.qooxdoo-versions")
-            .unset("info.qooxdoo-range")
-            .unset("provides.type")
-            .unset("requires.qxcompiler")
-            .unset("requires.qooxdoo-sdk")
-            .unset("requires.qooxdoo-compiler")
-            .unset("requires.qooxdoo-sdk");
+            .setValue("requires.@qooxdoo/framework", "^" + await this.getLibraryVersion(await this.getGlobalQxPath()));
           manifestModel.setWarnOnly(false);
           // now model should validate
-          await manifestModel.save();
           if (!this.argv.quiet) {
             console.info("Updated dependencies in Manifest.");
             console.info("Migration is completed.");
           }
         }
       }
+      await manifestModel.save();
       self.migrationInProcess = false;
       if (change && announceOnly) {
         console.error(`*** Please run 'qx package migrate' to apply the changes. If you don't want this, downgrade to a previous version of the compiler.`);

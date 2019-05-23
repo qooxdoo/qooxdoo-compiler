@@ -51,7 +51,7 @@ qx.Class.define("qx.tool.cli.commands.package.Publish", {
             alias: "I",
             describe: "Do not prompt user"
           },
-          "version": {
+          "use-version": {
             alias: "V",
             describe: "Use given version number"
           },
@@ -161,56 +161,52 @@ qx.Class.define("qx.tool.cli.commands.package.Publish", {
       }
 
       let libraries;
-      let manifest_path;
-      let manifest;
       let version;
-      let index_path = process.cwd() + "/qooxdoo.json";
-      if (fs.existsSync(index_path)) {
+      let manifestModels = [];
+      let mainManifestModel;
+      const cwd = process.cwd();
+      const registryModel = qx.tool.config.Registry.getInstance();
+      if (await registryModel.exists()) {
         // we have a qooxdoo.json index file containing the paths of libraries in the repository
-        let index = qx.tool.utils.Json.parseJson(fs.readFileSync(index_path, "utf-8"));
-        if (index.contribs) {
-          console.warn("qooxdoo.json/contribs is deprecated, use qooxdoo.json/libraries instead");
-        }
-        libraries = index.libraries || index.contribs;
+        await registryModel.load();
+        libraries = registryModel.getValue("libraries");
         for (let library of libraries) {
-          manifest_path = path.join(process.cwd(), library.path, qx.tool.config.Manifest.getInstance().getFileName());
+          let manifestModel = (new qx.tool.config.Abstract(qx.tool.config.Manifest.config))
+            .set({baseDir: path.join(cwd, library.path)});
+          let manifest_path = manifestModel.getDataPath();
           if (!fs.existsSync(manifest_path)) {
-            throw new qx.tool.utils.Utils.UserError(`Invalid path in qooxdoo.json: ${library.path}/Manifest.json does not exist.`);
+            throw new qx.tool.utils.Utils.UserError(`Invalid path in ${registryModel.getFileName()}: ${library.path}/${manifestName} does not exist.`);
           }
-          let m = qx.tool.utils.Json.parseJson(fs.readFileSync(manifest_path, "utf-8"));
+          await manifestModel.load();
           // use the first manifest or the one with a truthy property "main" as reference
           if (!version || library.main) {
-            version = m.info.version;
-            manifest = m;
+            version = manifestModel.getValue("info.version");
+            mainManifestModel = manifestModel;
+            manifestModels.push(manifestModel);
           }
         }
       } else {
         // read Manifest.json
-        manifest_path = path.join(process.cwd(), qx.tool.config.Manifest.getInstance().getFileName());
-        if (!fs.existsSync(manifest_path)) {
-          throw new qx.tool.utils.Utils.UserError("Cannot find Manifest.json - are you in the project directory?");
-        }
-        manifest = qx.tool.utils.Json.parseJson(fs.readFileSync(manifest_path, "utf-8"));
-
+        mainManifestModel = await qx.tool.config.Manifest.getInstance().load();
+        manifestModels.push(mainManifestModel);
         // prevent accidental publication of demo manifest.
-        if (!argv.force && manifest.provides.namespace.includes(".demo")) {
-          throw new qx.tool.utils.Utils.UserError("This seems to be the library demo. Please go into the library directory to publish the library.");
+        if (!argv.force && mainManifestModel.getValue("provides.namespace").includes(".demo")) {
+          throw new qx.tool.utils.Utils.UserError("This seems to be the library demo. Please go into the library root directory to publish the library.");
         }
         libraries = [{ path: "."}];
       }
 
-
       // version
       let new_version;
-      if (argv.version) {
+      if (argv.useVersion) {
         // use user-supplied value
-        new_version = argv.version;
-        if (!semver.valid(new_version)) {
-          throw new qx.tool.utils.Utils.UserError(`${new_version} is not a valid version number.`);
+        new_version = semver.coerce(argv.useVersion);
+        if (!new_version) {
+          throw new qx.tool.utils.Utils.UserError(`${argv.useVersion} is not a valid version number.`);
         }
       } else {
         // use version number from manifest and increment it
-        let old_version = manifest.info.version;
+        let old_version = mainManifestModel.getValue("info.version");
         if (!semver.valid(old_version)) {
           throw new qx.tool.utils.Utils.UserError("Invalid version number in Manifest. Must be a valid semver version (x.y.z).");
         }
@@ -271,39 +267,9 @@ qx.Class.define("qx.tool.cli.commands.package.Publish", {
 
       // update Manifest(s)
       for (let library of libraries) {
-        manifest_path = path.join(process.cwd(), library.path, qx.tool.config.Manifest.getInstance().getFileName());
-        manifest = qx.tool.utils.Json.parseJson(fs.readFileSync(manifest_path, "utf-8"));
-
-        manifest.info.version = new_version;
-
-        // qooxdoo-versions @deprecated but still suppored
-        let qooxdoo_versions = manifest.info["qooxdoo-versions"];
-        if (qooxdoo_versions instanceof Array) {
-          if (!qooxdoo_versions.includes(qooxdoo_version)) {
-            manifest.info["qooxdoo-versions"].push(qooxdoo_version);
-          }
-        }
-
-        // qooxdoo-range @deprecated
-        let needWrite = false;
-        let semver_range;
-        if (manifest.info["qooxdoo-range"]) {
-          if (!argv.quiet) {
-            console.info(`Deprecated key "manifest.info.qooxdoo-range" found, will be changed to manifest.requires["@qooxdoo/framework"]`);
-          }
-          semver_range = manifest.info["qooxdoo-range"];
-          delete manifest.info["qooxdoo-range"];
-          needWrite = true;
-        }
-        if (manifest.requires["qooxdoo-sdk"]) {
-          if (!argv.quiet) {
-            console.info(`Deprecated key "manifest.requires["qooxdoo-sdk"]" found, will be changed to manifest.requires["@qooxdoo/framework"]`);
-          }
-          semver_range = manifest.requires["qooxdoo-sdk"];
-          delete manifest.requires["qooxdoo-sdk"];
-          needWrite = true;
-        }
-        semver_range = (manifest.requires && manifest.requires["@qooxdoo/framework"]) || semver_range;
+        let manifestModel = new qx.tool.config.Abstract({
+          fileName: manifestName
+        });
 
         if (!semver.satisfies(qooxdoo_version, semver_range, {loose: true})) {
           needWrite = true;

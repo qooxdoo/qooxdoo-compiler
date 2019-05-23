@@ -22,10 +22,13 @@
 qx.Class.define("qx.tool.config.Compile", {
   extend: qx.tool.config.Abstract,
   type: "singleton",
-  construct: function() {
-    this.base(arguments, {
+  statics: {
+    config: {
       fileName: "compile.json",
       version: "1"
-    });
+    }
+  },
+  construct: function() {
+    this.base(arguments, this.self(arguments).config);
   }
 });

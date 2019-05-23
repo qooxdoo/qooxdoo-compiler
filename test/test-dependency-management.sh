@@ -9,7 +9,7 @@ cd myapp
 LIST=$(../qx package list --short --noheaders --installed --all)
 echo "$LIST"
 COUNTLINES=$(echo "$LIST" | wc -l | tr -d ' ')
-if [ "$COUNTLINES" != "4" ]; then echo "Installing dependencies failed"; exit 1; fi
+if [ "$COUNTLINES" != "4" ]; then echo "Test 1 failed"; exit 1; fi
 ../qx compile --feedback=false --warnAsError || exit 1
 cd ..
 
@@ -22,7 +22,7 @@ cd myapp
 LIST=$(../qx package list --short --noheaders --installed --all)
 echo "$LIST"
 COUNTLINES=$(echo "$LIST" | wc -l | tr -d ' ')
-if [ "$COUNTLINES" != "4" ]; then echo "Installing dependencies failed"; exit 1; fi
+if [ "$COUNTLINES" != "4" ]; then echo "Test 2 failed"; exit 1; fi
 ../qx compile --feedback=false --warnAsError || exit 1
 cd ..
 
@@ -41,7 +41,7 @@ echo "$LIST"
 #qooxdoo/qxl.test2/qxl.test2D      v1.0.2   v1.0.2   v1.0.2"
 #if [ "$EXPECTED" != "$LIST" ]; then echo "Installing dependencies failed"; exit 1; fi
 COUNTLINES=$(echo "$LIST" | wc -l | tr -d ' ')
-if [ "$COUNTLINES" != "3" ]; then echo "Installing dependencies failed"; exit 1; fi
+if [ "$COUNTLINES" != "3" ]; then echo "Test 3 failed"; exit 1; fi
 ../qx compile --feedback=false --warnAsError || exit 1
 
 ../qx package upgrade
@@ -70,6 +70,6 @@ echo "$LIST"
 #qooxdoo/qxl.test2/qxl.test2D      v1.0.2                                     v1.0.2   v1.0.2"
 #if [ "$EXPECTED" != "$LIST" ]; then echo "Installing dependencies failed"; exit 1; fi
 COUNTLINES=$(echo "$LIST" | wc -l | tr -d ' ')
-if [ "$COUNTLINES" != "3" ]; then echo "Installing dependencies failed"; exit 1; fi
+if [ "$COUNTLINES" != "3" ]; then echo "Test 4 failed"; exit 1; fi
 ../qx compile --feedback=false --warnAsError || exit 1
 cd ..
