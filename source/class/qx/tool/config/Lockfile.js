@@ -17,15 +17,22 @@
 ************************************************************************ */
 
 /**
- * A model for the lockfile
+ * A model for the lockfile, which has a version, but no "official" schema (yet)
  */
+const version = "2.1";
 qx.Class.define("qx.tool.config.Lockfile", {
   extend: qx.tool.config.Abstract,
   type: "singleton",
   construct: function() {
     this.base(arguments, {
       fileName: qx.tool.cli.commands.Package.lockfile.filename,
-      version: "2.1"
+      version,
+      validate: false,
+      createIfNotExists: true,
+      templateFunction: () => ({
+        libraries: [],
+        version
+      })
     });
   }
 });

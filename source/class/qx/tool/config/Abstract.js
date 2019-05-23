@@ -60,9 +60,12 @@ qx.Class.define("qx.tool.config.Abstract", {
 
     /**
      * Schema version of the config file
+     * If string, validate all data against this version of the schema
+     * If null, do not validate
      */
     version: {
-      check: "String"
+      check: "String",
+      nullable: true
     },
 
     /**
@@ -100,6 +103,34 @@ qx.Class.define("qx.tool.config.Abstract", {
     warnOnly: {
       check: "Boolean",
       init: false
+    },
+
+    /**
+     * Whether to validate the model data (default: true)
+     */
+    validate: {
+      check: "Boolean",
+      init: true
+    },
+
+    /**
+     * Whether to create the file if it doesn't exist yet (default: false)
+     * Setting this to true doesn't automatically create it, you still need to
+     * call save(). It just prevents an error during loading the config data.
+     * Only works if a "templateFunction" has been set.
+     */
+    createIfNotExists: {
+      check: "Boolean",
+      init: false
+    },
+
+    /**
+     * A function that returns the config file template which is used if no
+     * file exists and the "createIfNotExists" property is set to true
+     */
+    templateFunction: {
+      check: "Function",
+      nullable: false
     }
   },
 
@@ -117,6 +148,9 @@ qx.Class.define("qx.tool.config.Abstract", {
      * @private
      */
     _validateData(data) {
+      if (!this.isValidate() || this.getVersion() === null) {
+        return;
+      }
       if (!this.__schema) {
         throw new Error(`Cannot validate - no schema available! Please load the model first.`);
       }
@@ -195,28 +229,48 @@ qx.Class.define("qx.tool.config.Abstract", {
           // don't load again
           return this;
         }
-        if (!await fs.existsAsync(this.getDataPath())) {
+        if (await fs.existsAsync(this.getDataPath())) {
+          // load data from file
+          data = qx.tool.utils.Json.parseJson(await fs.readFileAsync(this.getDataPath(), "utf8"));
+        } else if (this.isCreateIfNotExists()) {
+          // we're supposed to create it, make sure we're in the library root
+          if (qx.tool.config.Manifest.getInstance().exists()) {
+            // but only if we have a template
+            let templateFunction = this.getTemplateFunction();
+            if (templateFunction) {
+              data = templateFunction.bind(this)();
+              if (!qx.lang.Type.isObject(data)) {
+                throw new Error(`Template for config file ${this.getDataPath()} is invalid. Must be an object.`);
+              }
+            } else {
+              throw new Error(`Cannot create config file ${this.getDataPath()} without a template.`);
+            }
+          } else {
+            throw new Error(`Cannot create config file ${this.getDataPath()} since no Manifest exists. Are you in the library root?`);
+          }
+        } else {
           throw new Error(`Cannot load config file: ${this.getDataPath()} does not exist. Are you in the library root?`);
         }
-        data = qx.tool.utils.Json.parseJson(await fs.readFileAsync(this.getDataPath(), "utf8"));
       }
-      // load schema
-      if (!this.__schema) {
-        if (!fs.existsSync(this.getSchemaPath())) {
-          throw new Error(`No schema file exists at ${this.getSchemaPath()}`);
+      // load schema if validation is enabled
+      if (this.isValidate() && this.getVersion() !== null) {
+        if (!this.__schema) {
+          if (!fs.existsSync(this.getSchemaPath())) {
+            throw new Error(`No schema file exists at ${this.getSchemaPath()}`);
+          }
+          this.__schema = await qx.tool.utils.Json.loadJsonAsync(this.getSchemaPath());
         }
-        this.__schema = await qx.tool.utils.Json.loadJsonAsync(this.getSchemaPath());
-      }
-      // check initial data
-      let dataSchemaInfo = qx.tool.utils.Json.getSchemaInfo(data);
-      if (!dataSchemaInfo) {
-        throw new Error(`Invalid data: must conform to json schema at ${this.getSchemaUri()}!`);
-      }
-      let dataVersion = semver.coerce(dataSchemaInfo.version);
-      let schemaVersion = semver.coerce(this.getVersion());
-      if (dataVersion !== schemaVersion) {
-        // migrate the data if possible
-        data = this._migrateData(data, dataVersion, schemaVersion);
+        // check initial data
+        let dataSchemaInfo = qx.tool.utils.Json.getSchemaInfo(data);
+        if (!dataSchemaInfo) {
+          throw new Error(`Invalid data: must conform to json schema at ${this.getSchemaUri()}!`);
+        }
+        let dataVersion = semver.coerce(dataSchemaInfo.version);
+        let schemaVersion = semver.coerce(this.getVersion());
+        if (dataVersion !== schemaVersion) {
+          // migrate the data if possible
+          data = this._migrateData(data, dataVersion, schemaVersion);
+        }
       }
       // validate and save
       this.setData(data);

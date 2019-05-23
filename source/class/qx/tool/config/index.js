@@ -12,7 +12,7 @@
      See the LICENSE file in the project's top-level directory for details.
 
    Authors:
-     * John Spackman (john.spackman@zenesis.com, @johnspackman)
+     * Christian Boulanger (info@bibliograph.org, @cboulanger)
 
 ************************************************************************ */
 

@@ -108,18 +108,11 @@ qx.Class.define("qx.tool.cli.commands.Package", {
     },
 
     /**
-     * Returns the library list from the lockfile
+     * Returns the lockfile data
      * @return {Object}
      */
     getLockfileData: async function() {
-      let lockfile_path = this.getLockfilePath();
-      if (!await fs.existsAsync(lockfile_path)) {
-        return {
-          version: qx.tool.config.Lockfile.getInstance().getVersion(),
-          libraries: []
-        };
-      }
-      return qx.tool.utils.Json.loadJsonAsync(lockfile_path);
+      return (await qx.tool.config.Lockfile.getInstance().load()).getData();
     },
 
     /**
