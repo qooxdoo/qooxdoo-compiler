@@ -20,12 +20,8 @@ require("../Package");
 require("@qooxdoo/framework");
 const process = require("process");
 const path = require("upath");
-<<<<<<< Updated upstream
 const semver = require("semver");
-const fs = require("fs");
-=======
 const fs = qx.tool.utils.Promisify.fs;
->>>>>>> Stashed changes
 
 /**
  * Installs a package
