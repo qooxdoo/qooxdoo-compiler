@@ -14,15 +14,15 @@ const appNamespace = "testConfigSchemaApp";
       rimraf.sync(appNamespace);
     }
     // create a test app
-    const appConfig = {noninteractive:true, namespace:appNamespace, theme: "Indigo", icontheme: "Tango"};
+    const appConfig = {noninteractive:true, namespace:appNamespace, theme: "Indigo", icontheme: "Tango", verbose:false};
     await (new qx.tool.cli.commands.Create(appConfig)).process();
     process.chdir(appNamespace);
+
     // run tests
-    const createInstance = qx.tool.utils.ConfigFile.getInstanceByType;
     /**
      * Manifest.json
      */
-    const manifestConfig = await createInstance("manifest");
+    const manifestConfig = await qx.tool.config.Manifest.getInstance().load();
     // get a value
     assert.strictEqual(manifestConfig.getValue("provides.namespace"), appNamespace);
     // change a value
@@ -55,7 +55,7 @@ const appNamespace = "testConfigSchemaApp";
     /**
      * compile.json
      */
-    const compilerConfig = await createInstance("compile");
+    const compilerConfig = await qx.tool.config.Compile.getInstance().load();
     assert.strictEqual(compilerConfig.getValue("applications.0.name"), appNamespace);
 
     // delete the test app

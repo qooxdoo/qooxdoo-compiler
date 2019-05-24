@@ -1,4 +1,5 @@
 {
+ "$schema": "https://raw.githubusercontent.com/qooxdoo/qooxdoo-compiler/master/resource/schema/v1/Manifest.json",
   "info" :
   {
     "name" : "${name}",

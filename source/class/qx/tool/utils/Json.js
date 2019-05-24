@@ -120,10 +120,6 @@ qx.Class.define("qx.tool.utils.Json", {
       if (Object.getOwnPropertyNames(schemaInfo).length === 0) {
         return null;
       }
-      // add more information
-      if (qx.tool.ConfigSchemas[schemaInfo.type] === undefined) {
-        throw new Error(`No schema of type '${schemaInfo.type}' has been defined`);
-      }
       return schemaInfo;
     },
 

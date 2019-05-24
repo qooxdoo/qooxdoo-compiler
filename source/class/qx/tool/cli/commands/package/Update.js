@@ -278,7 +278,7 @@ qx.Class.define("qx.tool.cli.commands.package.Update", {
             // create a list of libraries via their manifests
             for (let [index, {path:manifest_path}] of manifests.entries()) {
               let manifest_data;
-              manifest_path = path.join(manifest_path, qx.tool.ConfigSchemas.manifest.filename);
+              manifest_path = path.join(manifest_path, qx.tool.config.Manifest.config.fileName);
               try {
                 if (argv.verbose) {
                   console.log(`>>> Retrieving Manifest file '${manifest_path}' for ${name} ${tag_name}...`);
@@ -380,7 +380,7 @@ qx.Class.define("qx.tool.cli.commands.package.Update", {
         } // end iteration over repos
 
         // wrap-up
-        self.getCache().version = qx.tool.ConfigSchemas.lockfile.version;
+        self.getCache().version = qx.tool.config.Lockfile.getInstance().getVersion();
         self.getCache().num_libraries = num_libraries;
         if (!update_repo_only) {
           self.getCache().repos.list = names.sort();
