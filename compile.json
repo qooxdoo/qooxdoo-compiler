@@ -23,6 +23,7 @@
       "theme": "qxl.apiviewer.Theme",
       "name": "apiviewer",
       "title": "Qooxdoo API Viewer",
+	  "default": true,
       "environment": {
         "qx.icontheme": "Tango",
         "excludeFromAPIViewer": [
@@ -35,7 +36,9 @@
       "exclude": [
         "qx.test.*",
         "qx.module.Blocker",
-        "qx.module.Placement"
+        "qx.module.Placement",
+		"qx.tool.*"
+		
       ]
     }
   ]
