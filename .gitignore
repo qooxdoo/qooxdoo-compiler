@@ -14,3 +14,5 @@ foo*/
 myapp
 *~
 qooxdoo/
+compiled/
+qx_packages/
