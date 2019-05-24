@@ -20,8 +20,12 @@ require("../Package");
 require("@qooxdoo/framework");
 const process = require("process");
 const path = require("upath");
+<<<<<<< Updated upstream
 const semver = require("semver");
 const fs = require("fs");
+=======
+const fs = qx.tool.utils.Promisify.fs;
+>>>>>>> Stashed changes
 
 /**
  * Installs a package
@@ -178,6 +182,13 @@ qx.Class.define("qx.tool.cli.commands.package.Migrate", {
               console.info(`Updated dependencies in ${manifestModel.getDataPath()}.`);
             }
           }
+        }
+      }
+      let compileJsFilename = path.join(process.cwd(), "compile.js");
+      if (await fs.existsAsync(compileJsFilename)) {
+        let data = await fs.readFileAsync(compileJsFilename, "utf8");
+        if (data.indexOf("module.exports") < 0) {
+          console.warn("*** Your compile.js appears to be missing a `module.exports` statement - please see https://git.io/fjBqU for more details");
         }
       }
       self.migrationInProcess = false;
