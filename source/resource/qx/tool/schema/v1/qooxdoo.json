@@ -22,6 +22,9 @@
         "properties": {
           "path": {
             "type": "string"
+          },
+          "main": {
+            "type": "boolean"
           }
         }
       }

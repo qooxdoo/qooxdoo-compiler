@@ -56,7 +56,7 @@ qx.Class.define("qx.tool.cli.Watch", {
       analyser.addListener("compiledClass", function() {
         this.__stats.classesCompiled++;
       }, this);
-      dirs.push(qx.tool.ConfigSchemas.compile.filename);
+      dirs.push(qx.tool.config.Compile.config.fileName);
       dirs.push("compile.js");
       analyser.getLibraries().forEach(function(lib) {
         let dir = path.join(lib.getRootDir(), lib.getSourcePath());

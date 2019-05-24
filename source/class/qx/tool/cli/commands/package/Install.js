@@ -16,10 +16,9 @@
 
 ************************************************************************ */
 
-
 require("../Package");
-
 require("@qooxdoo/framework");
+
 const download = require("download");
 const fs = qx.tool.utils.Promisify.fs;
 const path = require("upath");
@@ -91,9 +90,11 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
 
   members: {
 
-    __data: null,
-    __manifest: null,
+    /**
+     * @var {Boolean}
+     */
     __cacheUpdated: false,
+
 
     /**
      * API method to install a library via its URI and version tag
@@ -136,8 +137,9 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
      * @return {Promise<Boolean>}
      */
     async isInstalled(library_uri, release_tag) {
-      let data = await this.getLockfileData();
-      return data.libraries.some(lib => lib.uri === library_uri && (release_tag === undefined || release_tag === lib.repo_tag));
+      return (await this .getLockfileModel())
+        .getValue("libraries")
+        .some(lib => lib.uri === library_uri && (release_tag === undefined || release_tag === lib.repo_tag));
     },
 
     /**
@@ -146,18 +148,19 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
     process: async function() {
       await this.base(arguments);
       await this.__updateCache();
-      await this.__readConfigData();
+      const [manifestModel, lockfileModel] = await this._getConfigData();
 
       // create shorthand for uri@id
       this.argv.uri = this.argv.uri || this.argv["uri@release_tag"];
 
       // if no library uri has been passed, install from lockfile or manifest
+
       if (!this.argv.uri && !this.argv.fromPath) {
-        if (this.__data.libraries.length) {
+        if (lockfileModel.getValue("libraries").length) {
           await this.__downloadLibrariesInLockfile();
         } else {
-          await this.__installDependenciesFromManifest(this.__manifest);
-          await this.__saveConfigData();
+          await this.__installDependenciesFromManifest(manifestModel.getData());
+          await this._saveConfigData();
         }
         return;
       }
@@ -186,7 +189,7 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
         await this.__installFromTree(uri, id, this.argv.save);
       }
 
-      await this.__saveConfigData();
+      await this._saveConfigData();
 
       if (this.argv.verbose) {
         console.info(">>> Done.");
@@ -208,39 +211,6 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
         // implicit update
         await (new qx.tool.cli.commands.package.Update({quiet:true})).process();
         await (new qx.tool.cli.commands.package.List({quiet:true})).process();
-      }
-    },
-
-    /**
-     * Read manifest and library data into (private) members
-     * @return {Promise<void>}
-     * @private
-     */
-    async __readConfigData() {
-      this.__manifest = await qx.tool.utils.Json.loadJsonAsync(qx.tool.ConfigSchemas.manifest.filename);
-      if (!this.__manifest.requires) {
-        this.__manifest.requires = {};
-      }
-      this.__data = await this.getLockfileData();
-    },
-
-    /**
-     * Save manifest (unless --save==false) and library data
-     * @return {Promise<void>}
-     * @private
-     */
-    async __saveConfigData() {
-      let lockfile = this.getLockfilePath();
-      await qx.tool.utils.Json.saveJsonAsync(lockfile, this.__data);
-      if (this.argv.verbose) {
-        console.info(`>>> Saved library data to ${lockfile}`);
-      }
-      if (this.argv.save) {
-        let manifest_file = qx.tool.ConfigSchemas.manifest.filename;
-        await qx.tool.utils.Json.saveJsonAsync(manifest_file, this.__manifest);
-        if (this.argv.verbose) {
-          console.info(`>>> Saved dependency data to ${manifest_file}`);
-        }
       }
     },
 
@@ -386,8 +356,9 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
      */
     async __updateInstalledLibraryData(uri, id, download_path, writeToManifest) {
       let {repo_name, package_path} = uri ? this.__getUriInfo(uri) : {repo_name:"", package_path:""};
+      const [manifestModel, lockfileModel] = await this._getConfigData();
       let library_path = path.join(download_path, package_path);
-      let manifest_path = path.join(library_path, qx.tool.ConfigSchemas.manifest.filename);
+      let manifest_path = path.join(library_path, qx.tool.config.Manifest.config.fileName);
       if (!fs.existsSync(manifest_path)) {
         throw new qx.tool.utils.Utils.UserError(`No manifest file in '${library_path}'.`);
       }
@@ -411,20 +382,21 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
       }
 
       // do we already have an entry for the library that matches either the URI or the local path?
-      let index = this.__data.libraries.findIndex(elem => (uri && elem.uri === uri) || (!uri && elem.path === local_path));
+      let data = lockfileModel.getData();
+      let index = data.libraries.findIndex(elem => (uri && elem.uri === uri) || (!uri && elem.path === local_path));
       if (index >= 0) {
-        this.__data.libraries[index] = lib;
+        data.libraries[index] = lib;
         if (this.argv.verbose) {
           console.info(`>>> Updating already existing lockfile entry for ${info.name}, ${info.version}, installed from '${uri ? uri : local_path}'.`);
         }
       } else {
-        this.__data.libraries.push(lib);
+        data.libraries.push(lib);
         if (this.argv.verbose) {
           console.info(`>>> Added new lockfile entry for ${info.name}, ${info.version}, installed from '${uri ? uri : local_path}'.`);
         }
       }
-      if (writeToManifest && !this.__manifest.requires[uri]) {
-        this.__manifest.requires[uri] = "^" + info.version;
+      if (writeToManifest && !manifestModel.getValue(["requires", uri])) {
+        manifestModel.setValue(["requires", uri], "^" + info.version);
       }
       let appsInstalled = await this.__installApplication(library_path);
       if (!appsInstalled && this.argv.verbose) {
@@ -445,7 +417,7 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
      * @return {Promise<Boolean>} Wether any libraries were installed
      */
     __installDependenciesFromPath: async function(downloadPath) {
-      let manifest_file = path.join(downloadPath, qx.tool.ConfigSchemas.manifest.filename);
+      let manifest_file = path.join(downloadPath, qx.tool.config.Manifest.config.fileName);
       let manifest = await qx.tool.utils.Json.loadJsonAsync(manifest_file);
       if (!manifest.requires) {
         if (this.argv.verbose) {
@@ -535,32 +507,32 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
 
     /**
      * Given the download path of a library, install its applications
+     * todo use config API, use compile.js where it exists
      * @param {String} downloadPath
      * @return {Promise<Boolean>} Returns true if applications were installed
      */
     __installApplication: async function(downloadPath) {
-      let manifest = await qx.tool.utils.Json.loadJsonAsync(path.join(downloadPath, qx.tool.ConfigSchemas.manifest.filename));
+      let manifest = await qx.tool.utils.Json.loadJsonAsync(path.join(downloadPath, qx.tool.config.Manifest.config.fileName));
       if (!manifest.provides || !manifest.provides.application) {
         return false;
       }
       // FIXME: this won't use compile.js
-      let compileData = await qx.tool.utils.Json.loadJsonAsync(qx.tool.ConfigSchemas.compile.filename);
       let manifestApp = manifest.provides.application;
-      let app = compileData.applications.find(app => {
+      const compileConfigModel = await qx.tool.config.Compile.getInstance().load();
+      let app = compileConfigModel.getValue("applications").find(app => {
         if (manifestApp.name && app.name) {
           return manifestApp.name === app.name;
         }
         return manifestApp["class"] === app["class"];
       });
       if (!app) {
-        compileData.applications.push(manifestApp);
+        compileConfigModel.transform("applications", apps => apps.concat([manifestApp]));
         app = manifestApp;
       } else {
         for (let key of Object.getOwnPropertyNames(manifestApp)) {
           app[key] = manifestApp[key];
         }
       }
-      await qx.tool.utils.Json.saveJsonAsync(qx.tool.ConfigSchemas.compile.filename, compileData);
       if (this.argv.verbose) {
         console.info(">>> Installed application " + (app.name||app["class"]));
       }
@@ -574,7 +546,7 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
      */
     __downloadLibrariesInLockfile: async function() {
       if (this.argv.verbose) {
-        console.info(`>>> Downloading libraries listed in ${qx.tool.ConfigSchemas.lockfile.filename}...`);
+        console.info(`>>> Downloading libraries listed in ${qx.tool.config.Lockfile.config.fileName}...`);
       }
       let libraries = (await this.getLockfileData()).libraries;
       for (let i = 0; i < libraries.length; i++) {

@@ -17,7 +17,6 @@
 ************************************************************************ */
 
 require("@qooxdoo/framework");
-require("../ConfigSchemas");
 const path = require("path");
 
 /**

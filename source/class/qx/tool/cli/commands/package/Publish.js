@@ -51,7 +51,7 @@ qx.Class.define("qx.tool.cli.commands.package.Publish", {
             alias: "I",
             describe: "Do not prompt user"
           },
-          "version": {
+          "use-version": {
             alias: "V",
             describe: "Use given version number"
           },
@@ -157,60 +157,56 @@ qx.Class.define("qx.tool.cli.commands.package.Publish", {
 
       // create index file first?
       if (argv.i) {
-        await this.__createIndexFile();
+        await this.__createIndexFile(argv);
       }
 
       let libraries;
-      let manifest_path;
-      let manifest;
       let version;
-      let index_path = process.cwd() + "/qooxdoo.json";
-      if (fs.existsSync(index_path)) {
+      let manifestModels = [];
+      let mainManifestModel;
+      const cwd = process.cwd();
+      const registryModel = qx.tool.config.Registry.getInstance();
+      if (await registryModel.exists()) {
         // we have a qooxdoo.json index file containing the paths of libraries in the repository
-        let index = qx.tool.utils.Json.parseJson(fs.readFileSync(index_path, "utf-8"));
-        if (index.contribs) {
-          console.warn("qooxdoo.json/contribs is deprecated, use qooxdoo.json/libraries instead");
-        }
-        libraries = index.libraries || index.contribs;
+        await registryModel.load();
+        libraries = registryModel.getValue("libraries");
         for (let library of libraries) {
-          manifest_path = path.join(process.cwd(), library.path, qx.tool.ConfigSchemas.manifest.filename);
+          let manifestModel = (new qx.tool.config.Abstract(qx.tool.config.Manifest.config))
+            .set({baseDir: path.join(cwd, library.path)});
+          let manifest_path = manifestModel.getDataPath();
           if (!fs.existsSync(manifest_path)) {
-            throw new qx.tool.utils.Utils.UserError(`Invalid path in qooxdoo.json: ${library.path}/Manifest.json does not exist.`);
+            throw new qx.tool.utils.Utils.UserError(`Invalid path in ${registryModel.getFileName()}: ${manifest_path} does not exist.`);
           }
-          let m = qx.tool.utils.Json.parseJson(fs.readFileSync(manifest_path, "utf-8"));
+          await manifestModel.load();
           // use the first manifest or the one with a truthy property "main" as reference
           if (!version || library.main) {
-            version = m.info.version;
-            manifest = m;
+            version = manifestModel.getValue("info.version");
+            mainManifestModel = manifestModel;
+            manifestModels.push(manifestModel);
           }
         }
       } else {
         // read Manifest.json
-        manifest_path = path.join(process.cwd(), qx.tool.ConfigSchemas.manifest.filename);
-        if (!fs.existsSync(manifest_path)) {
-          throw new qx.tool.utils.Utils.UserError("Cannot find Manifest.json - are you in the project directory?");
-        }
-        manifest = qx.tool.utils.Json.parseJson(fs.readFileSync(manifest_path, "utf-8"));
-
+        mainManifestModel = await qx.tool.config.Manifest.getInstance().load();
+        manifestModels.push(mainManifestModel);
         // prevent accidental publication of demo manifest.
-        if (!argv.force && manifest.provides.namespace.includes(".demo")) {
-          throw new qx.tool.utils.Utils.UserError("This seems to be the library demo. Please go into the library directory to publish the library.");
+        if (!argv.force && mainManifestModel.getValue("provides.namespace").includes(".demo")) {
+          throw new qx.tool.utils.Utils.UserError("This seems to be the library demo. Please go into the library root directory to publish the library.");
         }
         libraries = [{ path: "."}];
       }
 
-
       // version
       let new_version;
-      if (argv.version) {
+      if (argv.useVersion) {
         // use user-supplied value
-        new_version = argv.version;
-        if (!semver.valid(new_version)) {
-          throw new qx.tool.utils.Utils.UserError(`${new_version} is not a valid version number.`);
+        new_version = semver.coerce(argv.useVersion);
+        if (!new_version) {
+          throw new qx.tool.utils.Utils.UserError(`${argv.useVersion} is not a valid version number.`);
         }
       } else {
         // use version number from manifest and increment it
-        let old_version = manifest.info.version;
+        let old_version = mainManifestModel.getValue("info.version");
         if (!semver.valid(old_version)) {
           throw new qx.tool.utils.Utils.UserError("Invalid version number in Manifest. Must be a valid semver version (x.y.z).");
         }
@@ -269,80 +265,43 @@ qx.Class.define("qx.tool.cli.commands.package.Publish", {
         process.exit(0);
       }
 
+      // framework dependency
+      let semver_range = mainManifestModel.getValue("requires.@qooxdoo/framework");
+      if (!semver.satisfies(qooxdoo_version, semver_range, {loose: true})) {
+        semver_range += "^" + qooxdoo_version;
+      }
+
       // update Manifest(s)
-      for (let library of libraries) {
-        manifest_path = path.join(process.cwd(), library.path, qx.tool.ConfigSchemas.manifest.filename);
-        manifest = qx.tool.utils.Json.parseJson(fs.readFileSync(manifest_path, "utf-8"));
-
-        manifest.info.version = new_version;
-
-        // qooxdoo-versions @deprecated but still suppored
-        let qooxdoo_versions = manifest.info["qooxdoo-versions"];
-        if (qooxdoo_versions instanceof Array) {
-          if (!qooxdoo_versions.includes(qooxdoo_version)) {
-            manifest.info["qooxdoo-versions"].push(qooxdoo_version);
-          }
-        }
-
-        // qooxdoo-range @deprecated
-        let needWrite = false;
-        let semver_range;
-        if (manifest.info["qooxdoo-range"]) {
-          if (!argv.quiet) {
-            console.info(`Deprecated key "manifest.info.qooxdoo-range" found, will be changed to manifest.requires["@qooxdoo/framework"]`);
-          }
-          semver_range = manifest.info["qooxdoo-range"];
-          delete manifest.info["qooxdoo-range"];
-          needWrite = true;
-        }
-        if (manifest.requires["qooxdoo-sdk"]) {
-          if (!argv.quiet) {
-            console.info(`Deprecated key "manifest.requires["qooxdoo-sdk"]" found, will be changed to manifest.requires["@qooxdoo/framework"]`);
-          }
-          semver_range = manifest.requires["qooxdoo-sdk"];
-          delete manifest.requires["qooxdoo-sdk"];
-          needWrite = true;
-        }
-        semver_range = (manifest.requires && manifest.requires["@qooxdoo/framework"]) || semver_range;
-
-        if (!semver.satisfies(qooxdoo_version, semver_range, {loose: true})) {
-          needWrite = true;
-          semver_range += (semver_range ? " || ^" : "^") + qooxdoo_version;
-        }
-        if (needWrite) {
-          if (!manifest.requires) {
-            manifest.requires = {};
-          }
-          manifest.requires["@qooxdoo/framework"] = semver_range;
-        }
-
-        let manifest_content = JSON.stringify(manifest, null, 2);
+      for (let manifestModel of manifestModels) {
+        manifestModel.setValue("requires.@qooxdoo/framework", semver_range);
+        manifestModel.setValue("info.version", new_version);
         if (argv.dryrun) {
           if (!argv.quiet) {
-            console.info("Dry run: Not committing the following Manifest:");
-            console.info(manifest_content);
+            console.info(`Dry run: Not committing ${manifestModel.getDataPath()} with the following content:`);
+            console.info(manifestModel.getData());
           }
         } else {
-          fs.writeFileSync(manifest_path, manifest_content, "utf-8");
+          manifestModel.save();
         }
       }
 
-      // package.json
+      // package.json, only supported in the root
       const package_json_path = path.join(process.cwd(), "package.json");
       if (await fs.existsAsync(package_json_path)) {
         let data = await qx.tool.utils.Json.loadJsonAsync(package_json_path);
         data.version = new_version;
-        if (argv.dryrun) {
+        if (this.argv.dryrun) {
           console.info("Dry run: Not changing package.json version...");
         } else {
-          await qx.tool.utils.Json.saveJsonAsync(package_json_path,data);
+          await qx.tool.utils.Json.saveJsonAsync(package_json_path, data);
+          if (!this.argv.quiet) {
+            console.info(`Updated version in package.json.`);
+          }
         }
       }
 
       if (argv.dryrun) {
-        if (!argv.quiet) {
-          console.info(`Dry run: not creating tag and release '${tag}' of ${repo_name}...`);
-        }
+        console.info(`Dry run: not creating tag and release '${tag}' of ${repo_name}...`);
         process.exit(0);
       }
 
@@ -406,41 +365,54 @@ qx.Class.define("qx.tool.cli.commands.package.Publish", {
      * Creates a qooxdoo.json file with paths to Manifest.json files in this repository
      * @private
      */
-    __createIndexFile: async () => new Promise((resolve, reject) => {
-        glob(qx.tool.ConfigSchemas.manifest.filename, {matchBase: true}, async (err, files) => {
-          if (err) {
-            reject(err);
+    __createIndexFile: async argv => new Promise((resolve, reject) => {
+      if (argv.verbose && !argv.quiet) {
+        console.info("Creating index file...");
+      }
+      glob(qx.tool.config.Manifest.config.fileName, {matchBase: true}, async (err, files) => {
+        if (err) {
+          reject(err);
+        }
+        if (!files || !files.length) {
+          reject(new qx.tool.utils.Utils.UserError("No Manifest.json files could be found"));
+        }
+        let mainpath;
+        if (files.length > 1) {
+          let choices = files.map(p => {
+            let m = qx.tool.utils.Json.parseJson(fs.readFileSync(path.join(process.cwd(), p), "utf-8"));
+            return {
+              name: m.info.name + (m.info.summary ? ": " + m.info.summary : ""),
+              value: p
+            };
+          });
+          let answer = await inquirer.prompt({
+            name: "mainpath",
+            message: "Please choose the main library",
+            type: "list",
+            choices
+          });
+          mainpath = answer.mainpath;
+        }
+        let data = {
+          libraries: files.map(p => files.length > 1 && p === mainpath ? {
+            path: path.dirname(p),
+            main: true
+          } : {path: path.dirname(p)})
+        };
+        // write index file
+        const registryModel = qx.tool.config.Registry.getInstance();
+        if (argv.dryrun) {
+          console.info(`Dry run: not creating index file ${registryModel.getDataPath()} with the following content:`);
+          console.info(data);
+        } else {
+          await registryModel.load(data);
+          await registryModel.save();
+          if (!argv.quiet) {
+            console.info(`Created index file ${registryModel.getDataPath()}'.`);
           }
-          if (!files || !files.length) {
-            reject(new qx.tool.utils.Utils.UserError("No Manifest.json files could be found"));
-          }
-          let mainpath;
-          if (files.length > 1) {
-            let choices = files.map(p => {
-              let m = qx.tool.utils.Json.parseJson(fs.readFileSync(path.join(process.cwd(), p), "utf-8"));
-              return {
-                name: m.info.name + (m.info.summary ? ": " + m.info.summary : ""),
-                value: p
-              };
-            });
-            let answer = await inquirer.prompt({
-              name: "mainpath",
-              message: "Please choose the main library",
-              type: "list",
-              choices
-            });
-            mainpath = answer.mainpath;
-          }
-          let index = {
-            libraries: files.map(p => files.length > 1 && p === mainpath ? {
-              path: path.dirname(p),
-              main: true
-            } : {path: path.dirname(p)})
-          };
-          // write index file
-          fs.writeFileSync("qooxdoo.json", JSON.stringify(index, null, 2), "utf-8");
-          resolve();
-        });
-      })
+        }
+        resolve();
+      });
+    })
   }
 });

@@ -58,7 +58,7 @@ qx.Class.define("qx.tool.cli.commands.Clean", {
      * Deletes all generated and cache files
      */
     process: async function() {
-      let compileConfig = await qx.tool.utils.ConfigFile.getInstanceByType("compile");
+      let compileConfig = await qx.tool.config.Compile.getInstance().load();
       for (let target of compileConfig.getValue("targets")) {
         await this.__removePath(path.join(process.cwd(), target.outputPath));
       }

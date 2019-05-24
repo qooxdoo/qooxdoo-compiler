@@ -8,6 +8,8 @@ echo
 pushd test
 node test-deps.js
 node test-config-schemas.js
+node test-pkg-migrate.js
+node test-commands.js
 popd
 
 ./qx package update
@@ -63,4 +65,4 @@ cp ../test/testdata/npm/application/*.js source/class/myapp
 node compiled/source/myapp/myapp.js
 popd
 rm -rf myapp
-echo "CLI Tests finished successfully" 
+echo "CLI Tests finished successfully"
