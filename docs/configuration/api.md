@@ -38,6 +38,6 @@ and `qx.tool.config.Lockfile`.
    `if (manifestModel.isDirty() { manifestModel.save() };`
    
 This API is not only useful for qooxdoo purposes. In fact, you can use it for 
-your own applications by extending `qx.tool.config.Abstract` to write your own
-config file models. 
+your own applications by extending `qx.tool.config.Abstract` to write your [own
+config file models](../../source/class/qx/tool/config/).
 

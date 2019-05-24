@@ -74,15 +74,15 @@ qx.Class.define("qx.tool.cli.commands.Command", {
      * application folder. If no project data can be determined, resolves to an empty map.
      */
     getProjectData : async function() {
-      let qooxdooJsonPath = path.join(process.cwd(), qx.tool.config.Registry.getInstance().getFileName());
+      let qooxdooJsonPath = path.join(process.cwd(), qx.tool.config.Registry.config.fileName);
       let data = {};
       if (await fs.existsAsync(qooxdooJsonPath)) {
         data = await this.parseJsonFile(qooxdooJsonPath);
       } else {
-        if (await fs.existsAsync(path.join(process.cwd(), qx.tool.config.Manifest.getInstance().getFileName()))) {
+        if (await fs.existsAsync(path.join(process.cwd(), qx.tool.config.Manifest.config.fileName))) {
           data.libraries = [{path : "."}];
         }
-        if (await fs.existsAsync(path.join(process.cwd(), qx.tool.config.Compile.getInstance().getFileName()))) {
+        if (await fs.existsAsync(path.join(process.cwd(), qx.tool.config.Compile.config.fileName))) {
           data.applications = [{path : "."}];
         }
       }
@@ -141,30 +141,28 @@ qx.Class.define("qx.tool.cli.commands.Command", {
      * @return {Promise<String>} Promise that resolves with the path {String}
      */
     getAppQxPath : async function() {
-      let compileConfig = qx.tool.config.Compile.getInstance(); // don't load it
-      if (await compileConfig.exists()) {
-        if (!compileConfig.isLoaded()) {
-          await compileConfig.load();
-        }
-        let qxpath = false;
-        let appPath = await this.getApplicationPath();
-        let libraries = compileConfig.getValue("libraries");
-        if (libraries) {
-          for (let somepath of libraries) {
-            let manifestPath = somepath;
-            if (!path.isAbsolute(somepath)) {
-              manifestPath = path.join(appPath, manifestPath);
+      if (!await fs.existsAsync(path.join(process.cwd(), qx.tool.config.Compile.config.fileName))) {
+        return this.getGlobalQxPath();
+      }
+      let compileConfig = await qx.tool.config.Compile.getInstance().load();
+      let qxpath = false;
+      let appPath = await this.getApplicationPath();
+      let libraries = compileConfig.getValue("libraries");
+      if (libraries) {
+        for (let somepath of libraries) {
+          let manifestPath = somepath;
+          if (!path.isAbsolute(somepath)) {
+            manifestPath = path.join(appPath, manifestPath);
+          }
+          manifestPath = path.join(manifestPath, qx.tool.config.Manifest.config.fileName);
+          let manifest = await this.parseJsonFile(manifestPath);
+          try {
+            if (manifest.provides && manifest.provides.namespace === "qx") {
+              qxpath = path.dirname(manifestPath);
+              return qxpath;
             }
-            manifestPath = path.join(manifestPath, qx.tool.config.Manifest.getInstance().getFileName());
-            let manifest = await this.parseJsonFile(manifestPath);
-            try {
-              if (manifest.provides && manifest.provides.namespace === "qx") {
-                qxpath = path.dirname(manifestPath);
-                return qxpath;
-              }
-            } catch (e) {
-              console.warn(`Invalid manifest file ${manifestPath}.`);
-            }
+          } catch (e) {
+            console.warn(`Invalid manifest file ${manifestPath}.`);
           }
         }
       }
@@ -180,13 +178,13 @@ qx.Class.define("qx.tool.cli.commands.Command", {
       let cfg = await qx.tool.cli.ConfigDb.getInstance();
       let dir = cfg.db("qx.library");
       if (dir) {
-        let manifestPath = path.join(dir, qx.tool.config.Manifest.getInstance().getFileName());
+        let manifestPath = path.join(dir, qx.tool.config.Manifest.config.fileName);
         if (await fs.existsAsync(manifestPath)) {
           return dir;
         }
       }
       // This project's node_modules
-      if (await fs.existsAsync("node_modules/@qooxdoo/framework/" + qx.tool.config.Manifest.getInstance().getFileName())) {
+      if (await fs.existsAsync("node_modules/@qooxdoo/framework/" + qx.tool.config.Manifest.config.fileName)) {
         return path.resolve("node_modules/@qooxdoo/framework");
       }
 
@@ -222,7 +220,7 @@ qx.Class.define("qx.tool.cli.commands.Command", {
      * @return {String} Version
      */
     getLibraryVersion : async function(libPath) {
-      let manifestPath = path.join(libPath, qx.tool.config.Manifest.getInstance().getFileName());
+      let manifestPath = path.join(libPath, qx.tool.config.Manifest.config.fileName);
       let manifest = await this.parseJsonFile(manifestPath);
       let version;
       try {

@@ -30,5 +30,11 @@ qx.Class.define("qx.tool.config.Registry", {
   },
   construct: function() {
     this.base(arguments, this.self(arguments).config);
+  },
+
+  members: {
+    getLibraries() {
+      return this.getValue("libraries");
+    }
   }
 });

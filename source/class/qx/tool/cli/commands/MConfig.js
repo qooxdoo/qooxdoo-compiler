@@ -68,7 +68,7 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
           config = await this.__loadJs("compile.js", config);
         }
 
-        let lockfile = qx.tool.config.Lockfile.getInstance().getFileName();
+        let lockfile = qx.tool.config.Lockfile.config.fileName;
         try {
           var name = path.join(path.dirname(parsedArgs.config), lockfile);
           lockfile_content = await this.__loadJson(name);
@@ -247,7 +247,7 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
         environment: {},
         applications: apps,
         libraries: argv.library||[],
-        config: argv.configFile||qx.tool.config.Compile.getInstance().getFileName(),
+        config: argv.configFile||qx.tool.config.Compile.config.fileName,
         continuous: argv.continuous,
         verbose: argv.verbose
       };

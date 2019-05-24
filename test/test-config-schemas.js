@@ -14,9 +14,10 @@ const appNamespace = "testConfigSchemaApp";
       rimraf.sync(appNamespace);
     }
     // create a test app
-    const appConfig = {noninteractive:true, namespace:appNamespace, theme: "Indigo", icontheme: "Tango"};
+    const appConfig = {noninteractive:true, namespace:appNamespace, theme: "Indigo", icontheme: "Tango", verbose:false};
     await (new qx.tool.cli.commands.Create(appConfig)).process();
     process.chdir(appNamespace);
+
     // run tests
     /**
      * Manifest.json

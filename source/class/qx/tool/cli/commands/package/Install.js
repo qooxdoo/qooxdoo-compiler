@@ -358,7 +358,7 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
       let {repo_name, package_path} = uri ? this.__getUriInfo(uri) : {repo_name:"", package_path:""};
       const [manifestModel, lockfileModel] = await this._getConfigData();
       let library_path = path.join(download_path, package_path);
-      let manifest_path = path.join(library_path, qx.tool.config.Manifest.getInstance().getFileName());
+      let manifest_path = path.join(library_path, qx.tool.config.Manifest.config.fileName);
       if (!fs.existsSync(manifest_path)) {
         throw new qx.tool.utils.Utils.UserError(`No manifest file in '${library_path}'.`);
       }
@@ -417,7 +417,7 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
      * @return {Promise<Boolean>} Wether any libraries were installed
      */
     __installDependenciesFromPath: async function(downloadPath) {
-      let manifest_file = path.join(downloadPath, qx.tool.config.Manifest.getInstance().getFileName());
+      let manifest_file = path.join(downloadPath, qx.tool.config.Manifest.config.fileName);
       let manifest = await qx.tool.utils.Json.loadJsonAsync(manifest_file);
       if (!manifest.requires) {
         if (this.argv.verbose) {
@@ -512,7 +512,7 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
      * @return {Promise<Boolean>} Returns true if applications were installed
      */
     __installApplication: async function(downloadPath) {
-      let manifest = await qx.tool.utils.Json.loadJsonAsync(path.join(downloadPath, qx.tool.config.Manifest.getInstance().getFileName()));
+      let manifest = await qx.tool.utils.Json.loadJsonAsync(path.join(downloadPath, qx.tool.config.Manifest.config.fileName));
       if (!manifest.provides || !manifest.provides.application) {
         return false;
       }
@@ -546,7 +546,7 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
      */
     __downloadLibrariesInLockfile: async function() {
       if (this.argv.verbose) {
-        console.info(`>>> Downloading libraries listed in ${qx.tool.config.Lockfile.getInstance().getFileName()}...`);
+        console.info(`>>> Downloading libraries listed in ${qx.tool.config.Lockfile.config.fileName}...`);
       }
       let libraries = (await this.getLockfileData()).libraries;
       for (let i = 0; i < libraries.length; i++) {

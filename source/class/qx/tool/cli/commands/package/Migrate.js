@@ -21,6 +21,7 @@ require("@qooxdoo/framework");
 const process = require("process");
 const path = require("upath");
 const semver = require("semver");
+const fs = require("fs");
 
 /**
  * Installs a package
@@ -75,7 +76,7 @@ qx.Class.define("qx.tool.cli.commands.package.Migrate", {
         return;
       }
       self.migrationInProcess = true;
-      let change = false;
+      let needFix = false;
       // do not call this.base(arguments) here!
       let pkg = qx.tool.cli.commands.Package;
       let cwd = process.cwd();
@@ -100,59 +101,94 @@ qx.Class.define("qx.tool.cli.commands.package.Migrate", {
           to: pkg.cache_dir + "/"
         }];
         await this.migrate(migrateFiles, replaceInFiles, announceOnly);
-        if (!announceOnly) {
+        if (announceOnly) {
+          needFix = true;
+        } else {
           if (!this.argv.quiet) {
             console.info("Fixing path names in the lockfile...");
           }
           this.argv.reinstall = true;
           await (new qx.tool.cli.commands.package.Upgrade(this.argv)).process();
-          change = true;
         }
       }
-      const manifestModel = await qx.tool.config.Manifest.getInstance().set({warnOnly: true}).load();
-      // fix deprecated properties etc.
-      manifestModel
-        .transform("info.authors", authors => {
-          if (authors === "") {
-            return [];
-          } else if (qx.lang.Type.isString(authors)) {
-            return [{name: authors}];
-          } else if (qx.lang.Type.isObject(authors)) {
-            return authors;
+      // Migrate all manifest in a package; this partially duplicated code in Publish
+      const registryModel = qx.tool.config.Registry.getInstance();
+      let manifestModels =[];
+      if (await registryModel.exists()) {
+        // we have a qooxdoo.json index file containing the paths of libraries in the repository
+        await registryModel.load();
+        let libraries = registryModel.getLibraries();
+        for (let library of libraries) {
+          manifestModels.push((new qx.tool.config.Abstract(qx.tool.config.Manifest.config)).set({baseDir: path.join(cwd, library.path)}));
+        }
+      } else {
+        manifestModels.push(qx.tool.config.Manifest.getInstance());
+      }
+      for (const manifestModel of manifestModels) {
+        await manifestModel.set({warnOnly: true}).load();
+        needFix = !qx.lang.Type.isArray(manifestModel.getValue("info.authors")) ||
+            !semver.valid(manifestModel.getValue("info.version") ||
+              manifestModel.keyExists({
+                "info.qooxdoo-versions": null,
+                "info.qooxdoo-range": null,
+                "provides.type": null,
+                "requires.qxcompiler": null,
+                "requires.qooxdoo-sdk": null,
+                "requires.qooxdoo-compiler": null
+              })
+        );
+        if (needFix) {
+          if (announceOnly) {
+            console.warn("*** Manifest(s) need to be updated.");
+          } else {
+            manifestModel
+              .transform("info.authors", authors => {
+                if (authors === "") {
+                  return [];
+                } else if (qx.lang.Type.isString(authors)) {
+                  return [{name: authors}];
+                } else if (qx.lang.Type.isObject(authors)) {
+                  return authors;
+                }
+                return [];
+              })
+              .transform("info.version", version => String(semver.coerce(version)))
+              .unset("info.qooxdoo-versions")
+              .unset("info.qooxdoo-range")
+              .unset("provides.type")
+              .unset("requires.qxcompiler")
+              .unset("requires.qooxdoo-compiler")
+              .unset("requires.qooxdoo-sdk");
           }
-          return [];
-        })
-        .transform("info.version", version => String(semver.coerce(version)))
-        .unset("info.qooxdoo-versions")
-        .unset("info.qooxdoo-range")
-        .unset("provides.type")
-        .unset("requires.qxcompiler")
-        .unset("requires.qooxdoo-sdk")
-        .unset("requires.qooxdoo-compiler")
-        .unset("requires.qooxdoo-sdk");
+        }
 
-      // update dependencies
-      if (!manifestModel.getValue("requires.@qooxdoo/compiler") || !manifestModel.getValue("requires.@qooxdoo/framework")) {
-        if (announceOnly) {
-          console.info("*** Framework and/or compiler dependencies in Manifest need to be updated.");
-        } else {
-          change = true;
-          manifestModel
-            .setValue("requires.@qooxdoo/compiler", "^" + qx.tool.compiler.Version.VERSION)
-            .setValue("requires.@qooxdoo/framework", "^" + await this.getLibraryVersion(await this.getGlobalQxPath()));
-          manifestModel.setWarnOnly(false);
-          // now model should validate
-          if (!this.argv.quiet) {
-            console.info("Updated dependencies in Manifest.");
-            console.info("Migration is completed.");
+        // update dependencies
+        if (!manifestModel.getValue("requires.@qooxdoo/compiler") || !manifestModel.getValue("requires.@qooxdoo/framework")) {
+          needFix = true;
+          if (announceOnly) {
+            console.warn("*** Framework and/or compiler dependencies in Manifest need to be updated.");
+          } else {
+            manifestModel
+              .setValue("requires.@qooxdoo/compiler", "^" + qx.tool.compiler.Version.VERSION)
+              .setValue("requires.@qooxdoo/framework", "^" + await this.getLibraryVersion(await this.getGlobalQxPath()));
+            manifestModel.setWarnOnly(false);
+            // now model should validate
+            await manifestModel.save();
+            if (!this.argv.quiet) {
+              console.info(`Updated dependencies in ${manifestModel.getDataPath()}.`);
+            }
           }
         }
       }
-      await manifestModel.save();
       self.migrationInProcess = false;
-      if (change && announceOnly) {
-        console.error(`*** Please run 'qx package migrate' to apply the changes. If you don't want this, downgrade to a previous version of the compiler.`);
-        process.exit(1);
+      if (needFix) {
+        if (announceOnly) {
+          console.error(`*** Please run 'qx package migrate' to apply the changes. If you don't want this, downgrade to a previous version of the compiler.`);
+          process.exit(1);
+        }
+        console.info("Migration completed.");
+      } else if (!announceOnly || !this.argv.quiet) {
+        console.info("Everything is up-to-date. No migration necessary.");
       }
     }
   }

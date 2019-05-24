@@ -234,7 +234,6 @@ qx.Class.define("qx.tool.config.Abstract", {
      * @return {qx.tool.config.Abstract} Returns the instance for chaining
      */
     async load(data=undefined) {
-      // load data
       if (data === undefined) {
         if (this.isLoaded()) {
           // don't load again
@@ -391,6 +390,25 @@ qx.Class.define("qx.tool.config.Abstract", {
       }
       this.setValue(prop_path, transformedValue, options);
       return this;
+    },
+
+    /**
+     * Given a map containing property paths as keys and arbitrary values,
+     * return the map with values that are true if the property path exists
+     * and false otherwise.
+     * @param propOrMap
+     * @return {boolean|*}
+     */
+    keyExists(propOrMap) {
+      if (qx.lang.Type.isString(propOrMap)) {
+        return this.getValue(propOrMap) !== undefined;
+      } else if (qx.lang.Type.isObject(propOrMap)) {
+        for (let key of Object.getOwnPropertyNames(propOrMap)) {
+          propOrMap[key] = this.keyExists(key);
+        }
+        return propOrMap;
+      }
+      throw new TypeError("Invalid argument");
     },
 
     /**

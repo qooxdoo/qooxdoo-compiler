@@ -21,7 +21,6 @@ const appNamespace = "testCommandsApp";
     process.chdir(appNamespace);
     // run tests
     let actual, expected;
-
     const manifestModel = await qx.tool.config.Manifest.getInstance().load();
 
     // qx add script --rename=y.js test/testdata/x.js

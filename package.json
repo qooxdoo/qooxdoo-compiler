@@ -72,7 +72,6 @@
     "rimraf": "^2.6.2",
     "semver": "^5.7.0",
     "set-value": "^3.0.0",
-    "simple-git": "^1.113.0",
     "tmp": "0.0.33",
     "uglify-es": "^3.3.9",
     "unset-value": "^1.0.0",

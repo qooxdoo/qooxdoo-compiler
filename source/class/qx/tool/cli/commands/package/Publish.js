@@ -157,7 +157,7 @@ qx.Class.define("qx.tool.cli.commands.package.Publish", {
 
       // create index file first?
       if (argv.i) {
-        await this.__createIndexFile();
+        await this.__createIndexFile(argv);
       }
 
       let libraries;
@@ -175,7 +175,7 @@ qx.Class.define("qx.tool.cli.commands.package.Publish", {
             .set({baseDir: path.join(cwd, library.path)});
           let manifest_path = manifestModel.getDataPath();
           if (!fs.existsSync(manifest_path)) {
-            throw new qx.tool.utils.Utils.UserError(`Invalid path in ${registryModel.getFileName()}: ${library.path}/${manifestName} does not exist.`);
+            throw new qx.tool.utils.Utils.UserError(`Invalid path in ${registryModel.getFileName()}: ${manifest_path} does not exist.`);
           }
           await manifestModel.load();
           // use the first manifest or the one with a truthy property "main" as reference
@@ -265,50 +265,43 @@ qx.Class.define("qx.tool.cli.commands.package.Publish", {
         process.exit(0);
       }
 
+      // framework dependency
+      let semver_range = mainManifestModel.getValue("requires.@qooxdoo/framework");
+      if (!semver.satisfies(qooxdoo_version, semver_range, {loose: true})) {
+        semver_range += "^" + qooxdoo_version;
+      }
+
       // update Manifest(s)
-      for (let library of libraries) {
-        let manifestModel = new qx.tool.config.Abstract({
-          fileName: manifestName
-        });
-
-        if (!semver.satisfies(qooxdoo_version, semver_range, {loose: true})) {
-          needWrite = true;
-          semver_range += (semver_range ? " || ^" : "^") + qooxdoo_version;
-        }
-        if (needWrite) {
-          if (!manifest.requires) {
-            manifest.requires = {};
-          }
-          manifest.requires["@qooxdoo/framework"] = semver_range;
-        }
-
-        let manifest_content = JSON.stringify(manifest, null, 2);
+      for (let manifestModel of manifestModels) {
+        manifestModel.setValue("requires.@qooxdoo/framework", semver_range);
+        manifestModel.setValue("info.version", new_version);
         if (argv.dryrun) {
           if (!argv.quiet) {
-            console.info("Dry run: Not committing the following Manifest:");
-            console.info(manifest_content);
+            console.info(`Dry run: Not committing ${manifestModel.getDataPath()} with the following content:`);
+            console.info(manifestModel.getData());
           }
         } else {
-          fs.writeFileSync(manifest_path, manifest_content, "utf-8");
+          manifestModel.save();
         }
       }
 
-      // package.json
+      // package.json, only supported in the root
       const package_json_path = path.join(process.cwd(), "package.json");
       if (await fs.existsAsync(package_json_path)) {
         let data = await qx.tool.utils.Json.loadJsonAsync(package_json_path);
         data.version = new_version;
-        if (argv.dryrun) {
+        if (this.argv.dryrun) {
           console.info("Dry run: Not changing package.json version...");
         } else {
-          await qx.tool.utils.Json.saveJsonAsync(package_json_path,data);
+          await qx.tool.utils.Json.saveJsonAsync(package_json_path, data);
+          if (!this.argv.quiet) {
+            console.info(`Updated version in package.json.`);
+          }
         }
       }
 
       if (argv.dryrun) {
-        if (!argv.quiet) {
-          console.info(`Dry run: not creating tag and release '${tag}' of ${repo_name}...`);
-        }
+        console.info(`Dry run: not creating tag and release '${tag}' of ${repo_name}...`);
         process.exit(0);
       }
 
@@ -372,41 +365,54 @@ qx.Class.define("qx.tool.cli.commands.package.Publish", {
      * Creates a qooxdoo.json file with paths to Manifest.json files in this repository
      * @private
      */
-    __createIndexFile: async () => new Promise((resolve, reject) => {
-        glob(qx.tool.config.Manifest.getInstance().getFileName(), {matchBase: true}, async (err, files) => {
-          if (err) {
-            reject(err);
+    __createIndexFile: async argv => new Promise((resolve, reject) => {
+      if (argv.verbose && !argv.quiet) {
+        console.info("Creating index file...");
+      }
+      glob(qx.tool.config.Manifest.config.fileName, {matchBase: true}, async (err, files) => {
+        if (err) {
+          reject(err);
+        }
+        if (!files || !files.length) {
+          reject(new qx.tool.utils.Utils.UserError("No Manifest.json files could be found"));
+        }
+        let mainpath;
+        if (files.length > 1) {
+          let choices = files.map(p => {
+            let m = qx.tool.utils.Json.parseJson(fs.readFileSync(path.join(process.cwd(), p), "utf-8"));
+            return {
+              name: m.info.name + (m.info.summary ? ": " + m.info.summary : ""),
+              value: p
+            };
+          });
+          let answer = await inquirer.prompt({
+            name: "mainpath",
+            message: "Please choose the main library",
+            type: "list",
+            choices
+          });
+          mainpath = answer.mainpath;
+        }
+        let data = {
+          libraries: files.map(p => files.length > 1 && p === mainpath ? {
+            path: path.dirname(p),
+            main: true
+          } : {path: path.dirname(p)})
+        };
+        // write index file
+        const registryModel = qx.tool.config.Registry.getInstance();
+        if (argv.dryrun) {
+          console.info(`Dry run: not creating index file ${registryModel.getDataPath()} with the following content:`);
+          console.info(data);
+        } else {
+          await registryModel.load(data);
+          await registryModel.save();
+          if (!argv.quiet) {
+            console.info(`Created index file ${registryModel.getDataPath()}'.`);
           }
-          if (!files || !files.length) {
-            reject(new qx.tool.utils.Utils.UserError("No Manifest.json files could be found"));
-          }
-          let mainpath;
-          if (files.length > 1) {
-            let choices = files.map(p => {
-              let m = qx.tool.utils.Json.parseJson(fs.readFileSync(path.join(process.cwd(), p), "utf-8"));
-              return {
-                name: m.info.name + (m.info.summary ? ": " + m.info.summary : ""),
-                value: p
-              };
-            });
-            let answer = await inquirer.prompt({
-              name: "mainpath",
-              message: "Please choose the main library",
-              type: "list",
-              choices
-            });
-            mainpath = answer.mainpath;
-          }
-          let index = {
-            libraries: files.map(p => files.length > 1 && p === mainpath ? {
-              path: path.dirname(p),
-              main: true
-            } : {path: path.dirname(p)})
-          };
-          // write index file
-          fs.writeFileSync("qooxdoo.json", JSON.stringify(index, null, 2), "utf-8");
-          resolve();
-        });
-      })
+        }
+        resolve();
+      });
+    })
   }
 });

@@ -96,7 +96,7 @@ qx.Class.define("qx.tool.cli.commands.Package", {
      * @return {String}
      */
     getLockfilePath: function() {
-      return path.join(process.cwd(), qx.tool.config.Lockfile.getInstance().getFileName());
+      return path.join(process.cwd(), qx.tool.config.Lockfile.config.fileName);
     },
 
     /**
