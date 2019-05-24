@@ -18,7 +18,7 @@
 
 const fs = qx.tool.utils.Promisify.fs;
 const process = require("process");
-const path = require("path");
+const path = require("upath");
 const semver = require("semver");
 const get_value = require("get-value");
 const set_value = require("set-value");
@@ -403,10 +403,12 @@ qx.Class.define("qx.tool.config.Abstract", {
       if (qx.lang.Type.isString(propOrMap)) {
         return this.getValue(propOrMap) !== undefined;
       } else if (qx.lang.Type.isObject(propOrMap)) {
+        res = false;
         for (let key of Object.getOwnPropertyNames(propOrMap)) {
           propOrMap[key] = this.keyExists(key);
+          res = res || propOrMap[key];
         }
-        return propOrMap;
+        return res;
       }
       throw new TypeError("Invalid argument");
     },

@@ -127,16 +127,15 @@ qx.Class.define("qx.tool.cli.commands.package.Migrate", {
       for (const manifestModel of manifestModels) {
         await manifestModel.set({warnOnly: true}).load();
         needFix = !qx.lang.Type.isArray(manifestModel.getValue("info.authors")) ||
-            !semver.valid(manifestModel.getValue("info.version") ||
-              manifestModel.keyExists({
-                "info.qooxdoo-versions": null,
-                "info.qooxdoo-range": null,
-                "provides.type": null,
-                "requires.qxcompiler": null,
-                "requires.qooxdoo-sdk": null,
-                "requires.qooxdoo-compiler": null
-              })
-        );
+            !semver.valid(manifestModel.getValue("info.version")) ||
+            manifestModel.keyExists({
+              "info.qooxdoo-versions": null,
+              "info.qooxdoo-range": null,
+              "provides.type": null,
+              "requires.qxcompiler": null,
+              "requires.qooxdoo-sdk": null,
+              "requires.qooxdoo-compiler": null
+            });
         if (needFix) {
           if (announceOnly) {
             console.warn("*** Manifest(s) need to be updated.");
