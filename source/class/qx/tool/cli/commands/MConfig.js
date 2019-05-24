@@ -19,11 +19,13 @@
 
 
 require("@qooxdoo/framework");
+require("../../config");
 const path = require("upath");
 const fs = qx.tool.utils.Promisify.fs;
 const JsonToAst = require("json-to-ast");
 const semver = require("semver");
 const vm = require("vm");
+
 
 qx.Mixin.define("qx.tool.cli.commands.MConfig", {
 
@@ -51,7 +53,7 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
       var parsedArgs = await this.__parseImpl();
       var config = {};
       var lockfile_content = {
-        version: qx.tool.ConfigSchemas.lockfile.version
+        version: qx.tool.config.Lockfile.getInstance().getVersion()
       };
 
       if (parsedArgs.config) {
@@ -61,12 +63,12 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
           if (ex.code != "ENOENT")
             throw ex;
         }
-        
+
         if (await fs.existsAsync("compile.js")) {
           config = await this.__loadJs("compile.js", config);
         }
-        
-        let lockfile = qx.tool.ConfigSchemas.lockfile.filename;
+
+        let lockfile = qx.tool.config.Lockfile.config.fileName;
         try {
           var name = path.join(path.dirname(parsedArgs.config), lockfile);
           lockfile_content = await this.__loadJson(name);
@@ -74,7 +76,7 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
           // Nothing
         }
         // check semver-type compatibility (i.e. compatible as long as major version stays the same)
-        let schemaVersion = semver.coerce(qx.tool.ConfigSchemas.lockfile.version, true).raw;
+        let schemaVersion = semver.coerce(qx.tool.config.Lockfile.getInstance().getVersion(), true).raw;
         let fileVersion = lockfile_content.version ? semver.coerce(lockfile_content.version, true).raw : "1.0.0";
         if (semver.major(schemaVersion) > semver.major(fileVersion)) {
           if (this.argv.force) {
@@ -245,7 +247,7 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
         environment: {},
         applications: apps,
         libraries: argv.library||[],
-        config: argv.configFile||qx.tool.ConfigSchemas.compile.filename,
+        config: argv.configFile||qx.tool.config.Compile.config.fileName,
         continuous: argv.continuous,
         verbose: argv.verbose
       };
@@ -277,7 +279,7 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
       if (!await qx.tool.utils.files.Utils.safeStat(aPath)) {
         return false;
       }
-      
+
       try {
         let p = new Promise((resolve, reject) => {
           const script = require(path.resolve(aPath));
@@ -289,7 +291,7 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
               throw new Error("Error while reading " + aPath + " - cannot find configuration data");
             }
           }
-          
+
           if (typeof script == "function") {
             try {
               let result = script({
@@ -301,24 +303,24 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
                 else
                   onResolve(data);
               });
-              
+
               if (result instanceof Promise) {
                 result.then(onResolve).catch(reject);
-                
+
               } else if (result) {
                 onResolve(result);
               }
-              
+
             }catch(ex) {
               reject(ex);
             }
-            
+
           } else {
             onResolve(script);
           }
-            
+
         });
-        
+
         return await p;
       } catch(e) {
         let lines = e.stack.split('\n');

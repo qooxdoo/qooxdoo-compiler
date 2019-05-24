@@ -89,7 +89,7 @@
             }
           }
         },
-       "version": {
+        "version": {
           "type": "string",
           "description": "a semver compatible version string",
           "//pattern": "^(\\d|[1-9]\\d*)\\.(\\d|[1-9]\\d*)\\.(\\d|[1-9]\\d*)(?:-([-\\dA-Za-z]+(?:\\.[\\dA-Za-z-]+)*))?(?:\\+([-\\dA-Za-z]+(?:\\.[-\\d0-9A-Za-z]+)*))?$"
@@ -178,28 +178,6 @@
         },
         "application": {
           "type":"object"
-        },
-        "externalResources": {
-          "type":"object",
-          "description": "Static Javascript and CSS files that shall be always included without further processing by qooxdoo. All paths are relative to the resource folder stated in the 'provides' section.",
-          "properties": {
-            "css": {
-              "type": "array",
-              "uniqueItems": true,
-              "items": {
-                "type": "string",
-                "pattern": "\\.css$"
-              }
-            },
-            "script": {
-              "type": "array",
-              "uniqueItems": true,
-              "items": {
-                "type": "string",
-                "pattern": "\\.js$"
-              }
-            }
-          }
         }
       }
     },
@@ -214,6 +192,28 @@
         }
       },
       "additionalProperties": false
+    },
+    "externalResources": {
+      "type":"object",
+      "description": "Static Javascript and CSS files that shall be always included without further processing by qooxdoo. All paths are relative to the resource folder stated in the 'provides' section.",
+      "properties": {
+        "css": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "[.]css$"
+          }
+        },
+        "script": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "[.]js$"
+          }
+        }
+      }
     },
     "setup": {
       "description": "Setup Section - used in Qooxdoo SDK Manifest.json ... do we need this still?",

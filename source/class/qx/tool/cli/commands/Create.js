@@ -287,7 +287,6 @@ qx.Class.define("qx.tool.cli.commands.Create", {
           }
         }
       }
-
       // go
       traverseFileSystem.bind(this)(skeleton_dir, appdir);
     }

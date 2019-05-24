@@ -20,6 +20,7 @@ require("@qooxdoo/framework");
 if (qx.tool === undefined) {
   qx.tool = {
     $$rootDir: __dirname,
+    $$classPath: __dirname + "/source/class",
     $$sourceDir: __dirname + "/source/class/qx/tool",
     $$resourceDir: __dirname + "/source/resource/qx/tool"
   };
@@ -28,6 +29,7 @@ if (qx.tool === undefined) {
 require("./source/class/qx/tool/utils");
 require("./source/class/qx/tool/compiler");
 require("./source/class/qx/tool/cli");
+require("./source/class/qx/tool/config");
 
 const updateNotifier = require("update-notifier");
 const pkg = require("./package.json");
