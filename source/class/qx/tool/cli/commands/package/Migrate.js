@@ -126,19 +126,36 @@ qx.Class.define("qx.tool.cli.commands.package.Migrate", {
       }
       for (const manifestModel of manifestModels) {
         await manifestModel.set({warnOnly: true}).load();
-        needFix = !qx.lang.Type.isArray(manifestModel.getValue("info.authors")) ||
-            !semver.valid(manifestModel.getValue("info.version")) ||
-            manifestModel.keyExists({
-              "info.qooxdoo-versions": null,
-              "info.qooxdoo-range": null,
-              "provides.type": null,
-              "requires.qxcompiler": null,
-              "requires.qooxdoo-sdk": null,
-              "requires.qooxdoo-compiler": null
-            });
+        needFix = false;
+        let s = "";
+        if (!qx.lang.Type.isArray(manifestModel.getValue("info.authors"))) {
+          needFix = true;
+          s += "   missign info.authors\n";
+        }
+        if (!semver.valid(manifestModel.getValue("info.version"))) {
+          needFix = true;
+          s += "   missing or invalid info.version\n";
+        }
+        let obj = {
+          "info.qooxdoo-versions": null,
+          "info.qooxdoo-range": null,
+          "provides.type": null,
+          "requires.qxcompiler": null,
+          "requires.qooxdoo-sdk": null,
+          "requires.qooxdoo-compiler": null
+        };
+        if (manifestModel.keyExists(obj)) {
+           needFix = true;
+           s += "   obsolete entry:\n";
+           for (let key in obj) {
+              if (obj[key]) {
+                 s += "      " + key + "\n";
+               }  
+            }
+        };
         if (needFix) {
           if (announceOnly) {
-            console.warn("*** Manifest(s) need to be updated.");
+            console.warn("*** Manifest(s) need to be updated:\n" + s);
           } else {
             manifestModel
               .transform("info.authors", authors => {
