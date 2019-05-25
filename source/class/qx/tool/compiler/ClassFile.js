@@ -204,6 +204,8 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
     this.__taskQueue.error = err => {
       this.error(err.stack||err);
     };
+
+    analyser.getIgnores().forEach(s => this.addIgnore(s));
   },
 
   members: {

@@ -192,6 +192,7 @@ qx.Class.define("qx.tool.config.Abstract", {
      * Path to the local copy of the schema json file
      * @return {String}
      */
+    /* @ignore qx.tool.$$resourceDir */
     getSchemaPath() {
       return path.join(qx.tool.$$resourceDir, "schema", "v" + this.getVersion(), this.getFileName());
     },

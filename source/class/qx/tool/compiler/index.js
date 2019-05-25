@@ -27,4 +27,3 @@ require("./resources");
 require("./targets");
 require("../utils/IndexedArray");
 
-module.exports = qx.tool.compiler;

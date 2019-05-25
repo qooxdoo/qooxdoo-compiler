@@ -24,7 +24,6 @@ const path = require("upath");
 const fs = qx.tool.utils.Promisify.fs;
 const JsonToAst = require("json-to-ast");
 const semver = require("semver");
-const vm = require("vm");
 
 
 qx.Mixin.define("qx.tool.cli.commands.MConfig", {
@@ -62,10 +61,6 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
         }catch(ex) {
           if (ex.code != "ENOENT")
             throw ex;
-        }
-
-        if (await fs.existsAsync("compile.js")) {
-          config = await this.__loadJs("compile.js", config);
         }
 
         let lockfile = qx.tool.config.Lockfile.config.fileName;
@@ -115,11 +110,13 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
         }
       }
       this._mergeArguments(parsedArgs, config, lockfile_content);
+
       if (config.libraries) {
         for (const aPath of config.libraries) {
           if (typeof aPath === "object" && typeof aPath.path === "string") {
             throw new Error("Configuration for libraries has changed - it is now an array of strings, each of which is a path to the directory containing Manifest.json.  Please run 'qx upgrade'");
           }
+          await this.__loadJs(path.join(aPath, "compile.js"), config);
         }
       }
       return config;
@@ -277,7 +274,7 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
 
     __loadJs: async function(aPath, inputData) {
       if (!await qx.tool.utils.files.Utils.safeStat(aPath)) {
-        return false;
+        return inputData;
       }
 
       try {
@@ -320,8 +317,8 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
           }
 
         });
-
-        return await p;
+        let res = await p;
+        return res;
       } catch(e) {
         let lines = e.stack.split('\n');
         for (let i = 0; i < lines.length; i++) {

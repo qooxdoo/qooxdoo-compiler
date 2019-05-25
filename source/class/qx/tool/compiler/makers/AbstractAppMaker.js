@@ -26,7 +26,7 @@ require("./Maker");
 /**
  * Base class for application makers, add targets, locales etc
  */
-module.exports = qx.Class.define("qx.tool.compiler.makers.AbstractAppMaker", {
+qx.Class.define("qx.tool.compiler.makers.AbstractAppMaker", {
   extend: qx.tool.compiler.makers.Maker,
   type: "abstract",
 
@@ -54,7 +54,7 @@ module.exports = qx.Class.define("qx.tool.compiler.makers.AbstractAppMaker", {
     }
   },
 
-  members: {
+   members: {
 
     /*
      * @Override

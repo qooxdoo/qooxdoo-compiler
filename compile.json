@@ -17,6 +17,14 @@
   "locales": [
     "en"
   ],
+  "ignores": [
+    "module.*",
+	"process.*",
+	"Promise.*",
+	"require.*",
+	"path.*",
+	"args.*"
+  ],
   "applications": [
     {
       "class": "qxl.apiviewer.Application",
@@ -27,18 +35,23 @@
       "environment": {
         "qx.icontheme": "Tango",
         "excludeFromAPIViewer": [
-          "qxl.apiviewer.*"
+          "qxl.*",
+          "qx.*"
+        ],
+        "includeToAPIViewer": [
+          "qx.tool.*"
         ]
       },
       "include": [
-        "qx.*"
+        "qx.*",
+		"qx.tool.*"
       ],
       "exclude": [
         "qx.test.*",
         "qx.module.Blocker",
         "qx.module.Placement",
-		"qx.tool.*"
-		
+        "qx.tool.compiler.util",
+        "*.index"
       ]
     }
   ]
