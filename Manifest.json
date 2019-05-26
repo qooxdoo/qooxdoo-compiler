@@ -1,0 +1,44 @@
+{
+  "$schema": "https://raw.githubusercontent.com/qooxdoo/qooxdoo-compiler/master/resource/schema/v1/Manifest.json",
+  "info" :
+  {
+    "name" : "qxcompiler",
+
+    "summary" : "the qooxdoo compiler",
+    "description" : "",
+
+    "homepage" : "https://github.com/qooxdoo/qooxdoo-compiler",
+
+    "license" : "MIT license",
+    "authors" : [
+  {
+        "name": "John Spackman (johnspackman)",
+        "email": "john.spackman@zenesis.com"
+  },
+  {
+    "name": "Christian Boulanger (cboulanger)",
+    "email": "info@bibliograph.org"
+  },
+  {
+        "name": "Henner Kollmann (hkollmann)",
+        "email": "Henner.Kollmann.gmx.de"
+  }
+],
+
+    "version" : "1.0.0-beta"
+  },
+
+  "provides" :
+  {
+    "namespace"   : "qxcompiler",
+    "encoding"    : "utf-8",
+    "class"       : "source/class",
+    "resource"    : "source/resource",
+    "translation" : "source/translation"
+  },
+
+  "requires": {
+    "@qooxdoo/framework": "^6.0.0-alpha-20190511-1022",
+    "@qooxdoo/compiler" : "^1.0.0-beta"
+  }
+}

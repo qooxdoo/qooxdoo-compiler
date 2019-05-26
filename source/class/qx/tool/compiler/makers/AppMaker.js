@@ -21,13 +21,14 @@
  * *********************************************************************** */
 
 require("@qooxdoo/framework");
+require("./AbstractAppMaker");
 
 /**
  * Application maker; supports multiple applications to compile against a single
  * target
  */
-module.exports = qx.Class.define("qx.tool.compiler.makers.AppMaker", {
-  extend: require("./AbstractAppMaker"),
+qx.Class.define("qx.tool.compiler.makers.AppMaker", {
+  extend: qx.tool.compiler.makers.AbstractAppMaker,
 
   /**
    * Constructor

@@ -1,0 +1,83 @@
+{
+  "$schema": "https://raw.githubusercontent.com/qooxdoo/qooxdoo-compiler/master/resource/schema/v1/compile.json",
+  "targets": [
+    {
+      "type": "source",
+      "outputPath": "compiled/source",
+      "bundle": {
+        "include": [
+          "qx.*",
+          "qxWeb",
+          "qxl.*"
+        ]
+      },
+      "babelOptions": {
+        "targets": "edge >=18, chrome >= 73, firefox >= 66"
+      }
+    },
+    {
+      "type": "build",
+      "outputPath": "compiled/build"
+    }
+  ],
+  "parts": {
+    "boot": {
+      "include": [
+        "qx.*",
+        "qxl.*"
+      ],
+      "exclude": [
+        "qx.tool.*"
+      ]
+    },
+    "compiler": {
+      "include": [
+        "qx.tool.*"
+      ]
+    }
+  },
+  "defaultTarget": "source",
+  "locales": [
+    "en"
+  ],
+  "ignores": [
+    "module.*",
+    "process.*",
+    "Promise.*",
+    "require.*",
+    "path.*",
+    "args.*"
+  ],
+  "applications": [
+    {
+      "class": "qxl.apiviewer.Application",
+      "theme": "qxl.apiviewer.Theme",
+      "name": "apiviewer",
+      "title": "Qooxdoo API Viewer",
+      "default": true,
+      "environment": {
+        "qx.icontheme": "Tango",
+        "excludeFromAPIViewer": [
+          "qxl.*",
+          "qx.*",
+          "qxWeb"
+        ],
+        "includeToAPIViewer": [
+          "qx.tool.*"
+        ]
+      },
+      "include": [
+        "qx.*",
+        "qxl.*"
+      ],
+      "exclude": [
+        "qx.test.*",
+        "qx.module.Blocker",
+        "qx.module.Placement",
+        "qx.tool.compiler.util",
+        "qx.ui.website.*",
+        "*.index"
+      ]
+    }
+  ]
+}
