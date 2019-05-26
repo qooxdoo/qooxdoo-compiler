@@ -318,8 +318,10 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         await qx.tool.utils.files.Utils.safeUnlink(maker.getAnalyser().getResDbFilename());
       }
       var analyser = maker.getAnalyser();
-      analyser.setIgnores(config.ignores);
-      
+	  if (config.ignores) {
+         analyser.setIgnores(config.ignores);
+	  }
+     
       var target = maker.getTarget();
       if (this.__gauge) {
         maker.addListener("writingApplications", () => this.__gauge.show("Writing Applications", 0));

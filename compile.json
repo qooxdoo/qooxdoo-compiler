@@ -51,6 +51,8 @@
         "qx.module.Blocker",
         "qx.module.Placement",
         "qx.tool.compiler.util",
+		"qx.ui.website.*",
+		"qxWeb",
         "*.index"
       ]
     }

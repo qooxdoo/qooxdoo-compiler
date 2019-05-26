@@ -109,8 +109,8 @@ module.exports = qx.Class.define("qx.tool.compiler.Analyser", {
     },
     /** list of global ignores */
     ignores: {
-      init: null,
-      nullable: true,
+      init: [],
+      nullable: false,
       check: "Array"
     }
 
