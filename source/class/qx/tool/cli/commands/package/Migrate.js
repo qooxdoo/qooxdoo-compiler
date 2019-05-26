@@ -130,7 +130,7 @@ qx.Class.define("qx.tool.cli.commands.package.Migrate", {
         let s = "";
         if (!qx.lang.Type.isArray(manifestModel.getValue("info.authors"))) {
           needFix = true;
-          s += "   missign info.authors\n";
+          s += "   missing info.authors\n";
         }
         if (!semver.valid(manifestModel.getValue("info.version"))) {
           needFix = true;

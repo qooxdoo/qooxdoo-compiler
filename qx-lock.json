@@ -16,9 +16,5 @@
       "repo_name": "qooxdoo/qxl.versionlabel",
       "repo_tag": "v0.1.2"
     }
-  ],
-  "version": "2.1",
-  "requires": {
-    "qooxdoo/qxl.apiviewer": "^0.1.16"
-  }
+  ]
 }
