@@ -92,7 +92,7 @@ This is a sample file:
   * **application**: An application description block as described in 
         [compiler.json](../cli/compile-json.md). This block will copied to `applications` section in `compile.json` during installation of the contrib.
 
-  * **externalResources**: Static Javascript and CSS files that shall be always included without further processing by qooxdoo. All paths are relative to the resource folder stated in the "provides" section.
+* **externalResources**: Static Javascript and CSS files that shall be always included without further processing by qooxdoo. All paths are relative to the resource folder stated in the "provides" section.
   * **script**: Array of javascript files.
   * **css**: Array of css files.
 -   **requires**: a list of of needed libraries and contribs. Format is 

@@ -140,7 +140,7 @@
           "items": {
             "type": "object",
             "required": [
-              "name", "resouces"
+              "name", "resources"
             ],
             "additionalProperties": false,
             "properties": {
