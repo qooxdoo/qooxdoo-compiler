@@ -171,18 +171,15 @@ qx.Class.define("qx.tool.cli.commands.package.Publish", {
         await registryModel.load();
         libraries = registryModel.getValue("libraries");
         for (let library of libraries) {
-          let manifestModel = (new qx.tool.config.Abstract(qx.tool.config.Manifest.config))
-            .set({baseDir: path.join(cwd, library.path)});
-          let manifest_path = manifestModel.getDataPath();
-          if (!fs.existsSync(manifest_path)) {
-            throw new qx.tool.utils.Utils.UserError(`Invalid path in ${registryModel.getFileName()}: ${manifest_path} does not exist.`);
-          }
-          await manifestModel.load();
+          let manifestModel =
+            await (new qx.tool.config.Abstract(qx.tool.config.Manifest.config))
+              .set({baseDir: path.join(cwd, library.path)})
+              .load();
+          manifestModels.push(manifestModel);
           // use the first manifest or the one with a truthy property "main" as reference
           if (!version || library.main) {
             version = manifestModel.getValue("info.version");
             mainManifestModel = manifestModel;
-            manifestModels.push(manifestModel);
           }
         }
       } else {
@@ -273,8 +270,9 @@ qx.Class.define("qx.tool.cli.commands.package.Publish", {
 
       // update Manifest(s)
       for (let manifestModel of manifestModels) {
-        manifestModel.setValue("requires.@qooxdoo/framework", semver_range);
-        manifestModel.setValue("info.version", new_version);
+        manifestModel
+          .setValue("requires.@qooxdoo/framework", semver_range)
+          .setValue("info.version", new_version);
         if (argv.dryrun) {
           if (!argv.quiet) {
             console.info(`Dry run: Not committing ${manifestModel.getDataPath()} with the following content:`);
