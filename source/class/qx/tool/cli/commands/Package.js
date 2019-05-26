@@ -137,7 +137,7 @@ qx.Class.define("qx.tool.cli.commands.Package", {
      * @return {Promise<qx.tool.config.Manifest>}
      */
     async getManifestModel() {
-      return qx.tool.config.Lockfile.getInstance().load();
+      return qx.tool.config.Manifest.getInstance().load();
     },
 
     /**

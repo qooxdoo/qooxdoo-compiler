@@ -137,7 +137,7 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
      * @return {Promise<Boolean>}
      */
     async isInstalled(library_uri, release_tag) {
-      return (await this .getLockfileModel())
+      return (await this.getLockfileModel())
         .getValue("libraries")
         .some(lib => lib.uri === library_uri && (release_tag === undefined || release_tag === lib.repo_tag));
     },
@@ -382,15 +382,14 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
       }
 
       // do we already have an entry for the library that matches either the URI or the local path?
-      let data = lockfileModel.getData();
-      let index = data.libraries.findIndex(elem => (uri && elem.uri === uri) || (!uri && elem.path === local_path));
+      let index = lockfileModel.getValue("libraries").findIndex(elem => (uri && elem.uri === uri) || (!uri && elem.path === local_path));
       if (index >= 0) {
-        data.libraries[index] = lib;
+        lockfileModel.setValue(["libraries", index], lib);
         if (this.argv.verbose) {
           console.info(`>>> Updating already existing lockfile entry for ${info.name}, ${info.version}, installed from '${uri ? uri : local_path}'.`);
         }
       } else {
-        data.libraries.push(lib);
+        lockfileModel.transform("libraries", libs => libs.push(lib) && libs);
         if (this.argv.verbose) {
           console.info(`>>> Added new lockfile entry for ${info.name}, ${info.version}, installed from '${uri ? uri : local_path}'.`);
         }

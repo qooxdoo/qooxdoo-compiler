@@ -5,19 +5,16 @@ set -e
 echo "Testing qooxdoo-compiler version $(./qx --version)"
 echo
 
+./qx package update
+
 pushd test
 node test-deps.js
 node test-config-schemas.js
 node test-pkg-migrate.js
 node test-commands.js
 popd
+test/test-dependency-management.sh
 
-./qx package update
-
-# disabled until it is fixed
-# test/test-dependency-management.sh
-
-rm -rf myapp
 # test create app
 ./qx create myapp -I --type server -v
 pushd myapp
