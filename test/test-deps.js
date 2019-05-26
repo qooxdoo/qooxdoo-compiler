@@ -50,7 +50,8 @@ async function createMaker() {
       "test.overridden1": true,
       "test.overridden2": false,
       "test.overridden5": "application"
-    }
+    },
+    templatePath: "../source/resource/qx/tool/cli/templates"
   }));
 
   return new Promise((resolve, reject) => {
