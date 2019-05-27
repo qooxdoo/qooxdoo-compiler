@@ -31,6 +31,7 @@
   },
   "requires": {
     "@qooxdoo/framework": "^6.0.0-alpha",
-    "@qooxdoo/compiler": "^1.0.0-beta"
+    "@qooxdoo/compiler": "^1.0.0-beta",
+    "qooxdoo/qxl.apiviewer": "^0.1.18"
   }
 }
