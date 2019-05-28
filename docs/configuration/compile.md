@@ -278,7 +278,7 @@ If you add the `environment` block at the top level of the compile.json (as in t
 ```
 In this example, `demoapp.myCustomSetting` is always 3 for the `appone` Application, and either 1 or 2 for `apptwo` depending on whether you're compile a `source` Target or a `build` Target.
 
-###Code Elimination
+### Code Elimination
 When the compiler can absolutely determine, in advance, the values for an environment variable,
 it will evaluate the expression in advance and eliminate code which can never be called; for example,
 the most common example of this is `qx.debug` which is true for the Source Target and false for Build Targets.

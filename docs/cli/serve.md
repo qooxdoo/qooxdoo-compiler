@@ -1,8 +1,16 @@
 ### Mini Web Server
 
-Although many applications will run perfectly well when loaded via a `file://` URL, browser security means that some applications *must* use an `http://` url.  The CLI includes the `qx serve` command which operates a mini web server running (by default) on `http://localhost:8080`.  You can customise the port with the `--listenPort=<portnumber>` argument, or by adding `serve: { listenPort: <portnumber> }` to your `compile.json`; the command line option will take precedence over the `compile.json` setting.  
+Although many applications will run perfectly well when loaded via a `file://`
+URL, browser security means that some applications *must* use an `http://` url. 
+The CLI includes the `qx serve` command which operates a mini web server running
+(by default) on `http://localhost:8080`.  You can customise the port with the
+`--listenPort=<portnumber>` argument, or by adding `serve: { listenPort:
+<portnumber> }` to your `compile.json`; the command line option will take
+precedence over the `compile.json` setting.
 
-An important feature is that `qx serve` will constantly compile your application in the background, every time you edit the code - this is equivalent to `qx compile --watch` plus the web server.
+An important feature is that `qx serve` will constantly compile your application
+in the background, every time you edit the code - this is equivalent to `qx
+compile --watch` plus the web server.
 
 As an example this will compile your application and start the web server on port 8082 
 
@@ -42,5 +50,8 @@ Options:
 
 ```
 
-Note that the `qx serve` command supports exactly the same options as `qx compile`, with the exception of `--watch` because that is always enabled; for more details of the options and the compilation process, please see [compiler.md](compiler.md)
+Note that the `qx serve` command supports exactly the same options as `qx
+compile`, with the exception of `--watch` because that is always enabled; for
+more details of the options and the compilation process, please see
+[compiler.md](compiler.md)
  
