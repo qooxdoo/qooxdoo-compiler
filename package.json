@@ -83,6 +83,7 @@
   },
   "devDependencies": {
     "cross-os": "^1.2.2",
+    "bats": "^1.1.0",
     "dot": "^1.1.2",
     "jstransformer-dot": "^0.1.2",
     "metalsmith": "^2.3.0",
