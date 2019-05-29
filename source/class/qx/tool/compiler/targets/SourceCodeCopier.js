@@ -45,7 +45,7 @@ qx.Class.define("qx.tool.compiler.targets.SourceCodeCopier", {
   construct(outputFilename) {
     this.base(arguments);
 
-    let pos = outputFilename.lastIndexOf('.');
+    let pos = outputFilename.lastIndexOf(".");
     let basename = outputFilename.substring(0, pos);
 
     this.__tmpFilename = basename + "-tmp.js";
@@ -100,7 +100,6 @@ qx.Class.define("qx.tool.compiler.targets.SourceCodeCopier", {
         hash.write(data);
         this.__existingHashValue = this.__hash.read();
       }
-
     },
 
     /**
@@ -168,10 +167,9 @@ qx.Class.define("qx.tool.compiler.targets.SourceCodeCopier", {
         await fs.renameAsync(this.__tmpFilename, this.__outputFilename);
         await fs.writeFileAsync(this.__mapFilename, JSON.stringify(JSON.parse(this.__generator.toString()), null, 2), "utf8");
         return true;
-      } else {
-        await fs.unlinkAsync(this.__tmpFilename);
-        return false;
-      }
+      } 
+      await fs.unlinkAsync(this.__tmpFilename);
+      return false;
     }
   }
 });

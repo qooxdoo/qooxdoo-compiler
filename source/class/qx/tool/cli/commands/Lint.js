@@ -66,7 +66,7 @@ qx.Class.define("qx.tool.cli.commands.Lint", {
             alias: "v",
             describe: "enables additional progress output to console",
             type: "boolean"
-          },
+          }
         },
         handler: function(argv) {
           return new qx.tool.cli.commands.Lint(argv)
@@ -126,7 +126,8 @@ qx.Class.define("qx.tool.cli.commands.Lint", {
               .then(() => {
                 if (this.argv.verbose) {
                   console.info(`Report written to ${this.argv.outputFile}`);
-                }})
+                } 
+              })
               .catch(e => console.error(`Error writing report to ${this.argv.outputFile}:` + e.message));
           } else if (report.errorCount > 0 || this.argv.warnAsError) {
             throw new qx.tool.utils.Utils.UserError(s);

@@ -771,27 +771,27 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
           "class": {
             "static": {
               "@"           : "object",
-              "type"        : "string",    // String
-              "statics"     : "object",    // Map
-              "environment" : "object",    // Map
-              "defer"       : "function"   // Function
+              "type"        : "string", // String
+              "statics"     : "object", // Map
+              "environment" : "object", // Map
+              "defer"       : "function" // Function
             },
             "normal": {
               "@"          : "object",
               "@construct" : "object",
               "@destruct"  : "object",
-              "type"       : "string",    // String
-              "extend"     : "function",  // Function
-              "implement"  : "object",    // Interface[]
-              "include"    : "object",    // Mixin[]
-              "construct"  : "function",  // Function
-              "statics"    : "object",    // Map
-              "properties" : "object",    // Map
-              "members"    : "object",    // Map
+              "type"       : "string", // String
+              "extend"     : "function", // Function
+              "implement"  : "object", // Interface[]
+              "include"    : "object", // Mixin[]
+              "construct"  : "function", // Function
+              "statics"    : "object", // Map
+              "properties" : "object", // Map
+              "members"    : "object", // Map
               "environment"   : "object", // Map
-              "events"     : "object",    // Map
-              "defer"      : "function",  // Function
-              "destruct"   : "function"   // Function
+              "events"     : "object", // Map
+              "defer"      : "function", // Function
+              "destruct"   : "function" // Function
             }
           },
           "interface": {
@@ -799,16 +799,16 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
             "statics"    : "object", // Map
             "members"    : "object", // Map
             "properties" : "object", // Map
-            "events"     : "object"  // Map
+            "events"     : "object" // Map
           },
           "mixin": {
-            "include"    : "object",   // Mixin | Mixin[]
-            "statics"    : "object",   // Map
-            "members"    : "object",   // Map
-            "properties" : "object",   // Map
-            "events"     : "object",   // Map
+            "include"    : "object", // Mixin | Mixin[]
+            "statics"    : "object", // Map
+            "members"    : "object", // Map
+            "properties" : "object", // Map
+            "events"     : "object", // Map
             "destruct"   : "function", // Function
-            "construct"  : "function"  // Function
+            "construct"  : "function" // Function
           },
           "theme": {
             "title"       : "string", // String
@@ -1183,8 +1183,9 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
                       break;
                     }
                   }
-                  if (aliasIsThis || scope.isClassMember)
-                    break;
+                  if (aliasIsThis || scope.isClassMember) {
+                    break; 
+                  }
                 }
                 if (aliasIsThis) {
                   name = "this" + name.substring(originalAlias.length);
@@ -1213,8 +1214,9 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
                 t.__classMeta.type = TYPE[name];
                 if (t.__definingType == "Class" || t.__definingType == "Bootstrap") {
                   let typeProp = classDef.properties.find(prop => prop.key.type == "Identifier" && prop.key.value == "type");
-                  if (typeProp)
-                    t.__classMeta.isStatic == typeProp.value.type == "Literal" && typeProp.value.value === "static";
+                  if (typeProp) {
+ t.__classMeta.isStatic == typeProp.value.type == "Literal" && typeProp.value.value === "static"; 
+}
                 }
                 let jsdoc = meta.jsdoc;
                 if (jsdoc) {
@@ -1587,7 +1589,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         parent: this.__scope,
         vars: {},
         unresolved: {},
-        isClassMember: !!isClassMember
+        isClassMember: Boolean(isClassMember)
       };
     },
 

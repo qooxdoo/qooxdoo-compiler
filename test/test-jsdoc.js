@@ -1,12 +1,11 @@
-var test = require('tape');
+var test = require("tape");
 var fs = require("fs");
 var async = require("async");
 const {promisify, promisifyThis} = require("../source/class/qx/tool/utils");
 const readFile = promisify(fs.readFile);
 require("../index");
 
-test('Checks jsdoc @param parser', (assert) => {
-
+test("Checks jsdoc @param parser", assert => {
   var parser = new qx.tool.compiler.jsdoc.ParamParser();
   var pdoc = { name: "@param", body: "value {Boolean}, the new value of the widget" };
   parser.parseCommand(pdoc, "abc.def.Ghi", null);

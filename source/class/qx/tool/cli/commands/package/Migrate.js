@@ -152,7 +152,7 @@ qx.Class.define("qx.tool.cli.commands.package.Migrate", {
                  s += "      " + key + "\n";
                }  
             }
-        };
+        }
         if (needFix) {
           if (announceOnly) {
             console.warn("*** Manifest(s) need to be updated:\n" + s);

@@ -342,7 +342,7 @@ qx.Class.define("qx.tool.config.Abstract", {
       } catch (e) {
         // revert change
         if (originalValue === undefined) {
-          unset_value(this.getData(),prop_path);
+          unset_value(this.getData(), prop_path);
         } else {
           set_value(this.getData(), prop_path, originalValue, options);
         }

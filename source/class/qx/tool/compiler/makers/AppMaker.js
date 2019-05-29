@@ -151,9 +151,10 @@ qx.Class.define("qx.tool.compiler.makers.AppMaker", {
           let compiledClasses = this.getRecentlyCompiledClasses(true);
           var appsThisTime = this.__applications.filter(app => {
             let loadDeps = app.getDependencies();
-            if (!loadDeps || !loadDeps.length)
-              return true;
-            return loadDeps.some(name => !!compiledClasses[name]);
+            if (!loadDeps || !loadDeps.length) {
+              return true; 
+            }
+            return loadDeps.some(name => Boolean(compiledClasses[name]));
           });
 
           var promises = appsThisTime.map(application => {
