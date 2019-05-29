@@ -40,9 +40,7 @@ const appNamespace = "testConfigSchemaApp";
       authors.push({name: "John Doe", email:"john@acme.com"});
       return authors;
     });
-    manifestConfig.transform("info.authors", authors => {
-      return authors.concat({name: "Bob Schultz", email:"bob@acme.com"});
-    });
+    manifestConfig.transform("info.authors", authors => authors.concat({name: "Bob Schultz", email:"bob@acme.com"}));
     assert.ok(manifestConfig.getValue("info.authors").length === 2);
     // manipulating the data outside the api requires manual validation
     manifestConfig.getValue("info.authors").push({name: "Jane Miller", email:"jane@acme.com"});

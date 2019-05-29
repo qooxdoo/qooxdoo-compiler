@@ -27,10 +27,6 @@ const async = require("async");
 const util = require("../util");
 const path = require("upath");
 
-const stat = util.promisify(fs.stat);
-const readFile = util.promisify(fs.readFile);
-const writeFile = util.promisify(fs.writeFile);
-
 /**
  * A target for building an application, instances of Target control the generation of transpiled
  * source and collection into an application, including minifying etc
@@ -423,6 +419,7 @@ module.exports = qx.Class.define("qx.tool.compiler.targets.Target", {
               return bundleCopier.close()
                 .then(() => bundleCopier = null);
             }
+            return null;
           });
         })
         .then(() => {
@@ -879,7 +876,7 @@ module.exports = qx.Class.define("qx.tool.compiler.targets.Target", {
         }
         return code;
       }
-
+      /* eslint-disable no-template-curly-in-string */
       let defaultIndexHtml =
           "<!DOCTYPE html>\n" +
           "<html>\n" +
@@ -895,6 +892,7 @@ module.exports = qx.Class.define("qx.tool.compiler.targets.Target", {
           "  <script type=\"text/javascript\" src=\"${appPath}boot.js\"></script>\n" +
           "</body>\n" +
           "</html>\n";
+      /* eslint-enable no-template-curly-in-string */
 
       var bootDir = application.getBootPath();
       var stats = bootDir && (await qx.tool.utils.files.Utils.safeStat(bootDir));
@@ -908,11 +906,15 @@ module.exports = qx.Class.define("qx.tool.compiler.targets.Target", {
             .then(data => {
               if (path.basename(from) == "index.html") {
                 if (!data.match(/\$\{\s*preBootJs\s*\}/)) {
+                  /* eslint-disable no-template-curly-in-string */
                   data = data.replace("</body>", "\n${preBootJs}\n</body>");
+                  /* eslint-enable no-template-curly-in-string */
                   qx.tool.compiler.Console.print("qx.tool.compiler.target.missingPreBootJs", from);
                 }
                 if (!data.match(/\s*boot.js\s*/)) {
+                  /* eslint-disable no-template-curly-in-string */
                   data = data.replace("</body>", "\n  <script type=\"text/javascript\" src=\"${appPath}boot.js\"></script>\n</body>");
+                  /* eslint-enable no-template-curly-in-string */
                   qx.tool.compiler.Console.print("qx.tool.compiler.target.missingBootJs", from);
                 }
                 indexHtml = data;

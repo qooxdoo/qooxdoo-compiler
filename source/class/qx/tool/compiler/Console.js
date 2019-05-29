@@ -135,7 +135,9 @@ qx.Class.define("qx.tool.compiler.Console", {
       "qx.tool.compiler.symbol.unresolved": "Unresolved use of symbol %1",
 
       "qx.tool.compiler.target.missingBootJs": "There is no reference to boot.js script in the index.html copied from %1 (see https://git.io/fh7NI)",
-      "qx.tool.compiler.target.missingPreBootJs": "There is no reference to ${preBootJs} in the index.html copied from %1 (see https://git.io/fh7NI)",
+      /* eslint-disable no-template-curly-in-string */
+      "qx.tool.compiler.target.missingPreBootJs": "There is no reference to ${preBootJs} in the index.html copied from %1 (see https://git.io/fh7NI)"
+      /* eslint-enable no-template-curly-in-string */
     }, "warning");
   },
 

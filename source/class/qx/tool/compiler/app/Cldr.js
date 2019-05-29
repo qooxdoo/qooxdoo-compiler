@@ -129,10 +129,12 @@ qx.Class.define("qx.tool.compiler.app.Cldr", {
           cldr.quotationStart = get("ldml.delimiters[0].quotationStart[0]");
 
           function getText(row) {
-            if (typeof row == "string")
-              return row;
-            if (row && row["_"] !== undefined)
-              return row["_"];
+            if (typeof row == "string") {
+              return row; 
+            }
+            if (row && row["_"] !== undefined) {
+              return row["_"]; 
+            }
             return "";
           }
 
@@ -248,8 +250,9 @@ qx.Class.define("qx.tool.compiler.app.Cldr", {
           cldr.cldr_number_percent_format = getValue("ldml.numbers[0].percentFormats[0].percentFormatLength[0].percentFormat[0].pattern[0]");// "#,##0%";
 
           function getDisplayName(row) {
-            if (qx.lang.Type.isArray(row.displayName))
-              return row.displayName.map(elem => getText(elem));
+            if (qx.lang.Type.isArray(row.displayName)) {
+              return row.displayName.map(elem => getText(elem)); 
+            }
             return getText(row.displayName);
           }
 

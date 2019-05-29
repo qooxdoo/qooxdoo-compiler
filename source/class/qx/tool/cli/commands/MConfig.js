@@ -58,9 +58,10 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
       if (parsedArgs.config) {
         try {
           config = await this.__loadJson(parsedArgs.config);
-        }catch(ex) {
-          if (ex.code != "ENOENT")
-            throw ex;
+        } catch (ex) {
+          if (ex.code != "ENOENT") {
+            throw ex; 
+          }
         }
 
         let lockfile = qx.tool.config.Lockfile.config.fileName;
@@ -295,37 +296,35 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
                 command: this,
                 inputData
               }, (err, data) => {
-                if (err)
-                  reject(err);
-                else
-                  onResolve(data);
+                if (err) {
+                  reject(err); 
+                } else {
+                  onResolve(data); 
+                }
               });
 
               if (result instanceof Promise) {
                 result.then(onResolve).catch(reject);
-
               } else if (result) {
                 onResolve(result);
               }
-
-            }catch(ex) {
+            } catch (ex) {
               reject(ex);
             }
-
           } else {
             onResolve(script);
           }
-
         });
         let res = await p;
         return res;
-      } catch(e) {
-        let lines = e.stack.split('\n');
+      } catch (e) {
+        let lines = e.stack.split("\n");
         for (let i = 0; i < lines.length; i++) {
-          if (lines[i].match(/^\s+at/))
-            lines.splice(i);
+          if (lines[i].match(/^\s+at/)) {
+            lines.splice(i); 
+          }
         }
-        let lineNumber = lines[0].split('evalmachine.<anonymous>:')[1];
+        let lineNumber = lines[0].split("evalmachine.<anonymous>:")[1];
         if (lineNumber !== undefined) {
           lines.shift();
           throw new Error("Error while reading " + aPath + " at line " + lineNumber + "\n" + lines.join("\n"));

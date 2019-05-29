@@ -2,8 +2,6 @@ require("../index");
 const rimraf = require("rimraf");
 const fs = qx.tool.utils.Promisify.fs;
 const process = require("process");
-const assert = require("assert");
-const path = require("path");
 const download = require("download");
 
 

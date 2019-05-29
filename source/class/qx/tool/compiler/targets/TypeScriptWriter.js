@@ -368,8 +368,8 @@ qx.Class.define("qx.tool.compiler.targets.TypeScriptWriter", {
       if (meta.isSingleton) {
         this.writeMethods({
           getInstance: {
-            type: 'function',
-            access: 'public',
+            type: "function",
+            access: "public",
             jsdoc: {
               "@return": [{ type: meta.className }]
             }

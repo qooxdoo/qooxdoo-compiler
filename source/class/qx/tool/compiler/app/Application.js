@@ -510,11 +510,12 @@ qx.Class.define("qx.tool.compiler.app.Application", {
         let classInfo = db.classInfo[classname];
         if (classInfo.assets) {
           classInfo.assets.forEach(asset => {
-            var pos = asset.indexOf('/');
+            var pos = asset.indexOf("/");
             if (pos > -1) {
               var ns = asset.substring(0, pos);
-              if (analyser.findLibrary(ns))
-                requiredLibs[ns] = true;
+              if (analyser.findLibrary(ns)) {
+                requiredLibs[ns] = true; 
+              }
             }
           });
         }
@@ -793,8 +794,7 @@ qx.Class.define("qx.tool.compiler.app.Application", {
                 }
               }
             });
-          } 
-
+          }
       }
       });
       return Object.keys(result);

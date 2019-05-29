@@ -79,5 +79,11 @@
         "*.index"
       ]
     }
-  ]
+  ],
+  "eslintConfig": {
+      "extends": "@qooxdoo/qx",
+      "parserOptions": {
+         "ecmaVersion": 2018
+      }
+   }
 }

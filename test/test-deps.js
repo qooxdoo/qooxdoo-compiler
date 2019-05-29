@@ -6,7 +6,6 @@ const readFile = promisify(fs.readFile);
 require("../index");
 
 async function createMaker() {
-  var STARTTIME = new Date();
   var QOOXDOO_PATH = "../node_modules/@qooxdoo/framework";
 
   // Makers use an Analyser to figure out what the Target should write
@@ -57,15 +56,16 @@ async function createMaker() {
   return new Promise((resolve, reject) => {
     maker.addLibrary("testapp", function (err) {
       if (err) {
- return reject(err);
-}
+        return reject(err);
+      }
       maker.addLibrary(QOOXDOO_PATH + "/framework", function (err) {
         if (err) {
-reject(err);
-} else {
- resolve(maker);
-}
+          reject(err);
+        } else {
+          resolve(maker);
+        }
       });
+      return null;
     });
   });
 }
@@ -97,7 +97,6 @@ test("Checks dependencies and environment settings", assert => {
   var compileInfo;
   var db;
   var meta;
-  var expected;
   deleteRecursive("unit-tests-output")
       .then(() => createMaker())
       .then(_maker => {
@@ -207,42 +206,47 @@ async function deleteRecursive(name) {
   return new Promise((resolve, reject) => {
     fs.exists(name, function (exists) {
       if (!exists) {
- return resolve();
-}
+        return resolve();
+      }
       deleteRecursiveImpl(name, err => {
         if (err) {
- reject(err);
-} else {
-resolve(err);
-}
+          reject(err);
+        } else {
+          resolve(err);
+        }
       });
+      return null;
     });
 
     function deleteRecursiveImpl(name, cb) {
       fs.stat(name, function (err, stat) {
         if (err) {
-return cb && cb(err);
-}
+          return cb && cb(err);
+        }
 
         if (stat.isDirectory()) {
           fs.readdir(name, function (err, files) {
             if (err) {
-return cb && cb(err);
-}
+              return cb && cb(err);
+            }
             async.each(files,
                 function (file, cb) {
                   deleteRecursiveImpl(name + "/" + file, cb);
                 },
                 function (err) {
                   if (err) {
- return cb && cb(err);
-}
+                    return cb && cb(err);
+                  }
                   fs.rmdir(name, cb);
-                });
+                  return null;
+                }
+            );
+            return null;
           });
         } else {
           fs.unlink(name, cb);
         }
+        return null;
       });
     }
   });
