@@ -1215,8 +1215,8 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
                 if (t.__definingType == "Class" || t.__definingType == "Bootstrap") {
                   let typeProp = classDef.properties.find(prop => prop.key.type == "Identifier" && prop.key.value == "type");
                   if (typeProp) {
- t.__classMeta.isStatic == typeProp.value.type == "Literal" && typeProp.value.value === "static"; 
-}
+                    t.__classMeta.isStatic == typeProp.value.type == "Literal" && typeProp.value.value === "static"; 
+                  }
                 }
                 let jsdoc = meta.jsdoc;
                 if (jsdoc) {
@@ -1253,11 +1253,12 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
                 t.__popMeta(className);
 
                 // Must be a conventional define
+/* FIXME: What is this for???                
                 if (path.node.arguments.length != 2 ||
                     path.node.arguments[0].type != "StringLiteral" ||
                     path.node.arguments[1].type != "ObjectExpression") {
-
                 }
+*/                
               } else if (name == "qx.core.Environment.add") {
                 let arg = path.node.arguments[0];
                 if (types.isLiteral(arg)) {

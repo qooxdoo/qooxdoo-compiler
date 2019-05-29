@@ -103,18 +103,16 @@ qx.Class.define("qx.tool.utils.Json", {
           schemaInfo.type = match[2].toLocaleLowerCase();
           schemaInfo.version = match[1];
         }
-      } else {
         // guess file type, this would be easy with the file name!
-        if (data.targets) {
-          schemaInfo.type = "compile";
-          schemaInfo.version = "0";
-        } else if (data.info && data.provides) {
-          schemaInfo.type = "manifest";
-          schemaInfo.version = "0";
-        } else if (data.libraries || data.contribs) {
-          schemaInfo.type = "qooxdoo";
-          schemaInfo.version = "0";
-        }
+      } else if (data.targets) {
+        schemaInfo.type = "compile";
+        schemaInfo.version = "0";
+      } else if (data.info && data.provides) {
+        schemaInfo.type = "manifest";
+        schemaInfo.version = "0";
+      } else if (data.libraries || data.contribs) {
+        schemaInfo.type = "qooxdoo";
+        schemaInfo.version = "0";
       }
       // no schema was found
       if (Object.getOwnPropertyNames(schemaInfo).length === 0) {

@@ -318,9 +318,9 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         await qx.tool.utils.files.Utils.safeUnlink(maker.getAnalyser().getResDbFilename());
       }
       var analyser = maker.getAnalyser();
-	    if (config.ignores) {
+      if (config.ignores) {
          analyser.setIgnores(config.ignores);
-	    }
+      }
      
       var target = maker.getTarget();
       if (this.__gauge) {

@@ -96,7 +96,7 @@ qx.Class.define("qx.tool.compiler.targets.SourceCodeCopier", {
       if (stat) {
         let hash = crypto.createHash("sha256");
         hash.setEncoding("hex");
-        data = await fs.readFileAsync(this.__outputFilename, "utf8");
+        let data = await fs.readFileAsync(this.__outputFilename, "utf8");
         hash.write(data);
         this.__existingHashValue = this.__hash.read();
       }

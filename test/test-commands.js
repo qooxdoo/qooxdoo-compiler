@@ -20,7 +20,8 @@ const appNamespace = "testCommandsApp";
     await (new commands.Create(appConfig)).process();
     process.chdir(appNamespace);
     // run tests
-    let actual; let expected;
+    let actual; 
+    let expected;
     const manifestModel = await qx.tool.config.Manifest.getInstance().load();
 
     // qx add script --rename=y.js test/testdata/x.js

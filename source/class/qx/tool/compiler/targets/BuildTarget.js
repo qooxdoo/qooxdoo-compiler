@@ -25,8 +25,6 @@ const fs = qx.tool.utils.Promisify.fs;
 const path = require("upath");
 require("@qooxdoo/framework");
 const UglifyJS = require("uglify-es");
-const crypto = require("crypto");
-const sourceMap = require("source-map");
 
 require("./Target");
 
@@ -136,7 +134,6 @@ module.exports = qx.Class.define("qx.tool.compiler.targets.BuildTarget", {
     },
 
     _writeBootJs: async function(compileInfo, ws) {
-      var t = this;
       var application = compileInfo.application;
       var appRootDir = this.getApplicationRoot(application);
       var transpiledDir = path.join(this.getOutputDir(), "transpiled");

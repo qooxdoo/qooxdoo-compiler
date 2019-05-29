@@ -404,7 +404,7 @@ qx.Class.define("qx.tool.config.Abstract", {
       if (qx.lang.Type.isString(propOrMap)) {
         return this.getValue(propOrMap) !== undefined;
       } else if (qx.lang.Type.isObject(propOrMap)) {
-        res = false;
+        let res = false;
         for (let key of Object.getOwnPropertyNames(propOrMap)) {
           propOrMap[key] = this.keyExists(key);
           res = res || propOrMap[key];
