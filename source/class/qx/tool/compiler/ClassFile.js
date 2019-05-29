@@ -537,9 +537,17 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
           t.addDeclaration(node.id.name);
         }
         t.pushScope(node.id ? node.id.name : null, node, isClassMember);
-        for (var i = 0; i < node.params.length; i++) {
-          t.addDeclaration(node.params[i].name);
-        }
+        node.params.forEach(param => {
+          if (param.type == "AssignmentPattern") {
+            t.addDeclaration(param.left.name);
+          } else if (param.type == "RestElement") {
+            t.addDeclaration(param.argument.name);
+          } else if (param.type == "Identifier") {
+            t.addDeclaration(param.name);
+          } else {
+            console.warn("Unexpected type of parameter " + param.type + " at " + node.loc.start.line + "," + node.loc.start.column);
+          }
+        });
         var jsdoc = getJsDoc(node.leadingComments);
         if (jsdoc && jsdoc["@ignore"]) {
           jsdoc["@ignore"].forEach(elem => t.addIgnore(elem.body));
