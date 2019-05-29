@@ -237,10 +237,6 @@
         { "../qooxdoo": "/some/virtual/uri/path/qooxdoo"}
       ]
     },
-    "eslintConfig": {
-      "type": "object",
-      "description": "The syntax is the same as in in package.json. Explanation can be found here: <https://eslint.org/docs/user-guide/configuring>"
-    },
     "locales": {
       "description": "Include other translations than 'en'",
       "type": "array",
@@ -272,9 +268,24 @@
         }
       }
     },
+    "ignores": {
+      "description": "An array of names which the compiler should ignore. Same as @ignore in source code",
+      "type": "array",
+      "uniqueItems": true,
+      "examples": [
+        "modules.*"
+      ],
+      "items": {
+        "type": "string"
+      }  
+    },
     "babelOptions": {
       "type": "object",
       "description": "Options given to @babel/preset-env. With this options the output type of babel can be defined. For details see here: <https://babeljs.io/docs/en/babel-preset-env#options>. They can be overridden per target."
+    },
+    "eslintConfig": {
+      "type": "object",
+      "description": "The syntax is the same as in in package.json. Explanation can be found here: <https://eslint.org/docs/user-guide/configuring>"
     },
     "bundle": {
       "description": "Allows you to use wildcards to select classes which are to be bundled together into as few files as possible",

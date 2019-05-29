@@ -318,6 +318,10 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         await qx.tool.utils.files.Utils.safeUnlink(maker.getAnalyser().getResDbFilename());
       }
       var analyser = maker.getAnalyser();
+      if (config.ignores) {
+         analyser.setIgnores(config.ignores);
+      }
+     
       var target = maker.getTarget();
       if (this.__gauge) {
         maker.addListener("writingApplications", () => this.__gauge.show("Writing Applications", 0));
@@ -495,6 +499,8 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
           return;
         }
         var app = new qx.tool.compiler.app.Application(appData["class"]);
+        app.setTemplatePath(t.getTemplateDir());
+
         [ "type", "theme", "name", "environment", "outputPath", "bootPath", "loaderTemplate"].forEach(name => {
           if (appData[name] !== undefined) {
             var fname = "set" + qx.lang.String.firstUp(name);

@@ -29,7 +29,6 @@ qx.Class.define("qx.tool.cli.Cli", {
 
   members: {
     run: function() {
-
       if (qx.core.Environment.get("runtime.name") == "rhino") {
         qx.log.Logger.register(qx.log.appender.RhinoConsole);
       } else if (qx.core.Environment.get("runtime.name") == "node.js") {
@@ -84,6 +83,7 @@ qx.Class.define("qx.tool.cli.Cli", {
      * @param classNames {String[]} array of class names, each of which is in the `packageName` package
      * @param packageName {String} the name of the package to find each command class
      */
+     /* @ignore qx.tool.$$classPath */
     addYargsCommands: function(yargs, classNames, packageName) {
       let pkg = null;
       packageName.split(".").forEach(seg => {
@@ -94,7 +94,7 @@ qx.Class.define("qx.tool.cli.Cli", {
         }
       });
       classNames.forEach(cmd => {
-        require(path.join(qx.tool.$$classPath, packageName.replace(/\./g, "/"),cmd));
+        require(path.join(qx.tool.$$classPath, packageName.replace(/\./g, "/"), cmd));
         let data = pkg[cmd].getYargsCommand();
         if (data) {
           yargs.command(data);

@@ -18,7 +18,7 @@
 
 const fs = qx.tool.utils.Promisify.fs;
 const process = require("process");
-const path = require("path");
+const path = require("upath");
 const semver = require("semver");
 const get_value = require("get-value");
 const set_value = require("set-value");
@@ -192,6 +192,7 @@ qx.Class.define("qx.tool.config.Abstract", {
      * Path to the local copy of the schema json file
      * @return {String}
      */
+    /* @ignore qx.tool.$$resourceDir */
     getSchemaPath() {
       return path.join(qx.tool.$$resourceDir, "schema", "v" + this.getVersion(), this.getFileName());
     },
@@ -341,7 +342,7 @@ qx.Class.define("qx.tool.config.Abstract", {
       } catch (e) {
         // revert change
         if (originalValue === undefined) {
-          unset_value(this.getData(),prop_path);
+          unset_value(this.getData(), prop_path);
         } else {
           set_value(this.getData(), prop_path, originalValue, options);
         }
@@ -403,10 +404,12 @@ qx.Class.define("qx.tool.config.Abstract", {
       if (qx.lang.Type.isString(propOrMap)) {
         return this.getValue(propOrMap) !== undefined;
       } else if (qx.lang.Type.isObject(propOrMap)) {
+        let res = false;
         for (let key of Object.getOwnPropertyNames(propOrMap)) {
           propOrMap[key] = this.keyExists(key);
+          res = res || propOrMap[key];
         }
-        return propOrMap;
+        return res;
       }
       throw new TypeError("Invalid argument");
     },

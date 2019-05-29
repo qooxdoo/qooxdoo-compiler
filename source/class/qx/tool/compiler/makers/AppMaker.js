@@ -21,13 +21,14 @@
  * *********************************************************************** */
 
 require("@qooxdoo/framework");
+require("./AbstractAppMaker");
 
 /**
  * Application maker; supports multiple applications to compile against a single
  * target
  */
-module.exports = qx.Class.define("qx.tool.compiler.makers.AppMaker", {
-  extend: require("./AbstractAppMaker"),
+qx.Class.define("qx.tool.compiler.makers.AppMaker", {
+  extend: qx.tool.compiler.makers.AbstractAppMaker,
 
   /**
    * Constructor
@@ -150,9 +151,10 @@ module.exports = qx.Class.define("qx.tool.compiler.makers.AppMaker", {
           let compiledClasses = this.getRecentlyCompiledClasses(true);
           var appsThisTime = this.__applications.filter(app => {
             let loadDeps = app.getDependencies();
-            if (!loadDeps || !loadDeps.length)
-              return true;
-            return loadDeps.some(name => !!compiledClasses[name]);
+            if (!loadDeps || !loadDeps.length) {
+              return true; 
+            }
+            return loadDeps.some(name => Boolean(compiledClasses[name]));
           });
 
           var promises = appsThisTime.map(application => {

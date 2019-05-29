@@ -119,6 +119,18 @@ qx.Class.define("qx.tool.compiler.app.Application", {
     },
 
     /**
+     * template path 
+     */
+    templatePath: {
+      init: "",
+      nullable: false,
+      check: "String",
+      apply: "_applyType"
+
+    },
+
+
+    /**
      * Classes to include with the build
      */
     include: {
@@ -498,11 +510,12 @@ qx.Class.define("qx.tool.compiler.app.Application", {
         let classInfo = db.classInfo[classname];
         if (classInfo.assets) {
           classInfo.assets.forEach(asset => {
-            var pos = asset.indexOf('/');
+            var pos = asset.indexOf("/");
             if (pos > -1) {
               var ns = asset.substring(0, pos);
-              if (analyser.findLibrary(ns))
-                requiredLibs[ns] = true;
+              if (analyser.findLibrary(ns)) {
+                requiredLibs[ns] = true; 
+              }
             }
           });
         }
@@ -759,16 +772,30 @@ qx.Class.define("qx.tool.compiler.app.Application", {
           result[name] = true;
         } else {
           var prefix = name.substring(0, pos);
-          t.getAnalyser().getLibraries()
-          .forEach(function(lib) {
-            var symbols = lib.getKnownSymbols();
-            for (var symbol in symbols) {
-              if (symbols[symbol] == "class" && symbol.startsWith(prefix)) {
-                result[symbol] = true;
+          if (prefix) {
+            t.getAnalyser().getLibraries()
+            .forEach(function(lib) {
+              var symbols = lib.getKnownSymbols();
+              for (var symbol in symbols) {
+                if (symbols[symbol] == "class" && symbol.startsWith(prefix)) {
+                  result[symbol] = true;
+                }
               }
-            }
-          });
-        }
+            });
+          } 
+          var postfix = name.substring(pos + 1);
+          if (postfix) {
+            t.getAnalyser().getLibraries()
+            .forEach(function(lib) {
+              var symbols = lib.getKnownSymbols();
+              for (var symbol in symbols) {
+                if (symbols[symbol] == "class" && symbol.endsWith(postfix)) {
+                  result[symbol] = true;
+                }
+              }
+            });
+          }
+      }
       });
       return Object.keys(result);
     },
@@ -777,7 +804,7 @@ qx.Class.define("qx.tool.compiler.app.Application", {
      * Apply for `type` property
      */
     _applyType: function(value, oldValue) {
-      var loader = path.join(__dirname, "loader-" + (this.isBrowserApp() ? "browser" : "server") + ".tmpl.js");
+      var loader = path.join(this.getTemplatePath(), "loader", "loader-" + (this.isBrowserApp() ? "browser" : "server") + ".tmpl.js");
       this.setLoaderTemplate(loader);
       this.setTheme(null);
     },

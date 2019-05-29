@@ -24,7 +24,6 @@ const path = require("upath");
 const fs = qx.tool.utils.Promisify.fs;
 const JsonToAst = require("json-to-ast");
 const semver = require("semver");
-const vm = require("vm");
 
 
 qx.Mixin.define("qx.tool.cli.commands.MConfig", {
@@ -59,13 +58,10 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
       if (parsedArgs.config) {
         try {
           config = await this.__loadJson(parsedArgs.config);
-        }catch(ex) {
-          if (ex.code != "ENOENT")
-            throw ex;
-        }
-
-        if (await fs.existsAsync("compile.js")) {
-          config = await this.__loadJs("compile.js", config);
+        } catch (ex) {
+          if (ex.code != "ENOENT") {
+            throw ex; 
+          }
         }
 
         let lockfile = qx.tool.config.Lockfile.config.fileName;
@@ -115,11 +111,13 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
         }
       }
       this._mergeArguments(parsedArgs, config, lockfile_content);
+
       if (config.libraries) {
         for (const aPath of config.libraries) {
           if (typeof aPath === "object" && typeof aPath.path === "string") {
             throw new Error("Configuration for libraries has changed - it is now an array of strings, each of which is a path to the directory containing Manifest.json.  Please run 'qx upgrade'");
           }
+          await this.__loadJs(path.join(aPath, "compile.js"), config);
         }
       }
       return config;
@@ -277,7 +275,7 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
 
     __loadJs: async function(aPath, inputData) {
       if (!await qx.tool.utils.files.Utils.safeStat(aPath)) {
-        return false;
+        return inputData;
       }
 
       try {
@@ -298,37 +296,35 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
                 command: this,
                 inputData
               }, (err, data) => {
-                if (err)
-                  reject(err);
-                else
-                  onResolve(data);
+                if (err) {
+                  reject(err); 
+                } else {
+                  onResolve(data); 
+                }
               });
 
               if (result instanceof Promise) {
                 result.then(onResolve).catch(reject);
-
               } else if (result) {
                 onResolve(result);
               }
-
-            }catch(ex) {
+            } catch (ex) {
               reject(ex);
             }
-
           } else {
             onResolve(script);
           }
-
         });
-
-        return await p;
-      } catch(e) {
-        let lines = e.stack.split('\n');
+        let res = await p;
+        return res;
+      } catch (e) {
+        let lines = e.stack.split("\n");
         for (let i = 0; i < lines.length; i++) {
-          if (lines[i].match(/^\s+at/))
-            lines.splice(i);
+          if (lines[i].match(/^\s+at/)) {
+            lines.splice(i); 
+          }
         }
-        let lineNumber = lines[0].split('evalmachine.<anonymous>:')[1];
+        let lineNumber = lines[0].split("evalmachine.<anonymous>:")[1];
         if (lineNumber !== undefined) {
           lines.shift();
           throw new Error("Error while reading " + aPath + " at line " + lineNumber + "\n" + lines.join("\n"));

@@ -31,9 +31,12 @@ const replace_in_file = require("replace-in-file");
 /**
  * Base class for commands
  */
-qx.Class.define("qx.tool.cli.commands.Command", {
+  /*
+  * @ignore qx.tool.$$resourceDir
+  * @ignore qx.tool.$$rootDir
+  */
+ qx.Class.define("qx.tool.cli.commands.Command", {
   extend: qx.core.Object,
-
   statics:{
     /**
      * The path to the directory containing the templates

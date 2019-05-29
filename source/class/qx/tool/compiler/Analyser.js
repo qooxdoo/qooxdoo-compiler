@@ -106,6 +106,12 @@ module.exports = qx.Class.define("qx.tool.compiler.Analyser", {
       init: null,
       nullable: true,
       check: "Object"
+    },
+    /** list of global ignores */
+    ignores: {
+      init: [],
+      nullable: false,
+      check: "Array"
     }
 
   },
@@ -1037,8 +1043,9 @@ module.exports = qx.Class.define("qx.tool.compiler.Analyser", {
         return translation.read()
         .then(() => {
           let unusedEntries = {};
-          for (let msgid in translation.getEntries())
-            unusedEntries[msgid] = true;
+          for (let msgid in translation.getEntries()) {
+            unusedEntries[msgid] = true; 
+          }
 
           return Promise.all(this.__classes.map(async classname => {
             if (!classname.startsWith(library.getNamespace())) {
@@ -1046,8 +1053,9 @@ module.exports = qx.Class.define("qx.tool.compiler.Analyser", {
             }
 
             let dbClassInfo = await Promisify.call(cb => this.getClassInfo(classname, cb));
-            if (!dbClassInfo.translations)
-              return;
+            if (!dbClassInfo.translations) {
+              return; 
+            }
 
             dbClassInfo.translations.forEach(function(src) {
               var entry = translation.getOrCreateEntry(src.msgid);
@@ -1064,8 +1072,9 @@ module.exports = qx.Class.define("qx.tool.compiler.Analyser", {
               const fileName = classname.replace(/\./g, "/") + ".js";
               const fnAddReference = lineNo => {
                 let arr = ref[fileName];
-                if (!arr)
-                  arr = ref[fileName] = [];
+                if (!arr) {
+                  arr = ref[fileName] = []; 
+                }
 
                 if (!arr.includes(src.lineNo)) {
                   arr.push(lineNo);
