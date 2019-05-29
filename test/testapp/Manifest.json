@@ -5,21 +5,15 @@
     "description": "This is a skeleton for a custom application with qooxdoo.",
     "homepage": "http://some.homepage.url/",
     "license": "SomeLicense",
-    "authors": [
-      {
-        "name": "First Author (uid)",
-        "email": "first.author@some.domain"
-      }
-    ],
-    "version": "master"
+    "authors": [],
+    "version": "1.0.0"
   },
   "provides": {
     "namespace": "testapp",
     "encoding": "utf-8",
     "class": "source/class",
     "resource": "source/resource",
-    "translation": "source/translation",
-    "type": "application"
+    "translation": "source/translation"
   },
   "$schema": "https://raw.githubusercontent.com/qooxdoo/qooxdoo-compiler/master/resource/schema/v1/Manifest.json",
   "requires": {
