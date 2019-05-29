@@ -6,7 +6,6 @@ new name. In the meantime, you'll probably find references to "contribs"
 everywhere. The new system is fully backwards compatible to "qooxdoo-contrib",
 but will issue deprecation warnings when the old commands are used.*
 
-
 ## Overview
 
 qooxdoo's "plugin architecture" is called qooxdoo package system. It does not
@@ -426,8 +425,6 @@ supported, which takes an array of version numbers. You need to specify each and
 every version that you want to support, and any new qooxdoo version will break
 compatibility. Support for this will be removed in version 7.
 
-
-
 ### qx package and NPM 
 
 There are two ways in which the package system and the NPM package manager relate
@@ -439,13 +436,12 @@ a) Since the compiler is an NPM module, one might ask why we aren't using NPM
 for qooxdoo packages. Why create an additional package system? qooxdoo packages
 work similarly to NPM, but without storing releases in a centralized repository.
 They are (currently) downloaded directly from GitHub releases because that is
-where most qooxdoo code is developed and published. If there is enough demand,
-we might support other repository providers in the future.
+where most qooxdoo code is developed and published.
 
 b) Under normal circumstances, a package does not need to use NPM
 or maintain a `package.json` file. In particular, neither the `@qooxdoo/compiler` nor
 the `@qooxdoo/framework` npm packages should be NPM dependencies of the package.
 Instead, they are installed either at the level of the application or globally
-(see the [docs on installation](../../README.md#installation)). You might want
+(see the [docs on installation](../readme.md)). You might want
 to use NPM for development-time task such as transpiling your code, but all
 NPM-related information in the package will be ignored by the compiler.
