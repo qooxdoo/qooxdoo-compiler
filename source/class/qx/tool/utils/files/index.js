@@ -21,6 +21,6 @@
  * *********************************************************************** */
 
 module.exports = {
-    FindFiles: require("./FindFiles"),
-    Utils: require("./Utils")
+  FindFiles: require("./FindFiles"),
+  Utils: require("./Utils")
 };

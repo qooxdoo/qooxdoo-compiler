@@ -74,12 +74,12 @@ qx.Class.define("qx.tool.compiler.makers.AppMaker", {
 
       // merge all environment settings for the analyser
       const compileEnv = qx.tool.utils.Values.merge({},
-          qx.tool.compiler.ClassFile.ENVIRONMENT_CONSTANTS,
-          {
-            "qx.compilerVersion": qx.tool.compiler.Version.VERSION
-          },
-          this.getEnvironment(),
-          this.getTarget().getEnvironment());
+        qx.tool.compiler.ClassFile.ENVIRONMENT_CONSTANTS,
+        {
+          "qx.compilerVersion": qx.tool.compiler.Version.VERSION
+        },
+        this.getEnvironment(),
+        this.getTarget().getEnvironment());
 
       // Application env settings must be removed from the global and bumped into the application's
       //  environment settings (to avoid code elimination)

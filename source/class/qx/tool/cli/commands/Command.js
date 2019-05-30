@@ -31,11 +31,11 @@ const replace_in_file = require("replace-in-file");
 /**
  * Base class for commands
  */
-  /*
+/*
   * @ignore qx.tool.$$resourceDir
   * @ignore qx.tool.$$rootDir
   */
- qx.Class.define("qx.tool.cli.commands.Command", {
+qx.Class.define("qx.tool.cli.commands.Command", {
   extend: qx.core.Object,
   statics:{
     /**

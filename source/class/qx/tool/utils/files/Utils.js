@@ -55,7 +55,7 @@ qx.Class.define("qx.tool.utils.files.Utils", {
             p = Promise.resolve();
           }
           return p.then(() => readdir(from)
-              .then(files => Promise.all(files.map(file => t.sync(from + "/" + file, to + "/" + file, filter)))));
+            .then(files => Promise.all(files.map(file => t.sync(from + "/" + file, to + "/" + file, filter)))));
         } else if (statFrom.isFile()) {
           return qx.Promise.resolve(filter ? filter(from, to) : true)
             .then(result => result && t.copyFile(from, to));
