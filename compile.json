@@ -84,6 +84,15 @@
       "extends": "@qooxdoo/qx",
       "parserOptions": {
          "ecmaVersion": 2018
-      }
-   }
+      },
+      "rules": {
+        "indent": [
+           "error",
+           2,
+           {
+             "SwitchCase": 1
+           }
+        ]
+     }
+  }
 }
