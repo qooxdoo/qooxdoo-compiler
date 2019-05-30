@@ -766,8 +766,8 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
             }
           }
           result = "[[ UnaryExpression ]]";
-        } else if (node.type == "NewExpression") {
-          result = "[[ NewExpression ]]";
+        } else if (node.type == "NewExpression" || node.type == "BinaryExpression") {
+          result = "[[ " + node.type + " ]]";
         } else {
           t.warn("Cannot interpret AST " + node.type + " at " + t.__className + " [" + node.loc.start.line + "," + node.loc.start.column + "]");
           result = null;

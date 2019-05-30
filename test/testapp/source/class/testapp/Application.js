@@ -164,6 +164,7 @@ qx.Class.define("testapp.Application", {
       console.log("TestThat2.toHashCode() = " + (new testapp.TestThat2()).toHashCode());
       
       new testapp.Issue309();
+      new testapp.Issue206();
       
       qx.core.Assert.assertTrue(qx.locale.Number.getDecimalSeparator("nl").toString() === ",");
     },
