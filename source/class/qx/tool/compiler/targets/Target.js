@@ -357,6 +357,27 @@ module.exports = qx.Class.define("qx.tool.compiler.targets.Target", {
           var parts = compileInfo.parts = application.getPartsDependencies();
 
           let matchBundle = qx.tool.compiler.app.Application.createWildcardMatchFunction(application.getBundleInclude(), application.getBundleExclude());
+          requiredLibs.forEach(libnamespace => {
+            var library = analyser.findLibrary(libnamespace);
+            if (this.isWriteLibraryInfo()) {
+              libraryInfoMap[libnamespace] = library.getLibraryInfo();
+            }
+            var arr = library.getAddScript();
+            if (arr) {
+              arr.forEach(path => {
+                let pos = path.indexOf('/');
+                let pathNs = path.substring(0, pos);
+                if (pathNs == libnamespace || analyser.findLibrary(pathNs))
+                  configdata.urisBefore.push(pathNs + ":" + path);
+                else
+                  configdata.urisBefore.push("__external__:" + path)
+              });
+            }
+            arr = library.getAddCss();
+            if (arr) {
+              arr.forEach(path => configdata.cssBefore.push(libnamespace + ":" + path));
+            }
+          });
 
           var configdata = compileInfo.configdata = {
             "environment": {
