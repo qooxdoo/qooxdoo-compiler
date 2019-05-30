@@ -1,5 +1,5 @@
 qx.Mixin.define("testapp.MIssue240", {
-  type: "statics",
+  //type: "static",
   
   statics: {
     A: 1
