@@ -288,20 +288,20 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
           let options = t.__analyser.getBabelOptions() || {};
           options.modules = false;
           var config = {
-              babelrc: false,
-              sourceFileName : t.getSourcePath(),
-              filename: t.getSourcePath(),
-              sourceMaps: true,
-              "presets": [
-                [ require.resolve("@babel/preset-env"), options],
-                [ require.resolve("@babel/preset-typescript")]
-              ],
-              plugins: [
-                t._babelClassPlugin()
-              ],
-              parserOpts: { sourceType: "script" },
-              passPerPreset: true
-            };
+            babelrc: false,
+            sourceFileName : t.getSourcePath(),
+            filename: t.getSourcePath(),
+            sourceMaps: true,
+            "presets": [
+              [ require.resolve("@babel/preset-env"), options],
+              [ require.resolve("@babel/preset-typescript")]
+            ],
+            plugins: [
+              t._babelClassPlugin()
+            ],
+            parserOpts: { sourceType: "script" },
+            passPerPreset: true
+          };
           var result = babelCore.transform(src, config);
         } catch (ex) {
           if (ex._babel) {
@@ -768,65 +768,65 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
       }
 
       const ALLOWED_KEYS = {
-          "class": {
-            "static": {
-              "@"           : "object",
-              "type"        : "string", // String
-              "statics"     : "object", // Map
-              "environment" : "object", // Map
-              "defer"       : "function" // Function
-            },
-            "normal": {
-              "@"          : "object",
-              "@construct" : "object",
-              "@destruct"  : "object",
-              "type"       : "string", // String
-              "extend"     : "function", // Function
-              "implement"  : "object", // Interface[]
-              "include"    : "object", // Mixin[]
-              "construct"  : "function", // Function
-              "statics"    : "object", // Map
-              "properties" : "object", // Map
-              "members"    : "object", // Map
-              "environment"   : "object", // Map
-              "events"     : "object", // Map
-              "defer"      : "function", // Function
-              "destruct"   : "function" // Function
-            }
-          },
-          "interface": {
-            "extend"     : "object", // Interface | Interface[]
-            "statics"    : "object", // Map
-            "members"    : "object", // Map
-            "properties" : "object", // Map
-            "events"     : "object" // Map
-          },
-          "mixin": {
-            "include"    : "object", // Mixin | Mixin[]
-            "statics"    : "object", // Map
-            "members"    : "object", // Map
-            "properties" : "object", // Map
-            "events"     : "object", // Map
-            "destruct"   : "function", // Function
-            "construct"  : "function" // Function
-          },
-          "theme": {
-            "title"       : "string", // String
-            "aliases"     : "object", // Map
+        "class": {
+          "static": {
+            "@"           : "object",
             "type"        : "string", // String
-            "extend"      : "object", // Theme
-            "colors"      : "object", // Map
-            "borders"     : "object", // Map
-            "decorations" : "object", // Map
-            "fonts"       : "object", // Map
-            "icons"       : "object", // Map
-            "widgets"     : "object", // Map
-            "appearances" : "object", // Map
-            "meta"        : "object", // Map
-            "include"     : "object", // Array
-            "patch"       : "object", // Array
-            "boot"        : "function" // Function
+            "statics"     : "object", // Map
+            "environment" : "object", // Map
+            "defer"       : "function" // Function
+          },
+          "normal": {
+            "@"          : "object",
+            "@construct" : "object",
+            "@destruct"  : "object",
+            "type"       : "string", // String
+            "extend"     : "function", // Function
+            "implement"  : "object", // Interface[]
+            "include"    : "object", // Mixin[]
+            "construct"  : "function", // Function
+            "statics"    : "object", // Map
+            "properties" : "object", // Map
+            "members"    : "object", // Map
+            "environment"   : "object", // Map
+            "events"     : "object", // Map
+            "defer"      : "function", // Function
+            "destruct"   : "function" // Function
           }
+        },
+        "interface": {
+          "extend"     : "object", // Interface | Interface[]
+          "statics"    : "object", // Map
+          "members"    : "object", // Map
+          "properties" : "object", // Map
+          "events"     : "object" // Map
+        },
+        "mixin": {
+          "include"    : "object", // Mixin | Mixin[]
+          "statics"    : "object", // Map
+          "members"    : "object", // Map
+          "properties" : "object", // Map
+          "events"     : "object", // Map
+          "destruct"   : "function", // Function
+          "construct"  : "function" // Function
+        },
+        "theme": {
+          "title"       : "string", // String
+          "aliases"     : "object", // Map
+          "type"        : "string", // String
+          "extend"      : "object", // Theme
+          "colors"      : "object", // Map
+          "borders"     : "object", // Map
+          "decorations" : "object", // Map
+          "fonts"       : "object", // Map
+          "icons"       : "object", // Map
+          "widgets"     : "object", // Map
+          "appearances" : "object", // Map
+          "meta"        : "object", // Map
+          "include"     : "object", // Array
+          "patch"       : "object", // Array
+          "boot"        : "function" // Function
+        }
       };
 
       function isValidExtendClause(prop) {
@@ -1039,11 +1039,11 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
       };
 
       const TYPE = {
-          "qx.Class.define": "class",
-          "qx.Mixin.define": "mixin",
-          "qx.Theme.define": "theme",
-          "qx.Interface.define": "interface",
-          "qx.Bootstrap.define": "class"
+        "qx.Class.define": "class",
+        "qx.Mixin.define": "mixin",
+        "qx.Theme.define": "theme",
+        "qx.Interface.define": "interface",
+        "qx.Bootstrap.define": "class"
       };
 
       var VISITOR = {
@@ -1060,7 +1060,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
                 types.stringLiteral(t.__className.replace(/\./g, "/") + ".js"),
                 types.numericLiteral(path.node.loc.start.line),
                 types.numericLiteral(path.node.loc.start.column)
-                ]);
+              ]);
               path.replaceWith(tmp);
               path.skip();
             }
@@ -1253,7 +1253,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
                 t.__popMeta(className);
 
                 // Must be a conventional define
-/* FIXME: What is this for???                
+                /* FIXME: What is this for???                
                 if (path.node.arguments.length != 2 ||
                     path.node.arguments[0].type != "StringLiteral" ||
                     path.node.arguments[1].type != "ObjectExpression") {
@@ -1551,13 +1551,13 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
     __pushMeta: function(className) {
       var pos = className.lastIndexOf(".");
       var meta = {
-          className: className,
-          packageName: pos > -1 ? className.substring(0, pos) : null,
-          name: pos > -1 ? className.substring(pos + 1) : className,
-          superClass: null,
-          interfaces: [],
-          mixins: [],
-          functionName: null
+        className: className,
+        packageName: pos > -1 ? className.substring(0, pos) : null,
+        name: pos > -1 ? className.substring(pos + 1) : className,
+        superClass: null,
+        interfaces: [],
+        mixins: [],
+        functionName: null
       };
       this.__metaStack.push(meta);
       this.__classMeta = meta;

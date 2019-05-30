@@ -274,7 +274,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
       await (new qx.tool.cli.commands.package.Migrate(this.argv)).process(true);
 
       if (this.argv["machine-readable"]) {
-       qx.tool.compiler.Console.getInstance().setMachineReadable(true);
+        qx.tool.compiler.Console.getInstance().setMachineReadable(true);
       } else if (this.argv["feedback"]) {
         this.__gauge = new Gauge();
         this.__gauge.show("Compiling", 0);
@@ -319,7 +319,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
       }
       var analyser = maker.getAnalyser();
       if (config.ignores) {
-         analyser.setIgnores(config.ignores);
+        analyser.setIgnores(config.ignores);
       }
      
       var target = maker.getTarget();
@@ -667,61 +667,61 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         let requires_uris = Object.getOwnPropertyNames(requires).filter(name => !name.startsWith("qooxdoo-") && name !== "@qooxdoo/framework" && name !== "@qooxdoo/compiler");
         let pkg_libs = Object.getOwnPropertyNames(packages);
         if (requires_uris.length > 0 && pkg_libs.length === 0) {
-            // if we don't have package data
-            if (this.argv.download) {
-              // but we're instructed to download the libraries
-              if (this.argv.verbose) {
-                console.info(`>>> Installing latest compatible version of required libraries...`);
-              }
-              const installer = new qx.tool.cli.commands.package.Install({
-                verbose: this.argv.verbose,
-                save: false // save to lockfile only, not to manifest
-              });
-              await installer.process();
-              throw new qx.tool.utils.Utils.UserError("Added missing library information from Manifest. Please restart the compilation.");
-            } else {
-              throw new qx.tool.utils.Utils.UserError("No library information available. Try 'qx compile --download'");
+          // if we don't have package data
+          if (this.argv.download) {
+            // but we're instructed to download the libraries
+            if (this.argv.verbose) {
+              console.info(`>>> Installing latest compatible version of required libraries...`);
             }
+            const installer = new qx.tool.cli.commands.package.Install({
+              verbose: this.argv.verbose,
+              save: false // save to lockfile only, not to manifest
+            });
+            await installer.process();
+            throw new qx.tool.utils.Utils.UserError("Added missing library information from Manifest. Please restart the compilation.");
+          } else {
+            throw new qx.tool.utils.Utils.UserError("No library information available. Try 'qx compile --download'");
           }
+        }
 
-          for (let reqUri of Object.getOwnPropertyNames(requires)) {
-            let requiredRange = requires[reqUri];
-            switch (reqUri) {
-              // npm release only
-              case "qooxdoo-compiler":
-              case "@qooxdoo/compiler": {
-                let compilerVersion = qx.tool.compiler.Version.VERSION;
-                let satifiesRange = semver.satisfies(compilerVersion, requiredRange, {loose: true, includePrerelease: true}) ||
+        for (let reqUri of Object.getOwnPropertyNames(requires)) {
+          let requiredRange = requires[reqUri];
+          switch (reqUri) {
+            // npm release only
+            case "qooxdoo-compiler":
+            case "@qooxdoo/compiler": {
+              let compilerVersion = qx.tool.compiler.Version.VERSION;
+              let satifiesRange = semver.satisfies(compilerVersion, requiredRange, {loose: true, includePrerelease: true}) ||
                   (Number(semver.major(compilerVersion)) === 0 && semver.gtr(compilerVersion, requiredRange, true));
-                if (!satifiesRange) {
-                  errors.push(`${lib.getNamespace()}: Needs @qooxdoo/compiler version ${requiredRange}, found ${compilerVersion}`);
-                }
+              if (!satifiesRange) {
+                errors.push(`${lib.getNamespace()}: Needs @qooxdoo/compiler version ${requiredRange}, found ${compilerVersion}`);
+              }
+              break;
+            }
+            // npm release only
+            case "qooxdoo-sdk":
+            case "@qooxdoo/framework": {
+              let qxVersion = SDK_VERSION;
+              if (!semver.satisfies(qxVersion, requiredRange, {loose: true})) {
+                errors.push(`${lib.getNamespace()}: Needs @qooxdoo/framework version ${requiredRange}, found ${qxVersion}`);
+              }
+              break;
+            }
+            // github repository release or commit-ish identifier
+            default: {
+              let l = libs.find(entry => path.relative("", entry.getRootDir()) === packages[reqUri]);
+              if (!l) {
+                errors.push(`${lib.getNamespace()}: Cannot find required library '${reqUri}'`);
                 break;
               }
-              // npm release only
-              case "qooxdoo-sdk":
-              case "@qooxdoo/framework": {
-                let qxVersion = SDK_VERSION;
-                if (!semver.satisfies(qxVersion, requiredRange, {loose: true})) {
-                  errors.push(`${lib.getNamespace()}: Needs @qooxdoo/framework version ${requiredRange}, found ${qxVersion}`);
-                }
-                break;
+              // github release of a package
+              let libVersion = l.getLibraryInfo().version;
+              if (!semver.valid(libVersion, {loose: true})) {
+                console.warn(`${reqUri}: Version is not valid: ${libVersion}`);
+              } else if (!semver.satisfies(libVersion, requiredRange, {loose: true})) {
+                errors.push(`${lib.getNamespace()}: Needs ${reqUri} version ${requiredRange}, found ${libVersion}`);
               }
-              // github repository release or commit-ish identifier
-              default: {
-                let l = libs.find(entry => path.relative("", entry.getRootDir()) === packages[reqUri]);
-                if (!l) {
-                  errors.push(`${lib.getNamespace()}: Cannot find required library '${reqUri}'`);
-                  break;
-                }
-                // github release of a package
-                let libVersion = l.getLibraryInfo().version;
-                if (!semver.valid(libVersion, {loose: true})) {
-                  console.warn(`${reqUri}: Version is not valid: ${libVersion}`);
-                } else if (!semver.satisfies(libVersion, requiredRange, {loose: true})) {
-                  errors.push(`${lib.getNamespace()}: Needs ${reqUri} version ${requiredRange}, found ${libVersion}`);
-                }
-                break;
+              break;
             }
           }
         }

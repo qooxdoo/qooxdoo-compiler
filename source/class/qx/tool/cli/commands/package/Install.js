@@ -45,7 +45,7 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
            * qx contrib install name: Install latest published version
            * qx contrib install name@v0.0.2: Install version 0.0.2,
            * qx contrib install name@master: Install current master branch from github`,
-           builder: {
+        builder: {
           "release" : {
             alias: "r",
             describe: "Use a specific release tag instead of the tag of the latest compatible release",

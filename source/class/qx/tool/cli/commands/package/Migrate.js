@@ -145,13 +145,13 @@ qx.Class.define("qx.tool.cli.commands.package.Migrate", {
           "requires.qooxdoo-compiler": null
         };
         if (manifestModel.keyExists(obj)) {
-           needFix = true;
-           s += "   obsolete entry:\n";
-           for (let key in obj) {
-              if (obj[key]) {
-                 s += "      " + key + "\n";
-               }  
-            }
+          needFix = true;
+          s += "   obsolete entry:\n";
+          for (let key in obj) {
+            if (obj[key]) {
+              s += "      " + key + "\n";
+            }  
+          }
         }
         if (needFix) {
           if (announceOnly) {

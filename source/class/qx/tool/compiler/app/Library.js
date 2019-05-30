@@ -128,8 +128,8 @@ qx.Class.define("qx.tool.compiler.app.Library", {
      * @private
      */
     _transformRootDir: function(value) {
-//      if (value)
-//        value = path.resolve(value);
+      //      if (value)
+      //        value = path.resolve(value);
       return value;
     },
 
@@ -144,7 +144,7 @@ qx.Class.define("qx.tool.compiler.app.Library", {
       var t = this;
       let rootDir = loadFromDir;
 
-     qx.tool.utils.files.Utils.correctCase(path.resolve(loadFromDir))
+      qx.tool.utils.files.Utils.correctCase(path.resolve(loadFromDir))
         .then(tmp => this.setRootDir(rootDir = tmp))
         .then(() => qx.tool.utils.Json.loadJsonAsync(rootDir + "/Manifest.json"))
         .then(data => {
@@ -210,7 +210,7 @@ qx.Class.define("qx.tool.compiler.app.Library", {
                 t.setRequires(data.requires);
               }
               if (data.provides && data.provides.boot) {
-               qx.tool.compiler.Console.print("qx.tool.cli.compile.deprecatedProvidesBoot", rootDir);
+                qx.tool.compiler.Console.print("qx.tool.cli.compile.deprecatedProvidesBoot", rootDir);
               }
               return cb && cb();
             });
@@ -235,68 +235,68 @@ qx.Class.define("qx.tool.compiler.app.Library", {
           }
 
           async.each(
-              filenames,
-              function(filename, cb) {
-                if (filename[0] == ".") {
+            filenames,
+            function(filename, cb) {
+              if (filename[0] == ".") {
+                cb();
+                return;
+              }
+              fs.stat(path.join(folder, filename), function(err, stat) {
+                if (err || !stat) {
+                  cb(err);
+                  return;
+                }
+
+                if (stat.isDirectory()) {
+                  var tmp = packageName;
+                  if (tmp.length) {
+                    tmp += ".";
+                  }
+                  tmp += filename;
+                  scanDir(path.join(folder, filename), tmp, cb);
+                  return;
+                }
+
+                // Make sure it looks like a file
+                var match = filename.match(/(.*)(\.\w+)$/);
+                if (!match) {
+                  log.trace("Skipping file " + folder + "/" + filename);
                   cb();
                   return;
                 }
-                fs.stat(path.join(folder, filename), function(err, stat) {
-                  if (err || !stat) {
-                    cb(err);
-                    return;
-                  }
 
-                  if (stat.isDirectory()) {
-                    var tmp = packageName;
-                    if (tmp.length) {
-                      tmp += ".";
-                    }
-                    tmp += filename;
-                    scanDir(path.join(folder, filename), tmp, cb);
-                    return;
-                  }
+                // Class name
+                var className = match[1];
+                var extension = match[2];
+                if (packageName.length) {
+                  className = packageName + "." + className;
+                }
 
-                  // Make sure it looks like a file
-                  var match = filename.match(/(.*)(\.\w+)$/);
-                  if (!match) {
-                    log.trace("Skipping file " + folder + "/" + filename);
-                    cb();
-                    return;
-                  }
-
-                  // Class name
-                  var className = match[1];
-                  var extension = match[2];
-                  if (packageName.length) {
-                    className = packageName + "." + className;
-                  }
-
-                  if (className.match(/__init__/)) {
-                    cb();
-                    return;
-                  }
-                  if (extension == ".js" || extension == ".ts") {
-                    t.__knownSymbols[className] = "class";
-                    t.__sourceFileExtensions[className] = extension;
-                    classes.push(className);
-                  } else {
-                    t.__knownSymbols[filename] = "resource";
-                  }
-                  if (Boolean(packageName) && !t.__knownSymbols[packageName]) {
-                    t.__knownSymbols[packageName] = "package";
-                    var pos;
-                    tmp = packageName;
-                    while ((pos = tmp.lastIndexOf(".")) > -1) {
-                      tmp = tmp.substring(0, pos);
-                      t.__knownSymbols[tmp] = "package";
-                    }
-                  }
-
+                if (className.match(/__init__/)) {
                   cb();
-                });
-              },
-              cb);
+                  return;
+                }
+                if (extension == ".js" || extension == ".ts") {
+                  t.__knownSymbols[className] = "class";
+                  t.__sourceFileExtensions[className] = extension;
+                  classes.push(className);
+                } else {
+                  t.__knownSymbols[filename] = "resource";
+                }
+                if (Boolean(packageName) && !t.__knownSymbols[packageName]) {
+                  t.__knownSymbols[packageName] = "package";
+                  var pos;
+                  tmp = packageName;
+                  while ((pos = tmp.lastIndexOf(".")) > -1) {
+                    tmp = tmp.substring(0, pos);
+                    t.__knownSymbols[tmp] = "package";
+                  }
+                }
+
+                cb();
+              });
+            },
+            cb);
         });
       }
 

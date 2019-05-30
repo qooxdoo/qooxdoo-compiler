@@ -103,13 +103,13 @@ qx.Class.define("qx.tool.cli.commands.package.Update", {
       } else {
         if (!github.token) {
           let response = await inquirer.prompt([
-              {
-                type: "input",
-                name: "token",
-                message: "Searching GitHub requires an API token - visit https://github.com/settings/tokens to obtain one " +
+            {
+              type: "input",
+              name: "token",
+              message: "Searching GitHub requires an API token - visit https://github.com/settings/tokens to obtain one " +
                   "(you do not need to assign any permissions, just create a token);\nWhat is your GitHub API Token ? "
-              }
-            ]
+            }
+          ]
           );
           if (!response.token) {
             console.error("You have not provided a GitHub token.");

@@ -84,18 +84,18 @@ module.exports = qx.Class.define("qx.tool.compiler.targets.BuildTarget", {
       var resourceUri = mapTo ? mapTo : targetUri + "resource";
 
       compileInfo.build = {
-          parts: {}
+        parts: {}
       };
       await qx.tool.utils.Promisify.forEachOfSeries(compileInfo.configdata.loader.packages,
-          (pkg, pkgId) => {
-            compileInfo.build.parts[pkgId] = {
-                uris: pkg.uris,
-                hashValue: null,
-                modified: true
-              };
+        (pkg, pkgId) => {
+          compileInfo.build.parts[pkgId] = {
+            uris: pkg.uris,
+            hashValue: null,
+            modified: true
+          };
 
-            pkg.uris = ["__out__:" + t.getScriptPrefix() + "part-" + pkgId + ".js"];
-          });
+          pkg.uris = ["__out__:" + t.getScriptPrefix() + "part-" + pkgId + ".js"];
+        });
 
       var libraries = this.getAnalyser().getLibraries();
       var libraryLookup = {};
@@ -130,7 +130,7 @@ module.exports = qx.Class.define("qx.tool.compiler.targets.BuildTarget", {
           }
         }
       ])
-      .then(() => t.base(_arguments, compileInfo));
+        .then(() => t.base(_arguments, compileInfo));
     },
 
     _writeBootJs: async function(compileInfo, ws) {
@@ -169,23 +169,23 @@ module.exports = qx.Class.define("qx.tool.compiler.targets.BuildTarget", {
       var uglifyOpts = {
       };
       switch (this.getMinify()) {
-      case "off":
-        return;
+        case "off":
+          return;
 
-      case "minify":
-        uglifyOpts.mangle = false;
-        break;
+        case "minify":
+          uglifyOpts.mangle = false;
+          break;
 
-      case "beautify":
-        uglifyOpts.mangle = false;
-        uglifyOpts.output = {
+        case "beautify":
+          uglifyOpts.mangle = false;
+          uglifyOpts.output = {
             beautify: true
-        };
-        break;
+          };
+          break;
 
-      case "mangle":
-        uglifyOpts.mangle = true;
-        break;
+        case "mangle":
+          uglifyOpts.mangle = true;
+          break;
       }
 
       var t = this;
@@ -213,10 +213,10 @@ module.exports = qx.Class.define("qx.tool.compiler.targets.BuildTarget", {
           .then(() => {
             t.fireDataEvent("minifyingApplication", { application: application, part: pkgId, filename: "part-" + pkgId + ".js" });
             uglifyOpts.sourceMap = {
-                content: partSourceMap,
-                url: "part-" + pkgId + ".js.map",
-                includeSources: true
-              };
+              content: partSourceMap,
+              url: "part-" + pkgId + ".js.map",
+              includeSources: true
+            };
             var result = UglifyJS.minify(partSourceCode, uglifyOpts);
             var err = result.error;
             if (err) {
