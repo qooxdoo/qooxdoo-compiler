@@ -165,6 +165,7 @@ qx.Class.define("testapp.Application", {
       
       new testapp.Issue309();
       new testapp.Issue206();
+      new testapp.Issue240();
       
       qx.core.Assert.assertTrue(qx.locale.Number.getDecimalSeparator("nl").toString() === ",");
     },

@@ -796,7 +796,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
             "statics"    : "object", // Map
             "properties" : "object", // Map
             "members"    : "object", // Map
-            "environment"   : "object", // Map
+            "environment": "object", // Map
             "events"     : "object", // Map
             "defer"      : "function", // Function
             "destruct"   : "function" // Function
