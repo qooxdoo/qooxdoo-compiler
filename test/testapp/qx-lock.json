@@ -9,8 +9,5 @@
       "repo_tag": "v0.3.1"
     }
   ],
-  "version": "2.1",
-  "requires": {
-    "qooxdoo/qxl.testtapper": "^0.3.1"
-  }
+  "version": "2.1"
 }
