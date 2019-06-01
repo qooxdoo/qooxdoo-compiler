@@ -19,7 +19,7 @@
 /**
  * A model for the lockfile, which has a version, but no "official" schema (yet)
  */
-const version = "2.1";
+const version = "2.1.0";
 qx.Class.define("qx.tool.config.Lockfile", {
   extend: qx.tool.config.Abstract,
   type: "singleton",
