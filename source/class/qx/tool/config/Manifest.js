@@ -25,7 +25,7 @@ qx.Class.define("qx.tool.config.Manifest", {
   statics: {
     config: {
       fileName: "Manifest.json",
-      version: "1"
+      version: "1.0.0"
     }
   },
   construct: function() {

@@ -34,7 +34,7 @@ qx.Class.define("qx.tool.config.Abstract", {
     /**
      * The base URL of all json schema definitions
      */
-    schemaBaseUrl: "https://raw.githubusercontent.com/qooxdoo/qooxdoo-compiler/master/resource/schema"
+    schemaBaseUrl: "https://raw.githubusercontent.com/qooxdoo/qooxdoo-compiler/master/source/resource/qx/tool/schema"
   },
 
   construct: function(config) {
@@ -75,6 +75,7 @@ qx.Class.define("qx.tool.config.Abstract", {
      * If null, do not validate
      */
     version: {
+      validate: version => semver.coerce(version) !== null,
       check: "String",
       nullable: true
     },
@@ -165,9 +166,6 @@ qx.Class.define("qx.tool.config.Abstract", {
       if (!this.__schema) {
         throw new Error(`Cannot validate - no schema available! Please load the model first.`);
       }
-      if (data.$schema !== this.getSchemaUri()) {
-        throw new Error(`Invalid schema: expected ${this.getSchemaUri()}, got ${data.$schema}`);
-      }
       try {
         qx.tool.utils.Json.validate(data, this.__schema);
       } catch (e) {
@@ -189,12 +187,22 @@ qx.Class.define("qx.tool.config.Abstract", {
     },
 
     /**
-     * Path to the local copy of the schema json file
+     * Returns the part of the schema URI that is identical for all paths
+     * @private
+     */
+    _getSchemaFileName() {
+      let [name, ext] = this.getFileName().split(/\./);
+      let version = String(semver.coerce(this.getVersion())).replace(/\./g, "-");
+      return `${name}-${version}.${ext}`;
+    },
+
+    /**
+     * Path to the schema json file in the file system
      * @return {String}
      */
     /* @ignore qx.tool.$$resourceDir */
     getSchemaPath() {
-      return path.join(qx.tool.$$resourceDir, "schema", "v" + this.getVersion(), this.getFileName());
+      return path.join(qx.tool.$$resourceDir, "schema", this._getSchemaFileName());
     },
 
     /**
@@ -202,7 +210,7 @@ qx.Class.define("qx.tool.config.Abstract", {
      * @return {String}
      */
     getSchemaUri() {
-      return qx.tool.config.Abstract.schemaBaseUrl + path.join("/v" + this.getVersion(), this.getFileName());
+      return qx.tool.config.Abstract.schemaBaseUrl + "/" + this._getSchemaFileName();
     },
 
     /**
@@ -274,7 +282,7 @@ qx.Class.define("qx.tool.config.Abstract", {
         // check initial data
         let dataSchemaInfo = qx.tool.utils.Json.getSchemaInfo(data);
         if (!dataSchemaInfo) {
-          throw new Error(`Invalid data: must conform to json schema at ${this.getSchemaUri()}!`);
+          throw new Error(`Invalid data: no schema found, must be of schema ${this.getSchemaUri()}!`);
         }
         let dataVersion = semver.coerce(dataSchemaInfo.version);
         let schemaVersion = semver.coerce(this.getVersion());
