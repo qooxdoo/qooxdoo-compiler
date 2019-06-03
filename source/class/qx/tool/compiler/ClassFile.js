@@ -1259,14 +1259,6 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
                 path.skip();
                 path.traverse(CLASS_DEF_VISITOR, {classDefPath: path});
                 t.__popMeta(className);
-
-                // Must be a conventional define
-                /* FIXME: What is this for???                
-                if (path.node.arguments.length != 2 ||
-                    path.node.arguments[0].type != "StringLiteral" ||
-                    path.node.arguments[1].type != "ObjectExpression") {
-                }
-*/                
               } else if (name == "qx.core.Environment.add") {
                 let arg = path.node.arguments[0];
                 if (types.isLiteral(arg)) {

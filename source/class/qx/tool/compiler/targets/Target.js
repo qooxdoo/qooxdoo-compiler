@@ -365,12 +365,13 @@ module.exports = qx.Class.define("qx.tool.compiler.targets.Target", {
             var arr = library.getAddScript();
             if (arr) {
               arr.forEach(path => {
-                let pos = path.indexOf('/');
+                let pos = path.indexOf("/");
                 let pathNs = path.substring(0, pos);
-                if (pathNs == libnamespace || analyser.findLibrary(pathNs))
+                if (pathNs == libnamespace || analyser.findLibrary(pathNs)) {
                   configdata.urisBefore.push(pathNs + ":" + path);
-                else
-                  configdata.urisBefore.push("__external__:" + path)
+                } else {
+                  configdata.urisBefore.push("__external__:" + path);
+                }
               });
             }
             arr = library.getAddCss();
