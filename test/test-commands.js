@@ -27,11 +27,11 @@ const appNamespace = "testCommandsApp";
     // qx add script --rename=y.js test/testdata/x.js
     let filename = "x.js";
     let scriptpath = path.join(qx.tool.$$rootDir, "test/testdata", filename);
-    let resourcedir = appNamespace + "/js";
+    let resourcedir = "js";
     let args = {verbose:true, noninteractive:true, scriptpath, resourcedir, rename:"y.js"};
     await (new commands.add.Script(args)).process();
     actual = manifestModel.getValue("externalResources.script.0");
-    expected = path.join(resourcedir, "y.js");
+    expected = path.join(appNamespace, resourcedir, "y.js");
     assert.strictEqual(actual, expected);
     let filePath = path.join(process.cwd(), "source/resource", expected);
     assert.ok(await fs.existsAsync(filePath), "File was not copied.");
