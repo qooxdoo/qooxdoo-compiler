@@ -94,7 +94,7 @@ qx.Class.define("qx.tool.cli.Watch", {
 
           // On case insensitive (but case preserving) filing systems, qx.tool.utils.files.Utils.correctCase
           // is needed corrects because chokidar needs the correct case in order to detect changes.
-         qx.tool.utils.files.Utils.correctCase(dir).then(dir => {
+          qx.tool.utils.files.Utils.correctCase(dir).then(dir => {
             confirmed.push(dir);
             resolve();
           });
@@ -111,7 +111,7 @@ qx.Class.define("qx.tool.cli.Watch", {
           this.__make();
         });
         watcher.on("error", err => {
-         qx.tool.compiler.Console.print(err.code == "ENOSPC" ? "qx.tool.cli.watch.enospcError" : "qx.tool.cli.watch.watchError", err);
+          qx.tool.compiler.Console.print(err.code == "ENOSPC" ? "qx.tool.cli.watch.enospcError" : "qx.tool.cli.watch.watchError", err);
         });
       });
     },
@@ -247,12 +247,12 @@ qx.Class.define("qx.tool.cli.Watch", {
   },
 
   defer: function() {
-   qx.tool.compiler.Console.addMessageIds({
+    qx.tool.compiler.Console.addMessageIds({
       "qx.tool.cli.watch.makingApplications": ">>> Making the applications...",
       "qx.tool.cli.watch.restartingMake" : ">>> Code changed during make, restarting...",
       "qx.tool.cli.watch.compiledClasses": ">>> Compiled %1 classes in %2"
     });
-   qx.tool.compiler.Console.addMessageIds({
+    qx.tool.compiler.Console.addMessageIds({
       "qx.tool.cli.watch.compileFailed": ">>> Fatal error during compile: %1",
       "qx.tool.cli.watch.enospcError": ">>> ENOSPC error occured - try increasing fs.inotify.max_user_watches",
       "qx.tool.cli.watch.watchError": ">>> Error occured while watching files - file modifications may not be detected; error: %1"

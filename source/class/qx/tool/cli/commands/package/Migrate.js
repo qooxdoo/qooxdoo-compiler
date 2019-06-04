@@ -145,13 +145,13 @@ qx.Class.define("qx.tool.cli.commands.package.Migrate", {
           "requires.qooxdoo-compiler": null
         };
         if (manifestModel.keyExists(obj)) {
-           needFix = true;
-           s += "   obsolete entry:\n";
-           for (let key in obj) {
-              if (obj[key]) {
-                 s += "      " + key + "\n";
-               }  
-            }
+          needFix = true;
+          s += "   obsolete entry:\n";
+          for (let key in obj) {
+            if (obj[key]) {
+              s += "      " + key + "\n";
+            }  
+          }
         }
         if (needFix) {
           if (announceOnly) {
@@ -168,13 +168,24 @@ qx.Class.define("qx.tool.cli.commands.package.Migrate", {
                 }
                 return [];
               })
-              .transform("info.version", version => String(semver.coerce(version)))
+              .transform("info.version", version => {
+                let coerced = semver.coerce(version);
+                if (coerced === null) {
+                  console.warn(`*** Version string '${version}' could not be interpretted as semver, changing to 1.0.0`);
+                  return "1.0.0";
+                }
+                return String(coerced);
+              })
               .unset("info.qooxdoo-versions")
               .unset("info.qooxdoo-range")
               .unset("provides.type")
               .unset("requires.qxcompiler")
               .unset("requires.qooxdoo-compiler")
               .unset("requires.qooxdoo-sdk");
+            await manifestModel.save();
+            if (!this.argv.quiet) {
+              console.info(`Updated settings in ${manifestModel.getDataPath()}.`);
+            }
           }
         }
         // update dependencies

@@ -63,16 +63,16 @@ module.exports = qx.Class.define("qx.tool.compiler.targets.SourceTarget", {
 
       application.getRequiredLibraries().forEach(ns => {
         compileInfo.configdata.libraries[ns] = {
-            sourceUri: sourceUri,
-            resourceUri: resourceUri
-          };
+          sourceUri: sourceUri,
+          resourceUri: resourceUri
+        };
       });
 
       var _arguments = arguments;
       if (this.getCopyResources()) {
         await t._syncAssets(compileInfo)
           .then(() =>
-          t.base(_arguments, compileInfo)
+            t.base(_arguments, compileInfo)
           );
       } else {
         await t.base(_arguments, compileInfo);

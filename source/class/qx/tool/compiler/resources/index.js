@@ -21,8 +21,8 @@
  * *********************************************************************** */
 
 module.exports = {
-    Manager: require("./Manager"),
-    Handler: require("./Handler"),
-    ImageHandler: require("./ImageHandler"),
-    MetaHandler: require("./MetaHandler")
+  Manager: require("./Manager"),
+  Handler: require("./Handler"),
+  ImageHandler: require("./ImageHandler"),
+  MetaHandler: require("./MetaHandler")
 };

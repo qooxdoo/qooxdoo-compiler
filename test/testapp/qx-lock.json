@@ -1,11 +1,13 @@
 {
   "libraries": [
     {
-      "library_name": "Dialog",
-      "library_version": "1.4.0",
-      "repo_name": "cboulanger/qx-contrib-Dialog",
-      "repo_tag": "v1.4.0",
-      "path": "packages/cboulanger_qx-contrib-Dialog_v1.4.0"
+      "library_name": "Commandline Testrunner for Qooxdoo Apps",
+      "library_version": "0.3.1",
+      "path": "qx_packages/qooxdoo_qxl_testtapper_v0_3_1",
+      "uri": "qooxdoo/qxl.testtapper",
+      "repo_name": "qooxdoo/qxl.testtapper",
+      "repo_tag": "v0.3.1"
     }
-  ]
+  ],
+  "version": "2.1"
 }

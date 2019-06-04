@@ -69,11 +69,14 @@ qx.Class.define("qx.tool.cli.commands.add.Script", {
 
   members: {
     process: async function() {
+      let manifestModel = await qx.tool.config.Manifest.getInstance().load();
+      let namespace = manifestModel.getValue("provides.namespace");
+      
       let script_path = this.argv.scriptpath;
       let script_name = path.basename(script_path);
-      let resource_dir_path = path.join(process.cwd(), "source", "resource", this.argv.resourcedir);
+      let resource_dir_path = path.join(process.cwd(), "source", "resource", namespace, this.argv.resourcedir);
       let resource_file_path = path.join(resource_dir_path, this.argv.rename || script_name);
-      let external_res_path = path.join(this.argv.resourcedir, this.argv.rename || script_name);
+      let external_res_path = path.join(namespace, this.argv.resourcedir, this.argv.rename || script_name);
       // validate file paths
       if (!script_path.endsWith(".js")) {
         throw new qx.tool.utils.Utils.UserError("File doesn't seem to be a javascript file.");
@@ -96,7 +99,6 @@ qx.Class.define("qx.tool.cli.commands.add.Script", {
         }
       }
       // check manifest structure
-      let manifestModel = await qx.tool.config.Manifest.getInstance().load();
       let script_list = manifestModel.getValue("externalResources.script") || [];
       if (this.argv.undo) {
         // undo, i.e. remove file from resource folder and Manifest

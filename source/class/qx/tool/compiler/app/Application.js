@@ -198,7 +198,7 @@ qx.Class.define("qx.tool.compiler.app.Application", {
      * @returns boolean
      */
     isBrowserApp: function () {
-       return this.getType() === "browser";
+      return this.getType() === "browser";
     },
 
     /**
@@ -229,13 +229,13 @@ qx.Class.define("qx.tool.compiler.app.Application", {
             throw new Error(Console.decode("qx.tool.compiler.application.duplicatePartNames", part.getName()));
           }
           var partData = {
-              name: part.getName(),
-              include: part.getInclude(),
-              exclude: part.getExclude(),
-              classes: [],
-              dependsOn: {},
-              combine: part.getCombine(),
-              minify: part.getMinify()
+            name: part.getName(),
+            include: part.getInclude(),
+            exclude: part.getExclude(),
+            classes: [],
+            dependsOn: {},
+            combine: part.getCombine(),
+            minify: part.getMinify()
           };
           partData.match = qx.tool.compiler.app.Application.createWildcardMatchFunction(part.getInclude(), part.getExclude());
           partsByName[part.getName()] = partData;
@@ -247,16 +247,16 @@ qx.Class.define("qx.tool.compiler.app.Application", {
         }
       } else {
         bootPart = {
-            name: "boot",
-            include:[ "*" ],
-            exclude: [],
-            classes: [],
-            dependsOn: {},
-            combine: false,
-            minify: false,
-            match: function() {
-              return true;
-            }
+          name: "boot",
+          include:[ "*" ],
+          exclude: [],
+          classes: [],
+          dependsOn: {},
+          combine: false,
+          minify: false,
+          match: function() {
+            return true;
+          }
         };
         partsByName.boot = bootPart;
         parts.push(bootPart);
@@ -267,10 +267,10 @@ qx.Class.define("qx.tool.compiler.app.Application", {
           return classDataByClassname[classname];
         }
         var classData = classDataByClassname[classname] = {
-            classname: classname,
-            parts: {},
-            best: null,
-            actual: null
+          classname: classname,
+          parts: {},
+          best: null,
+          actual: null
         };
         parts.forEach(part => {
           if (part === bootPart) {
@@ -774,28 +774,28 @@ qx.Class.define("qx.tool.compiler.app.Application", {
           var prefix = name.substring(0, pos);
           if (prefix) {
             t.getAnalyser().getLibraries()
-            .forEach(function(lib) {
-              var symbols = lib.getKnownSymbols();
-              for (var symbol in symbols) {
-                if (symbols[symbol] == "class" && symbol.startsWith(prefix)) {
-                  result[symbol] = true;
+              .forEach(function(lib) {
+                var symbols = lib.getKnownSymbols();
+                for (var symbol in symbols) {
+                  if (symbols[symbol] == "class" && symbol.startsWith(prefix)) {
+                    result[symbol] = true;
+                  }
                 }
-              }
-            });
+              });
           } 
           var postfix = name.substring(pos + 1);
           if (postfix) {
             t.getAnalyser().getLibraries()
-            .forEach(function(lib) {
-              var symbols = lib.getKnownSymbols();
-              for (var symbol in symbols) {
-                if (symbols[symbol] == "class" && symbol.endsWith(postfix)) {
-                  result[symbol] = true;
+              .forEach(function(lib) {
+                var symbols = lib.getKnownSymbols();
+                for (var symbol in symbols) {
+                  if (symbols[symbol] == "class" && symbol.endsWith(postfix)) {
+                    result[symbol] = true;
+                  }
                 }
-              }
-            });
+              });
           }
-      }
+        }
       });
       return Object.keys(result);
     },

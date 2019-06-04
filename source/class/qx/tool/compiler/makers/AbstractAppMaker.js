@@ -54,7 +54,7 @@ qx.Class.define("qx.tool.compiler.makers.AbstractAppMaker", {
     }
   },
 
-   members: {
+  members: {
 
     /*
      * @Override

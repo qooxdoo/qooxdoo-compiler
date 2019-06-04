@@ -117,6 +117,9 @@ qx.$$loader = {
         if (prefix.length && prefix[prefix.length - 1] != '/')
           prefix += "/";
         euri = prefix + uri[1];
+      } else if (uri.length > 2) {
+        uri.shift();
+        euri = uri.join(":");
       } else {
         euri = compressedUris[i];
       }
