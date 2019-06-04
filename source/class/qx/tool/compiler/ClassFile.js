@@ -537,9 +537,17 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
           t.addDeclaration(node.id.name);
         }
         t.pushScope(node.id ? node.id.name : null, node, isClassMember);
-        for (var i = 0; i < node.params.length; i++) {
-          t.addDeclaration(node.params[i].name);
-        }
+        node.params.forEach(param => {
+          if (param.type == "AssignmentPattern") {
+            t.addDeclaration(param.left.name);
+          } else if (param.type == "RestElement") {
+            t.addDeclaration(param.argument.name);
+          } else if (param.type == "Identifier") {
+            t.addDeclaration(param.name);
+          } else {
+            console.warn("Unexpected type of parameter " + param.type + " at " + node.loc.start.line + "," + node.loc.start.column);
+          }
+        });
         var jsdoc = getJsDoc(node.leadingComments);
         if (jsdoc && jsdoc["@ignore"]) {
           jsdoc["@ignore"].forEach(elem => t.addIgnore(elem.body));
@@ -758,8 +766,8 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
             }
           }
           result = "[[ UnaryExpression ]]";
-        } else if (node.type == "NewExpression") {
-          result = "[[ NewExpression ]]";
+        } else if (node.type == "NewExpression" || node.type == "BinaryExpression") {
+          result = "[[ " + node.type + " ]]";
         } else {
           t.warn("Cannot interpret AST " + node.type + " at " + t.__className + " [" + node.loc.start.line + "," + node.loc.start.column + "]");
           result = null;
@@ -788,7 +796,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
             "statics"    : "object", // Map
             "properties" : "object", // Map
             "members"    : "object", // Map
-            "environment"   : "object", // Map
+            "environment": "object", // Map
             "events"     : "object", // Map
             "defer"      : "function", // Function
             "destruct"   : "function" // Function
@@ -1251,14 +1259,6 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
                 path.skip();
                 path.traverse(CLASS_DEF_VISITOR, {classDefPath: path});
                 t.__popMeta(className);
-
-                // Must be a conventional define
-                /* FIXME: What is this for???                
-                if (path.node.arguments.length != 2 ||
-                    path.node.arguments[0].type != "StringLiteral" ||
-                    path.node.arguments[1].type != "ObjectExpression") {
-                }
-*/                
               } else if (name == "qx.core.Environment.add") {
                 let arg = path.node.arguments[0];
                 if (types.isLiteral(arg)) {

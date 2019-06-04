@@ -265,7 +265,7 @@ qx.Class.define("qx.tool.cli.commands.Create", {
               }
               // console.log(template);
               if (fs.existsSync(targetFile)) {
-                throw new qx.tool.utils.Utils.UserError(`${targetFile} already exists.`); // todo: handle overwriting
+                throw new qx.tool.utils.Utils.UserError(`${targetFile} already exists.`);
               }
               fs.writeFileSync(targetFile, template, "utf-8");
             } else {

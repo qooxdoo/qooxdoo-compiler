@@ -26,6 +26,7 @@
  * because the unit tests will enable and disable features to test the compiler output.
  *
  * @asset(testapp/*)
+ * @asset(qx/test/script.js)
  * @asset(abc/def/myicon.gif)
  * @require(qx.io.remote.Rpc)
  * @require(testapp.WrongClassName)
@@ -163,6 +164,14 @@ qx.Class.define("testapp.Application", {
       console.log("TestThat1.toHashCode() = " + (new testapp.TestThat1()).toHashCode());
       console.log("TestThat2.toHashCode() = " + (new testapp.TestThat2()).toHashCode());
       
+      new testapp.Issue309();
+      new testapp.Issue206();
+      new testapp.Issue240();
+      new testapp.Issue186();
+      
+      qx.core.Assert.assertTrue(TEST_EXTERNAL === "loaded");
+      qx.core.Assert.assertTrue(SCRIPT_LOADED === true);
+      qx.core.Assert.assertTrue(typeof jQuery == "function");
       qx.core.Assert.assertTrue(qx.locale.Number.getDecimalSeparator("nl").toString() === ",");
     },
 
