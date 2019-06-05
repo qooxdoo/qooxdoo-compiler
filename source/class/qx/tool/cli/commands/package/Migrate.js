@@ -126,6 +126,7 @@ qx.Class.define("qx.tool.cli.commands.package.Migrate", {
       }
       for (const manifestModel of manifestModels) {
         await manifestModel.set({warnOnly: true}).load();
+        manifestModel.setValidate(false);
         needFix = false;
         let s = "";
         if (!qx.lang.Type.isArray(manifestModel.getValue("info.authors"))) {
@@ -184,7 +185,7 @@ qx.Class.define("qx.tool.cli.commands.package.Migrate", {
               .unset("requires.qooxdoo-sdk");
             await manifestModel.save();
             if (!this.argv.quiet) {
-              console.info(`Updated settings in ${manifestModel.getDataPath()}.`);
+              console.info(`Updated settings in ${manifestModel.getRelativeDataPath()}.`);
             }
           }
         }
@@ -209,10 +210,11 @@ qx.Class.define("qx.tool.cli.commands.package.Migrate", {
             // now model should validate
             await manifestModel.save();
             if (!this.argv.quiet) {
-              console.info(`Updated dependencies in ${manifestModel.getDataPath()}.`);
+              console.info(`Updated dependencies in ${manifestModel.getRelativeDataPath()}.`);
             }
           }
         }
+        manifestModel.setValidate(true);
       }
       let compileJsFilename = path.join(process.cwd(), "compile.js");
       if (await fs.existsAsync(compileJsFilename)) {

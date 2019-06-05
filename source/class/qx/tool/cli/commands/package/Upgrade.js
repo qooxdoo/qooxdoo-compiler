@@ -81,6 +81,9 @@ qx.Class.define("qx.tool.cli.commands.package.Upgrade", {
         if (!library.repo_name || !library.repo_tag) {
           continue;
         }
+        if (!library.uri) {
+          library.uri = library.repo_name;
+        }
         // if a library to upgrade has been provided, skip non-matching ones
         if (this.argv.library_uri && library.uri !== this.argv.library_uri) {
           continue;

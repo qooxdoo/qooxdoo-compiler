@@ -94,6 +94,12 @@ qx.Class.define("qx.tool.cli.commands.Config", {
           }
           return path.resolve(value);
         }
+      },
+      "qx.translation.strictPoCompatibility": {
+        desc: "Whether to write PO files with strict compatibility, i.e. include line numbers in output",
+        set: async function(value) {
+          return value === "true" ? true : value === "false" ? false : Boolean(value);
+        }
       }
     }
 

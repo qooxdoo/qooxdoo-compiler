@@ -169,7 +169,7 @@ qx.Class.define("qx.tool.config.Abstract", {
       try {
         qx.tool.utils.Json.validate(data, this.__schema);
       } catch (e) {
-        let msg = `Error validating data for ${this.getDataPath()}: ${e.message}`;
+        let msg = `Error validating data for ${this.getRelativeDataPath()}: ${e.message}`;
         if (this.isWarnOnly()) {
           console.warn(msg);
         } else {
@@ -184,6 +184,13 @@ qx.Class.define("qx.tool.config.Abstract", {
      */
     getDataPath() {
       return path.join(this.getBaseDir(), this.getFileName());
+    },
+    
+    /**
+     * The path to the configuration file, relative to CWD
+     */
+    getRelativeDataPath() {
+      return path.relative(process.cwd(), this.getDataPath());
     },
 
     /**
@@ -259,16 +266,16 @@ qx.Class.define("qx.tool.config.Abstract", {
             if (templateFunction) {
               data = templateFunction.bind(this)();
               if (!qx.lang.Type.isObject(data)) {
-                throw new Error(`Template for config file ${this.getDataPath()} is invalid. Must be an object.`);
+                throw new Error(`Template for config file ${this.getRelativeDataPath()} is invalid. Must be an object.`);
               }
             } else {
-              throw new Error(`Cannot create config file ${this.getDataPath()} without a template.`);
+              throw new Error(`Cannot create config file ${this.getRelativeDataPath()} without a template.`);
             }
           } else {
-            throw new Error(`Cannot create config file ${this.getDataPath()} since no Manifest exists. Are you in the library root?`);
+            throw new Error(`Cannot create config file ${this.getRelativeDataPath()} since no Manifest exists. Are you in the library root?`);
           }
         } else {
-          throw new Error(`Cannot load config file: ${this.getDataPath()} does not exist. Are you in the library root?`);
+          throw new Error(`Cannot load config file: ${this.getRelativeDataPath()} does not exist. Are you in the library root?`);
         }
       }
       // load schema if validation is enabled
