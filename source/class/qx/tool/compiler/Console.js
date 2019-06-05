@@ -111,6 +111,7 @@ qx.Class.define("qx.tool.compiler.Console", {
 
       // Target errors (@see {Target})
       "qx.tool.compiler.target.missingAppLibrary": "Cannot find library required to create application for %1",
+      "qx.tool.compiler.target.missingScriptResource": "Cannot find script resource: %1",
 
       // Library errors (@see {Library})
       "qx.tool.compiler.library.emptyManifest": "Empty Manifest.json in library at %1",
