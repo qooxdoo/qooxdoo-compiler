@@ -275,7 +275,7 @@ qx.Class.define("qx.tool.cli.commands.package.Publish", {
           .setValue("info.version", new_version);
         if (argv.dryrun) {
           if (!argv.quiet) {
-            console.info(`Dry run: Not committing ${manifestModel.getDataPath()} with the following content:`);
+            console.info(`Dry run: Not committing ${manifestModel.getRelativeDataPath()} with the following content:`);
             console.info(manifestModel.getData());
           }
         } else {
@@ -400,13 +400,13 @@ qx.Class.define("qx.tool.cli.commands.package.Publish", {
         // write index file
         const registryModel = qx.tool.config.Registry.getInstance();
         if (argv.dryrun) {
-          console.info(`Dry run: not creating index file ${registryModel.getDataPath()} with the following content:`);
+          console.info(`Dry run: not creating index file ${registryModel.getRelativeDataPath()} with the following content:`);
           console.info(data);
         } else {
           await registryModel.load(data);
           await registryModel.save();
           if (!argv.quiet) {
-            console.info(`Created index file ${registryModel.getDataPath()}'.`);
+            console.info(`Created index file ${registryModel.getRelativeDataPath()}'.`);
           }
         }
         resolve();
