@@ -101,17 +101,25 @@ module.exports = qx.Class.define("qx.tool.compiler.Analyser", {
       init: null,
       check: "Map"
     },
+    
     /** options sent to babel preset */
     babelOptions: {
       init: null,
       nullable: true,
       check: "Object"
     },
+    
     /** list of global ignores */
     ignores: {
       init: [],
       nullable: false,
       check: "Array"
+    },
+    
+    /** Whether to write line numbers to .po files */
+    writePoLineNumbers: {
+      init: false,
+      check: "Boolean"
     }
 
   },
@@ -1024,6 +1032,7 @@ module.exports = qx.Class.define("qx.tool.compiler.Analyser", {
       var translation = t.__translations[id];
       if (!translation) {
         translation = t.__translations[id] = new qx.tool.compiler.app.Translation(library, locale);
+        translation.setWriteLineNumbers(this.isWritePoLineNumbers());
         await translation.checkRead();
       }
       return translation;
@@ -1040,6 +1049,7 @@ module.exports = qx.Class.define("qx.tool.compiler.Analyser", {
 
       return Promise.all(locales.map(locale => {
         var translation = new qx.tool.compiler.app.Translation(library, locale);
+        translation.setWriteLineNumbers(this.isWritePoLineNumbers());
         return translation.read()
           .then(() => {
             let unusedEntries = {};
@@ -1094,8 +1104,12 @@ module.exports = qx.Class.define("qx.tool.compiler.Analyser", {
                     if (!entry.comments) {
                       entry.comments = {};
                     }
-                    entry.comments.extracted = "NO LONGER USED";
-                    entry.comments.reference = {};
+                    if (Object.keys(entry.comments).length == 0 && entry.msgstr === "") {
+                      translation.deleteEntry(msgid);
+                    } else {
+                      entry.comments.extracted = "NO LONGER USED";
+                      entry.comments.reference = {};
+                    }
                   }
                 });
               });

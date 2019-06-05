@@ -311,6 +311,9 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
           console.log(errors.join("\n"));
         }
       }
+      
+      let cfg = await qx.tool.cli.ConfigDb.getInstance();
+      maker.getAnalyser().setWritePoLineNumbers(cfg.db("qx.translation.strictPoCompatibility", false));
 
       if (this.argv["clean"]) {
         await maker.eraseOutputDir();
