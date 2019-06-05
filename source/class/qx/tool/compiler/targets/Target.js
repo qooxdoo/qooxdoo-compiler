@@ -326,6 +326,7 @@ module.exports = qx.Class.define("qx.tool.compiler.targets.Target", {
       var t = this;
       var analyser = application.getAnalyser();
       var db = analyser.getDatabase();
+      var rm = analyser.getResourceManager();
 
       var compileInfo = {
         library: null,
@@ -395,12 +396,15 @@ module.exports = qx.Class.define("qx.tool.compiler.targets.Target", {
             var arr = library.getAddScript();
             if (arr) {
               arr.forEach(path => {
-                let pos = path.indexOf("/");
-                let pathNs = path.substring(0, pos);
-                if (pathNs == libnamespace || analyser.findLibrary(pathNs)) {
-                  configdata.urisBefore.push(pathNs + ":" + path);
-                } else {
+                if (path.match(/^https?:/)) {
                   configdata.urisBefore.push("__external__:" + path);
+                } else {
+                  let lib = rm.findLibraryForResource(path);
+                  if (lib) {
+                    configdata.urisBefore.push(lib.getNamespace() + ":" + path);
+                  } else {
+                    qx.tool.compiler.Console.print("qx.tool.compiler.target.missingScriptResource", path);
+                  }
                 }
               });
             }
@@ -478,7 +482,6 @@ module.exports = qx.Class.define("qx.tool.compiler.targets.Target", {
                   "C": {}
                 }
               };
-              var rm = analyser.getResourceManager();
 
               return qx.Promise.all([
                 analyser.getCldr("en").then(cldr => pkgdata.locales["C"] = cldr),
