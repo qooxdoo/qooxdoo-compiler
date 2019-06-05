@@ -163,19 +163,19 @@ qx.Class.define("qx.tool.cli.commands.Package", {
       if (this.argv.save && manifestModel.isDirty()) {
         await manifestModel.save();
         if (this.argv.verbose) {
-          console.info(`>>> Saved dependency data to ${manifestModel.getDataPath()}`);
+          console.info(`>>> Saved dependency data to ${manifestModel.getRelativeDataPath()}`);
         }
       }
       if (lockfileModel.isDirty()) {
         await lockfileModel.save();
         if (this.argv.verbose) {
-          console.info(`>>> Saved library data to ${lockfileModel.getDataPath()}`);
+          console.info(`>>> Saved library data to ${lockfileModel.getRelativeDataPath()}`);
         }
       }
       if (compileConfigModel.isDirty()) {
         await compileConfigModel.save();
         if (this.argv.verbose) {
-          console.info(`>>> Saved compile config data to ${compileConfigModel.getDataPath()}`);
+          console.info(`>>> Saved compile config data to ${compileConfigModel.getRelativeDataPath()}`);
         }
       }
     },

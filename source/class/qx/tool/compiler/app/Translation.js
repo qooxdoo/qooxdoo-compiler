@@ -61,6 +61,12 @@ module.exports = qx.Class.define("qx.tool.compiler.app.Translation", {
       init: "en",
       nullable: false,
       check :"String"
+    },
+    
+    /** Whether to write line numbers to .po files */
+    writeLineNumbers: {
+      init: false,
+      check: "Boolean"
     }
   },
 
@@ -307,8 +313,19 @@ module.exports = qx.Class.define("qx.tool.compiler.app.Translation", {
             const ref = entry.comments.reference;
             for (let classname in ref) {
               if (ref[classname]) {
-                for (let lineNo of ref[classname]) {
-                  const addStr = " " + classname + ":" + lineNo;
+                if (this.isWriteLineNumbers()) {
+                  for (let lineNo of ref[classname]) {
+                    const addStr = " " + classname + ":" + lineNo;
+                    if (refStr.length + addStr.length > 78) { // 78 is default length in python po library
+                      // line break
+                      lines.push(refStr);
+                      refStr = "#:" + addStr;
+                    } else {
+                      refStr += addStr;
+                    }
+                  }
+                } else {
+                  const addStr = " " + classname;
                   if (refStr.length + addStr.length > 78) { // 78 is default length in python po library
                     // line break
                     lines.push(refStr);
@@ -356,8 +373,18 @@ module.exports = qx.Class.define("qx.tool.compiler.app.Translation", {
      * @returns {*|null}
      */
     getEntry: function(id) {
-      var t = this;
-      return t.__translations[id]||null;
+      return this.__translations[id]||null;
+    },
+
+    /**
+     * Deletes the entry with the given msgid; return the deleted value, or null if it does not exist
+     * @param id
+     * @returns {*|null}
+     */
+    deleteEntry: function(id) {
+      let entry = this.__translations[id]||null;
+      delete this.__translations[id];
+      return entry;
     },
 
     /**
