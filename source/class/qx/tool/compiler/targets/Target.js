@@ -400,7 +400,7 @@ module.exports = qx.Class.define("qx.tool.compiler.targets.Target", {
                 if (pathNs == libnamespace || analyser.findLibrary(pathNs)) {
                   configdata.urisBefore.push(pathNs + ":" + path);
                 } else {
-                  configdata.urisBefore.push("__external__:" + path);
+                  configdata.urisBefore.push(libnamespace + ":" + path);
                 }
               });
             }
