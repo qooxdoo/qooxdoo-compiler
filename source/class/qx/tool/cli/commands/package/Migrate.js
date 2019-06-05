@@ -122,7 +122,9 @@ qx.Class.define("qx.tool.cli.commands.package.Migrate", {
           manifestModels.push((new qx.tool.config.Abstract(qx.tool.config.Manifest.config)).set({baseDir: path.join(cwd, library.path)}));
         }
       } else {
-        manifestModels.push(qx.tool.config.Manifest.getInstance());
+        if (fs.existsSync(qx.tool.config.Manifest.config.fileName)) {
+          manifestModels.push(qx.tool.config.Manifest.getInstance());
+        }
       }
       for (const manifestModel of manifestModels) {
         await manifestModel.set({warnOnly: true}).load();
