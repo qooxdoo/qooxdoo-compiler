@@ -6,6 +6,8 @@ echo "Testing qooxdoo-compiler version $(./qx --version)"
 echo
 
 ./qx package update
+./qx package install
+./qx lint
 
 # node API tests
 pushd test

@@ -92,16 +92,24 @@ qx.Class.define("qx.tool.utils.Json", {
      * Identify the type and version of the config file schema in the data that
      * has been passed. Return an object containing type and version of the json
      * schema, or null if no schema could been detected
+     * Todo: This needs to be rewritten.
      * @param data {Object} JSON data
      * @return {{type,version}|null}
      */
     getSchemaInfo: function(data) {
       let schemaInfo = {};
       if (data.$schema) {
-        let match = data.$schema.match(/\/v([^/]+)\/([^.]+)\.json$/);
+        let match = data.$schema.match(/\/([^-]+)-([^.]+)\.json$/);
         if (match) {
-          schemaInfo.type = match[2].toLocaleLowerCase();
-          schemaInfo.version = match[1];
+          schemaInfo.type = match[1].toLocaleLowerCase();
+          schemaInfo.version = match[2].replace(/-/g, ".");
+        } else {
+          // deprecated schema url
+          let match = data.$schema.match(/\/v([^/]+)\/([^.]+)\.json$/);
+          if (match) {
+            schemaInfo.type = match[2].toLocaleLowerCase();
+            schemaInfo.version = match[1];
+          }
         }
         // guess file type, this would be easy with the file name!
       } else if (data.targets) {
