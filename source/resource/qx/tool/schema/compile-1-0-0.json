@@ -7,7 +7,6 @@
   "required": [
     "applications",
     "targets",
-    "defaultTarget",
     "$schema"
   ],
   "additionalProperties": false,
@@ -30,7 +29,6 @@
         "additionalItems": false,
         "required": [
           "class",
-          "theme",
           "name"
         ],
         "properties": {
@@ -86,7 +84,7 @@
           },
           "type": {
             "description": "The type of application",
-            "pattern": "^(browser|node)$",
+            "pattern": "^(browser|node|rhino)$",
             "default": "browser"
           },
           "loaderTemplate": {
