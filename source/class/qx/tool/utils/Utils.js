@@ -54,11 +54,12 @@ qx.Class.define("qx.tool.utils.Utils", {
      * @param {string} message
      * @return {Error}
      */
-    UserError : function(message) {
-      var error = new Error(message);
-      error.name = "UserError";
-      error.stack = null;
-      return error;
+    UserError:  class extends Error {
+      constructor(message) {
+        super(message);
+        this.name = "UserError";
+        this.stack = null;
+      }
     },
 
     /**
