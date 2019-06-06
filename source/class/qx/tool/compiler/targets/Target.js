@@ -326,6 +326,7 @@ module.exports = qx.Class.define("qx.tool.compiler.targets.Target", {
       var t = this;
       var analyser = application.getAnalyser();
       var db = analyser.getDatabase();
+      var rm = analyser.getResourceManager();
 
       var compileInfo = {
         library: null,
@@ -387,27 +388,27 @@ module.exports = qx.Class.define("qx.tool.compiler.targets.Target", {
             "preBootCode": []
           };
           
+          function addExternal(arr, type) {
+            if (arr) {
+              arr.forEach(path => {
+                if (path.match(/^https?:/)) {
+                  configdata[type].push("__external__:" + path);
+                } else {
+                  let lib = rm.findLibraryForResource(path);
+                  if (lib) {
+                    configdata[type].push(lib.getNamespace() + ":" + path);
+                  }
+                }
+              });
+            }
+          }
           requiredLibs.forEach(libnamespace => {
             var library = analyser.findLibrary(libnamespace);
             if (this.isWriteLibraryInfo()) {
               libraryInfoMap[libnamespace] = library.getLibraryInfo();
             }
-            var arr = library.getAddScript();
-            if (arr) {
-              arr.forEach(path => {
-                let pos = path.indexOf("/");
-                let pathNs = path.substring(0, pos);
-                if (pathNs == libnamespace || analyser.findLibrary(pathNs)) {
-                  configdata.urisBefore.push(pathNs + ":" + path);
-                } else {
-                  configdata.urisBefore.push("__external__:" + path);
-                }
-              });
-            }
-            arr = library.getAddCss();
-            if (arr) {
-              arr.forEach(path => configdata.cssBefore.push(libnamespace + ":" + path));
-            }
+            addExternal(library.getAddScript(), "urisBefore");
+            addExternal(library.getAddCss(), "cssBefore");
           });
           
           return qx.tool.utils.Promisify.eachSeries(parts, (part, index) => {
@@ -478,7 +479,6 @@ module.exports = qx.Class.define("qx.tool.compiler.targets.Target", {
                   "C": {}
                 }
               };
-              var rm = analyser.getResourceManager();
 
               return qx.Promise.all([
                 analyser.getCldr("en").then(cldr => pkgdata.locales["C"] = cldr),
