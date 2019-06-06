@@ -388,30 +388,27 @@ module.exports = qx.Class.define("qx.tool.compiler.targets.Target", {
             "preBootCode": []
           };
           
+          function addExternal(arr, type) {
+            if (arr) {
+              arr.forEach(path => {
+                if (path.match(/^https?:/)) {
+                  configdata[type].push("__external__:" + path);
+                } else {
+                  let lib = rm.findLibraryForResource(path);
+                  if (lib) {
+                    configdata[type].push(lib.getNamespace() + ":" + path);
+                  }
+                }
+              });
+            }
+          }
           requiredLibs.forEach(libnamespace => {
             var library = analyser.findLibrary(libnamespace);
             if (this.isWriteLibraryInfo()) {
               libraryInfoMap[libnamespace] = library.getLibraryInfo();
             }
-            var arr = library.getAddScript();
-            if (arr) {
-              arr.forEach(path => {
-                if (path.match(/^https?:/)) {
-                  configdata.urisBefore.push("__external__:" + path);
-                } else {
-                  let lib = rm.findLibraryForResource(path);
-                  if (lib) {
-                    configdata.urisBefore.push(lib.getNamespace() + ":" + path);
-                  } else {
-                    qx.tool.compiler.Console.print("qx.tool.compiler.target.missingScriptResource", path);
-                  }
-                }
-              });
-            }
-            arr = library.getAddCss();
-            if (arr) {
-              arr.forEach(path => configdata.cssBefore.push(libnamespace + ":" + path));
-            }
+            addExternal(library.getAddScript(), "urisBefore");
+            addExternal(library.getAddCss(), "cssBefore");
           });
           
           return qx.tool.utils.Promisify.eachSeries(parts, (part, index) => {
