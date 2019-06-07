@@ -10,6 +10,14 @@ const appNamespace = "testCommandsApp";
 (async () => {
   try {
     console.info("Running command tests...");
+	
+    try {
+      throw new qx.tool.utils.Utils.UserError("test");
+    } catch (e) {
+      console.error(e);
+      assert.ok(e.name === "UserError");
+    }
+	
     // delete existing app
     if (await fs.existsAsync(appNamespace) && await fs.statAsync(appNamespace)) {
       rimraf.sync(appNamespace);

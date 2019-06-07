@@ -650,19 +650,26 @@ qx.Class.define("qx.tool.compiler.app.Application", {
         }
       }
 
+      var rm = analyser.getResourceManager();
+      function addExternalAssets(arr, msgId) {
+        if (arr) {
+          arr.forEach(path => {
+            if (!path.match(/^https?:/)) {
+              let lib = rm.findLibraryForResource(path);
+              if (lib) {
+                assets.push(lib.getNamespace() + ":" + path);
+              } else {
+                qx.tool.compiler.Console.print(msgId, path);
+              }
+            }
+          });
+        }
+      }
       for (let name in libraryLookup) {
         var lib = libraryLookup[name];
         if (lib) {
-          if (lib.getAddScript()) {
-            lib.getAddScript().forEach(function(path) {
-              assets.push(lib.getNamespace() + ":" + path);
-            });
-          }
-          if (lib.getAddCss()) {
-            lib.getAddCss().forEach(function(path) {
-              assets.push(lib.getNamespace() + ":" + path);
-            });
-          }
+          addExternalAssets(lib.getAddScript(), "qx.tool.compiler.application.missingScriptResource");
+          addExternalAssets(lib.getAddCss(), "qx.tool.compiler.application.missingCssResource");
         }
       }
 
