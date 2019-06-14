@@ -64,6 +64,10 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
           }
         }
 
+        if (await fs.existsAsync("compile.js")) {
+          config = await this.__loadJs("compile.js", config);
+        }
+        
         let lockfile = qx.tool.config.Lockfile.config.fileName;
         try {
           var name = path.join(path.dirname(parsedArgs.config), lockfile);
@@ -112,14 +116,6 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
       }
       this._mergeArguments(parsedArgs, config, lockfile_content);
 
-      if (config.libraries) {
-        for (const aPath of config.libraries) {
-          if (typeof aPath === "object" && typeof aPath.path === "string") {
-            throw new Error("Configuration for libraries has changed - it is now an array of strings, each of which is a path to the directory containing Manifest.json.  Please run 'qx upgrade'");
-          }
-          await this.__loadJs(path.join(aPath, "compile.js"), config);
-        }
-      }
       return config;
     },
 
