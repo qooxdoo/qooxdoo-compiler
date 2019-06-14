@@ -282,13 +282,18 @@ module.exports = qx.Class.define("qx.tool.compiler.resources.Manager", {
             async.forEach(Object.keys(unconfirmed),
               function(relFile, callback) {
                 let fileInfo = resources[relFile];
-                let rootDir = path.join(library.getRootDir(), library.get(fileInfo.resource));
-                fs.stat(path.join(rootDir, relFile), function(err, stat) {
-                  if (err) {
-                    delete resources[relFile];
-                  }
+                if (!fileInfo) {
+                  delete resources[relFile];
                   callback();
-                });
+                } else {
+                  let rootDir = path.join(library.getRootDir(), library.get(fileInfo.resource));
+                  fs.stat(path.join(rootDir, relFile), function(err, stat) {
+                    if (err) {
+                      delete resources[relFile];
+                    }
+                    callback();
+                  });
+                }
               },
               callback);
           }
