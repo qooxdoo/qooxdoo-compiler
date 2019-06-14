@@ -92,13 +92,13 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
         let lockfile = qx.tool.config.Lockfile.config.fileName;
         try {
           var name = path.join(path.dirname(parsedArgs.config), lockfile);
-          lockfile_content = await qx.tool.utils.Json.loadJsonAsync(name);
+          lockfile_content = await qx.tool.utils.Json.loadJsonAsync(name) || lockfile_content;
         } catch (ex) {
           // Nothing
         }
         // check semver-type compatibility (i.e. compatible as long as major version stays the same)
         let schemaVersion = semver.coerce(qx.tool.config.Lockfile.getInstance().getVersion(), true).raw;
-        let fileVersion = lockfile_content.version ? semver.coerce(lockfile_content.version, true).raw : "1.0.0";
+        let fileVersion = lockfile_content && lockfile_content.version ? semver.coerce(lockfile_content.version, true).raw : "1.0.0";
         if (semver.major(schemaVersion) > semver.major(fileVersion)) {
           if (this.argv.force) {
             let config = {
