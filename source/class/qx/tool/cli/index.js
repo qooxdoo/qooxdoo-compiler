@@ -40,3 +40,6 @@ require("./commands/package/Remove.js");
 require("./commands/package/Update.js");
 require("./commands/package/Upgrade.js");
 require("./commands/package/Migrate.js");
+require("./config/AbstractConfig.js");
+require("./config/CompilerConfig.js");
+require("./config/LibraryConfig.js");
