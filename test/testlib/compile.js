@@ -1,36 +1,36 @@
 const fs = require("fs");
 const path = require("path");
 
-qx.Class.define("qxl.compilertests.testlib.CompilerConfig", {
-  extend: qx.tool.cli.config.CompilerConfig,
+qx.Class.define("qxl.compilertests.testlib.CompilerApi", {
+  extend: qx.tool.cli.api.CompilerApi,
   
   members: {
     async load() {
       let data = await this.base(arguments);
       if (!data.environment)
         data.environment = {};
-      data.environment.testlibCompilerConfig = "two";
+      data.environment.testlibCompilerApi = "two";
       return data;
     }
   }
 });
 
-qx.Class.define("qxl.compilertests.testlib.LibraryConfig", {
-  extend: qx.tool.cli.config.LibraryConfig,
+qx.Class.define("qxl.compilertests.testlib.LibraryApi", {
+  extend: qx.tool.cli.api.LibraryApi,
   
   members: {
     async load() {
-      let command = this.getCompilerConfig().getCommand();
+      let command = this.getCompilerApi().getCommand();
       command.addListener("checkEnvironment", e => this._appCompiling(e.getData().application, e.getData().environment));
     },
     
     _appCompiling(application, environment) {
-      environment.testlibLibraryConfig = "one";
+      environment.testlibLibraryApi = "one";
     }
   }
 });
 
 module.exports = {
-    LibraryConfig: qxl.compilertests.testlib.LibraryConfig,
-    CompilerConfig: qxl.compilertests.testlib.CompilerConfig
+    LibraryApi: qxl.compilertests.testlib.LibraryApi,
+    CompilerApi: qxl.compilertests.testlib.CompilerApi
 };

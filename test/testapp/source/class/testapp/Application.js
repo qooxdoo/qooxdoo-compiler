@@ -174,10 +174,10 @@ qx.Class.define("testapp.Application", {
       qx.core.Assert.assertTrue(typeof jQuery == "function");
       qx.core.Assert.assertTrue(qx.locale.Number.getDecimalSeparator("nl").toString() === ",");
       
-      qx.core.Assert.assertTrue(qx.core.Environment.get("testappCompilerConfig") === "two");
-      qx.core.Assert.assertTrue(qx.core.Environment.get("testappLibraryConfig") === "one");
-      qx.core.Assert.assertTrue(qx.core.Environment.get("testlibCompilerConfig") === undefined);
-      qx.core.Assert.assertTrue(qx.core.Environment.get("testlibLibraryConfig") === "one");
+      qx.core.Assert.assertTrue(qx.core.Environment.get("testappCompilerApi") === "two");
+      qx.core.Assert.assertTrue(qx.core.Environment.get("testappLibraryApi") === "one");
+      qx.core.Assert.assertTrue(qx.core.Environment.get("testlibCompilerApi") === undefined);
+      qx.core.Assert.assertTrue(qx.core.Environment.get("testlibLibraryApi") === "one");
     },
 
     undocumentedMethod: function () {

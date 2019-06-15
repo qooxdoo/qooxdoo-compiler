@@ -35,10 +35,14 @@ const semver = require("semver");
  *
  */
 qx.Mixin.define("qx.tool.cli.commands.MConfig", {
+  
+  statics: {
+    compileJsFilename: "compile.js"
+  },
 
   members: {
     
-    _compilerConfig: null,
+    _compilerApi: null,
 
     /**
      * Parses the command line and produces configuration data.
@@ -47,25 +51,24 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
      * file the file must be a module which returns an object whcih has any of
      * these properties:
      * 
-     *  CompilerConfig - the class (derived from qx.tool.cli.config.CompilerConfig)
+     *  CompilerConfig - the class (derived from qx.tool.cli.api.CompilerApi)
      *    for configuring the compiler
      *    
      * Each library can also have a compile.js, and that is also a module which can
      * return an object with any of these properties:
      *  
-     *  LibraryConfig - the class (derived from qx.tool.cli.config.LibraryConfig)
+     *  LibraryConfig - the class (derived from qx.tool.cli.api.LibraryApi)
      *    for configuring the library 
      *
      */
     parse: async function() {
       var parsedArgs = await this.__parseImpl();
-      var config = {};
       var lockfile_content = {
         version: qx.tool.config.Lockfile.getInstance().getVersion()
       };
 
-      let compileJsFilename = "compile.js";
-      let compileJsonFilename = "compile.json";
+      let compileJsFilename = qx.tool.cli.commands.MConfig.compileJsFilename;
+      let compileJsonFilename = qx.tool.config.Compile.config.fileName;
       if (parsedArgs.config) {
         if (parsedArgs.config.match(/\.js$/)) {
           compileJsFilename = parsedArgs.config;
@@ -74,19 +77,20 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
         }
       }
       
-      let CompilerConfig = qx.tool.cli.config.CompilerConfig;
+      let CompilerApi = qx.tool.cli.api.CompilerApi;
       if (await fs.existsAsync(compileJsFilename)) {
         let compileJs = await this.__loadJs(compileJsFilename);
-        if (compileJs.CompilerConfig) {
-          CompilerConfig = compileJs.CompilerConfig;
+        if (compileJs.CompilerApi) {
+          CompilerApi = compileJs.CompilerApi;
         }
       }
-      let compilerConfig = this._compilerConfig = new CompilerConfig(this).set({ 
+      let compilerApi = this._compilerApi = new CompilerApi(this).set({ 
         rootDir: ".",
         configFilename: compileJsonFilename
       });
       
-      config = await compilerConfig.load();
+      await compilerApi.load();
+      let config = compilerApi.getConfiguration();
       
       if (parsedArgs.config) {
         let lockfile = qx.tool.config.Lockfile.config.fileName;
@@ -139,25 +143,25 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
 
       if (config.libraries) {
         for (const aPath of config.libraries) {
-          let compileJsFilename = path.join(aPath, "compile.js");
-          let LibraryConfig = qx.tool.cli.config.LibraryConfig;
-          if (await fs.existsAsync(compileJsFilename)) {
-            let compileJs = await this.__loadJs(compileJsFilename);
-            if (compileJs.LibraryConfig) {
-              LibraryConfig = compileJs.LibraryConfig;
+          let libCompileJsFilename = path.join(aPath, qx.tool.cli.commands.MConfig.compileJsFilename);
+          let LibraryApi = qx.tool.cli.api.LibraryApi;
+          if (await fs.existsAsync(libCompileJsFilename)) {
+            let compileJs = await this.__loadJs(libCompileJsFilename);
+            if (compileJs.LibraryApi) {
+              LibraryApi = compileJs.LibraryApi;
             }
           }
           
-          let libraryConfig = new LibraryConfig().set({ 
+          let libraryApi = new LibraryApi().set({ 
             rootDir: aPath,
-            compilerConfig: compilerConfig
+            compilerApi: compilerApi
           });
-          compilerConfig.addLibraryConfig(libraryConfig);
-          await libraryConfig.load();
+          compilerApi.addLibraryApi(libraryApi);
+          await libraryApi.load();
         }
       }
       
-      await compilerConfig.afterLibrariesLoaded();
+      await compilerApi.afterLibrariesLoaded();
       
       return config;
     },
