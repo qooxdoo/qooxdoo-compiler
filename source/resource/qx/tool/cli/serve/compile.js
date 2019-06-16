@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-require("../../../index");
+require("../../../../../../index");
 var fs = qx.tool.utils.Promisify.fs;
 
 const dot = require('dot');
