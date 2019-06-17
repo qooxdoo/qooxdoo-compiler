@@ -260,12 +260,14 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
     __maker: null,
     __config: null,
 
-    _getMaker: function() {
+    getMaker: function() {
       return this.__maker;
     },
+    
     _getConfig: function() {
       return this.__config;
     },
+    
     /*
      * @Override
      */
