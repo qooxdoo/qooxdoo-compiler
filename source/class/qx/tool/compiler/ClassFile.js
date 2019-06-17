@@ -749,7 +749,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
           });
         } else if (node.type == "Identifier") {
           result = node.name;
-        } else if (node.type == "CallExpression" || node.type == "FunctionExpression") {
+        } else if (node.type == "CallExpression" || node.type == "FunctionExpression" || node.type == "ArrowFunctionExpression") {
           result = new Function("[[ Function ]]");
         } else if (node.type == "MemberExpression") {
           result = collapseMemberExpression(node);

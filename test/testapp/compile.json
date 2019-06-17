@@ -42,6 +42,10 @@
       ]
     }
   ],
+  "libraries": [
+    ".",
+    "../testlib"
+  ],
   "environment": {
     "test.isFalse": false,
     "test.isTrue": true,

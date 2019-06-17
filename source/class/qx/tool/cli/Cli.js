@@ -29,11 +29,13 @@ qx.Class.define("qx.tool.cli.Cli", {
 
   members: {
     run: function() {
+      /*
       if (qx.core.Environment.get("runtime.name") == "rhino") {
         qx.log.Logger.register(qx.log.appender.RhinoConsole);
       } else if (qx.core.Environment.get("runtime.name") == "node.js") {
         qx.log.Logger.register(qx.log.appender.NodeConsole);
       }
+      */
 
       var args = qx.lang.Array.clone(process.argv);
       args.shift();

@@ -22,62 +22,87 @@ require("@qooxdoo/framework");
 require("../../config");
 const path = require("upath");
 const fs = qx.tool.utils.Promisify.fs;
-const JsonToAst = require("json-to-ast");
 const semver = require("semver");
 
 
+/**
+ * Mixin used for commands that need to be able to parse compiler configuration
+ * 
+ * Configuration files do not support processes, job executions, or even
+ * macros - if you want to add basic processing (eg for macros), use a .js file to
+ * manipulate the data.  If you want to customise the Maker that is produced, you
+ * need to use the API directly.
+ *
+ */
 qx.Mixin.define("qx.tool.cli.commands.MConfig", {
+  
+  statics: {
+    compileJsFilename: "compile.js"
+  },
 
   members: {
+    
+    _compilerApi: null,
 
     /**
-     * Parses the command line and produces configuration data
-     *
+     * Parses the command line and produces configuration data.
+     * 
      * Loads a configuration file from a .js or .json file; if you provide a .js
-     * file the file MUST return a function.
-     * If there is also a .json, then it is loaded and parsed first.
-     *
-     * The Function returned from a .js file MUST accept two arguments, one for the
-     * data (which will be null if there is no .json) and the second is the callback
-     * to call when complete; the callback takes an error object and the output
-     * configuration data.
-     *
-     * Configuration files do not support processes, job executions, or even
-     * macros - if you want to add basic processing (eg for macros), use a .js file to
-     * manipulate the data.  If you want to customise the Maker that is produced, you
-     * need to use the API directly.
+     * file the file must be a module which returns an object whcih has any of
+     * these properties:
+     * 
+     *  CompilerConfig - the class (derived from qx.tool.cli.api.CompilerApi)
+     *    for configuring the compiler
+     *    
+     * Each library can also have a compile.js, and that is also a module which can
+     * return an object with any of these properties:
+     *  
+     *  LibraryConfig - the class (derived from qx.tool.cli.api.LibraryApi)
+     *    for configuring the library 
      *
      */
     parse: async function() {
       var parsedArgs = await this.__parseImpl();
-      var config = {};
       var lockfile_content = {
         version: qx.tool.config.Lockfile.getInstance().getVersion()
       };
 
+      let compileJsFilename = qx.tool.cli.commands.MConfig.compileJsFilename;
+      let compileJsonFilename = qx.tool.config.Compile.config.fileName;
       if (parsedArgs.config) {
-        try {
-          config = await this.__loadJson(parsedArgs.config);
-        } catch (ex) {
-          if (ex.code != "ENOENT") {
-            throw ex; 
-          }
+        if (parsedArgs.config.match(/\.js$/)) {
+          compileJsFilename = parsedArgs.config;
+        } else {
+          compileJsonFilename = parsedArgs.config;
         }
-
-        if (await fs.existsAsync("compile.js")) {
-          config = await this.__loadJs("compile.js", config);
+      }
+      
+      let CompilerApi = qx.tool.cli.api.CompilerApi;
+      if (await fs.existsAsync(compileJsFilename)) {
+        let compileJs = await this.__loadJs(compileJsFilename);
+        if (compileJs.CompilerApi) {
+          CompilerApi = compileJs.CompilerApi;
         }
-        
+      }
+      let compilerApi = this._compilerApi = new CompilerApi(this).set({ 
+        rootDir: ".",
+        configFilename: compileJsonFilename
+      });
+      
+      await compilerApi.load();
+      let config = compilerApi.getConfiguration();
+      
+      if (parsedArgs.config) {
         let lockfile = qx.tool.config.Lockfile.config.fileName;
         try {
           var name = path.join(path.dirname(parsedArgs.config), lockfile);
-          lockfile_content = await this.__loadJson(name);
+          lockfile_content = await qx.tool.utils.Json.loadJsonAsync(name) || lockfile_content;
         } catch (ex) {
           // Nothing
         }
         // check semver-type compatibility (i.e. compatible as long as major version stays the same)
         let schemaVersion = semver.coerce(qx.tool.config.Lockfile.getInstance().getVersion(), true).raw;
-        let fileVersion = lockfile_content.version ? semver.coerce(lockfile_content.version, true).raw : "1.0.0";
+        let fileVersion = lockfile_content && lockfile_content.version ? semver.coerce(lockfile_content.version, true).raw : "1.0.0";
         if (semver.major(schemaVersion) > semver.major(fileVersion)) {
           if (this.argv.force) {
             let config = {
@@ -116,6 +141,28 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
       }
       this._mergeArguments(parsedArgs, config, lockfile_content);
 
+      if (config.libraries) {
+        for (const aPath of config.libraries) {
+          let libCompileJsFilename = path.join(aPath, qx.tool.cli.commands.MConfig.compileJsFilename);
+          let LibraryApi = qx.tool.cli.api.LibraryApi;
+          if (await fs.existsAsync(libCompileJsFilename)) {
+            let compileJs = await this.__loadJs(libCompileJsFilename);
+            if (compileJs.LibraryApi) {
+              LibraryApi = compileJs.LibraryApi;
+            }
+          }
+          
+          let libraryApi = new LibraryApi().set({ 
+            rootDir: aPath,
+            compilerApi: compilerApi
+          });
+          compilerApi.addLibraryApi(libraryApi);
+          await libraryApi.load();
+        }
+      }
+      
+      await compilerApi.afterLibrariesLoaded();
+      
       return config;
     },
 
@@ -268,51 +315,10 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
       return result;
     },
 
-
-    __loadJs: async function(aPath, inputData) {
-      if (!await qx.tool.utils.files.Utils.safeStat(aPath)) {
-        return inputData;
-      }
-
+    __loadJs: async function(aPath) {
       try {
-        let p = new Promise((resolve, reject) => {
-          const script = require(path.resolve(aPath));
-
-          function onResolve(data) {
-            if (data) {
-              resolve(data);
-            } else {
-              throw new Error("Error while reading " + aPath + " - cannot find configuration data");
-            }
-          }
-
-          if (typeof script == "function") {
-            try {
-              let result = script({
-                command: this,
-                inputData
-              }, (err, data) => {
-                if (err) {
-                  reject(err); 
-                } else {
-                  onResolve(data); 
-                }
-              });
-
-              if (result instanceof Promise) {
-                result.then(onResolve).catch(reject);
-              } else if (result) {
-                onResolve(result);
-              }
-            } catch (ex) {
-              reject(ex);
-            }
-          } else {
-            onResolve(script);
-          }
-        });
-        let res = await p;
-        return res;
+        let module = require(path.resolve(aPath));
+        return module;
       } catch (e) {
         let lines = e.stack.split("\n");
         for (let i = 0; i < lines.length; i++) {
@@ -328,20 +334,7 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
           throw new Error("Error while reading " + aPath + "\n" + lines.join("\n"));
         }
       }
-    },
-
-
-    __loadJson: async function(aPath) {
-      var data = await fs.readFileAsync(aPath, {encoding: "utf8"});
-      try {
-        var ast = JsonToAst.parseToAst(data);
-        var json = JsonToAst.astToObject(ast);
-        return json;
-      } catch (ex) {
-        throw new Error("Failed to load " + aPath + ": " + ex);
-      }
     }
-
   }
 
 });
