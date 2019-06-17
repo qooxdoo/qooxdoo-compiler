@@ -67,30 +67,6 @@ qx.Class.define("qx.tool.cli.LogAppender", {
     toTextArray: function(entry) {
       var output = [];
 
-      function zeropad2(val) {
-        if (val < 10) {
-          return "0" + val;
-        }
-        return String(val);
-      }
-      function zeropad3(val) {
-        if (val < 10) {
-          return "00" + val;
-        }
-        if (val < 100) {
-          return "0" + val;
-        }
-        return String(val);
-      }
-      
-      /*
-      var dt = entry.time;
-      var str = dt.getFullYear() + "-" + zeropad2(dt.getMonth() + 1) + "-" + zeropad2(dt.getDate()) + " " +
-        zeropad2(dt.getHours()) + ":" + zeropad2(dt.getMinutes()) + ":" + zeropad2(dt.getSeconds()) + "." + zeropad3(dt.getMilliseconds());
-
-      output.push(str);
-      */
-
       var items = entry.items;
       var item;
       var msg;
