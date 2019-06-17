@@ -84,6 +84,12 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
             describe: "enables additional progress output to console",
             type: "boolean"
           },
+          "show-startpage": {
+            alias: "S",
+            describe: "Show the startpage with the list of applications and additional information",
+            type: "boolean",
+            default: false
+          },
           "minify": {
             describe: "disables minification (for build targets only)",
             choices: ["off", "minify", "mangle", "beautify"],
@@ -164,7 +170,7 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
       var apps = maker.getApplications();
 
       const app = express();
-      if ((apps.length === 1) && apps[0].getWriteIndexHtmlToRoot()) {
+      if (apps.length === 1 && apps[0].getWriteIndexHtmlToRoot() && this.argv.showStartpage === false) {
         app.use("/", express.static(target.getOutputDir()));
       } else {
         app.use("/docs", express.static(path.join(await this.getAppQxPath(), "../docs")));
