@@ -30,7 +30,6 @@ qx.Class.define("qxl.compilertests.testapp.LibraryApi", {
     },
     
     _onMaking() {
-      debugger;
       // The "making" event can be fired more than once (eg when watching) so we want to start our own
       //  sass watch once
       if (this.__startedSassWatch)
