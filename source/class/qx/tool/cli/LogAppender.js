@@ -82,11 +82,14 @@ qx.Class.define("qx.tool.cli.LogAppender", {
         }
         return String(val);
       }
+      
+      /*
       var dt = entry.time;
       var str = dt.getFullYear() + "-" + zeropad2(dt.getMonth() + 1) + "-" + zeropad2(dt.getDate()) + " " +
         zeropad2(dt.getHours()) + ":" + zeropad2(dt.getMinutes()) + ":" + zeropad2(dt.getSeconds()) + "." + zeropad3(dt.getMilliseconds());
 
       output.push(str);
+      */
 
       var items = entry.items;
       var item;

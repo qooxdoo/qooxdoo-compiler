@@ -140,7 +140,7 @@ qx.Class.define("qx.tool.compiler.app.Library", {
      * @param cb
      */
     loadManifest: function(loadFromDir, cb) {
-      var Console =qx.tool.compiler.Console.getInstance();
+      var Console = qx.tool.compiler.Console.getInstance();
       var t = this;
       let rootDir = loadFromDir;
 
@@ -157,7 +157,8 @@ qx.Class.define("qx.tool.compiler.app.Library", {
           function fixLibraryPath(dir) {
             let d = path.resolve(rootDir, dir);
             if (!fs.existsSync(d)) {
-              return dir;
+              t.warn(Console.decode("qx.tool.compiler.library.cannotFindPath", t.getNamespace(), dir));
+              return qx.Promise.resolve(dir);
             }
             return qx.tool.utils.files.Utils.correctCase(d)
               .then(correctedDir => {
@@ -300,7 +301,14 @@ qx.Class.define("qx.tool.compiler.app.Library", {
         });
       }
 
-      scanDir(path.join(t.getRootDir(), t.getSourcePath()), "", function(err) {
+      let rootDir = path.join(t.getRootDir(), t.getSourcePath());
+      if (!fs.existsSync(rootDir)) {
+        let Console = qx.tool.compiler.Console.getInstance();
+        this.warn(Console.decode("qx.tool.compiler.library.cannotFindPath", t.getNamespace(), rootDir));
+        cb(null, []);
+        return;
+      }
+      scanDir(rootDir, "", function(err) {
         cb(err, classes);
       });
     },
