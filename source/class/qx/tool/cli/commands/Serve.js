@@ -84,6 +84,12 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
             describe: "enables additional progress output to console",
             type: "boolean"
           },
+          "show-startpage": {
+            alias: "S",
+            describe: "Show the startpage with the list of applications and additional information",
+            type: "boolean",
+            default: false
+          },
           "minify": {
             describe: "disables minification (for build targets only)",
             choices: ["off", "minify", "mangle", "beautify"],
@@ -147,7 +153,8 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
       this.argv.watch = true;
       this.argv["machine-readable"] = false;
       this.argv["feedback"] = false;
-      return this.base(arguments).then(() => this.runWebServer());
+      await this.base(arguments);
+      await this.runWebServer();
     },
 
     /**
@@ -156,16 +163,17 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
      */
     /* @ignore qx.tool.$$resourceDir */
 
-    runWebServer: function() {
+    runWebServer: async function() {
       var maker = this._getMaker();
       var config = this._getConfig();
       var target = maker.getTarget();
       var apps = maker.getApplications();
 
       const app = express();
-      if ((apps.length === 1) && apps[0].getWriteIndexHtmlToRoot()) {
+      if (apps.length === 1 && apps[0].getWriteIndexHtmlToRoot() && this.argv.showStartpage === false) {
         app.use("/", express.static(target.getOutputDir()));
       } else {
+        app.use("/docs", express.static(path.join(await this.getAppQxPath(), "../docs")));
         app.use("/", express.static(path.join(qx.tool.$$resourceDir, "cli/serve/build")));
         app.use("/" + target.getOutputDir(), express.static(target.getOutputDir()));
         var obj = {
