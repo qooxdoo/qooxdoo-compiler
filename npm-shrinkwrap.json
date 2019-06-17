@@ -4929,6 +4929,11 @@
         "ci-info": "^1.5.0"
       }
     },
+    "is-class-hotfix": {
+      "version": "0.0.6",
+      "resolved": "https://registry.npmjs.org/is-class-hotfix/-/is-class-hotfix-0.0.6.tgz",
+      "integrity": "sha512-0n+pzCC6ICtVr/WXnN2f03TK/3BfXY7me4cjCAqT8TYXEl0+JBRoqBo94JJHXcyDSLUeWbNX8Fvy5g5RJdAstQ=="
+    },
     "is-data-descriptor": {
       "version": "0.1.4",
       "resolved": "https://registry.npmjs.org/is-data-descriptor/-/is-data-descriptor-0.1.4.tgz",
@@ -5132,6 +5137,16 @@
       "dev": true,
       "requires": {
         "has-symbols": "^1.0.0"
+      }
+    },
+    "is-type-of": {
+      "version": "1.2.1",
+      "resolved": "https://registry.npmjs.org/is-type-of/-/is-type-of-1.2.1.tgz",
+      "integrity": "sha512-uK0kyX9LZYhSDS7H2sVJQJop1UnWPWmo5RvR3q2kFH6AUHYs7sOrVg0b4nyBHw29kRRNFofYN/JbHZDlHiItTA==",
+      "requires": {
+        "core-util-is": "^1.0.2",
+        "is-class-hotfix": "~0.0.6",
+        "isstream": "~0.1.2"
       }
     },
     "is-typedarray": {
@@ -7576,6 +7591,30 @@
       "integrity": "sha1-A3GrSuC91yDUFm19/aZP96RFpsA=",
       "requires": {
         "is-promise": "^2.1.0"
+      }
+    },
+    "runscript": {
+      "version": "1.3.1",
+      "resolved": "https://registry.npmjs.org/runscript/-/runscript-1.3.1.tgz",
+      "integrity": "sha512-SgGd244ZxujjEA5DB9WndeI7GEtmNPzzx/k5ChlqZeAcuwq/YLUzm5KQZMhOvmoiw9tREwt6/pE+MwAizM7UVQ==",
+      "requires": {
+        "debug": "^2.6.8",
+        "is-type-of": "^1.1.0"
+      },
+      "dependencies": {
+        "debug": {
+          "version": "2.6.9",
+          "resolved": "https://registry.npmjs.org/debug/-/debug-2.6.9.tgz",
+          "integrity": "sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==",
+          "requires": {
+            "ms": "2.0.0"
+          }
+        },
+        "ms": {
+          "version": "2.0.0",
+          "resolved": "https://registry.npmjs.org/ms/-/ms-2.0.0.tgz",
+          "integrity": "sha1-VgiurfwAvmwpAd9fmGF4jeDVl8g="
+        }
       }
     },
     "rx-lite": {

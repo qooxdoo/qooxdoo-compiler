@@ -163,7 +163,7 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
       
       await compilerApi.afterLibrariesLoaded();
       
-      return config;
+      return compilerApi.getConfiguration();
     },
 
     /*

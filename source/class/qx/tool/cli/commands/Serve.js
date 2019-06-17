@@ -157,7 +157,7 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
     /* @ignore qx.tool.$$resourceDir */
 
     runWebServer: function() {
-      var maker = this._getMaker();
+      var maker = this.getMaker();
       var config = this._getConfig();
       var target = maker.getTarget();
       var apps = maker.getApplications();
