@@ -89,10 +89,10 @@ async function loadPartials(files, metalsmith, done) {
         metadata.partials[name] = fn;
       }
     }
+    done();
   } catch (err) {
     done(err);
   }
-  done();
 }
 
 /**
