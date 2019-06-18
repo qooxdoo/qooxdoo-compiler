@@ -5,7 +5,7 @@
   "scripts": {
     "test": "cross-os test.os",
     "postinstall": "npm update --no-save @qooxdoo/framework",
-    "compileWebSite": "cd tool/cli/serve && node compile.js",
+    "compileWebSite": "cd source/resource/qx/tool/cli/serve && node compile.js",
     "lint": "eslint lib"
   },
   "cross-os": {
