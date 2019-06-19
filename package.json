@@ -4,7 +4,6 @@
   "main": "index.js",
   "scripts": {
     "test": "cross-os test.os",
-    "postinstall": "npm update --no-save @qooxdoo/framework",
     "compileWebSite": "cd source/resource/qx/tool/cli/serve && node compile.js",
     "lint": "eslint lib"
   },
