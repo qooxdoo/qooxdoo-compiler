@@ -6,14 +6,10 @@ exe() { echo "\$ ${@/eval/}" ; "$@" ; }
 git config user.email "travis@travis-ci.org"
 git config user.name "Travis CI"
 
-# revert changes of npm update of @qooxdoo/framework
-exe git clean -fd
-exe git checkout -- .
-
 PACKAGE_VERSION=$(node -p "require('./package.json').version")
 PACKAGE_DATE=$(date +%Y%m%d-%H%M)
 
-if [ "$TRAVIS_TAG" == "" ]; then
+if [ "${TRAVIS_TAG:-}" == "" ]; then
    SET_VERSION=$PACKAGE_VERSION.$PACKAGE_DATE
 else
    SET_VERSION=patch
@@ -23,11 +19,11 @@ NEW_VERSION=$(npm version $SET_VERSION -m "[ci skip] new npm version: %s")
 echo "new version: $NEW_VERSION"
 
 GIT_URL="$(git config remote.origin.url)"
-GIT_URL=${GIT_URL/https:\/\//https:\/\/$GH_TOKEN@}
-if [ "$TRAVIS_TAG" != "" ]; then
+GIT_URL=${GIT_URL/https:\/\//https:\/\/${GH_TOKEN:-}@}
+if [ "${TRAVIS_TAG:-}" != "" ]; then
    exe git push $GIT_URL $TRAVIS_TAG
 fi
 
 # fill .npmrc with access token
-echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN:-}" > ~/.npmrc
 exe npm publish --access public
