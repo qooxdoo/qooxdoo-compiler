@@ -21,6 +21,7 @@ const path = require("upath");
 const process = require("process");
 const express = require("express");
 const http = require("http");
+const fs = qx.tool.utils.Promisify.fs;
 
 require("app-module-path").addPath(process.cwd() + "/node_modules");
 
@@ -131,6 +132,11 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
             describe: "Whether bundling is enabled",
             type: "boolean",
             default: true
+          },
+          "with-devtools": {
+            describe: "Whether to build development tools (ApiViewer, Playground, Widgetbrowser) locally rather than linking to the qooxdoo website",
+            type: "boolean",
+            default: false
           }
         },
         handler: function(argv) {
@@ -154,8 +160,18 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
       this.argv["machine-readable"] = false;
       this.argv["feedback"] = false;
       await this.base(arguments);
+      // build website if it hasn't been built yet.
+      const website = new qx.tool.utils.Website();
+      if (!await fs.existsAsync(website.getTargetDir())) {
+        await website.generateSite();
+        await website.compileScss();
+      }
+      if (this.argv.withDevTools) {
+        await website.buildDevTools();
+      }
       await this.runWebServer();
     },
+
 
     /**
      *
@@ -170,12 +186,13 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
       var apps = maker.getApplications();
 
       const app = express();
+      const website = new qx.tool.utils.Website();
       if (apps.length === 1 && apps[0].getWriteIndexHtmlToRoot() && this.argv.showStartpage === false) {
         app.use("/", express.static(target.getOutputDir()));
       } else {
         let s = await this.getAppQxPath();
         app.use("/docs", express.static(path.join(s, "docs")));
-        app.use("/", express.static(path.join(qx.tool.$$resourceDir, "cli/serve/build")));
+        app.use("/", express.static(website.getTargetDir()));
         app.use("/" + target.getOutputDir(), express.static(target.getOutputDir()));
         var obj = {
           target: {
