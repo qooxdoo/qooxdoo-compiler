@@ -193,7 +193,7 @@ qx.Class.define("qx.tool.cli.commands.Command", {
 
       // The compiler's qooxdoo
       let filename = require.resolve("@qooxdoo/framework/package.json");
-      return path.join(path.dirname(filename), "framework");
+      return path.dirname(filename);
     },
 
     /**
