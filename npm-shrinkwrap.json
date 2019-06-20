@@ -4824,8 +4824,8 @@
       "integrity": "sha1-Epai1Y/UXxmg9s4B1lcB4sc1tus="
     },
     "json-to-ast": {
-      "version": "git+https://github.com/johnspackman/json-to-ast.git#a42fbe89a4f2033062213c49bfec7cf429d94db6",
-      "from": "git+https://github.com/johnspackman/json-to-ast.git#editable-json"
+      "version": "github:johnspackman/json-to-ast#a42fbe89a4f2033062213c49bfec7cf429d94db6",
+      "from": "github:johnspackman/json-to-ast#editable-json"
     },
     "json5": {
       "version": "2.1.0",
