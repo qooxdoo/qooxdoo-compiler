@@ -4,7 +4,8 @@
   "main": "index.js",
   "scripts": {
     "test": "cross-os test.os",
-    "postinstall": "npm update --no-save @qooxdoo/framework",
+    "prepare": "npm update --no-save @qooxdoo/framework",
+    "prepack": "npm update --save @qooxdoo/framework && npm shrinkwrap",
     "compileWebSite": "cd source/resource/qx/tool/cli/serve && node compile.js",
     "lint": "eslint lib"
   },
@@ -43,7 +44,7 @@
     "@octokit/rest": "^15.18.1",
     "@qooxdoo/eslint-config-qx": "^1.0.2",
     "@qooxdoo/eslint-plugin-qx": "^1.0.0",
-    "@qooxdoo/framework": "^6.0.0-alpha-20190511-1022",
+    "@qooxdoo/framework": "^6.0.0-beta",
     "ajv": "^6.10.0",
     "app-module-path": "^2.2.0",
     "async": "^2.6.1",
@@ -66,7 +67,7 @@
     "glob": "^7.1.3",
     "image-size": "^0.6.3",
     "inquirer": "^6.2.0",
-    "json-to-ast": "git+https://github.com/johnspackman/json-to-ast.git#editable-json",
+    "json-to-ast": "github:johnspackman/json-to-ast#editable-json",
     "jsonlint": "^1.6.2",
     "node-fetch": "^1.7.3",
     "node-sass": "^4.12.0",
