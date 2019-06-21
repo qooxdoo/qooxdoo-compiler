@@ -44,7 +44,13 @@ qx.Class.define("qx.tool.utils.Website", {
     TARGET_DIR: path.join(qx.tool.$$resourceDir, "website/build")
   },
 
-  construct(options) {
+  construct(options={}) {
+    qx.core.Object.apply(this, arguments);
+    const self = qx.tool.utils.Website;
+    this.initSourceDir(self.SOURCE_DIR);
+    this.initTargetDir(self.TARGET_DIR);
+    this.initAppsNamespace(self.APP_NAMESPACE);
+
     for (let key of Object.getOwnPropertyNames(options)) {
       this.set(key, options[key]);
     }
@@ -57,22 +63,27 @@ qx.Class.define("qx.tool.utils.Website", {
   properties: {
     appsNamespace: {
       check: "String",
-      init: qx.tool.utils.Website.APP_NAMESPACE
+      deferredInit: true
     },
 
     sourceDir: {
       check: "String",
-      init: qx.tool.utils.Website.SOURCE_DIR
+      deferredInit: true
     },
 
     targetDir: {
       check: "String",
-      init: qx.tool.utils.Website.TARGET_DIR
+      deferredInit: true
     },
 
     cleanBeforeBuild: {
       check: "Boolean",
       init: true
+    },
+
+    withDevtools: {
+      check: "Boolean",
+      init: false
     }
   },
 
@@ -87,7 +98,7 @@ qx.Class.define("qx.tool.utils.Website", {
      * that contains `url` and `title` properties.
      *
      */
-    getPages(files, metalsmith, done) {
+    async getPages(files, metalsmith) {
       var metadata = metalsmith.metadata();
 
       var pages = [];
@@ -121,8 +132,6 @@ qx.Class.define("qx.tool.utils.Website", {
 
       unorderedPages.forEach(page => pages.push(page));
       metadata.site.pages = pages;
-
-      done();
     },
 
     /**
@@ -131,34 +140,29 @@ qx.Class.define("qx.tool.utils.Website", {
      * extension.
      *
      */
-    async loadPartials(files, metalsmith, done) {
+    async loadPartials(files, metalsmith) {
       const metadata = metalsmith.metadata();
-      try {
-        const partialsDir = path.join(this.getSourceDir(), "partials");
-        let files = await fs.readdirAsync(partialsDir, "utf8");
-        for (let filename of files) {
-          let m = filename.match(/^(.+)\.([^.]+)$/);
-          if (!m) {
-            continue;
-          }
-          let [, name, ext] = m;
-          let data = await fs.readFileAsync(path.join(partialsDir, filename), "utf8");
-          let fn;
-          try {
-            fn = dot.template(data);
-          } catch (err) {
-            console.log("Failed to load partial " + filename + ": " + err);
-            continue;
-          }
-          fn.name = filename;
-          metadata.partials[filename] = fn;
-          if (ext === "html") {
-            metadata.partials[name] = fn;
-          }
+      const partialsDir = path.join(this.getSourceDir(), "partials");
+      files = await fs.readdirAsync(partialsDir, "utf8");
+      for (let filename of files) {
+        let m = filename.match(/^(.+)\.([^.]+)$/);
+        if (!m) {
+          continue;
         }
-        done();
-      } catch (err) {
-        done(err);
+        let [, name, ext] = m;
+        let data = await fs.readFileAsync(path.join(partialsDir, filename), "utf8");
+        let fn;
+        try {
+          fn = dot.template(data);
+        } catch (err) {
+          console.log("Failed to load partial " + filename + ": " + err);
+          continue;
+        }
+        fn.name = filename;
+        metadata.partials[filename] = fn;
+        if (ext === "html") {
+          metadata.partials[name] = fn;
+        }
       }
     },
 
@@ -166,8 +170,8 @@ qx.Class.define("qx.tool.utils.Website", {
      * Generates the site with Metalsmith
      * @returns {Promise}
      */
-    generateSite() {
-      return new Promise((resolve, reject) => {
+    async generateSite() {
+      await new Promise((resolve, reject) => {
         metalsmith(this.getSourceDir())
           .metadata({
             site: {
@@ -186,9 +190,9 @@ qx.Class.define("qx.tool.utils.Website", {
           .source(path.join(this.getSourceDir(), "src"))
           .destination(this.getTargetDir())
           .clean(true)
-          .use(this.loadPartials)
+          .use(this.loadPartials.bind(this))
           .use(markdown())
-          .use(this.getPages)
+          .use(this.getPages.bind(this))
           .use(layouts({
             engine: "dot"
           }))

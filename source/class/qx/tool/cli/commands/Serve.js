@@ -41,18 +41,21 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
         describe  : "runs a webserver to run the current application with continuous compilation, using compile.json",
         builder   : {
           "target": {
+            alias: "t",
             "default": "source",
             describe: "Set the target type: source or build or class name",
             requiresArg: true,
             type: "string"
           },
           "output-path": {
+            alias: "o",
             describe: "Base path for output",
             nargs: 1,
             requiresArg: true,
             type: "string"
           },
           "locale": {
+            alias: "l",
             describe: "Compile for a given locale",
             nargs: 1,
             requiresArg: true,
@@ -77,6 +80,7 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
             array: true
           },
           "machine-readable": {
+            alias: "m",
             describe: "output compiler messages in machine-readable format",
             type: "boolean"
           },
@@ -97,16 +101,19 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
             default: "mangle"
           },
           "save-unminified": {
+            alias: "u",
             describe: "Saves a copy of the unminified version of output files (build target only)",
             type: "boolean",
             default: false
           },
           "erase": {
+            alias: "e",
             describe: "Enabled automatic deletion of the output directory when compiler version changes",
             type: "boolean",
             default: true
           },
           "typescript": {
+            alias: "T",
             describe: "Outputs typescript definitions in qooxdoo.d.ts",
             type: "boolean"
           },
@@ -115,10 +122,12 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
             type: "boolean"
           },
           "clean": {
+            alias: "c",
             describe: "Deletes the target dir before compile",
             type: "boolean"
           },
           "listen-port": {
+            alias: "p",
             describe: "The port for the web browser to listen on",
             type: "number",
             default: 8080
@@ -129,11 +138,13 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
             default: true
           },
           "bundling": {
+            alias: "b",
             describe: "Whether bundling is enabled",
             type: "boolean",
             default: true
           },
           "with-devtools": {
+            alias: "d",
             describe: "Whether to build development tools (ApiViewer, Playground, Widgetbrowser) locally rather than linking to the qooxdoo website",
             type: "boolean",
             default: false
@@ -161,13 +172,11 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
       this.argv["feedback"] = false;
       await this.base(arguments);
       // build website if it hasn't been built yet.
-      const website = new qx.tool.utils.Website();
+      const website = new qx.tool.utils.Website({withDevtools: this.argv.withDevtools});
       if (!await fs.existsAsync(website.getTargetDir())) {
+        console.info("Building website...");
         await website.generateSite();
         await website.compileScss();
-      }
-      if (this.argv.withDevTools) {
-        await website.buildDevTools();
       }
       await this.runWebServer();
     },
