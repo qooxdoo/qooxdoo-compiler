@@ -17,7 +17,6 @@
 
 ************************************************************************ */
 
-require("@qooxdoo/framework");
 const fs = qx.tool.utils.Promisify.fs;
 const process = require("process");
 const path = require("upath");
@@ -35,6 +34,9 @@ const sass = require("node-sass");
 // config
 dot.templateSettings.strip = false;
 
+/**
+ * @ignore(qx.tool.$$resourceDir)
+ */
 qx.Class.define("qx.tool.utils.Website", {
   extend: qx.core.Object,
 
@@ -54,10 +56,6 @@ qx.Class.define("qx.tool.utils.Website", {
     for (let key of Object.getOwnPropertyNames(options)) {
       this.set(key, options[key]);
     }
-    if (this.isCleanBeforeBuild()) {
-      rimraf.sync(this.getTargetDir());
-      fs.mkdirSync(this.getTargetDir());
-    }
   },
 
   properties: {
@@ -74,11 +72,6 @@ qx.Class.define("qx.tool.utils.Website", {
     targetDir: {
       check: "String",
       deferredInit: true
-    },
-
-    cleanBeforeBuild: {
-      check: "Boolean",
-      init: true
     },
 
     withDevtools: {
@@ -149,7 +142,7 @@ qx.Class.define("qx.tool.utils.Website", {
         if (!m) {
           continue;
         }
-        let [, name, ext] = m;
+        let [unused, name, ext] = m;
         let data = await fs.readFileAsync(path.join(partialsDir, filename), "utf8");
         let fn;
         try {

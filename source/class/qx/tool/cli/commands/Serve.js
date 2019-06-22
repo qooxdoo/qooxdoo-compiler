@@ -89,12 +89,6 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
             describe: "enables additional progress output to console",
             type: "boolean"
           },
-          "show-startpage": {
-            alias: "S",
-            describe: "Show the startpage with the list of applications and additional information",
-            type: "boolean",
-            default: false
-          },
           "minify": {
             describe: "disables minification (for build targets only)",
             choices: ["off", "minify", "mangle", "beautify"],
@@ -143,6 +137,18 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
             type: "boolean",
             default: true
           },
+          "show-startpage": {
+            alias: "S",
+            describe: "Show the startpage with the list of applications and additional information",
+            type: "boolean",
+            default: false
+          },
+          "rebuild-startpage": {
+            alias: "R",
+            describe: "Rebuil the startpage with the list of applications and additional information",
+            type: "boolean",
+            default: false
+          },
           "with-devtools": {
             alias: "d",
             describe: "Whether to build development tools (ApiViewer, Playground, Widgetbrowser) locally rather than linking to the qooxdoo website",
@@ -173,8 +179,8 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
       await this.base(arguments);
       // build website if it hasn't been built yet.
       const website = new qx.tool.utils.Website({withDevtools: this.argv.withDevtools});
-      if (!await fs.existsAsync(website.getTargetDir())) {
-        console.info("Building website...");
+      if (!await fs.existsAsync(website.getTargetDir()) || this.argv.rebuildStartpage) {
+        console.info(">>> Building startpage...");
         await website.generateSite();
         await website.compileScss();
       }
@@ -212,7 +218,7 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
             name: app.getName(),
             type: app.getType(),
             title: app.getTitle() || app.getName(),
-            outputPath: target.getProjectDir(app) + "/"
+            outputPath: target.getProjectDir(app) // no trailing slash or link will break
           }))
         };
         app.get("/serve.api/apps.json", (req, res) => {
@@ -223,7 +229,7 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
       this.addListenerOnce("made", e => {
         let server = http.createServer(app);
         server.on("error", e => {
-          if (e.code == "EADDRINUSE") {
+          if (e.code === "EADDRINUSE") {
             qx.tool.compiler.Console.print("qx.tool.cli.serve.webAddrInUse", config.serve.listenPort);
             process.exit(-1);
           } else {

@@ -263,11 +263,11 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
     getMaker: function() {
       return this.__maker;
     },
-    
+
     _getConfig: function() {
       return this.__config;
     },
-    
+
     /*
      * @Override
      */
@@ -313,7 +313,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
           console.log(errors.join("\n"));
         }
       }
-      
+
       let cfg = await qx.tool.cli.ConfigDb.getInstance();
       maker.getAnalyser().setWritePoLineNumbers(cfg.db("qx.translation.strictPoCompatibility", false));
 
@@ -326,7 +326,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
       if (config.ignores) {
         analyser.setIgnores(config.ignores);
       }
-     
+
       var target = maker.getTarget();
       if (this.__gauge) {
         maker.addListener("writingApplications", () => this.__gauge.show("Writing Applications", 0));
