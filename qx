@@ -1,4 +1,4 @@
-#!/usr/bin/env node --no-warnings
+#!/usr/bin/env node
 
 require("./index");
 new qx.tool.cli.Cli().run();
