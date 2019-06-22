@@ -133,7 +133,7 @@ qx.Class.define("qx.tool.utils.Website", {
      * extension.
      *
      */
-    async loadPartials(files, metalsmith) {
+    loadPartials: async function (files, metalsmith) {
       const metadata = metalsmith.metadata();
       const partialsDir = path.join(this.getSourceDir(), "partials");
       files = await fs.readdirAsync(partialsDir, "utf8");
@@ -143,7 +143,9 @@ qx.Class.define("qx.tool.utils.Website", {
           continue;
         }
         let [unused, name, ext] = m;
-        unused += ""; // this is simply to avoid linting errors until https://github.com/qooxdoo/qooxdoo-compiler/issues/461 is fixed
+        if (unused) {
+          // this is simply to avoid linting errors until https://github.com/qooxdoo/qooxdoo-compiler/issues/461 is fixed
+        }
         let data = await fs.readFileAsync(path.join(partialsDir, filename), "utf8");
         let fn;
         try {
