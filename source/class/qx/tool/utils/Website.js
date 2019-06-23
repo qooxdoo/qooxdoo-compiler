@@ -124,7 +124,7 @@ qx.Class.define("qx.tool.utils.Website", {
 
     /**
      * Metalsmith plugin that loads partials and adding them to the metadata.partials map.  Each file
-     * is added with it's filename, and if it is a .html filename is also added without the .html
+     * is added with its filename, and if it is a .html filename is also added without the .html
      * extension.
      *
      */
