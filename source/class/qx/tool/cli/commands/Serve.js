@@ -87,9 +87,10 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
       this.argv["machine-readable"] = false;
       this.argv["feedback"] = false;
       await this.base(arguments);
+      // todo: implement handling of "build-devtools" option
+
       // build website if it hasn't been built yet.
-      let buildDevtools = this.argv.buildDevtools;
-      const website = new qx.tool.utils.Website({buildDevtools});
+      const website = new qx.tool.utils.Website();
       if (!await fs.existsAsync(website.getTargetDir()) || this.argv.rebuildStartpage) {
         console.info(">>> Building startpage...");
         await website.generateSite();

@@ -72,11 +72,6 @@ qx.Class.define("qx.tool.utils.Website", {
     targetDir: {
       check: "String",
       deferredInit: true
-    },
-
-    buildDevtools: {
-      check: "Boolean",
-      init: false
     }
   },
 
