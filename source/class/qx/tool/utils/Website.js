@@ -74,7 +74,7 @@ qx.Class.define("qx.tool.utils.Website", {
       deferredInit: true
     },
 
-    withDevtools: {
+    buildDevtools: {
       check: "Boolean",
       init: false
     }
