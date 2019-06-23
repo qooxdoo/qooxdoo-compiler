@@ -918,7 +918,7 @@ module.exports = qx.Class.define("qx.tool.compiler.targets.Target", {
           "</html>\n";
       /* eslint-enable no-template-curly-in-string */
 
-      var bootDir = application.getBootPath();
+      var bootDir = path.join(compileInfo.library.getRootDir(), application.getBootPath());
       var stats = bootDir && (await qx.tool.utils.files.Utils.safeStat(bootDir));
       let indexHtml = null;
       if (stats && stats.isDirectory()) {
