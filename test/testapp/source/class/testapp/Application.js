@@ -168,6 +168,7 @@ qx.Class.define("testapp.Application", {
       new testapp.Issue206();
       new testapp.Issue240();
       new testapp.Issue186();
+      new testapp.Issue461().unusedDestructedArray();
       
       qx.core.Assert.assertTrue(TEST_EXTERNAL === "loaded");
       qx.core.Assert.assertTrue(SCRIPT_LOADED === true);
