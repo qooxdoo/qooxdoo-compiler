@@ -917,37 +917,39 @@ module.exports = qx.Class.define("qx.tool.compiler.targets.Target", {
           "</body>\n" +
           "</html>\n";
       /* eslint-enable no-template-curly-in-string */
-
-      var bootDir = path.join(compileInfo.library.getRootDir(), application.getBootPath());
-      var stats = bootDir && (await qx.tool.utils.files.Utils.safeStat(bootDir));
+      var bootDir = application.getBootPath();
       let indexHtml = null;
-      if (stats && stats.isDirectory()) {
-        await qx.tool.utils.files.Utils.sync(bootDir, resDir, (from, to) => {
-          if (!from.endsWith(".html")) {
-            return true;
-          }
-          return fs.readFileAsync(from, "utf8")
-            .then(data => {
-              if (path.basename(from) == "index.html") {
-                if (!data.match(/\$\{\s*preBootJs\s*\}/)) {
+      if (bootDir) {
+        bootDir = path.join(compileInfo.library.getRootDir(), application.getBootPath());
+        var stats = await qx.tool.utils.files.Utils.safeStat(bootDir);
+        if (stats && stats.isDirectory()) {
+          await qx.tool.utils.files.Utils.sync(bootDir, resDir, (from, to) => {
+            if (!from.endsWith(".html")) {
+              return true;
+            }
+            return fs.readFileAsync(from, "utf8")
+              .then(data => {
+                if (path.basename(from) == "index.html") {
+                  if (!data.match(/\$\{\s*preBootJs\s*\}/)) {
                   /* eslint-disable no-template-curly-in-string */
-                  data = data.replace("</body>", "\n${preBootJs}\n</body>");
-                  /* eslint-enable no-template-curly-in-string */
-                  qx.tool.compiler.Console.print("qx.tool.compiler.target.missingPreBootJs", from);
-                }
-                if (!data.match(/\s*boot.js\s*/)) {
+                    data = data.replace("</body>", "\n${preBootJs}\n</body>");
+                    /* eslint-enable no-template-curly-in-string */
+                    qx.tool.compiler.Console.print("qx.tool.compiler.target.missingPreBootJs", from);
+                  }
+                  if (!data.match(/\s*boot.js\s*/)) {
                   /* eslint-disable no-template-curly-in-string */
-                  data = data.replace("</body>", "\n  <script type=\"text/javascript\" src=\"${appPath}boot.js\"></script>\n</body>");
-                  /* eslint-enable no-template-curly-in-string */
-                  qx.tool.compiler.Console.print("qx.tool.compiler.target.missingBootJs", from);
+                    data = data.replace("</body>", "\n  <script type=\"text/javascript\" src=\"${appPath}boot.js\"></script>\n</body>");
+                    /* eslint-enable no-template-curly-in-string */
+                    qx.tool.compiler.Console.print("qx.tool.compiler.target.missingBootJs", from);
+                  }
+                  indexHtml = data;
                 }
-                indexHtml = data;
-              }
-              data = replaceVars(data);
-              return fs.writeFileAsync(to, data, "utf8")
-                .then(() => false);
-            });
-        });
+                data = replaceVars(data);
+                return fs.writeFileAsync(to, data, "utf8")
+                  .then(() => false);
+              });
+          });
+        }
       }
       if (!indexHtml) {
         indexHtml = defaultIndexHtml;
