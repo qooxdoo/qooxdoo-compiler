@@ -173,7 +173,8 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
       if (apps.length === 1 && apps[0].getWriteIndexHtmlToRoot() && this.argv.showStartpage === false) {
         app.use("/", express.static(target.getOutputDir()));
       } else {
-        app.use("/docs", express.static(path.join(await this.getAppQxPath(), "../docs")));
+        let s = await this.getAppQxPath();
+        app.use("/docs", express.static(path.join(s, "docs")));
         app.use("/", express.static(path.join(qx.tool.$$resourceDir, "cli/serve/build")));
         app.use("/" + target.getOutputDir(), express.static(target.getOutputDir()));
         var obj = {

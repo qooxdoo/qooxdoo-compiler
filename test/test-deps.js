@@ -58,7 +58,7 @@ async function createMaker() {
       if (err) {
         return reject(err);
       }
-      maker.addLibrary(QOOXDOO_PATH + "/framework", function (err) {
+      maker.addLibrary(QOOXDOO_PATH, function (err) {
         if (err) {
           reject(err);
         } else {
