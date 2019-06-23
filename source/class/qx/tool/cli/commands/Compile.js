@@ -55,7 +55,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         describe: "Base path for output",
         nargs: 1,
         requiresArg: true,
-        type: "string",
+        type: "string"
       },
       "locale": {
         alias: "l",
