@@ -1453,7 +1453,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
 
             // Array destructuring `var [a,b] = [...]`
             } else if (decl.id.type == "ArrayPattern") {
-              decl.id.elements.forEach(prop => t.addDeclaration(prop.name));
+              decl.id.elements.forEach(prop => prop && t.addDeclaration(prop.name));
             }
           });
         },
