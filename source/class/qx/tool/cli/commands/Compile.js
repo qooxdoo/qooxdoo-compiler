@@ -37,7 +37,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
 
   statics: {
 
-    builder: {
+    YARGS_BUILDER: {
       "target": {
         alias: "t",
         describe: "Set the target type: source or build or class name. Default is first target in config file",
@@ -190,7 +190,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
       return {
         command   : "compile [configFile]",
         describe  : "compiles the current application, using compile.json",
-        builder   : qx.tool.cli.commands.Compile.builder,
+        builder   : qx.tool.cli.commands.Compile.YARGS_BUILDER,
         handler: function(argv) {
           return new qx.tool.cli.commands.Compile(argv)
             .process()

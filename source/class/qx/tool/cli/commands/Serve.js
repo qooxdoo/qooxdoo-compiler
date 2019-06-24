@@ -34,7 +34,7 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
 
   statics: {
 
-    builder: {
+    YARGS_BUILDER: {
       "listen-port": {
         alias: "p",
         describe: "The port for the web browser to listen on",
@@ -65,7 +65,7 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
       return {
         command   : "serve [configFile]",
         describe  : "runs a webserver to run the current application with continuous compilation, using compile.json",
-        builder   : Object.assign(qx.tool.cli.commands.Compile.builder, qx.tool.cli.commands.Serve.builder),
+        builder   : Object.assign(qx.tool.cli.commands.Compile.YARGS_BUILDER, qx.tool.cli.commands.Serve.YARGS_BUILDER),
         handler: function(argv) {
           return new qx.tool.cli.commands.Serve(argv)
             .process()
