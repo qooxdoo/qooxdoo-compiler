@@ -128,7 +128,7 @@ qx.Class.define("qx.tool.utils.Website", {
      * extension.
      *
      */
-    loadPartials: async function (files, metalsmith) {
+    async loadPartials(files, metalsmith) {
       const metadata = metalsmith.metadata();
       const partialsDir = path.join(this.getSourceDir(), "partials");
       files = await fs.readdirAsync(partialsDir, "utf8");
