@@ -3,6 +3,10 @@ set -o errexit
 
 exe() { echo "\$ ${@/eval/}" ; "$@" ; }
 
+# build local website
+exe source/resource/qx/tool/bin/build-website
+
+# deploy
 git config user.email "travis@travis-ci.org"
 git config user.name "Travis CI"
 
