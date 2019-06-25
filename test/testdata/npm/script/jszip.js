@@ -3017,13 +3017,11 @@ exports.Utf8EncodeWorker = Utf8EncodeWorker;
 
 },{"./nodejsUtils":14,"./stream/GenericWorker":28,"./support":30,"./utils":32}],32:[function(require,module,exports){
 'use strict';
-
 var support = require('./support');
 var base64 = require('./base64');
 var nodejsUtils = require('./nodejsUtils');
-var setImmediate = require('core-js/library/fn/set-immediate');
+//var setImmediate = require('core-js/library/fn/set-immediate');
 var external = require("./external");
-
 
 /**
  * Convert a string that pass as a "binary string": it should represent a byte
