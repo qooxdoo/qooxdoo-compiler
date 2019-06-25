@@ -110,7 +110,7 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
       var maker = this.getMaker();
       var config = this._getConfig();
       var target = maker.getTarget();
-      var apps = maker.getApplications();
+      var apps = maker.getApplications().filter(app => app.isBrowserApp());
 
       const app = express();
       const website = new qx.tool.utils.Website();
