@@ -71,8 +71,8 @@ qx.Class.define("qx.tool.cli.commands.package.Upgrade", {
     async process() {
       await this.base(arguments);
       await (new qx.tool.cli.commands.package.Update({
-          quiet:true,
-          prereleases: this.argv.prereleases
+        quiet:true,
+        prereleases: this.argv.prereleases
       })).process();
       await (new qx.tool.cli.commands.package.List({
         quiet:true,
