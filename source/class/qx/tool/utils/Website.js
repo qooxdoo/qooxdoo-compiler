@@ -124,11 +124,11 @@ qx.Class.define("qx.tool.utils.Website", {
 
     /**
      * Metalsmith plugin that loads partials and adding them to the metadata.partials map.  Each file
-     * is added with it's filename, and if it is a .html filename is also added without the .html
+     * is added with its filename, and if it is a .html filename is also added without the .html
      * extension.
      *
      */
-    loadPartials: async function (files, metalsmith) {
+    async loadPartials(files, metalsmith) {
       const metadata = metalsmith.metadata();
       const partialsDir = path.join(this.getSourceDir(), "partials");
       files = await fs.readdirAsync(partialsDir, "utf8");
