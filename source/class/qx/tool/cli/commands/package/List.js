@@ -82,8 +82,11 @@ qx.Class.define("qx.tool.cli.commands.package.List", {
           "noheaders": {
             alias: "H",
             describe: "Omit header and footer"
+          },
+          "prereleases": {
+            alias: "p",
+            describe: "Include prereleases into latest compatible releases"
           }
-
         },
         handler: function(argv) {
           return new qx.tool.cli.commands.package.List(argv)
@@ -415,7 +418,7 @@ qx.Class.define("qx.tool.cli.commands.package.List", {
             let latestCompatibleVersion = latestCompatibleRelease ? latestCompatibleRelease.replace(/v/, "") : undefined;
             if (compatibility === true &&
               (latestCompatibleRelease === undefined ||
-                (semver.gt(tag_version, latestCompatibleVersion, false) && !prerelease)
+                (semver.gt(tag_version, latestCompatibleVersion, false) && (!prerelease || this.argv.prereleases))
               )
             ) {
               this.__latestCompatible[qooxdoo_version][repo_name] = tag_name;

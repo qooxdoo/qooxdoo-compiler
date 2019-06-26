@@ -22,4 +22,5 @@ require("./Logger");
 require("./LogManager");
 require("./Values");
 require("./Utils.js");
+require("./Website.js");
 require("./files");

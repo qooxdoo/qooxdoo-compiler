@@ -37,147 +37,160 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
 
   statics: {
 
+    YARGS_BUILDER: {
+      "target": {
+        alias: "t",
+        describe: "Set the target type: source or build or class name. Default is first target in config file",
+        requiresArg: true,
+        type: "string"
+      },
+      "download": {
+        alias: "d",
+        describe: "Whether to automatically download missing libraries",
+        type: "boolean",
+        default: true
+      },
+      "output-path": {
+        alias: "o",
+        describe: "Base path for output",
+        nargs: 1,
+        requiresArg: true,
+        type: "string"
+      },
+      "locale": {
+        alias: "l",
+        describe: "Compile for a given locale",
+        nargs: 1,
+        requiresArg: true,
+        type: "string",
+        array: true
+      },
+      "update-po-files": {
+        alias: "u",
+        describe: "enables detection of translations and writing them out into .po files",
+        type: "boolean",
+        default: false
+      },
+      "write-all-translations": {
+        describe: "enables output of all translations, not just those that are explicitly referenced",
+        type: "boolean"
+      },
+      "set": {
+        describe: "sets an environment value",
+        nargs: 1,
+        requiresArg: true,
+        type: "string",
+        array: true
+      },
+      "app-class": {
+        describe: "sets the application class",
+        nargs: 1,
+        requiresArg: true,
+        type: "string"
+      },
+      "app-theme": {
+        describe: "sets the theme class for the current application",
+        nargs: 1,
+        requiresArg: true,
+        type: "string"
+      },
+      "app-name": {
+        describe: "sets the name of the current application",
+        nargs: 1,
+        requiresArg: true,
+        type: "string"
+      },
+      "library": {
+        describe: "adds a library",
+        nargs: 1,
+        requiresArg: true,
+        type: "string",
+        array: true
+      },
+      "watch": {
+        describe: "enables watching for changes and continuous compilation",
+        type: "boolean",
+        alias: "w"
+      },
+      "machine-readable": {
+        alias: "M",
+        describe: "output compiler messages in machine-readable format",
+        type: "boolean"
+      },
+      "verbose": {
+        alias: "v",
+        describe: "enables additional progress output to console",
+        type: "boolean"
+      },
+      "minify": {
+        alias: "m",
+        describe: "disables minification (for build targets only)",
+        choices: [ "off", "minify", "mangle", "beautify" ],
+        default: "mangle"
+      },
+      "save-unminified": {
+        alias: "u",
+        describe: "Saves a copy of the unminified version of output files (build target only)",
+        type: "boolean",
+        default: false
+      },
+      "erase": {
+        alias: "e",
+        describe: "Enabled automatic deletion of the output directory when compiler version changes",
+        type: "boolean",
+        default: true
+      },
+      "feedback": {
+        describe: "Shows gas-gauge feedback",
+        type: "boolean",
+        default: true,
+        alias: "f"
+      },
+      "typescript": {
+        alias: "T",
+        describe: "Outputs typescript definitions in qooxdoo.d.ts",
+        type: "boolean"
+      },
+      "add-created-at": {
+        alias: "C",
+        describe: "Adds code to populate object's $$createdAt",
+        type: "boolean"
+      },
+      "clean": {
+        alias: "c",
+        describe: "Deletes the target dir before compile",
+        type: "boolean"
+      },
+      "warnAsError": {
+        alias: "e",
+        default: false,
+        describe: "Handle compiler warnings as error"
+      },
+      "write-library-info": {
+        alias: "I",
+        describe: "Write library information to the script, for reflection",
+        type: "boolean",
+        default: true
+      },
+      "bundling": {
+        alias: "b",
+        describe: "Whether bundling is enabled",
+        type: "boolean",
+        default: true
+      },
+      "force": {
+        describe: "Override warnings",
+        type: "boolean",
+        default: false,
+        alias: "F"
+      }
+    },
+
     getYargsCommand: function() {
       return {
         command   : "compile [configFile]",
         describe  : "compiles the current application, using compile.json",
-        builder   : {
-          "target": {
-            describe: "Set the target type: source or build or class name. Default is first target in config file",
-            requiresArg: true,
-            type: "string"
-          },
-          "download": {
-            alias: "d",
-            describe: "Whether to automatically download missing libraries",
-            type: "boolean",
-            default: true
-          },
-          "output-path": {
-            describe: "Base path for output",
-            nargs: 1,
-            requiresArg: true,
-            type: "string",
-            alias: "o"
-          },
-          "locale": {
-            describe: "Compile for a given locale",
-            nargs: 1,
-            requiresArg: true,
-            type: "string",
-            array: true
-          },
-          "update-po-files": {
-            describe: "enables detection of translations and writing them out into .po files",
-            type: "boolean",
-            default: false,
-            alias: "u"
-          },
-          "write-all-translations": {
-            describe: "enables output of all translations, not just those that are explicitly referenced",
-            type: "boolean"
-          },
-          "set": {
-            describe: "sets an environment value",
-            nargs: 1,
-            requiresArg: true,
-            type: "string",
-            array: true
-          },
-          "app-class": {
-            describe: "sets the application class",
-            nargs: 1,
-            requiresArg: true,
-            type: "string"
-          },
-          "app-theme": {
-            describe: "sets the theme class for the current application",
-            nargs: 1,
-            requiresArg: true,
-            type: "string"
-          },
-          "app-name": {
-            describe: "sets the name of the current application",
-            nargs: 1,
-            requiresArg: true,
-            type: "string"
-          },
-          "library": {
-            describe: "adds a library",
-            nargs: 1,
-            requiresArg: true,
-            type: "string",
-            array: true
-          },
-          "watch": {
-            describe: "enables watching for changes and continuous compilation",
-            type: "boolean",
-            alias: "w"
-          },
-          "machine-readable": {
-            describe: "output compiler messages in machine-readable format",
-            type: "boolean"
-          },
-          "verbose": {
-            alias: "v",
-            describe: "enables additional progress output to console",
-            type: "boolean"
-          },
-          "minify": {
-            describe: "disables minification (for build targets only)",
-            choices: [ "off", "minify", "mangle", "beautify" ],
-            default: "mangle"
-          },
-          "save-unminified": {
-            describe: "Saves a copy of the unminified version of output files (build target only)",
-            type: "boolean",
-            default: false
-          },
-          "erase": {
-            describe: "Enabled automatic deletion of the output directory when compiler version changes",
-            type: "boolean",
-            default: true
-          },
-          "feedback": {
-            describe: "Shows gas-gauge feedback",
-            type: "boolean",
-            default: true,
-            alias: "f"
-          },
-          "typescript": {
-            describe: "Outputs typescript definitions in qooxdoo.d.ts",
-            type: "boolean"
-          },
-          "add-created-at": {
-            describe: "Adds code to populate object's $$createdAt",
-            type: "boolean"
-          },
-          "clean": {
-            describe: "Deletes the target dir before compile",
-            type: "boolean"
-          },
-          "warnAsError": {
-            alias: "e",
-            default: false,
-            describe: "Handle compiler warnings as error"
-          },
-          "write-library-info": {
-            describe: "Write library information to the script, for reflection",
-            type: "boolean",
-            default: true
-          },
-          "bundling": {
-            describe: "Whether bundling is enabled",
-            type: "boolean",
-            default: true
-          },
-          "force": {
-            describe: "Override warnings",
-            type: "boolean",
-            default: false,
-            alias: "F"
-          }
-        },
+        builder   : qx.tool.cli.commands.Compile.YARGS_BUILDER,
         handler: function(argv) {
           return new qx.tool.cli.commands.Compile(argv)
             .process()
@@ -263,11 +276,11 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
     getMaker: function() {
       return this.__maker;
     },
-    
+
     _getConfig: function() {
       return this.__config;
     },
-    
+
     /*
      * @Override
      */
@@ -313,7 +326,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
           console.log(errors.join("\n"));
         }
       }
-      
+
       let cfg = await qx.tool.cli.ConfigDb.getInstance();
       maker.getAnalyser().setWritePoLineNumbers(cfg.db("qx.translation.strictPoCompatibility", false));
 
@@ -326,7 +339,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
       if (config.ignores) {
         analyser.setIgnores(config.ignores);
       }
-     
+
       var target = maker.getTarget();
       if (this.__gauge) {
         maker.addListener("writingApplications", () => this.__gauge.show("Writing Applications", 0));
