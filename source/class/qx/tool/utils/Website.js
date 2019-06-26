@@ -146,7 +146,7 @@ qx.Class.define("qx.tool.utils.Website", {
         try {
           fn = dot.template(data);
         } catch (err) {
-          console.log("Failed to load partial " + filename + ": " + err);
+          qx.tool.compiler.Console.log("Failed to load partial " + filename + ": " + err);
           continue;
         }
         fn.name = filename;

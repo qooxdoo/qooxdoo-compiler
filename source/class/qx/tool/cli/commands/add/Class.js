@@ -77,7 +77,7 @@ qx.Class.define("qx.tool.cli.commands.add.Class", {
           return new qx.tool.cli.commands.add.Class(argv)
             .process()
             .catch(e => {
-              console.error(e.stack || e.message);
+              qx.tool.compiler.Console.error(e.stack || e.message);
               process.exit(1);
             });
         }

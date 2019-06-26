@@ -46,6 +46,13 @@ qx.Class.define("qx.tool.compiler.Console", {
       init: null,
       nullable: true,
       check: "Function"
+    },
+    
+    /** Colour prefix for console output */
+    colorOn: {
+      init: "",
+      nullable: false,
+      check: "String"
     }
   },
 
@@ -88,6 +95,41 @@ qx.Class.define("qx.tool.compiler.Console", {
       var msg = qx.tool.compiler.Console.MESSAGE_IDS[msgId]||msgId;
       var str = qx.lang.String.format(msg.message, args||[]);
       return str;
+    },
+    
+    /**
+     * console.log equivalent, with colorization
+     */
+    log(...args) {
+      console.log(this.getColorOn() + args.join(" "));
+    },
+    
+    /**
+     * console.debug equivalent, with colorization
+     */
+    debug(...args) {
+      console.debug(this.getColorOn() + args.join(" "));
+    },
+    
+    /**
+     * console.info equivalent, with colorization
+     */
+    info(...args) {
+      console.info(this.getColorOn() + args.join(" "));
+    },
+    
+    /**
+     * console.warn equivalent, with colorization
+     */
+    warn(...args) {
+      console.warn(this.getColorOn() + args.join(" "));
+    },
+    
+    /**
+     * console.error equivalent, with colorization
+     */
+    error(...args) {
+      console.error(this.getColorOn() + args.join(" "));
     }
   },
 
@@ -178,6 +220,41 @@ qx.Class.define("qx.tool.compiler.Console", {
      */
     decode: function(...args) {
       return this.getInstance().decode(...args);
+    },
+    
+    /**
+     * console.log equivalent, with colorization
+     */
+    log(...args) {
+      return this.getInstance().log(...args);
+    },
+
+    /**
+     * console.debug equivalent, with colorization
+     */
+    debug(...args) {
+      return this.getInstance().debug(...args);
+    },
+
+    /**
+     * console.info equivalent, with colorization
+     */
+    info(...args) {
+      return this.getInstance().info(...args);
+    },
+
+    /**
+     * console.warn equivalent, with colorization
+     */
+    warn(...args) {
+      return this.getInstance().warn(...args);
+    },
+
+    /**
+     * console.error equivalent, with colorization
+     */
+    error(...args) {
+      return this.getInstance().error(...args);
     },
 
     /**

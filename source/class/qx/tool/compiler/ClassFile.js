@@ -305,7 +305,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
           var result = babelCore.transform(src, config);
         } catch (ex) {
           if (ex._babel) {
-            console.log(ex);
+            qx.tool.compiler.Console.log(ex);
           }
           t.addMarker("compiler.syntaxError", ex.loc, ex.message, ex.codeFrame);
           t.__fatalCompileError = true;
@@ -545,7 +545,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
           } else if (param.type == "Identifier") {
             t.addDeclaration(param.name);
           } else {
-            console.warn("Unexpected type of parameter " + param.type + " at " + node.loc.start.line + "," + node.loc.start.column);
+            qx.tool.compiler.Console.warn("Unexpected type of parameter " + param.type + " at " + node.loc.start.line + "," + node.loc.start.column);
           }
         });
         var jsdoc = getJsDoc(node.leadingComments);

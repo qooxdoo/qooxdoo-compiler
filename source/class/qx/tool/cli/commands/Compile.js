@@ -22,6 +22,7 @@ const Gauge = require("gauge");
 const fs = qx.tool.utils.Promisify.fs;
 const semver = require("semver");
 const path = require("upath");
+const chalk = require("chalk");
 
 require("app-module-path").addPath(process.cwd() + "/node_modules");
 
@@ -143,7 +144,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
       "feedback": {
         describe: "Shows gas-gauge feedback",
         type: "boolean",
-        default: true,
+        default: null,
         alias: "f"
       },
       "typescript": {
@@ -195,7 +196,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
           return new qx.tool.cli.commands.Compile(argv)
             .process()
             .catch(e => {
-              console.error("Error: " + (e.stack || e.message));
+              qx.tool.compiler.Console.error("Error: " + (e.stack || e.message));
               process.exit(1);
             });
         }
@@ -288,10 +289,25 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
       // check if we need to migrate files
       await (new qx.tool.cli.commands.package.Migrate(this.argv)).process(true);
 
+      let configDb = await qx.tool.cli.ConfigDb.getInstance();
+      if (this.argv["feedback"] === null) {
+        this.argv["feedback"] = configDb.db("qx.default.feedback", true);
+      }
+            
       if (this.argv["machine-readable"]) {
         qx.tool.compiler.Console.getInstance().setMachineReadable(true);
+        
       } else if (this.argv["feedback"]) {
+        var themes = require('gauge/themes')
+        var ourTheme = themes.newTheme(themes({hasUnicode: true, hasColor: true}));
+        let colorOn = qx.tool.compiler.Console.getInstance().getColorOn();
+        ourTheme.preProgressbar = colorOn + ourTheme.preProgressbar;
+        ourTheme.preSubsection = colorOn + ourTheme.preSubsection;
+        ourTheme.progressbarTheme.postComplete += colorOn;
+        ourTheme.progressbarTheme.postRemaining += colorOn;
+     
         this.__gauge = new Gauge();
+        this.__gauge.setTheme(ourTheme);
         this.__gauge.show("Compiling", 0);
         const TYPES = {
           "error": "ERROR",
@@ -301,10 +317,10 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
           msgId = qx.tool.compiler.Console.MESSAGE_IDS[msgId];
           if (msgId.type !== "message") {
             this.__gauge.hide();
-            console.log(TYPES[msgId.type] + ": " + str);
+            qx.tool.compiler.Console.log(colorOn + TYPES[msgId.type] + ": " + str);
             this.__gauge.show();
           } else {
-            this.__gauge.show(str);
+            this.__gauge.show(colorOn + str);
           }
         });
       }
@@ -323,7 +339,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         if (this.argv.warnAsError) {
           throw new qx.tool.utils.Utils.UserError(errors.join("\n"));
         } else {
-          console.log(errors.join("\n"));
+          qx.tool.compiler.Console.log(errors.join("\n"));
         }
       }
 
@@ -374,9 +390,9 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
       maker.addListener("writtenApplications", e => {
         this.dispatchEvent(e.clone());
         if (this.argv.verbose) {
-          console.log("\nCompleted all applications, libraries used are:");
+          qx.tool.compiler.Console.log("\nCompleted all applications, libraries used are:");
           maker.getAnalyser().getLibraries().forEach(lib => {
-            console.log(`   ${lib.getNamespace()} (${lib.getRootDir()})`);
+            qx.tool.compiler.Console.log(`   ${lib.getNamespace()} (${lib.getRootDir()})`);
           });
         }
       });
@@ -420,6 +436,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
      * @return {Maker}
      */
     createMakerFromConfig: async function(data) {
+      const Console = qx.tool.compiler.Console.getInstance();
       var t = this;
       var maker = null;
 
@@ -621,13 +638,13 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         if (markers) {
           markers.forEach(function(marker) {
             var str = qx.tool.compiler.Console.decodeMarker(marker);
-            console.warn(data.classFile.getClassName() + ": " + str);
+            Console.warn(data.classFile.getClassName() + ": " + str);
           });
         }
       });
 
       if (!data.libraries.every(libData => fs.existsSync(libData + "/Manifest.json"))) {
-        console.log("One or more libraries not found - trying to install them from library repository...");
+        Console.log("One or more libraries not found - trying to install them from library repository...");
         const installer = new qx.tool.cli.commands.package.Install({
           quiet: true,
           save: false
@@ -645,7 +662,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
       }
       if (this.argv.verbose) {
         qxLib = maker.getAnalyser().findLibrary("qx");
-        console.log("QooxDoo found in " + qxLib.getRootDir());
+        Console.log("QooxDoo found in " + qxLib.getRootDir());
       }
       return maker;
     },
@@ -660,6 +677,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
      * @private
      */
     __checkDependencies: async function(maker, packages) {
+      const Console = qx.tool.compiler.Console.getInstance();
       let errors = [];
       let libs = maker.getAnalyser().getLibraries();
       const SDK_VERSION = await this.getUserQxVersion();
@@ -676,7 +694,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         let range = lib.getLibraryInfo()["qooxdoo-range"];
         if (range) {
           if (this.argv.verbose) {
-            console.warn(`${lib.getNamespace()}: The configuration setting "qooxdoo-range" in Manifest.json has been deprecated in favor of "requires.@qooxdoo/framework".`);
+            Console.warn(`${lib.getNamespace()}: The configuration setting "qooxdoo-range" in Manifest.json has been deprecated in favor of "requires.@qooxdoo/framework".`);
           }
           if (!requires["@qooxdoo/framework"]) {
             requires["@qooxdoo/framework"] = range;
@@ -689,7 +707,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
           if (this.argv.download) {
             // but we're instructed to download the libraries
             if (this.argv.verbose) {
-              console.info(`>>> Installing latest compatible version of required libraries...`);
+              Console.info(`>>> Installing latest compatible version of required libraries...`);
             }
             const installer = new qx.tool.cli.commands.package.Install({
               verbose: this.argv.verbose,
@@ -735,7 +753,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
               // github release of a package
               let libVersion = l.getLibraryInfo().version;
               if (!semver.valid(libVersion, {loose: true})) {
-                console.warn(`${reqUri}: Version is not valid: ${libVersion}`);
+                Console.warn(`${reqUri}: Version is not valid: ${libVersion}`);
               } else if (!semver.satisfies(libVersion, requiredRange, {loose: true})) {
                 errors.push(`${lib.getNamespace()}: Needs ${reqUri} version ${requiredRange}, found ${libVersion}`);
               }

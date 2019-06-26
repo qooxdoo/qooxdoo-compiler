@@ -70,7 +70,7 @@ qx.Class.define("qx.tool.cli.commands.package.Update", {
           return new qx.tool.cli.commands.package.Update(argv)
             .process()
             .catch(e => {
-              console.error(e.stack || e.message);
+              qx.tool.compiler.Console.error(e.stack || e.message);
               process.exit(1);
             });
         }
@@ -112,7 +112,7 @@ qx.Class.define("qx.tool.cli.commands.package.Update", {
           ]
           );
           if (!response.token) {
-            console.error("You have not provided a GitHub token.");
+            qx.tool.compiler.Console.error("You have not provided a GitHub token.");
             return;
           }
           github.token = response.token;
@@ -125,8 +125,8 @@ qx.Class.define("qx.tool.cli.commands.package.Update", {
 
       let num_libraries = this.getCache().num_libraries;
       if (num_libraries && !argv.quiet) {
-        console.info(`Found ${num_libraries} releases of libraries.`);
-        console.info(`Run 'qx package list' in the root dir of your project to see which versions of these libraries are compatible.`);
+        qx.tool.compiler.Console.info(`Found ${num_libraries} releases of libraries.`);
+        qx.tool.compiler.Console.info(`Run 'qx package list' in the root dir of your project to see which versions of these libraries are compatible.`);
       }
 
       // save cache
@@ -138,7 +138,7 @@ qx.Class.define("qx.tool.cli.commands.package.Update", {
 
       async function updateFromRepository() {
         if (!argv.quiet) {
-          console.log("Downloading cache from GitHub ...");
+          qx.tool.compiler.Console.log("Downloading cache from GitHub ...");
         }
         let url = self.getRepositoryCacheUrl();
         try {
@@ -159,7 +159,7 @@ qx.Class.define("qx.tool.cli.commands.package.Update", {
 
         // repositories
         if (!argv.quiet) {
-          console.log("Searching for package repositories on GitHub...");
+          qx.tool.compiler.Console.log("Searching for package repositories on GitHub...");
         }
 
         let query = "topic:qooxdoo-package fork:true";
@@ -191,7 +191,7 @@ qx.Class.define("qx.tool.cli.commands.package.Update", {
             continue;
           }
           if (argv.verbose) {
-            console.info(`### Found ${name} ...`);
+            qx.tool.compiler.Console.info(`### Found ${name} ...`);
           }
           names.push(name);
           let repository = new Repository(name, auth);
@@ -208,7 +208,7 @@ qx.Class.define("qx.tool.cli.commands.package.Update", {
           try {
             var releases_data = await repository.listReleases();
           } catch (e) {
-            console.error("Error retrieving releases: " + e);
+            qx.tool.compiler.Console.error("Error retrieving releases: " + e);
             continue;
           }
 
@@ -230,7 +230,7 @@ qx.Class.define("qx.tool.cli.commands.package.Update", {
 
           let versions = releases.map(r => r.version);
           if (argv.verbose) {
-            console.info(`>>> Retrieved ${releases.length} release(s) of ${name}: ${versions.join(", ")}.`);
+            qx.tool.compiler.Console.info(`>>> Retrieved ${releases.length} release(s) of ${name}: ${versions.join(", ")}.`);
           }
 
           // get Manifest.json of each release to determine compatible qooxdoo versions
@@ -244,13 +244,13 @@ qx.Class.define("qx.tool.cli.commands.package.Update", {
             // can be overridden by a qoxdoo.json in the root dir
             let qooxdoo_data;
             if (argv.verbose) {
-              console.log(`>>> Trying to retrieve 'qooxdoo.json' for ${name} ${tag_name}...`);
+              qx.tool.compiler.Console.log(`>>> Trying to retrieve 'qooxdoo.json' for ${name} ${tag_name}...`);
             }
             try {
               // @todo check if the method can return JSON to save parsing
               qooxdoo_data = await repository.getContents(tag_name, "qooxdoo.json", true);
               if (argv.verbose) {
-                console.log(`>>>  File exists, checking for libraries...`);
+                qx.tool.compiler.Console.log(`>>>  File exists, checking for libraries...`);
               }
               let data = qooxdoo_data.data;
               if (typeof data == "string") {
@@ -258,7 +258,7 @@ qx.Class.define("qx.tool.cli.commands.package.Update", {
                   data = qx.tool.utils.Json.parseJson(data);
                 } catch (e) {
                   if (argv.verbose) {
-                    console.warn(`!!!  Parse error: ${e.message}`);
+                    qx.tool.compiler.Console.warn(`!!!  Parse error: ${e.message}`);
                   }
                 }
               }
@@ -268,10 +268,10 @@ qx.Class.define("qx.tool.cli.commands.package.Update", {
               // no qooxdoo.json
               if (e.message.match(/404/)) {
                 if (argv.verbose) {
-                  console.log(`>>> No qooxdoo.json`);
+                  qx.tool.compiler.Console.log(`>>> No qooxdoo.json`);
                 }
               } else if (argv.verbose) {
-                console.warn(`!!! Error: ${e.message}`);
+                qx.tool.compiler.Console.warn(`!!! Error: ${e.message}`);
               }
             }
 
@@ -281,16 +281,16 @@ qx.Class.define("qx.tool.cli.commands.package.Update", {
               manifest_path = path.join(manifest_path, qx.tool.config.Manifest.config.fileName);
               try {
                 if (argv.verbose) {
-                  console.log(`>>> Retrieving Manifest file '${manifest_path}' for ${name} ${tag_name}...`);
+                  qx.tool.compiler.Console.log(`>>> Retrieving Manifest file '${manifest_path}' for ${name} ${tag_name}...`);
                 }
                 manifest_data = await repository.getContents(tag_name, manifest_path, true);
               } catch (e) {
                 if (e.message.match(/404/)) {
                   if (argv.verbose) {
-                    console.warn(`!!!  File does not exist.`);
+                    qx.tool.compiler.Console.warn(`!!!  File does not exist.`);
                   }
                 } else if (argv.verbose) {
-                  console.warn(`!!! Error: ${e.message}`);
+                  qx.tool.compiler.Console.warn(`!!! Error: ${e.message}`);
                 }
                 continue;
               }
@@ -302,8 +302,8 @@ qx.Class.define("qx.tool.cli.commands.package.Update", {
                   data = qx.tool.utils.Json.parseJson(data);
                 } catch (e) {
                   if (argv.verbose) {
-                    console.warn(`!!! Parse error: ${e.message}`);
-                    console.log(data);
+                    qx.tool.compiler.Console.warn(`!!! Parse error: ${e.message}`);
+                    qx.tool.compiler.Console.log(data);
                   }
                   continue;
                 }
@@ -314,10 +314,10 @@ qx.Class.define("qx.tool.cli.commands.package.Update", {
               // @deprecated
               var qx_version_range = (data.requires && (data.requires["@qooxdoo/framework"] || data.requires["qooxdoo-sdk"])) || data.info["qooxdoo-range"];
               if (argv.verbose && data.info["qooxdoo-range"]) {
-                console.warn(`!!! info.qooxdoo-range is deprecated. Please use the requires["@qooxdoo/framework"] key instead.`);
+                qx.tool.compiler.Console.warn(`!!! info.qooxdoo-range is deprecated. Please use the requires["@qooxdoo/framework"] key instead.`);
               }
               if (argv.verbose && data.requires && data.requires["qooxdoo-sdk"]) {
-                console.warn(`!!! requires["qooxdoo-sdk"] is deprecated. Please use the requires["@qooxdoo/framework"] key instead.`);
+                qx.tool.compiler.Console.warn(`!!! requires["qooxdoo-sdk"] is deprecated. Please use the requires["@qooxdoo/framework"] key instead.`);
               }
 
               // provide backwards-compatibility for info.qooxdoo-versions containing the semver range
@@ -325,7 +325,7 @@ qx.Class.define("qx.tool.cli.commands.package.Update", {
               if (typeof qx_versions == "string" && !qx_version_range) {
                 qx_version_range = qx_versions;
                 if (argv.verbose) {
-                  console.warn(`!!! info.qooxdoo-version is deprecated. Please use the requires["@qooxdoo/framework"] key instead.`);
+                  qx.tool.compiler.Console.warn(`!!! info.qooxdoo-version is deprecated. Please use the requires["@qooxdoo/framework"] key instead.`);
                 }
               }
 
@@ -333,20 +333,20 @@ qx.Class.define("qx.tool.cli.commands.package.Update", {
               if (qx_versions instanceof Array && qx_versions.length && !qx_version_range) {
                 qx_version_range = qx_versions.join(" || ");
                 if (argv.verbose) {
-                  console.warn(`!!! Manifest key 'info.qooxdoo-version' is deprecated. Please use the requires["@qooxdoo/framework"] key instead.`);
+                  qx.tool.compiler.Console.warn(`!!! Manifest key 'info.qooxdoo-version' is deprecated. Please use the requires["@qooxdoo/framework"] key instead.`);
                 }
               }
 
               if (!qx_version_range) {
                 if (argv.verbose) {
-                  console.warn(`!!! No compatibility information, skipping...`);
+                  qx.tool.compiler.Console.warn(`!!! No compatibility information, skipping...`);
                 }
                 continue;
               }
 
               if (!semver.validRange(qx_version_range, {loose: true})) {
                 if (argv.verbose) {
-                  console.warn(`!!! Invalid compatibility information, skipping...`);
+                  qx.tool.compiler.Console.warn(`!!! Invalid compatibility information, skipping...`);
                 }
                 continue;
               }
@@ -362,7 +362,7 @@ qx.Class.define("qx.tool.cli.commands.package.Update", {
               };
               num_libraries++;
               if (argv.verbose) {
-                console.log(`>>> ${name} ${tag_name}: Found package '${data.info.name}' (compatible with ${qx_versions})`);
+                qx.tool.compiler.Console.log(`>>> ${name} ${tag_name}: Found package '${data.info.name}' (compatible with ${qx_versions})`);
               } else if (!argv.quiet) {
                 process.stdout.write("."); // output dots to indicate progress
               }

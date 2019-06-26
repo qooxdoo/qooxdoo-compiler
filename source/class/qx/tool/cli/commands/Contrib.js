@@ -47,7 +47,7 @@ qx.Class.define("qx.tool.cli.commands.Contrib", {
             "Migrate"
           ], "qx.tool.cli.commands.package");
           let cmd = process.argv[process.argv.indexOf("contrib")+1];
-          console.warn(`*** 'qx contrib ${cmd}' is deprecated, use 'qx package ${cmd}' instead. ***`);
+          qx.tool.compiler.Console.warn(`*** 'qx contrib ${cmd}' is deprecated, use 'qx package ${cmd}' instead. ***`);
           return yargs
             .demandCommand()
             .showHelpOnFail()

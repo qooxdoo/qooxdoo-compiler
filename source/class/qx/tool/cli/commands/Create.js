@@ -85,7 +85,7 @@ qx.Class.define("qx.tool.cli.commands.Create", {
           return new qx.tool.cli.commands.Create(argv)
             .process()
             .catch(e => {
-              console.error(e.stack || e.message);
+              qx.tool.compiler.Console.error(e.stack || e.message);
               process.exit(1);
             });
         }
@@ -128,7 +128,7 @@ qx.Class.define("qx.tool.cli.commands.Create", {
       try {
         data.qooxdoo_version = await this.getLibraryVersion(data.qooxdoo_path);
       } catch (e) {
-        console.error(e.message);
+        qx.tool.compiler.Console.error(e.message);
         throw new qx.tool.utils.Utils.UserError("Cannot find qooxdoo framework folder.");
       }
 
@@ -261,9 +261,9 @@ qx.Class.define("qx.tool.cli.commands.Create", {
                 template = template.replace(new RegExp(`\\$\{${var_name}\}`, "g"), values[var_name]);
               }
               if (argv.verbose) {
-                console.info(`>>> Creating ${targetFile} from template ${sourceFile}...`);
+                qx.tool.compiler.Console.info(`>>> Creating ${targetFile} from template ${sourceFile}...`);
               }
-              // console.log(template);
+              // qx.tool.compiler.Console.log(template);
               if (fs.existsSync(targetFile)) {
                 throw new qx.tool.utils.Utils.UserError(`${targetFile} already exists.`);
               }
@@ -271,7 +271,7 @@ qx.Class.define("qx.tool.cli.commands.Create", {
             } else {
               // normal file
               if (argv.verbose) {
-                console.info(`>>> Copying ${sourceFile} to ${targetFile}...`);
+                qx.tool.compiler.Console.info(`>>> Copying ${sourceFile} to ${targetFile}...`);
               }
               fs.copyFileSync(sourceFile, targetFile);
             }

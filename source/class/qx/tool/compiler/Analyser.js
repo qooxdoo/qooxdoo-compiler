@@ -435,7 +435,7 @@ module.exports = qx.Class.define("qx.tool.compiler.Analyser", {
                 }
               }
               if (err && err.code === "ENOCLASSFILE") {
-                console.error(err.message);
+                qx.tool.compiler.Console.error(err.message);
                 err = null;
               }
               return cb(err);
@@ -794,8 +794,8 @@ module.exports = qx.Class.define("qx.tool.compiler.Analyser", {
 
       async function saveMetaData(classname, meta) {
         if (metaWrittenLog[classname]) {
-          console.log(" *** ERRROR *** Writing " + classname + " more than once");
-          throw new Error(" *** ERRROR *** Writing " + classname + " more than once");
+          qx.tool.compiler.Console.log(" *** ERROR *** Writing " + classname + " more than once");
+          throw new Error(" *** ERROR *** Writing " + classname + " more than once");
         }
         metaWrittenLog[classname] = true;
         var filename = qx.tool.compiler.ClassFile.getOutputPath(t, classname) + "on";
@@ -814,7 +814,7 @@ module.exports = qx.Class.define("qx.tool.compiler.Analyser", {
           .then(str => jsonlint.parse(str))
           .then(meta => cachedMeta[classname] = meta)
           .catch(err => {
-            console.error("Failed to load meta for " + classname + ": " + err);
+            qx.tool.compiler.Console.error("Failed to load meta for " + classname + ": " + err);
           });
       }
 

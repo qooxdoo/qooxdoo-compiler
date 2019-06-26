@@ -18,6 +18,7 @@
 
 require("@qooxdoo/framework");
 const path = require("path");
+const consoleControl = require("console-control-strings");
 
 /**
  * Entry point for the CLI
@@ -28,15 +29,18 @@ qx.Class.define("qx.tool.cli.Cli", {
   extend: qx.core.Object,
 
   members: {
-    run: function() {
-      /*
-      if (qx.core.Environment.get("runtime.name") == "rhino") {
-        qx.log.Logger.register(qx.log.appender.RhinoConsole);
-      } else if (qx.core.Environment.get("runtime.name") == "node.js") {
-        qx.log.Logger.register(qx.log.appender.NodeConsole);
+    async run() {
+      let configDb = await qx.tool.cli.ConfigDb.getInstance();
+      let color = configDb.db("qx.default.color", null);
+      if (color) {
+        let colorOn = consoleControl.color(color.split(' '));
+        process.stdout.write(colorOn + consoleControl.eraseLine())
+        let colorReset = consoleControl.color("reset");
+        process.on("exit", () => process.stdout.write(colorReset + consoleControl.eraseLine()));
+        let Console = qx.tool.compiler.Console.getInstance();
+        Console.setColorOn(colorOn);
       }
-      */
-
+      
       var args = qx.lang.Array.clone(process.argv);
       args.shift();
       process.title = args.join(" ");
