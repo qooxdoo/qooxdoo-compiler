@@ -22,7 +22,6 @@ const Gauge = require("gauge");
 const fs = qx.tool.utils.Promisify.fs;
 const semver = require("semver");
 const path = require("upath");
-const chalk = require("chalk");
 
 require("app-module-path").addPath(process.cwd() + "/node_modules");
 
@@ -296,9 +295,8 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
             
       if (this.argv["machine-readable"]) {
         qx.tool.compiler.Console.getInstance().setMachineReadable(true);
-        
       } else if (this.argv["feedback"]) {
-        var themes = require('gauge/themes')
+        var themes = require("gauge/themes");
         var ourTheme = themes.newTheme(themes({hasUnicode: true, hasColor: true}));
         let colorOn = qx.tool.compiler.Console.getInstance().getColorOn();
         ourTheme.preProgressbar = colorOn + ourTheme.preProgressbar;

@@ -33,8 +33,8 @@ qx.Class.define("qx.tool.cli.Cli", {
       let configDb = await qx.tool.cli.ConfigDb.getInstance();
       let color = configDb.db("qx.default.color", null);
       if (color) {
-        let colorOn = consoleControl.color(color.split(' '));
-        process.stdout.write(colorOn + consoleControl.eraseLine())
+        let colorOn = consoleControl.color(color.split(" "));
+        process.stdout.write(colorOn + consoleControl.eraseLine());
         let colorReset = consoleControl.color("reset");
         process.on("exit", () => process.stdout.write(colorReset + consoleControl.eraseLine()));
         let Console = qx.tool.compiler.Console.getInstance();
