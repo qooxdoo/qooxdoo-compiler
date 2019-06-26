@@ -1,7 +1,7 @@
 # Qooxdoo Compiler and Command Line Interface
-
-[![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/qooxdoo/qooxdoo)
-[![Build Status](https://travis-ci.org/qooxdoo/qooxdoo-compiler.svg?branch=master)](https://travis-ci.org/qooxdoo/qooxdoo-compiler)
+[![NPM Version][npm-image]][npm-url] 
+[![Gitter][gitter-image]][gitter-url]
+[![Travis Status][travis-image]][travis-url]
 
 Qooxdoo-Compiler is the new compiler and command line interface for Qooxdoo (http://qooxdoo.org) applications, written in 100% Node.JS Javascript it adds these key improvements over the standard python generator:
 
@@ -103,3 +103,10 @@ Please get stuck in to any aspects you'd like to work on - We're open to pull
 requests, and you can contact us to chat about features you'd like to see or
 help on using or extending Qooxdoo-Compiler.  The best place to talk about it is
 on Gitter at https://gitter.im/qooxdoo/qooxdoo
+
+[npm-image]: https://img.shields.io/npm/v/qooxdoo-sdk.svg
+[npm-url]: https://npmjs.org/package/@qooxdoo/compiler
+[travis-image]: https://travis-ci.org/qooxdoo/qooxdoo.svg?branch=master
+[travis-url]: https://travis-ci.org/qooxdoo/qooxdoo-compiler
+[gitter-image]: https://badges.gitter.im/qooxdoo/qooxdoo.svg
+[gitter-url]: https://gitter.im/qooxdoo/qooxdoo?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
