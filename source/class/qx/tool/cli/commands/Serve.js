@@ -118,7 +118,11 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
         app.use("/", express.static(target.getOutputDir()));
       } else {
         let s = await this.getAppQxPath();
-        app.use("/docs", express.static(path.join(path.dirname(s), "docs")));
+        if (!await fs.existsAsync(path.join(s, "docs"))) {
+          s = path.dirname(s);        
+        }   
+        app.use("/docs", express.static(path.join(s, "docs")));
+        app.use("/apps", express.static(path.join(s, "apps")));
         app.use("/", express.static(website.getTargetDir()));
         app.use("/" + target.getOutputDir(), express.static(target.getOutputDir()));
         var obj = {
