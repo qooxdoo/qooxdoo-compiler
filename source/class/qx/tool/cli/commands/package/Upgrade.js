@@ -49,6 +49,10 @@ qx.Class.define("qx.tool.cli.commands.package.Upgrade", {
           "dryrun":{
             alias: "d",
             describe: "Show result only, do not actually upgrade"
+          },
+          "prereleases": {
+            alias: "p",
+            describe: "Use prereleases if available"
           }
         },
         handler: function (argv) {
@@ -66,7 +70,14 @@ qx.Class.define("qx.tool.cli.commands.package.Upgrade", {
   members: {
     async process() {
       await this.base(arguments);
-      await (new qx.tool.cli.commands.package.Update({quiet:this.argv.quiet, verbose:this.argv.verbose})).process();
+      await (new qx.tool.cli.commands.package.Update({
+        quiet:true,
+        prereleases: this.argv.prereleases
+      })).process();
+      await (new qx.tool.cli.commands.package.List({
+        quiet:true,
+        prereleases: this.argv.prereleases
+      })).process();
       if (!this.argv.quiet) {
         console.info("Upgrading project dependencies to their latest available releases...");
       }
