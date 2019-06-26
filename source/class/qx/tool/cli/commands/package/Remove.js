@@ -48,7 +48,7 @@ qx.Class.define("qx.tool.cli.commands.package.Remove", {
           return new qx.tool.cli.commands.package.Remove(argv)
             .process()
             .catch(e => {
-              console.error(e.stack || e.message);
+              qx.tool.compiler.Console.error(e.stack || e.message);
               process.exit(1);
             });
         }
@@ -95,16 +95,16 @@ qx.Class.define("qx.tool.cli.commands.package.Remove", {
           rimraf.sync(p);
         }
         if (!this.argv.quiet) {
-          console.info(`Deleted ${found.length} entries for ${this.argv.uri}`);
+          qx.tool.compiler.Console.info(`Deleted ${found.length} entries for ${this.argv.uri}`);
         }
       } else if (this.argv.verbose) {
-        console.warn(`No entry for ${this.argv.uri}`);
+        qx.tool.compiler.Console.warn(`No entry for ${this.argv.uri}`);
       }
       data.libraries = libraries;
       fs.writeFileSync(this.getLockfilePath(), JSON.stringify(data, null, 2), "utf-8");
 
       if (this.argv.verbose) {
-        console.info(">>> Done.");
+        qx.tool.compiler.Console.info(">>> Done.");
       }
     },
 
@@ -132,7 +132,7 @@ qx.Class.define("qx.tool.cli.commands.package.Remove", {
       let manifest = await qx.tool.utils.Json.loadJsonAsync(path.join(libraryData.path, qx.tool.config.Manifest.config.fileName));
       if (!manifest || !manifest.provides || !manifest.provides.application) {
         if (this.argv.verbose) {
-          console.info(">>> No application to remove.");
+          qx.tool.compiler.Console.info(">>> No application to remove.");
         }
         return;
       }
@@ -150,7 +150,7 @@ qx.Class.define("qx.tool.cli.commands.package.Remove", {
         compileData.applications.splice(idx, 1);
 
         if (this.argv.verbose) {
-          console.info(">>> Removed application " + (app.name||app["class"]));
+          qx.tool.compiler.Console.info(">>> Removed application " + (app.name||app["class"]));
         }
         await qx.tool.utils.Json.saveJsonAsync(qx.tool.config.Compile.config.fileName, compileData);
       }

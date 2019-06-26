@@ -73,7 +73,7 @@ qx.Class.define("qx.tool.utils.Json", {
       }
       if (warnOnly) {
         const message = betterAjvErrors(schema.$id, json, ajv.errors, {format: "cli", indent: 2});
-        console.warn("JSON data does not validate against "+ schema.$id + ":\n" + message);
+        qx.tool.compiler.Console.warn("JSON data does not validate against "+ schema.$id + ":\n" + message);
         return false;
       }
       // throw fatal error

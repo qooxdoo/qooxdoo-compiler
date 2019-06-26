@@ -56,7 +56,7 @@ qx.Class.define("qx.tool.cli.commands.package.Migrate", {
           return new qx.tool.cli.commands.package.Migrate(argv)
             .process()
             .catch(e => {
-              console.error(e.stack || e.message);
+              qx.tool.compiler.Console.error(e.stack || e.message);
               process.exit(1);
             });
         }
@@ -105,7 +105,7 @@ qx.Class.define("qx.tool.cli.commands.package.Migrate", {
           needFix = true;
         } else {
           if (!this.argv.quiet) {
-            console.info("Fixing path names in the lockfile...");
+            qx.tool.compiler.Console.info("Fixing path names in the lockfile...");
           }
           this.argv.reinstall = true;
           await (new qx.tool.cli.commands.package.Upgrade(this.argv)).process();
@@ -156,7 +156,7 @@ qx.Class.define("qx.tool.cli.commands.package.Migrate", {
         }
         if (needFix) {
           if (announceOnly) {
-            console.warn("*** Manifest(s) need to be updated:\n" + s);
+            qx.tool.compiler.Console.warn("*** Manifest(s) need to be updated:\n" + s);
           } else {
             manifestModel
               .transform("info.authors", authors => {
@@ -172,7 +172,7 @@ qx.Class.define("qx.tool.cli.commands.package.Migrate", {
               .transform("info.version", version => {
                 let coerced = semver.coerce(version);
                 if (coerced === null) {
-                  console.warn(`*** Version string '${version}' could not be interpretted as semver, changing to 1.0.0`);
+                  qx.tool.compiler.Console.warn(`*** Version string '${version}' could not be interpretted as semver, changing to 1.0.0`);
                   return "1.0.0";
                 }
                 return String(coerced);
@@ -185,7 +185,7 @@ qx.Class.define("qx.tool.cli.commands.package.Migrate", {
               .unset("requires.qooxdoo-sdk");
             await manifestModel.save();
             if (!this.argv.quiet) {
-              console.info(`Updated settings in ${manifestModel.getRelativeDataPath()}.`);
+              qx.tool.compiler.Console.info(`Updated settings in ${manifestModel.getRelativeDataPath()}.`);
             }
           }
         }
@@ -201,7 +201,7 @@ qx.Class.define("qx.tool.cli.commands.package.Migrate", {
           !semver.satisfies(framework_version, framework_range)) {
           needFix = true;
           if (announceOnly) {
-            console.warn("*** Framework and/or compiler dependencies in Manifest need to be updated.");
+            qx.tool.compiler.Console.warn("*** Framework and/or compiler dependencies in Manifest need to be updated.");
           } else {
             manifestModel
               .setValue("requires.@qooxdoo/compiler", "^" + compiler_version)
@@ -210,7 +210,7 @@ qx.Class.define("qx.tool.cli.commands.package.Migrate", {
             // now model should validate
             await manifestModel.save();
             if (!this.argv.quiet) {
-              console.info(`Updated dependencies in ${manifestModel.getRelativeDataPath()}.`);
+              qx.tool.compiler.Console.info(`Updated dependencies in ${manifestModel.getRelativeDataPath()}.`);
             }
           }
         }
@@ -220,18 +220,18 @@ qx.Class.define("qx.tool.cli.commands.package.Migrate", {
       if (await fs.existsAsync(compileJsFilename)) {
         let data = await fs.readFileAsync(compileJsFilename, "utf8");
         if (data.indexOf("module.exports") < 0) {
-          console.warn("*** Your compile.js appears to be missing a `module.exports` statement - please see https://git.io/fjBqU for more details");
+          qx.tool.compiler.Console.warn("*** Your compile.js appears to be missing a `module.exports` statement - please see https://git.io/fjBqU for more details");
         }
       }
       self.migrationInProcess = false;
       if (needFix) {
         if (announceOnly) {
-          console.error(`*** Please run 'qx package migrate' to apply the changes. If you don't want this, downgrade to a previous version of the compiler.`);
+          qx.tool.compiler.Console.error(`*** Please run 'qx package migrate' to apply the changes. If you don't want this, downgrade to a previous version of the compiler.`);
           process.exit(1);
         }
-        console.info("Migration completed.");
+        qx.tool.compiler.Console.info("Migration completed.");
       } else if (!announceOnly && !this.argv.quiet) {
-        console.info("Everything is up-to-date. No migration necessary.");
+        qx.tool.compiler.Console.info("Everything is up-to-date. No migration necessary.");
       }
     }
   }

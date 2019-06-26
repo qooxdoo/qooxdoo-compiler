@@ -171,7 +171,7 @@ qx.Class.define("qx.tool.config.Abstract", {
       } catch (e) {
         let msg = `Error validating data for ${this.getRelativeDataPath()}: ${e.message}`;
         if (this.isWarnOnly()) {
-          console.warn(msg);
+          qx.tool.compiler.Console.warn(msg);
         } else {
           throw new Error(msg);
         }

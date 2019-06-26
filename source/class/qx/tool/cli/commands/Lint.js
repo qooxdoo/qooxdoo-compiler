@@ -72,7 +72,7 @@ qx.Class.define("qx.tool.cli.commands.Lint", {
           return new qx.tool.cli.commands.Lint(argv)
             .process()
             .catch(e => {
-              console.log(e.stack || e.message);
+              qx.tool.compiler.Console.log(e.stack || e.message);
               process.exit(1);
             });
         }
@@ -108,7 +108,7 @@ qx.Class.define("qx.tool.cli.commands.Lint", {
       }
       if (this.argv.config) {
         const fileConfig = linter.getConfigForFile(files[0]);
-        console.info(JSON.stringify(fileConfig, null, "  "));
+        qx.tool.compiler.Console.info(JSON.stringify(fileConfig, null, "  "));
       } else {
         let report = linter.executeOnFiles(files);
         if (this.argv.fix) {
@@ -120,22 +120,22 @@ qx.Class.define("qx.tool.cli.commands.Lint", {
           const s = formatter(report.results);
           if (this.argv.outputFile) {
             if (this.argv.verbose) {
-              console.info(`Report to be written to ${this.argv.outputFile}`);
+              qx.tool.compiler.Console.info(`Report to be written to ${this.argv.outputFile}`);
             }
             await fs.writeFileAsync(this.argv.outputFile, s, "UTF-8")
               .then(() => {
                 if (this.argv.verbose) {
-                  console.info(`Report written to ${this.argv.outputFile}`);
+                  qx.tool.compiler.Console.info(`Report written to ${this.argv.outputFile}`);
                 } 
               })
-              .catch(e => console.error(`Error writing report to ${this.argv.outputFile}:` + e.message));
+              .catch(e => qx.tool.compiler.Console.error(`Error writing report to ${this.argv.outputFile}:` + e.message));
           } else if (report.errorCount > 0 || this.argv.warnAsError) {
             throw new qx.tool.utils.Utils.UserError(s);
           } else {
-            console.info(s);
+            qx.tool.compiler.Console.info(s);
           }
         } else {
-          console.info("No errors found!");
+          qx.tool.compiler.Console.info("No errors found!");
         }
       }
     },

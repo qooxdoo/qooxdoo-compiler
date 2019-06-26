@@ -70,7 +70,7 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
           return new qx.tool.cli.commands.Serve(argv)
             .process()
             .catch(e => {
-              console.error(e.stack || e.message);
+              qx.tool.compiler.Console.error(e.stack || e.message);
               process.exit(1);
             });
         }
@@ -92,7 +92,7 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
       // build website if it hasn't been built yet.
       const website = new qx.tool.utils.Website();
       if (!await fs.existsAsync(website.getTargetDir()) || this.argv.rebuildStartpage) {
-        console.info(">>> Building startpage...");
+        qx.tool.compiler.Console.info(">>> Building startpage...");
         await website.generateSite();
         await website.compileScss();
       }
@@ -149,7 +149,7 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
             qx.tool.compiler.Console.print("qx.tool.cli.serve.webAddrInUse", config.serve.listenPort);
             process.exit(-1);
           } else {
-            console.log("Error when starting web server: " + e);
+            qx.tool.compiler.Console.log("Error when starting web server: " + e);
           }
         });
         server.listen(config.serve.listenPort, () =>
