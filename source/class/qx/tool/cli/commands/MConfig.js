@@ -115,7 +115,7 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
             let backup = filepath + ".old";
             await fs.copyFileAsync(filepath, backup);
             if (!this.argv.quiet) {
-              console.warn(`*** A backup of ${lockfile} has been saved to ${backup}, in case you need to revert to it. ***`);
+              qx.tool.compiler.Console.warn(`*** A backup of ${lockfile} has been saved to ${backup}, in case you need to revert to it. ***`);
             }
             await installer.deleteLockfile();
             for (let lib of lockfile_content.libraries) {
@@ -126,7 +126,7 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
                   await installer.installFromLocaPath(lib.path, lib.uri);
                 }
               } else if (this.argv.verbose) {
-                console.info(`>>> ${lib.uri}@${lib.repo_tag} is already installed.`);
+                qx.tool.compiler.Console.info(`>>> ${lib.uri}@${lib.repo_tag} is already installed.`);
               }
             }
             lockfile_content = await installer.getLockfileData();

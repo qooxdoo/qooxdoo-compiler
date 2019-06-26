@@ -44,7 +44,7 @@ qx.Class.define("qx.tool.cli.commands.Clean", {
           return new qx.tool.cli.commands.Clean(argv)
             .process()
             .catch(e => {
-              console.error(e.stack || e.message);
+              qx.tool.compiler.Console.error(e.stack || e.message);
               process.exit(1);
             });
         }
@@ -68,7 +68,7 @@ qx.Class.define("qx.tool.cli.commands.Clean", {
     __removePath: async function(pathToRemove) {
       if (await fs.existsAsync(pathToRemove)) {
         if (this.argv.verbose) {
-          console.info(`Removing ${pathToRemove}...`);
+          qx.tool.compiler.Console.info(`Removing ${pathToRemove}...`);
         }
         await new Promise((resolve, reject) => {
           rimraf(pathToRemove, {}, err => {

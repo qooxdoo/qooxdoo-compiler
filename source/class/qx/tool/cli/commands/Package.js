@@ -163,19 +163,19 @@ qx.Class.define("qx.tool.cli.commands.Package", {
       if (this.argv.save && manifestModel.isDirty()) {
         await manifestModel.save();
         if (this.argv.verbose) {
-          console.info(`>>> Saved dependency data to ${manifestModel.getRelativeDataPath()}`);
+          qx.tool.compiler.Console.info(`>>> Saved dependency data to ${manifestModel.getRelativeDataPath()}`);
         }
       }
       if (lockfileModel.isDirty()) {
         await lockfileModel.save();
         if (this.argv.verbose) {
-          console.info(`>>> Saved library data to ${lockfileModel.getRelativeDataPath()}`);
+          qx.tool.compiler.Console.info(`>>> Saved library data to ${lockfileModel.getRelativeDataPath()}`);
         }
       }
       if (compileConfigModel.isDirty()) {
         await compileConfigModel.save();
         if (this.argv.verbose) {
-          console.info(`>>> Saved compile config data to ${compileConfigModel.getRelativeDataPath()}`);
+          qx.tool.compiler.Console.info(`>>> Saved compile config data to ${compileConfigModel.getRelativeDataPath()}`);
         }
       }
     },
@@ -273,7 +273,7 @@ qx.Class.define("qx.tool.cli.commands.Package", {
       try {
         await fs.writeFileAsync(path, JSON.stringify(this.__cache, null, 2), "UTF-8");
       } catch (e) {
-        console.error(`Error exporting cache to ${path}:` + e.message);
+        qx.tool.compiler.Console.error(`Error exporting cache to ${path}:` + e.message);
         process.exit(1);
       }
     },

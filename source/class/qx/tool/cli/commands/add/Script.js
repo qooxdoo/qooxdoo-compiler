@@ -59,7 +59,7 @@ qx.Class.define("qx.tool.cli.commands.add.Script", {
           return new qx.tool.cli.commands.add.Script(argv)
             .process()
             .catch(e => {
-              console.error(e.stack || e.message);
+              qx.tool.compiler.Console.error(e.stack || e.message);
               process.exit(1);
             });
         }
@@ -119,7 +119,7 @@ qx.Class.define("qx.tool.cli.commands.add.Script", {
         }
       }
       // save
-      console.debug(script_list);
+      qx.tool.compiler.Console.debug(script_list);
       manifestModel
         .setValue("externalResources.script", script_list)
         .save();

@@ -80,7 +80,7 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
           return new qx.tool.cli.commands.package.Install(argv)
             .process()
             .catch(e => {
-              console.error(e.stack || e.message);
+              qx.tool.compiler.Console.error(e.stack || e.message);
               process.exit(1);
             });
         }
@@ -105,7 +105,7 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
     async install(library_uri, release_tag) {
       let installee = library_uri + (release_tag?"@"+release_tag:"");
       if (this.argv.verbose) {
-        console.info(`>>> To be installed: ${installee}`);
+        qx.tool.compiler.Console.info(`>>> To be installed: ${installee}`);
       }
       this.argv.uri= installee;
       this.argv.fromPath = false;
@@ -123,7 +123,7 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
         local_path = path.join(process.cwd(), local_path);
       }
       if (this.argv.verbose) {
-        console.info(`>>> To be installed: ${library_uri || "local libarary"} from ${local_path}`);
+        qx.tool.compiler.Console.info(`>>> To be installed: ${library_uri || "local libarary"} from ${local_path}`);
       }
       this.argv.uri = library_uri;
       this.argv.fromPath = local_path;
@@ -192,7 +192,7 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
       await this._saveConfigData();
 
       if (this.argv.verbose) {
-        console.info(">>> Done.");
+        qx.tool.compiler.Console.info(">>> Done.");
       }
     },
 
@@ -205,7 +205,7 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
       let repos_cache = this.getCache().repos;
       if (repos_cache.list.length === 0) {
         if (!this.argv.quiet) {
-          console.info(">>> Updating cache...");
+          qx.tool.compiler.Console.info(">>> Updating cache...");
         }
         this.clearCache();
         // implicit update
@@ -255,7 +255,7 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
         let cache = this.getCache();
         if (cache.compat[qooxdoo_version] === undefined) {
           if (this.argv.verbose && !this.argv.quiet) {
-            console.info(">>> Updating cache...");
+            qx.tool.compiler.Console.info(">>> Updating cache...");
           }
           await (new qx.tool.cli.commands.package.List({quiet:true, all:true})).process();
           cache = this.getCache(true);
@@ -269,7 +269,7 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
         }
       }
       if (this.argv.verbose) {
-        console.info(`>>> Installing '${uri}', release '${tag_name}' for qooxdoo version: ${qooxdoo_version}`);
+        qx.tool.compiler.Console.info(`>>> Installing '${uri}', release '${tag_name}' for qooxdoo version: ${qooxdoo_version}`);
       }
       let {download_path} = await this.__download(repo_name, tag_name);
       // iterate over contained libraries
@@ -314,7 +314,7 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
     __installFromTree: async function(uri, hash, writeToManifest) {
       let qooxdoo_version = await this.getUserQxVersion();
       if (this.argv.verbose) {
-        console.info(`>>> Installing '${uri}' from tree hash '${hash}' for qooxdoo version ${qooxdoo_version}`);
+        qx.tool.compiler.Console.info(`>>> Installing '${uri}' from tree hash '${hash}' for qooxdoo version ${qooxdoo_version}`);
       }
       let {repo_name} = this.__getUriInfo(uri);
       let {download_path} = await this.__download(repo_name, hash);
@@ -336,7 +336,7 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
     async __installFromPath(uri, dir, writeToManifest=false) {
       let qooxdoo_version = await this.getUserQxVersion();
       if (this.argv.verbose) {
-        console.info(`>>> Installing '${uri}' from '${dir}' for qooxdoo version ${qooxdoo_version}`);
+        qx.tool.compiler.Console.info(`>>> Installing '${uri}' from '${dir}' for qooxdoo version ${qooxdoo_version}`);
       }
       await this.__updateInstalledLibraryData(uri, undefined, dir, writeToManifest);
     },
@@ -386,12 +386,12 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
       if (index >= 0) {
         lockfileModel.setValue(["libraries", index], lib);
         if (this.argv.verbose) {
-          console.info(`>>> Updating already existing lockfile entry for ${info.name}, ${info.version}, installed from '${uri ? uri : local_path}'.`);
+          qx.tool.compiler.Console.info(`>>> Updating already existing lockfile entry for ${info.name}, ${info.version}, installed from '${uri ? uri : local_path}'.`);
         }
       } else {
         lockfileModel.transform("libraries", libs => libs.push(lib) && libs);
         if (this.argv.verbose) {
-          console.info(`>>> Added new lockfile entry for ${info.name}, ${info.version}, installed from '${uri ? uri : local_path}'.`);
+          qx.tool.compiler.Console.info(`>>> Added new lockfile entry for ${info.name}, ${info.version}, installed from '${uri ? uri : local_path}'.`);
         }
       }
       if (writeToManifest && !manifestModel.getValue(["requires", uri])) {
@@ -399,14 +399,14 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
       }
       let appsInstalled = await this.__installApplication(library_path);
       if (!appsInstalled && this.argv.verbose) {
-        console.info(`>>> No applications installed for ${uri}.`);
+        qx.tool.compiler.Console.info(`>>> No applications installed for ${uri}.`);
       }
       let depsInstalled = await this.__installDependenciesFromPath(library_path);
       if (!depsInstalled && this.argv.verbose) {
-        console.info(`>>> No dependencies installed for ${uri}.`);
+        qx.tool.compiler.Console.info(`>>> No dependencies installed for ${uri}.`);
       }
       if (!this.argv.quiet) {
-        console.info(`Installed ${info.name} (${uri}, ${info.version})`);
+        qx.tool.compiler.Console.info(`Installed ${info.name} (${uri}, ${info.version})`);
       }
     },
 
@@ -420,12 +420,12 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
       let manifest = await qx.tool.utils.Json.loadJsonAsync(manifest_file);
       if (!manifest.requires) {
         if (this.argv.verbose) {
-          console.info(`>>> ${manifest_file} does not contain library dependencies.`);
+          qx.tool.compiler.Console.info(`>>> ${manifest_file} does not contain library dependencies.`);
         }
         return false;
       }
       if (this.argv.verbose) {
-        console.info(`>>> Installing libraries from ${manifest_file}.`);
+        qx.tool.compiler.Console.info(`>>> Installing libraries from ${manifest_file}.`);
       }
       return this.__installDependenciesFromManifest(manifest);
     },
@@ -464,7 +464,7 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
                 break;
               }
               if (this.argv.verbose) {
-                console.info(`>>> ${lib_uri}@${version} is already installed.`);
+                qx.tool.compiler.Console.info(`>>> ${lib_uri}@${version} is already installed.`);
               }
               break;
             }
@@ -478,7 +478,7 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
               }
             }
             if (this.argv.verbose) {
-              console.info(`>>> ${lib_uri}@${lib_version} is already installed.`);
+              qx.tool.compiler.Console.info(`>>> ${lib_uri}@${lib_version} is already installed.`);
             }
           }
         }
@@ -533,7 +533,7 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
         }
       }
       if (this.argv.verbose) {
-        console.info(">>> Installed application " + (app.name||app["class"]));
+        qx.tool.compiler.Console.info(">>> Installed application " + (app.name||app["class"]));
       }
       return true;
     },
@@ -545,7 +545,7 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
      */
     __downloadLibrariesInLockfile: async function() {
       if (this.argv.verbose) {
-        console.info(`>>> Downloading libraries listed in ${qx.tool.config.Lockfile.config.fileName}...`);
+        qx.tool.compiler.Console.info(`>>> Downloading libraries listed in ${qx.tool.config.Lockfile.config.fileName}...`);
       }
       let libraries = (await this.getLockfileData()).libraries;
       for (let i = 0; i < libraries.length; i++) {
@@ -583,18 +583,18 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
       // download zip
       if (!force && dir_exists) {
         if (this.argv.verbose) {
-          console.info(`>>> Repository '${repo_name}', '${treeish}' has already been downloaded to ${download_path}. To download again, execute 'qx clean'.`);
+          qx.tool.compiler.Console.info(`>>> Repository '${repo_name}', '${treeish}' has already been downloaded to ${download_path}. To download again, execute 'qx clean'.`);
         }
       } else {
         if (this.argv.verbose) {
-          console.info(`>>> Downloading repository '${repo_name}', '${treeish}' from ${url} to ${download_path}`);
+          qx.tool.compiler.Console.info(`>>> Downloading repository '${repo_name}', '${treeish}' from ${url} to ${download_path}`);
         }
         try {
           await download(url, download_path, {extract:true, strip: 1});
         } catch (e) {
           // remove download path so that failed downloads do not result in empty folder
           if (this.argv.verbose) {
-            console.info(`>>> Download failed. Removing download folder.`);
+            qx.tool.compiler.Console.info(`>>> Download failed. Removing download folder.`);
           }
           rimraf.sync(download_path);
           throw e;

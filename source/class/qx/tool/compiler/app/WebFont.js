@@ -185,7 +185,7 @@ qx.Class.define("qx.tool.compiler.app.WebFont", {
               let codePoint = parseInt(map[key], 16);
               let glyph = font.glyphForCodePoint(codePoint);
               if (!glyph.id) {
-                console.log(`WARN: no glyph found for ${font} ${key}: ${codePoint}`);
+                qx.tool.compiler.Console.log(`WARN: no glyph found for ${font} ${key}: ${codePoint}`);
                 return;
               }
               resources["@" + this.getName() + "/" + key] = [

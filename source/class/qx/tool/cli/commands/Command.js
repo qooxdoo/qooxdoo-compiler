@@ -165,7 +165,7 @@ qx.Class.define("qx.tool.cli.commands.Command", {
               return qxpath;
             }
           } catch (e) {
-            console.warn(`Invalid manifest file ${manifestPath}.`);
+            qx.tool.compiler.Console.warn(`Invalid manifest file ${manifestPath}.`);
           }
         }
       }
@@ -252,12 +252,12 @@ qx.Class.define("qx.tool.cli.commands.Command", {
         // suppress all output unless in verbose mode
         exe.stdout.on("data", data => {
           if (this.argv.verbose) {
-            console.log(data.toString());
+            qx.tool.compiler.Console.log(data.toString());
           }
         });
         exe.stderr.on("data", data => {
           if (this.argv.verbose) {
-            console.error(data.toString());
+            qx.tool.compiler.Console.error(data.toString());
           }
         });
         exe.on("close", code => {
@@ -357,9 +357,9 @@ qx.Class.define("qx.tool.cli.commands.Command", {
         if (filesToRename.length) {
           if (annouceOnly) {
             // announce migration
-            console.warn(`*** Warning: Some metadata filenames have changed. The following files will be renamed:`);
+            qx.tool.compiler.Console.warn(`*** Warning: Some metadata filenames have changed. The following files will be renamed:`);
             for (let [newPath, oldPath] of filesToRename) {
-              console.warn(`    '${oldPath}' => '${newPath}'.`);
+              qx.tool.compiler.Console.warn(`    '${oldPath}' => '${newPath}'.`);
             }
           } else {
             // apply migration
@@ -367,10 +367,10 @@ qx.Class.define("qx.tool.cli.commands.Command", {
               try {
                 await fs.renameAsync(oldPath, newPath);
                 if (!quiet) {
-                  console.info(`Renamed '${oldPath}' to '${newPath}'.`);
+                  qx.tool.compiler.Console.info(`Renamed '${oldPath}' to '${newPath}'.`);
                 }
               } catch (e) {
-                console.error(`Renaming '${oldPath}' to '${newPath}' failed: ${e.message}.`);
+                qx.tool.compiler.Console.error(`Renaming '${oldPath}' to '${newPath}' failed: ${e.message}.`);
                 process.exit(1);
               }
             }
@@ -380,17 +380,17 @@ qx.Class.define("qx.tool.cli.commands.Command", {
       if (qx.lang.Type.isArray(replaceInFilesArr) && replaceInFilesArr.length) {
         for (let replaceInFiles of replaceInFilesArr) {
           if (annouceOnly) {
-            console.warn(`*** In the file(s) ${replaceInFiles.files}, '${replaceInFiles.from}' will be changed to '${replaceInFiles.to}'.`);
+            qx.tool.compiler.Console.warn(`*** In the file(s) ${replaceInFiles.files}, '${replaceInFiles.from}' will be changed to '${replaceInFiles.to}'.`);
             return;
           }
           try {
             let results = await replace_in_file(replaceInFiles);
             if (!quiet) {
               let files = results.filter(result => result.hasChanged).map(result => result.file);
-              console.info(`The following files were changed: ${files.join(", ")}`);
+              qx.tool.compiler.Console.info(`The following files were changed: ${files.join(", ")}`);
             }
           } catch (e) {
-            console.error(`Error replacing in files: ${e.message}`);
+            qx.tool.compiler.Console.error(`Error replacing in files: ${e.message}`);
             process.exit(1);
           }
         }

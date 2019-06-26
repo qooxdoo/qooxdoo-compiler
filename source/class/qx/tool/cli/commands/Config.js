@@ -40,7 +40,7 @@ qx.Class.define("qx.tool.cli.commands.Config", {
         var cmd = new qx.tool.cli.commands.Config(argv);
         return cmd[name](argv)
           .catch(e => {
-            console.log(e.stack || e.message);
+            qx.tool.compiler.Console.log(e.stack || e.message);
             process.exit(1);
           });
       }
@@ -88,7 +88,7 @@ qx.Class.define("qx.tool.cli.commands.Config", {
             if (await fs.existsAsync(path.join(value, "framework/Manifest.json"))) {
               value = path.join(value, "framework");
             } else {
-              console.error(`Cannot set qx.library to ${value} because there is no Manifest.json`);
+              qx.tool.compiler.Console.error(`Cannot set qx.library to ${value} because there is no Manifest.json`);
               return undefined;
             }
           }
@@ -99,6 +99,15 @@ qx.Class.define("qx.tool.cli.commands.Config", {
         desc: "Whether to write PO files with strict compatibility, i.e. include line numbers in output",
         set: async function(value) {
           return value === "true" ? true : value === "false" ? false : Boolean(value);
+        }
+      },
+      "qx.default.color": {
+        desc: "The default color for console output (eg \"white bgRed bold\")"
+      },
+      "qx.default.feedback": {
+        desc: "Default value for compiler feedback (override with --[no-]feedback)",
+        set: async function(value) {
+          return value === "true" ? true : value === "false" ? false : undefined;
         }
       }
     }
@@ -115,7 +124,7 @@ qx.Class.define("qx.tool.cli.commands.Config", {
       if (!argv.quiet) {
         let desc = this.__describe(argv.key);
         if (!desc) {
-          console.warn("Warning: Unrecognised configuration key " + argv.key);
+          qx.tool.compiler.Console.warn("Warning: Unrecognised configuration key " + argv.key);
         }
       }
     },
@@ -167,11 +176,11 @@ qx.Class.define("qx.tool.cli.commands.Config", {
       let cfg = await qx.tool.cli.ConfigDb.getInstance();
       let value = cfg.db(argv.key);
       if (argv.bare) {
-        console.log(value||"");
+        qx.tool.compiler.Console.log(value||"");
       } else if (value !== undefined) {
-        console.log(argv.key + "=" + value);
+        qx.tool.compiler.Console.log(argv.key + "=" + value);
       } else {
-        console.log(argv.key + " is not set");
+        qx.tool.compiler.Console.log(argv.key + " is not set");
       }
     },
 
@@ -207,7 +216,7 @@ qx.Class.define("qx.tool.cli.commands.Config", {
       }));
 
       // Display each value
-      console.log(columnify(keys));
+      qx.tool.compiler.Console.log(columnify(keys));
     }
   }
 });
