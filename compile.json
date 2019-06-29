@@ -53,7 +53,7 @@
       "class": "qxl.apiviewer.Application",
       "theme": "qxl.apiviewer.Theme",
       "name": "apiviewer",
-      "title": "Qooxdoo API Viewer",
+      "title": "Qooxdoo compiler API",
       "default": true,
       "environment": {
         "qx.icontheme": "Tango",
