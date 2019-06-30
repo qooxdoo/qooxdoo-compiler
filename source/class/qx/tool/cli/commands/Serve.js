@@ -52,12 +52,6 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
         describe: "Rebuil the startpage with the list of applications and additional information",
         type: "boolean",
         default: false
-      },
-      "build-devtools": {
-        alias: "D",
-        describe: "Whether to build development tools (ApiViewer, Playground, Widgetbrowser) locally",
-        type: "boolean",
-        default: false
       }
     },
 
@@ -87,8 +81,6 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
       this.argv["machine-readable"] = false;
       this.argv["feedback"] = false;
       await this.base(arguments);
-      // todo: implement handling of "build-devtools" option
-
       // build website if it hasn't been built yet.
       const website = new qx.tool.utils.Website();
       if (!await fs.existsAsync(website.getTargetDir()) || this.argv.rebuildStartpage) {
