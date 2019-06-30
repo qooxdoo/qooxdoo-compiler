@@ -83,7 +83,7 @@
   "eslintConfig": {
       "extends": "@qooxdoo/qx",
       "parserOptions": {
-         "ecmaVersion": 2018
+         "ecmaVersion": 2017
       },
       "rules": {
         "@qooxdoo/qx/no-illegal-private-usage": "error",

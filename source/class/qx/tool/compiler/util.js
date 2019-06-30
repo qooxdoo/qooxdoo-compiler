@@ -240,8 +240,8 @@ module.exports.json = {
 
   parse : function(str, reviver) {
     var t = this;
-    var PREFIX = this.__PREFIX;
-    var SUFFIX = this.__SUFFIX;
+    var PREFIX = this.__PREFIX__;
+    var SUFFIX = this.__SUFFIX__;
 
     function reviverImpl(key, value) {
       if (typeof value === "string" && value.substring(0, PREFIX.length) === PREFIX && value.slice(-SUFFIX.length) === SUFFIX) {
@@ -272,8 +272,8 @@ module.exports.json = {
 
   stringify : function(obj, replacer, space) {
     var t = this;
-    var PREFIX = this.__PREFIX;
-    var SUFFIX = this.__SUFFIX;
+    var PREFIX = this.__PREFIX__;
+    var SUFFIX = this.__SUFFIX__;
 
     function replacerImpl(key, value) {
       if (this[key] instanceof Date) {
@@ -288,8 +288,8 @@ module.exports.json = {
     return JSON.stringify(obj, replacerImpl, space);
   },
 
-  __PREFIX : "[__GRASSHOPPER__[",
-  __SUFFIX : "]]"
+  __PREFIX__ : "[__GRASSHOPPER__[",
+  __SUFFIX__ : "]]"
 };
 
 

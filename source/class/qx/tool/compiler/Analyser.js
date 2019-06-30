@@ -45,7 +45,7 @@ var log = util.createLog("analyser");
  * (and the files and library in which the class is defined, and environment
  * checks which have been used (env checks imply a dependency).
  */
-module.exports = qx.Class.define("qx.tool.compiler.Analyser", {
+qx.Class.define("qx.tool.compiler.Analyser", {
   extend: qx.core.Object,
 
   /**
@@ -150,6 +150,7 @@ module.exports = qx.Class.define("qx.tool.compiler.Analyser", {
   },
 
   members: {
+    
     __opened: false,
     __resManager: null,
     __dbFilename: null,
@@ -1324,3 +1325,5 @@ module.exports = qx.Class.define("qx.tool.compiler.Analyser", {
 
   }
 });
+
+module.exports = qx.tool.compiler.Analyser;

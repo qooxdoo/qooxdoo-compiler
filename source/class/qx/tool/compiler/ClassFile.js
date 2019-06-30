@@ -230,11 +230,11 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
     __metaDefinitions: null,
     __fatalCompileError: false,
     __translations: null,
-	__dbClassInfo: null,
-	__hasDefer: null,
+    __dbClassInfo: null,
+    __hasDefer: null,
     __definingType: null,
-	__sourceFilename: null,
-	__taskQueueDrain: null,
+    __sourceFilename: null,
+    __taskQueueDrain: null,
 	
     _onTaskQueueDrain: function() {
       var cbs = this.__taskQueueDrain;

@@ -80,7 +80,10 @@ qx.Class.define("qx.tool.compiler.targets.SourceCodeCopier", {
 
     /** {String} hash value for existing combined javascript */
     __existingHashValue: null,
-
+    
+    __generator: null,
+    __lineOffset: null,
+        
     /**
      * Returns the file the code is copied to
      */
