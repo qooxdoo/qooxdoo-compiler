@@ -6,7 +6,7 @@ const website = new qx.tool.utils.Website();
 
 (async () => {
   try {
-    await website.buildDevTools();
+    await website.buildDevtools();
   } catch (e) {
     console.error(e);
   }

@@ -219,7 +219,7 @@ qx.Class.define("qx.tool.utils.Website", {
     },
 
     /**
-     * Build the development tool apps (APIViewer, Playground, Widgetbrowser
+     * Build the development tool apps (APIViewer, Playground, Widgetbrowser, Demobrowser)
      * @return {Promise<void>}
      */
     async buildDevtools() {
@@ -232,7 +232,7 @@ qx.Class.define("qx.tool.utils.Website", {
       const opts = { noninteractive: true, namespace, theme: "indigo", icontheme: "Tango"};
       await (new qx.tool.cli.commands.Create(opts)).process();
       process.chdir(apps_path);
-      for (let name of ["apiviewer", "widgetbrowser", "playground"]) {
+      for (let name of ["apiviewer", "widgetbrowser", "playground", "demobrowser"]) {
         await (new qx.tool.cli.commands.package.Install({})).install("qooxdoo/qxl." + name);
       }
     }
