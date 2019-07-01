@@ -31,7 +31,7 @@ var log = util.createLog("translation");
 /**
  * Reads and writes .po files for translation
  */
-module.exports = qx.Class.define("qx.tool.compiler.app.Translation", {
+qx.Class.define("qx.tool.compiler.app.Translation", {
   extend: qx.core.Object,
 
   /**
@@ -74,7 +74,8 @@ module.exports = qx.Class.define("qx.tool.compiler.app.Translation", {
     __translations: null,
     __headers: null,
     __mtime: 0,
-
+    __onRead: null,
+    
     /**
      * Filename for the .po file
      * @returns {string}
@@ -421,3 +422,5 @@ module.exports = qx.Class.define("qx.tool.compiler.app.Translation", {
 
   }
 });
+
+module.exports = qx.tool.compiler.app.Translation;

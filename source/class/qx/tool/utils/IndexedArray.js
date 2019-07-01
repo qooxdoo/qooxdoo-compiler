@@ -46,6 +46,9 @@ qx.Class.define("qx.tool.utils.IndexedArray", {
 
   members: {
     __dirtySort: false,
+    __array: null,
+    __lookup: null,
+    __removed: false,
 
     /**
      * Adds an entry

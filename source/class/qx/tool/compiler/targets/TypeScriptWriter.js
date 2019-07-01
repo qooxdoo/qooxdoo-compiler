@@ -54,6 +54,9 @@ qx.Class.define("qx.tool.compiler.targets.TypeScriptWriter", {
     __outputStream: null,
     __classes: null,
     __target: null,
+    __apiCache: null,
+    __dirname: null,
+    __currentClass: null,
 
     /**
      * Generates the .d.ts file

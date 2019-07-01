@@ -17,7 +17,7 @@
  * *********************************************************************** */
 
 /* eslint no-confusing-arrow: 0 */
-
+/* eslint @qooxdoo/qx/no-illegal-private-usage: off */
 var fs = require("fs");
 var path = require("path");
 var util = require("util");
@@ -288,7 +288,7 @@ module.exports.json = {
     return JSON.stringify(obj, replacerImpl, space);
   },
 
-  __PREFIX : "[__GRASSHOPPER__[",
+  __PREFIX : "[__QOOXDOO__[",
   __SUFFIX : "]]"
 };
 

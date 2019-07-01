@@ -191,7 +191,9 @@ qx.Class.define("qx.tool.compiler.app.Application", {
     __parts: null,
     __requiredLibs: null,
     __fatalCompileErrors: null,
-
+    __classes: null,
+    __partsDeps: null,
+    
     /**
      * Checks if the application is for browser
      *
