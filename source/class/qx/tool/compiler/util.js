@@ -17,7 +17,7 @@
  * *********************************************************************** */
 
 /* eslint no-confusing-arrow: 0 */
-
+/* eslint @qooxdoo/qx/no-illegal-private-usage: off */
 var fs = require("fs");
 var path = require("path");
 var util = require("util");
@@ -240,8 +240,8 @@ module.exports.json = {
 
   parse : function(str, reviver) {
     var t = this;
-    var PREFIX = this.__PREFIX__;
-    var SUFFIX = this.__SUFFIX__;
+    var PREFIX = this.__PREFIX;
+    var SUFFIX = this.__SUFFIX;
 
     function reviverImpl(key, value) {
       if (typeof value === "string" && value.substring(0, PREFIX.length) === PREFIX && value.slice(-SUFFIX.length) === SUFFIX) {
@@ -272,8 +272,8 @@ module.exports.json = {
 
   stringify : function(obj, replacer, space) {
     var t = this;
-    var PREFIX = this.__PREFIX__;
-    var SUFFIX = this.__SUFFIX__;
+    var PREFIX = this.__PREFIX;
+    var SUFFIX = this.__SUFFIX;
 
     function replacerImpl(key, value) {
       if (this[key] instanceof Date) {
@@ -288,8 +288,8 @@ module.exports.json = {
     return JSON.stringify(obj, replacerImpl, space);
   },
 
-  __PREFIX__ : "[__GRASSHOPPER__[",
-  __SUFFIX__ : "]]"
+  __PREFIX : "[__QOOXDOO__[",
+  __SUFFIX : "]]"
 };
 
 
