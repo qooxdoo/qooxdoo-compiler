@@ -104,7 +104,7 @@ requests, and you can contact us to chat about features you'd like to see or
 help on using or extending Qooxdoo-Compiler.  The best place to talk about it is
 on Gitter at https://gitter.im/qooxdoo/qooxdoo
 
-[npm-image]: https://img.shields.io/npm/v/qooxdoo-sdk.svg
+[npm-image]: https://badge.fury.io/js/%40qooxdoo%2Fcompiler.svg
 [npm-url]: https://npmjs.org/package/@qooxdoo/compiler
 [travis-image]: https://travis-ci.org/qooxdoo/qooxdoo.svg?branch=master
 [travis-url]: https://travis-ci.org/qooxdoo/qooxdoo-compiler
