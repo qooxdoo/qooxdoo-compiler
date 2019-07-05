@@ -49,7 +49,7 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
       },
       "rebuild-startpage": {
         alias: "R",
-        describe: "Rebuil the startpage with the list of applications and additional information",
+        describe: "Rebuild the startpage with the list of applications and additional information",
         type: "boolean",
         default: false
       }
