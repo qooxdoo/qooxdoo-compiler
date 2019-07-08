@@ -844,7 +844,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
       };
 
       function isValidExtendClause(prop) {
-        if (prop.value.type == "MemberExpression" || prop.value.type == "Identifier") {
+        if (prop.value.type == "MemberExpression" || prop.value.type == "Identifier" || prop.value.type == "NullLiteral") {
           return true;
         }
         if (t.__classMeta.type === "class") {
@@ -1555,7 +1555,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
      * @param className {String} name of the class being defined
      */
     __pushMeta: function(className) {
-      var pos = className.lastIndexOf(".");
+      var pos = (className || "").lastIndexOf(".");
       var meta = {
         className: className,
         packageName: pos > -1 ? className.substring(0, pos) : null,
