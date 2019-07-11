@@ -63,7 +63,11 @@ function collapseMemberExpression(node) {
       }
       return str;
     }
-    var str = doCollapse(node.object);
+    var str;
+    if (node.object.type == "ArrayExpression")
+      str = "[]";
+    else
+      str = doCollapse(node.object);
     if (done) {
       return str;
     }
@@ -523,7 +527,12 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
      * Returns the loaded meta data
      */
     getOuterClassMeta: function() {
-      return this.__metaDefinitions[this.__className]||null;
+      let src = this.__metaDefinitions[this.__className]||null;
+      if (!src)
+        return src;
+      let dest = {};
+      Object.keys(src).filter(key => key[0] != '_').forEach(key => dest[key] = src[key]);
+      return dest;
     },
 
     /**
@@ -539,9 +548,9 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
 
       function enterFunction(path) {
         let isClassMember = t.__classMeta && 
-          t.__classMeta.topLevel && 
-          t.__classMeta.topLevel.keyName == "members" && 
-          path.parentPath.parentPath.parentPath == t.__classMeta.topLevel.path;
+          t.__classMeta._topLevel && 
+          t.__classMeta._topLevel.keyName == "members" && 
+          path.parentPath.parentPath.parentPath == t.__classMeta._topLevel.path;
         var node = path.node;
         if (node.id) {
           t.addDeclaration(node.id.name);
@@ -861,6 +870,42 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
       }
 
       var CLASS_DEF_VISITOR = {
+        ObjectMethod(path) {
+          if (path.parentPath.parentPath != this.classDefPath) {
+            path.skip();
+            path.traverse(VISITOR);
+            return;
+          }
+          var prop = path.node;
+          var keyName = getKeyName(prop.key);
+          let allowedKeys = ALLOWED_KEYS[t.__classMeta.type];
+          if (t.__classMeta.type === "class") {
+            allowedKeys = allowedKeys[t.__classMeta.isStatic ? "static" : "normal"];
+          }
+          if (allowedKeys[keyName] === undefined) {
+            t.addMarker("compiler.invalidClassDefinitionEntry", prop.value.loc, t.__classMeta.type, keyName);
+          }
+          
+          if (keyName == "defer") {
+            t.__hasDefer = true;
+            t.__inDefer = true;
+          }
+          const FUNCTION_NAMES = {
+              construct: "$$constructor",
+              destruct: "$$destructor",
+              defer: null
+          };
+          t.__classMeta.functionName = FUNCTION_NAMES[keyName]||keyName;
+          if (FUNCTION_NAMES[keyName] !== undefined) {
+            makeMeta(keyName, null, path.node);
+          }
+          path.skip();
+          enterFunction(path);
+          path.traverse(VISITOR);
+          exitFunction(path);
+          t.__classMeta.functionName = null;
+        },
+        
         ObjectProperty(path) {
           if (path.parentPath.parentPath != this.classDefPath) {
             path.skip();
@@ -900,36 +945,14 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
             path.skip();
             path.traverse(COLLECT_CLASS_NAMES_VISITOR, { collectedClasses: t.__classMeta.mixins });
             
-          } else if (keyName == "defer") {
-            t.__hasDefer = true;
-            t.__inDefer = true;
-            makeMeta("defer", null, path.node);
-            path.skip();
-            path.traverse(VISITOR);
-            t.__inDefer = false;
-            
-          } else if (keyName == "construct") {
-            t.__classMeta.functionName = "$$constructor";
-            makeMeta("construct", null, path.node);
-            path.skip();
-            path.traverse(VISITOR);
-            t.__classMeta.functionName = null;
-            
-          } else if (keyName == "destruct") {
-            t.__classMeta.functionName = "$$destructor";
-            makeMeta("destruct", null, path.node);
-            path.skip();
-            path.traverse(VISITOR);
-            t.__classMeta.functionName = null;
-            
           } else if (keyName == "members" || keyName == "statics") {
-            t.__classMeta.topLevel = {
+            t.__classMeta._topLevel = {
                 path,
                 keyName
             };
             path.skip();
             path.traverse(VISITOR);
-            t.__classMeta.topLevel = null;
+            t.__classMeta._topLevel = null;
             
           } else if (keyName == "properties") {
             path.skip();
@@ -1113,7 +1136,9 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
               AssignmentPattern: 1,
               RestElement: 1,
               ArrayPattern: 1,
-              LabeledStatement: 1
+              LabeledStatement: 1,
+              SpreadElement: 1,
+              ClassDeclaration: 1
           };
           
           // These are AST node types we expect to find at the root of the identifier, and which will
@@ -1141,7 +1166,8 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
               UpdateExpression: 1,
               SequenceExpression: 1,
               ContinueStatement: 1,
-              ForStatement: 1
+              ForStatement: 1,
+              TemplateLiteral: 1
           };
           let root = path;
           while (root) {
@@ -1153,7 +1179,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
             if (CHECK_FOR_UNDEFINED[parentType])
               return;
             if (!DO_NOT_WARN_TYPES[parentType])
-              console.warn("Undefined use test terminating at " + parentType);
+              t.addMarker("testForUnresolved", path.node.loc, parentType);
             break;
           }
           
@@ -1462,10 +1488,10 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
 
         Property(path) {
           if (t.__classMeta && 
-              t.__classMeta.topLevel && 
-              t.__classMeta.topLevel.path == path.parentPath.parentPath) {
+              t.__classMeta._topLevel && 
+              t.__classMeta._topLevel.path == path.parentPath.parentPath) {
             t.__classMeta.functionName = getKeyName(path.node.key);
-            makeMeta(t.__classMeta.topLevel.keyName, t.__classMeta.functionName, path.node);
+            makeMeta(t.__classMeta._topLevel.keyName, t.__classMeta.functionName, path.node);
             path.skip();
             path.traverse(VISITOR);
             t.__classMeta.functionName = null;
@@ -1474,10 +1500,10 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         
         ObjectMethod(path) {
           if (t.__classMeta && 
-              t.__classMeta.topLevel && 
-              t.__classMeta.topLevel.path == path.parentPath.parentPath) {
+              t.__classMeta._topLevel && 
+              t.__classMeta._topLevel.path == path.parentPath.parentPath) {
             t.__classMeta.functionName = getKeyName(path.node.key);
-            makeMeta(t.__classMeta.topLevel.keyName, t.__classMeta.functionName, path.node);
+            makeMeta(t.__classMeta._topLevel.keyName, t.__classMeta.functionName, path.node);
             path.skip();
             enterFunction(path, true);
             path.traverse(VISITOR);
@@ -1740,13 +1766,18 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
      */
     addReference: function(name, loc) {
       if (!qx.lang.Type.isArray(name)) {
-        name = [name];
+        name = name.split('.');
       }
       var scope = this.__scope;
       if (scope.vars[name[0]] !== undefined) {
         return;
       }
       
+      // Global variable or a local variable?
+      if (name[0] === "this" || name[0] === "[]" || qx.tool.compiler.ClassFile.GLOBAL_SYMBOLS[name[0]] || this.hasDeclaration(name[0])) {
+        return;
+      }
+
       let str = "";
       for (var i = 0; i < name.length; i++) {
         if (i) {
@@ -2171,26 +2202,51 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
       "qx.$$start": true,
       "qx.$$translations": true,
       "Array": true,
+      "ArrayBuffer": true,
+      "Boolean": true,
+      "Blob": true,
+      "CustomEvent": true,
       "Date": true,
       "Error": true,
+      "Event": true,
       "Function": true,
+      "Image": true,
+      "Infinity": true,
+      "Int8Array": true,
       "JSON": true,
       "Math": true,
+      "NaN": true,
       "Number": true,
       "Object": true,
       "Packages": true,
+      "Promise": true,
+      "RangeError": true,
+      "ReferenceError": true,
       "RegExp": true,
       "String": true,
+      "SyntaxError": true,
+      "TypeError": true,
       "XPathResult": true,
+      "alert": true,
       "arguments": true,
       "console": true,
+      "clearTimeout": true,
+      "decodeURIComponent": true,
       "document": true,
+      "encodeURIComponent": true,
+      "error": true,
       "eval": true,
       "history": true,
+      "isNaN": true,
+      "isFinite": true,
       "java": true,
       "navigator": true,
+      "parseInt": true,
+      "parseFloat": true,
       "performance": true,
-      "window": true
+      "setTimeout": true,
+      "window": true,
+      "undefined": true
     },
 
     /**

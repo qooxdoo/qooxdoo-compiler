@@ -165,13 +165,16 @@ test("Checks dependencies and environment settings", assert => {
        */
       .then(() => {
         var ci = db.classInfo["testapp.Issue488"];
-        var arr = ci.unresolved.map(entry => entry.name).sort();
+        var arr = ci.unresolved.map(entry => entry.name);
         var map = {};
         arr.forEach(name => map[name] = 1);
         assert.ok(Boolean(map["abc"]), "missing unresolved abc in testapp.Issue488");
         assert.ok(Boolean(map["request"]), "missing unresolved request in testapp.Issue488");
         assert.ok(Boolean(map["ro"]), "missing unresolved to in testapp.Issue488");
-        assert.ok(arr.length === 3, "unexpected unresolved " + JSON.stringify(arr) + " in testapp.Issue488");
+        assert.ok(Boolean(map["require"]), "missing unresolved require in testapp.Issue488");
+        assert.ok(Boolean(map["dontKnow"]), "missing unresolved dontKnow in testapp.Issue488");
+        assert.ok(Boolean(map["c"]), "missing unresolved dontKnow in testapp.Issue488");
+        assert.ok(arr.length === 6, "unexpected unresolved " + JSON.stringify(arr) + " in testapp.Issue488");
       })
 
       /*

@@ -49,6 +49,9 @@ qx.Class.define("testapp.Application", {
      * startup of the application
      *
      * @lint ignoreDeprecated(alert)
+     * @ignore(TEST_EXTERNAL)
+     * @ignore(SCRIPT_LOADED)
+     * @ignore(jQuery)
      */
     main: function () {
       // Call super class
