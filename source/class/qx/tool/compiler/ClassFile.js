@@ -20,6 +20,8 @@
  *
  * *********************************************************************** */
 
+/* eslint-disable padded-blocks */
+
 var fs = require("fs");
 var babelCore = require("@babel/core");
 require("@qooxdoo/framework");
@@ -64,10 +66,11 @@ function collapseMemberExpression(node) {
       return str;
     }
     var str;
-    if (node.object.type == "ArrayExpression")
+    if (node.object.type == "ArrayExpression") {
       str = "[]";
-    else
+    } else {
       str = doCollapse(node.object);
+    }
     if (done) {
       return str;
     }
@@ -210,6 +213,17 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
     };
 
     analyser.getIgnores().forEach(s => this.addIgnore(s));
+    this.__globalSymbols = {};
+    
+    const CF = qx.tool.compiler.ClassFile;
+    const addSymbols = arr => arr.forEach(s => this.__globalSymbols[s] = true);
+    if (analyser.getGlobalSymbols().length) {
+      addSymbols(analyser.getGlobalSymbols());
+    } else {
+      addSymbols(CF.QX_GLOBALS);
+      addSymbols(CF.COMMON_GLOBALS);
+      addSymbols(CF.BROWSER_GLOBALS);
+    }
   },
 
   members: {
@@ -239,6 +253,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
     __definingType: null,
     __sourceFilename: null,
     __taskQueueDrain: null,
+    __globalSymbols: null,
 	
     _onTaskQueueDrain: function() {
       var cbs = this.__taskQueueDrain;
@@ -528,10 +543,11 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
      */
     getOuterClassMeta: function() {
       let src = this.__metaDefinitions[this.__className]||null;
-      if (!src)
+      if (!src) {
         return src;
+      }
       let dest = {};
-      Object.keys(src).filter(key => key[0] != '_').forEach(key => dest[key] = src[key]);
+      Object.keys(src).filter(key => key[0] != "_").forEach(key => dest[key] = src[key]);
       return dest;
     },
 
@@ -872,9 +888,9 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
       }
       
       const FUNCTION_NAMES = {
-          construct: "$$constructor",
-          destruct: "$$destructor",
-          defer: null
+        construct: "$$constructor",
+        destruct: "$$destructor",
+        defer: null
       };
       function checkValidTopLevel(path) {
         var prop = path.node;
@@ -955,8 +971,8 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
             
           } else if (keyName == "members" || keyName == "statics") {
             t.__classMeta._topLevel = {
-                path,
-                keyName
+              path,
+              keyName
             };
             path.skip();
             path.traverse(VISITOR);
@@ -1066,16 +1082,19 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         },
 
         ExpressionStatement: {
-          enter: path => { checkJsDocDirectives(path.node); },
-          exit: path => { checkJsDocDirectives(path.node); }
+          enter: path => { 
+            checkJsDocDirectives(path.node); 
+          },
+          exit: path => { 
+            checkJsDocDirectives(path.node); 
+          }
         },
 
-        EmptyStatement: path => { checkJsDocDirectives(path.node); },
+        EmptyStatement: path => { 
+          checkJsDocDirectives(path.node); 
+        },
 
         Program: {
-          enter() {
-            debugger;
-          },
           exit(path) {
             let dbClassInfo = t._compileDbClassInfo();
             let copyInfo = {};
@@ -1123,22 +1142,21 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
           // These are AST node types which do not cause undefined references for the identifier,
           // eg ObjectProperty could be `{ abc: 1 }`, and `abc` is not undefined, it is an identifier
           const CHECK_FOR_UNDEFINED = { 
-              ObjectProperty: 1,
-              ObjectMethod: 1,
-              FunctionExpression: 1,
-              FunctionStatement: 1,
-              ArrowFunctionExpression: 1,
-              VariableDeclarator: 1,
-              FunctionDeclaration: 1,
-              CatchClause: 1,
-              FunctionDeclaration: 1,
-              AssignmentPattern: 1,
-              RestElement: 1,
-              ArrayPattern: 1,
-              LabeledStatement: 1,
-              SpreadElement: 1,
-              ClassDeclaration: 1,
-              ClassMethod: 1
+            ObjectProperty: 1,
+            ObjectMethod: 1,
+            FunctionExpression: 1,
+            FunctionStatement: 1,
+            ArrowFunctionExpression: 1,
+            VariableDeclarator: 1,
+            FunctionDeclaration: 1,
+            CatchClause: 1,
+            AssignmentPattern: 1,
+            RestElement: 1,
+            ArrayPattern: 1,
+            LabeledStatement: 1,
+            SpreadElement: 1,
+            ClassDeclaration: 1,
+            ClassMethod: 1
           };
           
           // These are AST node types we expect to find at the root of the identifier, and which will
@@ -1146,29 +1164,29 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
           //  that cause references to variables, everything else is in DO_NOT_WARN_TYPES.  But, if anything
           //  has been missed and is not in either of these lists, throw a warning so that it can be checked
           const DO_NOT_WARN_TYPES = {
-              AssignmentExpression: 1,
-              BooleanExpression: 1,
-              CallExpression: 1,
-              BinaryExpression: 1,
-              UnaryExpression: 1,
-              WhileStatement: 1,
-              IfStatement: 1,
-              NewExpression: 1,
-              ReturnStatement: 1,
-              ConditionalExpression: 1,
-              LogicalExpression: 1,
-              ForInStatement: 1,
-              ArrayExpression: 1,
-              SwitchStatement: 1,
-              SwitchCase: 1,
-              ThrowStatement: 1,
-              ExpressionStatement: 1,
-              UpdateExpression: 1,
-              SequenceExpression: 1,
-              ContinueStatement: 1,
-              ForStatement: 1,
-              TemplateLiteral: 1,
-              AwaitExpression: 1
+            AssignmentExpression: 1,
+            BooleanExpression: 1,
+            CallExpression: 1,
+            BinaryExpression: 1,
+            UnaryExpression: 1,
+            WhileStatement: 1,
+            IfStatement: 1,
+            NewExpression: 1,
+            ReturnStatement: 1,
+            ConditionalExpression: 1,
+            LogicalExpression: 1,
+            ForInStatement: 1,
+            ArrayExpression: 1,
+            SwitchStatement: 1,
+            SwitchCase: 1,
+            ThrowStatement: 1,
+            ExpressionStatement: 1,
+            UpdateExpression: 1,
+            SequenceExpression: 1,
+            ContinueStatement: 1,
+            ForStatement: 1,
+            TemplateLiteral: 1,
+            AwaitExpression: 1
           };
           let root = path;
           while (root) {
@@ -1177,10 +1195,12 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
               root = root.parentPath;
               continue;
             }
-            if (CHECK_FOR_UNDEFINED[parentType])
+            if (CHECK_FOR_UNDEFINED[parentType]) {
               return;
-            if (!DO_NOT_WARN_TYPES[parentType])
+            }
+            if (!DO_NOT_WARN_TYPES[parentType]) {
               t.addMarker("testForUnresolved", path.node.loc, parentType);
+            }
             break;
           }
           
@@ -1470,7 +1490,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
           }
 
           // Global variable or a local variable?
-          if (qx.tool.compiler.ClassFile.GLOBAL_SYMBOLS[members[0]] || t.hasDeclaration(members[0])) {
+          if (t.__globalSymbols[members[0]] || t.hasDeclaration(members[0])) {
             return;
           }
 
@@ -1703,8 +1723,9 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
       var unresolved = scope.unresolved;
 
       for (var name in old.unresolved) {
-        if (scope.vars[name])
+        if (scope.vars[name]) {
           continue;
+        }
         var entry = unresolved[name];
         if (!entry) {
           entry = unresolved[name] = {
@@ -1782,7 +1803,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
      */
     addReference: function(name, loc) {
       if (!qx.lang.Type.isArray(name)) {
-        name = name.split('.');
+        name = name.split(".");
       }
       var scope = this.__scope;
       if (scope.vars[name[0]] !== undefined) {
@@ -1790,7 +1811,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
       }
       
       // Global variable or a local variable?
-      if (name[0] === "this" || name[0] === "[]" || qx.tool.compiler.ClassFile.GLOBAL_SYMBOLS[name[0]] || this.hasDeclaration(name[0])) {
+      if (name[0] === "this" || name[0] === "[]" || this.__globalSymbols[name[0]] || this.hasDeclaration(name[0])) {
         return;
       }
 
@@ -1800,7 +1821,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
           str += ".";
         }
         str += name[i];
-        if (qx.tool.compiler.ClassFile.GLOBAL_SYMBOLS[str] || this.isIgnored(str)) {
+        if (this.__globalSymbols[str] || this.isIgnored(str)) {
           return;
         }
       }
@@ -1943,7 +1964,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
       msgId = "qx.tool.compiler." + msgId;
       
       let key = msgId;
-      let fragment = msgId.indexOf('#');
+      let fragment = msgId.indexOf("#");
       if (fragment > -1) {
         msgId = msgId.substring(0, fragment);
       } else {
@@ -2206,67 +2227,107 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
     /**
      * List of global symbols to be ignored
      */
-    GLOBAL_SYMBOLS: {
-      "qx.$$domReady": true,
-      "qx.$$environment": true,
-      "qx.$$libraries": true,
-      "qx.$$loader": true,
-      "qx.$$locales": true,
-      "qx.$$namespaceRoot": true,
-      "qx.$$resources": true,
-      "qx.$$packageData": true,
-      "qx.$$start": true,
-      "qx.$$translations": true,
-      "ActiveXObject": true,
-      "Array": true,
-      "ArrayBuffer": true,
-      "Boolean": true,
-      "Blob": true,
-      "CustomEvent": true,
-      "Date": true,
-      "DOMParser": true,
-      "Error": true,
-      "Event": true,
-      "Function": true,
-      "Image": true,
-      "Infinity": true,
-      "Int8Array": true,
-      "JSON": true,
-      "Math": true,
-      "NaN": true,
-      "Number": true,
-      "Object": true,
-      "Packages": true,
-      "Promise": true,
-      "RangeError": true,
-      "ReferenceError": true,
-      "RegExp": true,
-      "String": true,
-      "SyntaxError": true,
-      "TypeError": true,
-      "XPathResult": true,
-      "XMLHttpRequest": true,
-      "alert": true,
-      "arguments": true,
-      "console": true,
-      "clearTimeout": true,
-      "decodeURIComponent": true,
-      "document": true,
-      "encodeURIComponent": true,
-      "error": true,
-      "eval": true,
-      "history": true,
-      "isNaN": true,
-      "isFinite": true,
-      "java": true,
-      "navigator": true,
-      "parseInt": true,
-      "parseFloat": true,
-      "performance": true,
-      "setTimeout": true,
-      "window": true,
-      "undefined": true
-    },
+    QX_GLOBALS: [
+      "qx.$$domReady",
+      "qx.$$environment",
+      "qx.$$libraries",
+      "qx.$$loader",
+      "qx.$$locales",
+      "qx.$$namespaceRoot",
+      "qx.$$resources",
+      "qx.$$packageData",
+      "qx.$$start",
+      "qx.$$translations"
+    ],
+    
+    COMMON_GLOBALS: [
+      "Array",
+      "ArrayBuffer",
+      "Boolean",
+      "Date",
+      "DataView",
+      "EvalError",
+      "Error",
+      "Float32Array",
+      "Float64Array",
+      "Function",
+      "GeneratorFunction",
+      "Generator",
+      "Infinity",
+      "Int8Array",
+      "Int16Array",
+      "Int32Array",
+      "JSON",
+      "Map",
+      "Math",
+      "NaN",
+      "Number",
+      "Object",
+      "Proxy",
+      "Promise",
+      "RangeError",
+      "ReferenceError",
+      "Reflect",
+      "RegExp",
+      "Set",
+      "String",
+      "Symbol",
+      "SyntaxError",
+      "TypedArray",
+      "TypeError",
+      "Uint8Array",
+      "Uint8ClampedArray",
+      "Uint16Array",
+      "Uint32Array",
+      "URIError",
+      "WeakMap",
+      "WeakSet",
+      "arguments",
+      "console",
+      "clearTimeout",
+      "decodeURIComponent",
+      "encodeURIComponent",
+      "escape",
+      "error",
+      "eval",
+      "isNaN",
+      "isFinite",
+      "parseInt",
+      "parseFloat",
+      "setTimeout",
+      "undefined",
+      "unescape"
+    ],
+    
+    BROWSER_GLOBALS: [
+      "ActiveXObject",
+      "CustomEvent",
+      "DOMParser",
+      "Event",
+      "Image",
+      "XPathResult",
+      "XMLHttpRequest",
+      "alert",
+      "document",
+      "history",
+      "location",
+      "navigator",
+      "performance",
+      "window"
+    ],
+    
+    NODE_GLOBALS: [
+      "Blob",
+      "Module",
+      "require",
+      "module",
+      "process"
+    ],
+    
+    RHINO_GLOBALS: [
+      "Packages",
+      "java"
+    ],
 
     /**
      * These are the constants which are answered by Qooxdoo qx.core.Environment; we use out own copy here and

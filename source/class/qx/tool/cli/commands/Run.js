@@ -18,9 +18,7 @@
 
 const path = require("upath");
 const process = require("process");
-const express = require("express");
-const psTree = require('ps-tree');
-const fs = qx.tool.utils.Promisify.fs;
+const psTree = require("ps-tree");
 
 require("./Compile");
 
@@ -89,18 +87,20 @@ qx.Class.define("qx.tool.cli.commands.Run", {
       function kill(parentId) {
         return new qx.Promise((resolve, reject) => {
           psTree(parentId, function (err, children) {
-            if (err) 
-              return reject(err);
+            if (err) { 
+              reject(err);
+              return;
+            }
             children.forEach(item => {
               try {
                 process.kill(item.PID);
-              } catch(ex) {
+              } catch (ex) {
                 // Nothing
               }
             });
             try {
               process.kill(parentId);
-            } catch(ex) {
+            } catch (ex) {
               // Nothing
             }
             resolve();
@@ -111,11 +111,12 @@ qx.Class.define("qx.tool.cli.commands.Run", {
       let scriptname = path.join(target.getApplicationRoot(app), app.getName() + ".js");
       let args = config.run.arguments||"";
       let cmd = `node ${scriptname} ${args}`;
+      /* eslint-disable @qooxdoo/qx/no-illegal-private-usage */
       this.addListener("made", async e => {
         if (this.__process) {
           try {
             await kill(this.__process.pid);
-          }catch(ex) {
+          } catch (ex) {
             //Nothing
           }
           this.__process = null;
@@ -139,7 +140,6 @@ qx.Class.define("qx.tool.cli.commands.Run", {
           console.error("Application has failed: " + err);
         });        
       });
-
     }
   },
 
