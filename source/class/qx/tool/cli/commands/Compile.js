@@ -541,6 +541,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
 
       let hasExplicitDefaultApp = false;
       let defaultApp = null;
+      let allApplicationTypes = {};
       data.applications.forEach(function(appData, appIndex) {
         if (appNames && appNames.indexOf(appData.name) === -1) {
           return;
@@ -554,6 +555,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
             app[fname](appData[name]);
           }
         });
+        allApplicationTypes[app.getType()] = true;
         if (app.isBrowserApp()) {
           var setDefault;
           if (appData.writeIndexHtmlToRoot !== undefined) {
@@ -637,6 +639,21 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         });
         maker.addApplication(app);
       });
+      
+      const CF = qx.tool.compiler.ClassFile;
+      let globalSymbols = [];
+      qx.lang.Array.append(globalSymbols, CF.QX_GLOBALS);
+      qx.lang.Array.append(globalSymbols, CF.COMMON_GLOBALS);
+      if (allApplicationTypes["browser"]) {
+        qx.lang.Array.append(globalSymbols, CF.BROWSER_GLOBALS);
+      }
+      if (allApplicationTypes["node"]) {
+        qx.lang.Array.append(globalSymbols, CF.NODE_GLOBALS);
+      }
+      if (allApplicationTypes["rhino"]) {
+        qx.lang.Array.append(globalSymbols, CF.RHINO_GLOBALS);
+      }
+      maker.getAnalyser().setGlobalSymbols(globalSymbols);
 
       if (defaultApp) {
         defaultApp.setWriteIndexHtmlToRoot(true);
