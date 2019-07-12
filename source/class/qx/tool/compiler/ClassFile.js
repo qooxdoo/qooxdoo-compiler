@@ -545,17 +545,27 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         var keyName = key.type == "StringLiteral" ? key.value : key.name;
         return keyName;
       }
+      
+      function checkJsDocDirectives(node) {
+        var jsdoc = getJsDoc(node.leadingComments);
+        if (jsdoc && jsdoc["@ignore"]) {
+          jsdoc["@ignore"].forEach(elem => t.addIgnore(elem.body));
+        }
+        return jsdoc;
+      }
 
-      function enterFunction(path, node) {
-        node = node||path.node;
+      function enterFunction(path, node, idNode) {
+        node = node || path.node;
+        idNode = idNode || node.id || null;
+        
         let isClassMember = t.__classMeta && 
           t.__classMeta._topLevel && 
           t.__classMeta._topLevel.keyName == "members" && 
           path.parentPath.parentPath.parentPath == t.__classMeta._topLevel.path;
-        if (node.id) {
-          t.addDeclaration(node.id.name);
+        if (idNode) {
+          t.addDeclaration(idNode.name);
         }
-        t.pushScope(node.id ? node.id.name : null, node, isClassMember);
+        t.pushScope(idNode ? idNode.name : null, node, isClassMember);
         node.params.forEach(param => {
           if (param.type == "AssignmentPattern") {
             t.addDeclaration(param.left.name);
@@ -567,10 +577,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
             qx.tool.compiler.Console.warn("Unexpected type of parameter " + param.type + " at " + node.loc.start.line + "," + node.loc.start.column);
           }
         });
-        var jsdoc = getJsDoc(node.leadingComments);
-        if (jsdoc && jsdoc["@ignore"]) {
-          jsdoc["@ignore"].forEach(elem => t.addIgnore(elem.body));
-        }
+        checkJsDocDirectives(node);
       }
 
       function exitFunction(path, node) {
@@ -579,8 +586,8 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
       }
 
       var FUNCTION_DECL_OR_EXPR = {
-        enter: enterFunction,
-        exit: exitFunction
+        enter: path => enterFunction(path),
+        exit: path => exitFunction(path)
       };
 
       function getJsDoc(comment) {
@@ -626,13 +633,8 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         meta.location = node.loc;
 
         if (node.leadingComments) {
-          var jsdoc = getJsDoc(node.leadingComments);
+          let jsdoc = checkJsDocDirectives(node);
           if (jsdoc) {
-            if (jsdoc["@ignore"]) {
-              jsdoc["@ignore"].forEach(function(elem) {
-                t.addIgnore(elem.body);
-              });
-            }
             meta.jsdoc = jsdoc;
           }
         }
@@ -1064,21 +1066,16 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         },
 
         ExpressionStatement: {
-          enter(path) {
-            var jsdoc = getJsDoc(path.node.leadingComments);
-            if (jsdoc && jsdoc["@ignore"]) {
-              jsdoc["@ignore"].forEach(elem => t.addIgnore(elem.body));
-            }
-          },
-          exit(path) {
-            var jsdoc = getJsDoc(path.node.leadingComments);
-            if (jsdoc && jsdoc["@ignore"]) {
-              jsdoc["@ignore"].forEach(elem => t.removeIgnore(elem.body));
-            }
-          }
+          enter: path => { checkJsDocDirectives(path.node); },
+          exit: path => { checkJsDocDirectives(path.node); }
         },
 
+        EmptyStatement: path => { checkJsDocDirectives(path.node); },
+
         Program: {
+          enter() {
+            debugger;
+          },
           exit(path) {
             let dbClassInfo = t._compileDbClassInfo();
             let copyInfo = {};
@@ -1140,7 +1137,8 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
               ArrayPattern: 1,
               LabeledStatement: 1,
               SpreadElement: 1,
-              ClassDeclaration: 1
+              ClassDeclaration: 1,
+              ClassMethod: 1
           };
           
           // These are AST node types we expect to find at the root of the identifier, and which will
@@ -1169,7 +1167,8 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
               SequenceExpression: 1,
               ContinueStatement: 1,
               ForStatement: 1,
-              TemplateLiteral: 1
+              TemplateLiteral: 1,
+              AwaitExpression: 1
           };
           let root = path;
           while (root) {
@@ -1519,6 +1518,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         ArrowFunctionExpression: FUNCTION_DECL_OR_EXPR,
 
         VariableDeclaration(path) {
+          checkJsDocDirectives(path.node);
           path.node.declarations.forEach(decl => {
             // Simple `var x` form
             if (decl.id.type == "Identifier") {
@@ -1541,6 +1541,20 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
               decl.id.elements.forEach(prop => prop && t.addDeclaration(prop.name));
             }
           });
+        },
+        
+        ClassDeclaration(path) {
+          t.addDeclaration(path.node.id.name);
+        },
+        
+        // Note that AST Explorer calls this MethodDefinition, not ClassMethod
+        ClassMethod: {
+          enter(path) {
+            enterFunction(path, path.node.value, path.node.key);
+          },
+          exit(path) {
+            exitFunction(path, path.node.value, path.node.key);
+          }
         },
 
         CatchClause: {
@@ -2203,12 +2217,14 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
       "qx.$$packageData": true,
       "qx.$$start": true,
       "qx.$$translations": true,
+      "ActiveXObject": true,
       "Array": true,
       "ArrayBuffer": true,
       "Boolean": true,
       "Blob": true,
       "CustomEvent": true,
       "Date": true,
+      "DOMParser": true,
       "Error": true,
       "Event": true,
       "Function": true,
@@ -2229,6 +2245,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
       "SyntaxError": true,
       "TypeError": true,
       "XPathResult": true,
+      "XMLHttpRequest": true,
       "alert": true,
       "arguments": true,
       "console": true,
