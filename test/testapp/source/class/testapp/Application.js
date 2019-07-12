@@ -49,6 +49,9 @@ qx.Class.define("testapp.Application", {
      * startup of the application
      *
      * @lint ignoreDeprecated(alert)
+     * @ignore(TEST_EXTERNAL)
+     * @ignore(SCRIPT_LOADED)
+     * @ignore(jQuery)
      */
     main: function () {
       // Call super class
@@ -169,6 +172,7 @@ qx.Class.define("testapp.Application", {
       new testapp.Issue240();
       new testapp.Issue186();
       new testapp.Issue461().unusedDestructedArray();
+      new testapp.Issue488();
       
       qx.core.Assert.assertTrue(TEST_EXTERNAL === "loaded");
       qx.core.Assert.assertTrue(SCRIPT_LOADED === true);

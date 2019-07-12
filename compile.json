@@ -53,7 +53,7 @@
       "class": "qxl.apiviewer.Application",
       "theme": "qxl.apiviewer.Theme",
       "name": "apiviewer",
-      "title": "Qooxdoo API Viewer",
+      "title": "Qooxdoo compiler API",
       "default": true,
       "environment": {
         "qx.icontheme": "Tango",
@@ -83,9 +83,10 @@
   "eslintConfig": {
       "extends": "@qooxdoo/qx",
       "parserOptions": {
-         "ecmaVersion": 2018
+         "ecmaVersion": 2017
       },
       "rules": {
+        "@qooxdoo/qx/no-illegal-private-usage": "error",
         "indent": [
            "error",
            2,

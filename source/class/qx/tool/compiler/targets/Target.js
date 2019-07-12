@@ -31,7 +31,7 @@ const path = require("upath");
  * A target for building an application, instances of Target control the generation of transpiled
  * source and collection into an application, including minifying etc
  */
-module.exports = qx.Class.define("qx.tool.compiler.targets.Target", {
+qx.Class.define("qx.tool.compiler.targets.Target", {
   extend: qx.core.Object,
 
   /**
@@ -981,3 +981,5 @@ module.exports = qx.Class.define("qx.tool.compiler.targets.Target", {
     }
   }
 });
+
+module.exports = qx.tool.compiler.targets.Target;

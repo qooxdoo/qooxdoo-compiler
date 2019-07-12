@@ -44,6 +44,11 @@ qx.Class.define("qx.tool.cli.Watch", {
     __runningPromise: null,
     __applications: null,
     __watcherReady: false,
+    __maker: null,
+    __stats: null,
+    __making: null,
+    __outOfDate: null,
+    __timerId: null,
 
     start: function() {
       if (this.__runningPromise) {

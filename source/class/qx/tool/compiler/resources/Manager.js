@@ -38,7 +38,7 @@ require("./ScssHandler");
  * Analyses library resources, collecting information into a cached database
  * file
  */
-module.exports = qx.Class.define("qx.tool.compiler.resources.Manager", {
+qx.Class.define("qx.tool.compiler.resources.Manager", {
   extend: qx.core.Object,
 
   /**
@@ -77,6 +77,7 @@ module.exports = qx.Class.define("qx.tool.compiler.resources.Manager", {
     /** {Map{String,Library}} Lookup of libraries, indexed by resource folder URI */
     __librariesByResourceFolderUri: null,
 
+    __handlers: null,
 
     /**
      * Loads the cached database
@@ -459,3 +460,5 @@ module.exports = qx.Class.define("qx.tool.compiler.resources.Manager", {
     }
   }
 });
+
+module.exports = qx.tool.compiler.resources.Manager;

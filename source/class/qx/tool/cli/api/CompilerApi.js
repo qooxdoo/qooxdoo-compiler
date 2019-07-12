@@ -50,6 +50,7 @@ qx.Class.define("qx.tool.cli.api.CompilerApi", {
   
   members: {
     __libraryApis: null,
+    __command: null,
     
     /**
      * Loads the configuration data

@@ -99,9 +99,9 @@ qx.Class.define("qx.tool.cli.commands.Lint", {
       let linter = new CLIEngine({
         cache: this.argv.cache || false,
         baseConfig: lintOptions,
-        useEslintrc: useEslintrc
+        useEslintrc: useEslintrc,
+        fix: this.argv.fix
       });
-      linter.options.fix = this.argv.fix;
       let files = this.argv.files || [];
       if (files.length === 0) {
         files.push("source/class/");

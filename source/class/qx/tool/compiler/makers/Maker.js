@@ -32,7 +32,7 @@ const mkParentPath = util.promisify(util.mkParentPath);
 /**
  * Base class for makers; does not include anything about targets, locales, etc (see AbstractAppMaker)
  */
-module.exports = qx.Class.define("qx.tool.compiler.makers.Maker", {
+qx.Class.define("qx.tool.compiler.makers.Maker", {
   extend: qx.core.Object,
   type: "abstract",
 
@@ -235,3 +235,5 @@ module.exports = qx.Class.define("qx.tool.compiler.makers.Maker", {
 
   }
 });
+
+module.exports = qx.tool.compiler.makers.Maker;

@@ -41,6 +41,8 @@ qx.Class.define("qx.tool.compiler.resources.Handler", {
   },
   
   members: {
+    __matchEx: null,
+
     /**
      * Called to determine whether this handler is appropriate for the given filename;
      * default implementation is to check the RegEx passed to the constructor

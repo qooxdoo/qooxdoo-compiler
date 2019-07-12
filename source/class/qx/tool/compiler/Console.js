@@ -178,6 +178,7 @@ qx.Class.define("qx.tool.compiler.Console", {
       "qx.tool.compiler.translate.invalidMessageIds": "Cannot interpret message ID %1, %2",
       "qx.tool.compiler.translate.invalidMessageIds3": "Cannot interpret message ID %1, %2, %3",
 
+      "qx.tool.compiler.testForUnresolved": "Unexpected termination when testing for unresolved symbols, node type %1",
       "qx.tool.compiler.defer.unsafe": "Unsafe use of 'defer' method to access external class: %1",
       "qx.tool.compiler.symbol.unresolved": "Unresolved use of symbol %1",
 
