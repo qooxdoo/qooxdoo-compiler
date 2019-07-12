@@ -473,7 +473,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         } else {
           dbClassInfo.unresolved.push(item);
           for (var j = 0; j < item.locations.length; j++) {
-            t.addMarker("symbol.unresolved", item.locations[j].start, name);
+            t.addMarker("symbol.unresolved#" + name, item.locations[j].start, name);
           }
         }
       }
@@ -537,7 +537,11 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         return keyName;
       }
 
-      function enterFunction(path, isClassMember) {
+      function enterFunction(path) {
+        let isClassMember = t.__classMeta && 
+          t.__classMeta.topLevel && 
+          t.__classMeta.topLevel.keyName == "members" && 
+          path.parentPath.parentPath.parentPath == t.__classMeta.topLevel.path;
         var node = path.node;
         if (node.id) {
           t.addDeclaration(node.id.name);
@@ -857,7 +861,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
       }
 
       var CLASS_DEF_VISITOR = {
-        Property(path) {
+        ObjectProperty(path) {
           if (path.parentPath.parentPath != this.classDefPath) {
             path.skip();
             path.traverse(VISITOR);
@@ -881,17 +885,21 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
               t.__classMeta.superClass = collapseMemberExpression(prop.value);
               t._requireClass(t.__classMeta.superClass, { location: path.node.loc });
             }
+            
           } else if (keyName == "type") {
             var type = prop.value.value;
             t.__classMeta.isAbstract = type === "abstract";
             t.__classMeta.isStatic = type === "static";
             t.__classMeta.isSingleton = type === "singleton";
+            
           } else if (keyName == "implement") {
             path.skip();
             path.traverse(COLLECT_CLASS_NAMES_VISITOR, { collectedClasses: t.__classMeta.interfaces });
+            
           } else if (keyName == "include") {
             path.skip();
             path.traverse(COLLECT_CLASS_NAMES_VISITOR, { collectedClasses: t.__classMeta.mixins });
+            
           } else if (keyName == "defer") {
             t.__hasDefer = true;
             t.__inDefer = true;
@@ -899,85 +907,30 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
             path.skip();
             path.traverse(VISITOR);
             t.__inDefer = false;
+            
           } else if (keyName == "construct") {
             t.__classMeta.functionName = "$$constructor";
             makeMeta("construct", null, path.node);
             path.skip();
             path.traverse(VISITOR);
             t.__classMeta.functionName = null;
+            
           } else if (keyName == "destruct") {
             t.__classMeta.functionName = "$$destructor";
             makeMeta("destruct", null, path.node);
             path.skip();
             path.traverse(VISITOR);
             t.__classMeta.functionName = null;
-          } else if (keyName == "statics") {
-            if (this.__className == "qx.core.Environment") {
-              var checks = this.__findProperty(prop.value.properties, "_checksMap");
-              var props = checks.value.properties;
-              for (var j = 0; j < props.length; j++) {
-                this.__analyser.setEnvironmentCheck(props[j].key.value, props[j].value.value);
-              }
-            }
-            var staticsPath = path;
+            
+          } else if (keyName == "members" || keyName == "statics") {
+            t.__classMeta.topLevel = {
+                path,
+                keyName
+            };
             path.skip();
-            path.traverse({
-              Property(path) {
-                path.skip();
-                if (path.parentPath.parentPath != staticsPath) {
-                  path.traverse(VISITOR);
-                  return;
-                }
-                t.__classMeta.functionName = getKeyName(path.node.key);
-                makeMeta("statics", t.__classMeta.functionName, path.node);
-                path.traverse(VISITOR);
-                t.__classMeta.functionName = null;
-              },
-              FunctionDeclaration: FUNCTION_DECL_OR_EXPR,
-              FunctionExpression: FUNCTION_DECL_OR_EXPR,
-              ArrowFunctionExpression: FUNCTION_DECL_OR_EXPR
-            });
-          } else if (keyName == "members") {
-            var membersPath = path;
-            path.skip();
-            path.traverse({
-              Property(path) {
-                path.skip();
-                if (path.parentPath.parentPath != membersPath) {
-                  path.traverse(VISITOR);
-                  return;
-                }
-                t.__classMeta.functionName = getKeyName(path.node.key);
-                makeMeta("members", t.__classMeta.functionName, path.node);
-                path.traverse(VISITOR);
-                t.__classMeta.functionName = null;
-              },
-              ObjectMethod(path) {
-                path.skip();
-                if (path.parentPath.parentPath != membersPath) {
-                  path.traverse(VISITOR);
-                  return;
-                }
-                t.__classMeta.functionName = getKeyName(path.node.key);
-                makeMeta("members", t.__classMeta.functionName, path.node);
-                enterFunction(path, true);
-                path.traverse(VISITOR);
-                exitFunction(path);
-                t.__classMeta.functionName = null;
-              },
-              FunctionDeclaration: {
-                enter: path => enterFunction(path, path.parentPath.parentPath == membersPath),
-                exit: exitFunction
-              },
-              FunctionExpression: {
-                enter: path => enterFunction(path, path.parentPath.parentPath == membersPath),
-                exit: exitFunction
-              },
-              ArrowFunctionExpression: {
-                enter: path => enterFunction(path, path.parentPath.parentPath == membersPath),
-                exit: exitFunction
-              }
-            });
+            path.traverse(VISITOR);
+            t.__classMeta.topLevel = null;
+            
           } else if (keyName == "properties") {
             path.skip();
             if (!prop.value.properties) {
@@ -1007,6 +960,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
               });
             }
             path.traverse(VISITOR);
+            
           } else if (keyName == "events") {
             path.skip();
             if (prop.value.properties) {
@@ -1018,6 +972,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
               });
             }
             path.traverse(VISITOR);
+            
           } else if (keyName == "aliases") {
             path.skip();
             if (!prop.value.properties) {
@@ -1031,6 +986,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
                 meta.aliasMap[aliasName] = aliasValue;
               });
             }
+            
           } else if (keyName == "meta") {
             path.skip();
             if (!prop.value.properties) {
@@ -1045,6 +1001,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
               });
             }
             path.traverse(VISITOR);
+            
           } else {
             path.skip();
             path.traverse(VISITOR);
@@ -1138,6 +1095,74 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
 
             path.node.body.splice(0, path.node.body.length, rootFn);
           }
+        },
+        
+        Identifier(path) {
+          // These are AST node types which do not cause undefined references for the identifier,
+          // eg ObjectProperty could be `{ abc: 1 }`, and `abc` is not undefined, it is an identifier
+          const CHECK_FOR_UNDEFINED = { 
+              ObjectProperty: 1,
+              ObjectMethod: 1,
+              FunctionExpression: 1,
+              FunctionStatement: 1,
+              ArrowFunctionExpression: 1,
+              VariableDeclarator: 1,
+              FunctionDeclaration: 1,
+              CatchClause: 1,
+              FunctionDeclaration: 1,
+              AssignmentPattern: 1,
+              RestElement: 1,
+              ArrayPattern: 1,
+              LabeledStatement: 1
+          };
+          
+          // These are AST node types we expect to find at the root of the identifier, and which will
+          //  not trigger a warning.  The idea is that all of the types in CHECK_FOR_UNDEFINED are types
+          //  that cause references to variables, everything else is in DO_NOT_WARN_TYPES.  But, if anything
+          //  has been missed and is not in either of these lists, throw a warning so that it can be checked
+          const DO_NOT_WARN_TYPES = {
+              AssignmentExpression: 1,
+              BooleanExpression: 1,
+              CallExpression: 1,
+              BinaryExpression: 1,
+              UnaryExpression: 1,
+              WhileStatement: 1,
+              IfStatement: 1,
+              NewExpression: 1,
+              ReturnStatement: 1,
+              ConditionalExpression: 1,
+              LogicalExpression: 1,
+              ForInStatement: 1,
+              ArrayExpression: 1,
+              SwitchStatement: 1,
+              SwitchCase: 1,
+              ThrowStatement: 1,
+              ExpressionStatement: 1,
+              UpdateExpression: 1,
+              SequenceExpression: 1,
+              ContinueStatement: 1,
+              ForStatement: 1
+          };
+          let root = path;
+          while (root) {
+            let parentType = root.parentPath.node.type;
+            if (parentType == "MemberExpression") {
+              root = root.parentPath;
+              continue;
+            }
+            if (CHECK_FOR_UNDEFINED[parentType])
+              return;
+            if (!DO_NOT_WARN_TYPES[parentType])
+              console.warn("Undefined use test terminating at " + parentType);
+            break;
+          }
+          
+          let name = collapseMemberExpression(root.node);
+          if (name.startsWith("(")) {
+            return;
+          }
+          let members = name.split(".");
+          t.addReference(members, root.node.loc);
         },
 
         CallExpression: {
@@ -1435,6 +1460,32 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
           }
         },
 
+        Property(path) {
+          if (t.__classMeta && 
+              t.__classMeta.topLevel && 
+              t.__classMeta.topLevel.path == path.parentPath.parentPath) {
+            t.__classMeta.functionName = getKeyName(path.node.key);
+            makeMeta(t.__classMeta.topLevel.keyName, t.__classMeta.functionName, path.node);
+            path.skip();
+            path.traverse(VISITOR);
+            t.__classMeta.functionName = null;
+          }
+        },
+        
+        ObjectMethod(path) {
+          if (t.__classMeta && 
+              t.__classMeta.topLevel && 
+              t.__classMeta.topLevel.path == path.parentPath.parentPath) {
+            t.__classMeta.functionName = getKeyName(path.node.key);
+            makeMeta(t.__classMeta.topLevel.keyName, t.__classMeta.functionName, path.node);
+            path.skip();
+            enterFunction(path, true);
+            path.traverse(VISITOR);
+            exitFunction(path);
+            t.__classMeta.functionName = null;
+          }
+        },
+        
         FunctionDeclaration: FUNCTION_DECL_OR_EXPR,
         FunctionExpression: FUNCTION_DECL_OR_EXPR,
         ArrowFunctionExpression: FUNCTION_DECL_OR_EXPR,
@@ -1594,6 +1645,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
       this.__scope = {
         functionName: functionName,
         parent: this.__scope,
+        loc: node.loc,
         vars: {},
         unresolved: {},
         isClassMember: Boolean(isClassMember)
@@ -1609,6 +1661,8 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
       var unresolved = scope.unresolved;
 
       for (var name in old.unresolved) {
+        if (scope.vars[name])
+          continue;
         var entry = unresolved[name];
         if (!entry) {
           entry = unresolved[name] = {
@@ -1685,7 +1739,15 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
      * @param loc
      */
     addReference: function(name, loc) {
-      var str = "";
+      if (!qx.lang.Type.isArray(name)) {
+        name = [name];
+      }
+      var scope = this.__scope;
+      if (scope.vars[name[0]] !== undefined) {
+        return;
+      }
+      
+      let str = "";
       for (var i = 0; i < name.length; i++) {
         if (i) {
           str += ".";
@@ -1695,12 +1757,8 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
           return;
         }
       }
-      name = name.join(".");
+      name = str;
       if (name == this.__className || name.startsWith(this.__className + ".") || name.startsWith("(")) {
-        return;
-      }
-      var scope = this.__scope;
-      if (scope.vars[name] !== undefined) {
         return;
       }
 
@@ -1836,17 +1894,24 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
      */
     addMarker: function(msgId, pos) {
       msgId = "qx.tool.compiler." + msgId;
-
-      // Give each marker a unique key based on msgId and the line; use this to suppress
-      //  multiple markers
-      let key = msgId + "#";
-      if (pos) {
-        if (pos.line) {
-          key += pos.line;
-        } else if (pos.start && pos.start.line) {
-          key += pos.start.line;
+      
+      let key = msgId;
+      let fragment = msgId.indexOf('#');
+      if (fragment > -1) {
+        msgId = msgId.substring(0, fragment);
+      } else {
+        // Give each marker a unique key based on msgId and the line; use this to suppress
+        //  multiple markers
+        key += "#";
+        if (pos) {
+          if (pos.line) {
+            key += pos.line;
+          } else if (pos.start && pos.start.line) {
+            key += pos.start.line;
+          }
         }
       }
+      
       if (this.__haveMarkersFor[key]) {
         return;
       }
