@@ -546,12 +546,12 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         return keyName;
       }
 
-      function enterFunction(path) {
+      function enterFunction(path, node) {
+        node = node||path.node;
         let isClassMember = t.__classMeta && 
           t.__classMeta._topLevel && 
           t.__classMeta._topLevel.keyName == "members" && 
           path.parentPath.parentPath.parentPath == t.__classMeta._topLevel.path;
-        var node = path.node;
         if (node.id) {
           t.addDeclaration(node.id.name);
         }
@@ -573,8 +573,8 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         }
       }
 
-      function exitFunction(path) {
-        var node = path.node;
+      function exitFunction(path, node) {
+        node = node||path.node;
         t.popScope(node);
       }
 
@@ -868,6 +868,38 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         }
         return false;
       }
+      
+      const FUNCTION_NAMES = {
+          construct: "$$constructor",
+          destruct: "$$destructor",
+          defer: null
+      };
+      function checkValidTopLevel(path) {
+        var prop = path.node;
+        var keyName = getKeyName(prop.key);
+        let allowedKeys = ALLOWED_KEYS[t.__classMeta.type];
+        if (t.__classMeta.type === "class") {
+          allowedKeys = allowedKeys[t.__classMeta.isStatic ? "static" : "normal"];
+        }
+        if (allowedKeys[keyName] === undefined) {
+          t.addMarker("compiler.invalidClassDefinitionEntry", prop.value.loc, t.__classMeta.type, keyName);
+        }
+      }
+      function handleTopLevelMethods(path, keyName, functionNode) {
+        if (keyName == "defer") {
+          t.__hasDefer = true;
+          t.__inDefer = true;
+        }
+        t.__classMeta.functionName = FUNCTION_NAMES[keyName]||keyName;
+        if (FUNCTION_NAMES[keyName] !== undefined) {
+          makeMeta(keyName, null, functionNode);
+        }
+        path.skip();
+        enterFunction(path, functionNode);
+        path.traverse(VISITOR);
+        exitFunction(path, functionNode);
+        t.__classMeta.functionName = null;
+      }
 
       var CLASS_DEF_VISITOR = {
         ObjectMethod(path) {
@@ -876,34 +908,9 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
             path.traverse(VISITOR);
             return;
           }
-          var prop = path.node;
-          var keyName = getKeyName(prop.key);
-          let allowedKeys = ALLOWED_KEYS[t.__classMeta.type];
-          if (t.__classMeta.type === "class") {
-            allowedKeys = allowedKeys[t.__classMeta.isStatic ? "static" : "normal"];
-          }
-          if (allowedKeys[keyName] === undefined) {
-            t.addMarker("compiler.invalidClassDefinitionEntry", prop.value.loc, t.__classMeta.type, keyName);
-          }
-          
-          if (keyName == "defer") {
-            t.__hasDefer = true;
-            t.__inDefer = true;
-          }
-          const FUNCTION_NAMES = {
-              construct: "$$constructor",
-              destruct: "$$destructor",
-              defer: null
-          };
-          t.__classMeta.functionName = FUNCTION_NAMES[keyName]||keyName;
-          if (FUNCTION_NAMES[keyName] !== undefined) {
-            makeMeta(keyName, null, path.node);
-          }
-          path.skip();
-          enterFunction(path);
-          path.traverse(VISITOR);
-          exitFunction(path);
-          t.__classMeta.functionName = null;
+          var keyName = getKeyName(path.node.key);
+          checkValidTopLevel(path);
+          handleTopLevelMethods(path, keyName, path.node);
         },
         
         ObjectProperty(path) {
@@ -914,14 +921,13 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
           }
           var prop = path.node;
           var keyName = getKeyName(prop.key);
-          let allowedKeys = ALLOWED_KEYS[t.__classMeta.type];
-          if (t.__classMeta.type === "class") {
-            allowedKeys = allowedKeys[t.__classMeta.isStatic ? "static" : "normal"];
+          checkValidTopLevel(path);
+          
+          if (FUNCTION_NAMES[keyName] !== undefined) {
+            handleTopLevelMethods(path, keyName, path.node.value);
+            return;
           }
-          if (allowedKeys[keyName] === undefined) {
-            t.addMarker("compiler.invalidClassDefinitionEntry", prop.value.loc, t.__classMeta.type, keyName);
-          }
-
+          
           if (keyName == "extend") {
             if (!isValidExtendClause(prop)) {
               t.addMarker("compiler.invalidExtendClause", prop.value.loc);
@@ -1023,10 +1029,6 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
                 meta.themeMetaMap[key] = value;
               });
             }
-            path.traverse(VISITOR);
-            
-          } else {
-            path.skip();
             path.traverse(VISITOR);
           }
         }
@@ -1505,7 +1507,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
             t.__classMeta.functionName = getKeyName(path.node.key);
             makeMeta(t.__classMeta._topLevel.keyName, t.__classMeta.functionName, path.node);
             path.skip();
-            enterFunction(path, true);
+            enterFunction(path);
             path.traverse(VISITOR);
             exitFunction(path);
             t.__classMeta.functionName = null;
