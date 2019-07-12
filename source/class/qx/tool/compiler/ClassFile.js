@@ -562,10 +562,42 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         return keyName;
       }
       
-      function checkJsDocDirectives(node) {
+      function checkNodeJsDocDirectives(node) {
         var jsdoc = getJsDoc(node.leadingComments);
-        if (jsdoc && jsdoc["@ignore"]) {
-          jsdoc["@ignore"].forEach(elem => t.addIgnore(elem.body));
+        if (jsdoc) {
+          checkJsDocDirectives(jsdoc, node.loc);
+        }
+        return jsdoc;
+      }
+
+      function checkJsDocDirectives(jsdoc, loc) {
+        if (!jsdoc) {
+          return;
+        }
+        if (jsdoc["@use"]) {
+          jsdoc["@use"].forEach(function(elem) {
+            t._requireClass(elem.body, { where: "use", load: false, location: loc });
+          });
+        }
+        if (jsdoc["@require"]) {
+          jsdoc["@require"].forEach(function(elem) {
+            t._requireClass(elem.body, { where: "require", load: false, location: loc });
+          });
+        }
+        if (jsdoc["@optional"]) {
+          jsdoc["@optional"].forEach(function(elem) {
+            t.addIgnore(elem.body);
+          });
+        }
+        if (jsdoc["@ignore"]) {
+          jsdoc["@ignore"].forEach(function(elem) {
+            t.addIgnore(elem.body);
+          });
+        }
+        if (jsdoc["@asset"]) {
+          jsdoc["@asset"].forEach(function(elem) {
+            t._requireAsset(elem.body);
+          });
         }
         return jsdoc;
       }
@@ -593,7 +625,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
             qx.tool.compiler.Console.warn("Unexpected type of parameter " + param.type + " at " + node.loc.start.line + "," + node.loc.start.column);
           }
         });
-        checkJsDocDirectives(node);
+        checkNodeJsDocDirectives(node);
       }
 
       function exitFunction(path, node) {
@@ -649,7 +681,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         meta.location = node.loc;
 
         if (node.leadingComments) {
-          let jsdoc = checkJsDocDirectives(node);
+          let jsdoc = checkNodeJsDocDirectives(node);
           if (jsdoc) {
             meta.jsdoc = jsdoc;
           }
@@ -1083,15 +1115,15 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
 
         ExpressionStatement: {
           enter: path => { 
-            checkJsDocDirectives(path.node); 
+            checkNodeJsDocDirectives(path.node); 
           },
           exit: path => { 
-            checkJsDocDirectives(path.node); 
+            checkNodeJsDocDirectives(path.node); 
           }
         },
 
         EmptyStatement: path => { 
-          checkJsDocDirectives(path.node); 
+          checkNodeJsDocDirectives(path.node); 
         },
 
         Program: {
@@ -1304,34 +1336,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
                     t.__classMeta.isStatic == typeProp.value.type == "Literal" && typeProp.value.value === "static"; 
                   }
                 }
-                let jsdoc = meta.jsdoc;
-                if (jsdoc) {
-                  if (jsdoc["@use"]) {
-                    jsdoc["@use"].forEach(function(elem) {
-                      t._requireClass(elem.body, { where: "use", load: false, location: path.parent.loc });
-                    });
-                  }
-                  if (jsdoc["@require"]) {
-                    jsdoc["@require"].forEach(function(elem) {
-                      t._requireClass(elem.body, { where: "require", load: false, location: path.parent.loc });
-                    });
-                  }
-                  if (jsdoc["@optional"]) {
-                    jsdoc["@optional"].forEach(function(elem) {
-                      t.addIgnore(elem.body);
-                    });
-                  }
-                  if (jsdoc["@ignore"]) {
-                    jsdoc["@ignore"].forEach(function(elem) {
-                      t.addIgnore(elem.body);
-                    });
-                  }
-                  if (jsdoc["@asset"]) {
-                    jsdoc["@asset"].forEach(function(elem) {
-                      t._requireAsset(elem.body);
-                    });
-                  }
-                }
+                checkJsDocDirectives(meta.jsdoc, path.node.loc);
 
                 t._requireClass(name, { usage: "dynamic", location: path.node.loc });
                 path.skip();
@@ -1538,7 +1543,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         ArrowFunctionExpression: FUNCTION_DECL_OR_EXPR,
 
         VariableDeclaration(path) {
-          checkJsDocDirectives(path.node);
+          checkNodeJsDocDirectives(path.node);
           path.node.declarations.forEach(decl => {
             // Simple `var x` form
             if (decl.id.type == "Identifier") {
