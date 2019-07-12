@@ -20,6 +20,21 @@
         "https://raw.githubusercontent.com/qooxdoo/qooxdoo-compiler/master/resource/schema/v1/compile.json"
       ]
     },
+    "run": {
+      "type": "object",
+      "additionalItems": false,
+      "required": [ "application" ],
+      "properties": {
+        "application": {
+          "description": "The name of the application, as specified in the applications[] array",
+          "type": "string"
+        },
+        "arguments": {
+          "description": "Optional command line arguments",
+          "type": "string"
+        }
+      }
+    },
     "applications": {
       "type":"array",
       "description": "Each entry describes an application to be compiled.",

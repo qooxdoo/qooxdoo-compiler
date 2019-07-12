@@ -55,6 +55,7 @@ qx.Class.define("qx.tool.cli.Cli", {
           "Contrib", // deprecated
           "Create",
           "Lint",
+          "Run",
           "Serve"
         ],
         "qx.tool.cli.commands");
