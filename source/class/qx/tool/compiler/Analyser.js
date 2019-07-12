@@ -116,6 +116,13 @@ qx.Class.define("qx.tool.compiler.Analyser", {
       check: "Array"
     },
     
+    /** list of global symbols */
+    globalSymbols: {
+      init: [],
+      nullable: false,
+      check: "Array"
+    },
+    
     /** Whether to write line numbers to .po files */
     writePoLineNumbers: {
       init: false,

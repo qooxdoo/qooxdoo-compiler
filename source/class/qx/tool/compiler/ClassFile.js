@@ -210,6 +210,17 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
     };
 
     analyser.getIgnores().forEach(s => this.addIgnore(s));
+    this.__globalSymbols = {};
+    
+    const CF = qx.tool.compiler.ClassFile;
+    const addSymbols = arr => arr.forEach(s => this.__globalSymbols[s] = true);
+    addSymbols(CF.QX_GLOBALS);
+    if (analyser.getGlobalSymbols().getLength()) {
+      analyser.getGlobalSymbols();
+    } else {
+      addSymbols(CF.COMMON_GLOBALS);
+      addSymbols(CF.BROWSER_GLOBALS);
+    }
   },
 
   members: {
@@ -239,6 +250,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
     __definingType: null,
     __sourceFilename: null,
     __taskQueueDrain: null,
+    __globalSymbols: null,
 	
     _onTaskQueueDrain: function() {
       var cbs = this.__taskQueueDrain;
@@ -1470,7 +1482,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
           }
 
           // Global variable or a local variable?
-          if (qx.tool.compiler.ClassFile.GLOBAL_SYMBOLS[members[0]] || t.hasDeclaration(members[0])) {
+          if (t.__globalSymbols[members[0]] || t.hasDeclaration(members[0])) {
             return;
           }
 
@@ -1790,7 +1802,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
       }
       
       // Global variable or a local variable?
-      if (name[0] === "this" || name[0] === "[]" || qx.tool.compiler.ClassFile.GLOBAL_SYMBOLS[name[0]] || this.hasDeclaration(name[0])) {
+      if (name[0] === "this" || name[0] === "[]" || t.__globalSymbols[name[0]] || this.hasDeclaration(name[0])) {
         return;
       }
 
@@ -1800,7 +1812,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
           str += ".";
         }
         str += name[i];
-        if (qx.tool.compiler.ClassFile.GLOBAL_SYMBOLS[str] || this.isIgnored(str)) {
+        if (t.__globalSymbols[str] || this.isIgnored(str)) {
           return;
         }
       }
@@ -2206,67 +2218,107 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
     /**
      * List of global symbols to be ignored
      */
-    GLOBAL_SYMBOLS: {
-      "qx.$$domReady": true,
-      "qx.$$environment": true,
-      "qx.$$libraries": true,
-      "qx.$$loader": true,
-      "qx.$$locales": true,
-      "qx.$$namespaceRoot": true,
-      "qx.$$resources": true,
-      "qx.$$packageData": true,
-      "qx.$$start": true,
-      "qx.$$translations": true,
-      "ActiveXObject": true,
-      "Array": true,
-      "ArrayBuffer": true,
-      "Boolean": true,
-      "Blob": true,
-      "CustomEvent": true,
-      "Date": true,
-      "DOMParser": true,
-      "Error": true,
-      "Event": true,
-      "Function": true,
-      "Image": true,
-      "Infinity": true,
-      "Int8Array": true,
-      "JSON": true,
-      "Math": true,
-      "NaN": true,
-      "Number": true,
-      "Object": true,
-      "Packages": true,
-      "Promise": true,
-      "RangeError": true,
-      "ReferenceError": true,
-      "RegExp": true,
-      "String": true,
-      "SyntaxError": true,
-      "TypeError": true,
-      "XPathResult": true,
-      "XMLHttpRequest": true,
-      "alert": true,
-      "arguments": true,
-      "console": true,
-      "clearTimeout": true,
-      "decodeURIComponent": true,
-      "document": true,
-      "encodeURIComponent": true,
-      "error": true,
-      "eval": true,
-      "history": true,
-      "isNaN": true,
-      "isFinite": true,
-      "java": true,
-      "navigator": true,
-      "parseInt": true,
-      "parseFloat": true,
-      "performance": true,
-      "setTimeout": true,
-      "window": true,
-      "undefined": true
-    },
+    QX_GLOBALS: [
+      "qx.$$domReady",
+      "qx.$$environment",
+      "qx.$$libraries",
+      "qx.$$loader",
+      "qx.$$locales",
+      "qx.$$namespaceRoot",
+      "qx.$$resources",
+      "qx.$$packageData",
+      "qx.$$start",
+      "qx.$$translations"
+    ],
+    
+    COMMON_GLOBALS: [
+      "Array",
+      "ArrayBuffer",
+      "Boolean",
+      "Date",
+      "DataView",
+      "EvalError",
+      "Error",
+      "Float32Array",
+      "Float64Array",
+      "Function",
+      "GeneratorFunction",
+      "Generator",
+      "Infinity",
+      "Int8Array",
+      "Int16Array",
+      "Int32Array",
+      "JSON",
+      "Map",
+      "Math",
+      "NaN",
+      "Number",
+      "Object",
+      "Proxy",
+      "Promise",
+      "RangeError",
+      "ReferenceError",
+      "Reflect",
+      "RegExp"
+      "Set",
+      "String",
+      "Symbol",
+      "SyntaxError",
+      "TypedArray",
+      "TypeError",
+      "Uint8Array",
+      "Uint8ClampedArray",
+      "Uint16Array",
+      "Uint32Array",
+      "URIError",
+      "WeakMap",
+      "WeakSet",
+      "arguments",
+      "console",
+      "clearTimeout",
+      "decodeURIComponent",
+      "encodeURIComponent",
+      "escape",
+      "error",
+      "eval",
+      "isNaN",
+      "isFinite",
+      "parseInt",
+      "parseFloat",
+      "setTimeout",
+      "undefined",
+      "unescape"
+    ],
+    
+    BROWSER_GLOBALS: [
+      "ActiveXObject",
+      "CustomEvent",
+      "DOMParser",
+      "Event",
+      "Image",
+      "XPathResult",
+      "XMLHttpRequest",
+      "alert",
+      "document",
+      "history",
+      "location",
+      "navigator",
+      "performance",
+      "window"
+    ],
+    
+    NODE_GLOBALS: [
+      "Blob",
+      "Module",
+      "require",
+      "module",
+      "process"
+    ],
+    
+    RHINO_GLOBALS: [
+      "Packages",
+      "java"
+    ],
 
     /**
      * These are the constants which are answered by Qooxdoo qx.core.Environment; we use out own copy here and
