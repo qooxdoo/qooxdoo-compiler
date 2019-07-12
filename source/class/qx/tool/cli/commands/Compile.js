@@ -22,6 +22,7 @@ const Gauge = require("gauge");
 const fs = qx.tool.utils.Promisify.fs;
 const semver = require("semver");
 const path = require("upath");
+const consoleControl = require("console-control-strings");
 
 require("app-module-path").addPath(process.cwd() + "/node_modules");
 
@@ -295,32 +296,45 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
             
       if (this.argv["machine-readable"]) {
         qx.tool.compiler.Console.getInstance().setMachineReadable(true);
-      } else if (this.argv["feedback"]) {
-        var themes = require("gauge/themes");
-        var ourTheme = themes.newTheme(themes({hasUnicode: true, hasColor: true}));
-        let colorOn = qx.tool.compiler.Console.getInstance().getColorOn();
-        ourTheme.preProgressbar = colorOn + ourTheme.preProgressbar;
-        ourTheme.preSubsection = colorOn + ourTheme.preSubsection;
-        ourTheme.progressbarTheme.postComplete += colorOn;
-        ourTheme.progressbarTheme.postRemaining += colorOn;
-     
-        this.__gauge = new Gauge();
-        this.__gauge.setTheme(ourTheme);
-        this.__gauge.show("Compiling", 0);
-        const TYPES = {
-          "error": "ERROR",
-          "warning": "Warning"
-        };
-        qx.tool.compiler.Console.getInstance().setWriter((str, msgId) => {
-          msgId = qx.tool.compiler.Console.MESSAGE_IDS[msgId];
-          if (msgId.type !== "message") {
-            this.__gauge.hide();
-            qx.tool.compiler.Console.log(colorOn + TYPES[msgId.type] + ": " + str);
-            this.__gauge.show();
-          } else {
-            this.__gauge.show(colorOn + str);
-          }
-        });
+      } else {
+        let configDb = await qx.tool.cli.ConfigDb.getInstance();
+        let color = configDb.db("qx.default.color", null);
+        if (color) {
+          let colorOn = consoleControl.color(color.split(" "));
+          process.stdout.write(colorOn + consoleControl.eraseLine());
+          let colorReset = consoleControl.color("reset");
+          process.on("exit", () => process.stdout.write(colorReset + consoleControl.eraseLine()));
+          let Console = qx.tool.compiler.Console.getInstance();
+          Console.setColorOn(colorOn);
+        }
+        
+        if (this.argv["feedback"]) {
+          var themes = require("gauge/themes");
+          var ourTheme = themes.newTheme(themes({hasUnicode: true, hasColor: true}));
+          let colorOn = qx.tool.compiler.Console.getInstance().getColorOn();
+          ourTheme.preProgressbar = colorOn + ourTheme.preProgressbar;
+          ourTheme.preSubsection = colorOn + ourTheme.preSubsection;
+          ourTheme.progressbarTheme.postComplete += colorOn;
+          ourTheme.progressbarTheme.postRemaining += colorOn;
+       
+          this.__gauge = new Gauge();
+          this.__gauge.setTheme(ourTheme);
+          this.__gauge.show("Compiling", 0);
+          const TYPES = {
+            "error": "ERROR",
+            "warning": "Warning"
+          };
+          qx.tool.compiler.Console.getInstance().setWriter((str, msgId) => {
+            msgId = qx.tool.compiler.Console.MESSAGE_IDS[msgId];
+            if (msgId.type !== "message") {
+              this.__gauge.hide();
+              qx.tool.compiler.Console.log(colorOn + TYPES[msgId.type] + ": " + str);
+              this.__gauge.show();
+            } else {
+              this.__gauge.show(colorOn + str);
+            }
+          });
+        }
       }
 
       var config = this.__config = await this.parse(this.argv);
