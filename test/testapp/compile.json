@@ -9,6 +9,18 @@
       }
     },
     {
+      "type": "source",
+      "outputPath": "compiled/source-node",
+      "environment": {
+        "test.overridden4": "target",
+        "test.overridden5": "target"
+      },
+      "application-types": [ "node" ],
+      "babelOptions": {
+        "targets": "node >= 11"
+      }
+    },
+    {
       "type": "build",
       "outputPath": "compiled/build"
     }
@@ -40,6 +52,11 @@
       "include": [
         "testapp.test.*"
       ]
+    },
+    {
+        "class": "testapp.NodeApplication",
+        "type": "node",
+        "name": "nodeapp"
     }
   ],
   "libraries": [

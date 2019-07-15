@@ -52,22 +52,12 @@ async function createMaker() {
     },
     templatePath: "../source/resource/qx/tool/cli/templates"
   }));
-
-  return new Promise((resolve, reject) => {
-    maker.addLibrary("testapp", function (err) {
-      if (err) {
-        return reject(err);
-      }
-      maker.addLibrary(QOOXDOO_PATH, function (err) {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(maker);
-        }
-      });
-      return null;
-    });
-  });
+  
+  let analyser = maker.getAnalyser();
+  analyser.addLibrary(await qx.tool.compiler.app.Library.createLibrary("testapp"));
+  analyser.addLibrary(await qx.tool.compiler.app.Library.createLibrary(QOOXDOO_PATH));
+  
+  return maker;
 }
 
 test("Checks dependencies and environment settings", assert => {

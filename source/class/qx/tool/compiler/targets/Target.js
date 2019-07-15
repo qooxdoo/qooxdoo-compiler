@@ -456,14 +456,6 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
                 if (this.isWriteLibraryInfo()) {
                   libraryInfoMap[libnamespace] = library.getLibraryInfo();
                 }
-                var arr = library.getAddScript();
-                if (arr) {
-                  arr.forEach(path => configdata.urisBefore.push(libnamespace + ":" + path));
-                }
-                arr = library.getAddCss();
-                if (arr) {
-                  arr.forEach(path => configdata.cssBefore.push(libnamespace + ":" + path));
-                }
               });
 
               for (var name in environment) {
