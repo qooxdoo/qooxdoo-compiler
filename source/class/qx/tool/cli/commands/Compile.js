@@ -553,16 +553,14 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
       
       let libraries = this.__libraries = {};
       await qx.Promise.all(data.libraries.map(async libPath => {
-        var library = new qx.tool.compiler.app.Library();
-        await library.loadManifest(libPath);
+        var library = await new qx.tool.compiler.app.Library.createLibrary(libPath);
         libraries[library.getNamespace()] = library;
       }));
       
       // Search for Qooxdoo library if not already provided
       var qxLib = libraries["qx"];
       if (!qxLib) {
-        var library = new qx.tool.compiler.app.Library();
-        await library.loadManifest(await this.getGlobalQxPath());
+        var library = await new qx.tool.compiler.app.Library.createLibrary(await this.getGlobalQxPath());
         libraries[library.getNamespace()] = library;
         qxLib = libraries["qx"];
       }
