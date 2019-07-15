@@ -106,11 +106,6 @@
             "description": "The boot loader template file, usually determined automatically from the application type",
             "type": "string"
           },
-          "minify": {
-            "description": "Determines the minification to be used for this application, if the target supports it; overrides other settings. Can be off, minify, mangle or beautify; takes precedence over the target's minify setting.",
-            "type": "string",
-            "pattern": "^(off|minify|mangle|beautify)$"
-          },
           "default": {
             "description": "If true, this application is considered the default when serving the application; if not provided then the first browser app is the default application. When applications are generated, each application has it's own directory inside the target directory and also has it's own index.html. However, there is an index.html which is generated in the target output directory that runs the `default` application.",
             "type": "boolean"
@@ -135,6 +130,21 @@
           "type": {
             "description": "Either `source`, `build`, or a class name in qooxdoo-compiler; using a class name is advanced usage, but ultimately the standard names just shortcuts to class names anyway (`source` is `qxcompiler.targets.SourceTarget`, etc)",
             "type": "string"
+          },
+          "application-types": {
+            "description": "The application types which this target supports",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^(browser|node|rhino)$"
+            }
+          },
+          "application-names": {
+            "description": "The application names which this target supports",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "outputPath": {
             "description": "The folder where the compilation outputs to, and will be created if it does not already exist",
