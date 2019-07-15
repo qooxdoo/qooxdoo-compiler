@@ -228,7 +228,8 @@ qx.Class.define("qx.tool.cli.commands.package.List", {
               description: library.summary || repo.description,
               installedVersion: library.installedVersion,
               latestVersion: repo.latestVersion,
-              latestCompatible: repo.latestCompatible
+              latestCompatible: repo.latestCompatible,
+              info: library.info
             });
           }
         }
@@ -321,7 +322,8 @@ qx.Class.define("qx.tool.cli.commands.package.List", {
               version: "v" + info.version,
               compatibility: semver.satisfies(qooxdoo_version, manifest.requires["qooxdoo-sdk"], true),
               path: path.relative(process.cwd(), path.dirname(manifest_path)),
-              installedVersion: "v" + info.version
+              installedVersion: "v" + info.version,
+              info
             });
           }
         }
@@ -434,7 +436,8 @@ qx.Class.define("qx.tool.cli.commands.package.List", {
               compatibility,
               required_qx_version: qx_versions,
               path: path.dirname(manifest_path),
-              installedVersion
+              installedVersion,
+              info
             });
           }
         }
