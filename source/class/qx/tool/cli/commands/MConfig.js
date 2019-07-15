@@ -171,7 +171,9 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
      *
      */
     _mergeArguments: function(parsedArgs, config, lockfileContent) {
+      config.targetType = parsedArgs.target||config.defaultTarget||"source";
       if (parsedArgs.config) {
+        /*
         var defaultTarget = parsedArgs.target||config.defaultTarget;
         if (defaultTarget) {
           for (var i = 0; i < config.targets.length; i++) {
@@ -185,15 +187,14 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
           if (config.targets && (config.targets.length > 0)) {
             config.target = config.targets[0];
           }
-        }
+        }*/
       } else {
-        var target = config.target = {};
-        if (parsedArgs.target) {
-          target.type = parsedArgs.target;
-        }
-        if (parsedArgs.outputPath) {
-          target.outputPath = parsedArgs.outputPath;
-        }
+        config.targets = [
+          {
+            type: parsedArgs.target||"source",
+            outputPath: parsedArgs.outputPath||"compiled/source"
+          }
+        ];
       }
 
       if (!config.locales) {

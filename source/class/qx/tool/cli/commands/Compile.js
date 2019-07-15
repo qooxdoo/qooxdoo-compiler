@@ -256,12 +256,6 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
     "making": "qx.event.type.Event",
 
     /**
-     * Fired when making of apps restarts because of
-     * changes
-    */
-    "remaking": "qx.event.type.Event",
-
-    /**
      * Fired when making of apps is done.
     */
     "made": "qx.event.type.Event"
@@ -271,16 +265,9 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
 
   members: {
     __gauge: null,
-    __maker: null,
+    __makers: null,
     __config: null,
-
-    getMaker: function() {
-      return this.__maker;
-    },
-
-    _getConfig: function() {
-      return this.__config;
-    },
+    __libraries: null,
 
     /*
      * @Override
@@ -337,59 +324,23 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         }
       }
 
-      var config = this.__config = await this.parse(this.argv);
-      if (!config) {
-        throw new qx.tool.utils.Utils.UserError("Error: Cannot find any configuration");
-      }
-      var maker = this.__maker = await this.createMakerFromConfig(config);
-      if (!maker) {
-        throw new qx.tool.utils.Utils.UserError("Error: Cannot find anything to make");
-      }
-
-      let errors = await this.__checkDependencies(maker, config.packages);
-      if (errors.length > 0) {
-        if (this.argv.warnAsError) {
-          throw new qx.tool.utils.Utils.UserError(errors.join("\n"));
-        } else {
-          qx.tool.compiler.Console.log(errors.join("\n"));
-        }
-      }
-
-      let cfg = await qx.tool.cli.ConfigDb.getInstance();
-      maker.getAnalyser().setWritePoLineNumbers(cfg.db("qx.translation.strictPoCompatibility", false));
-
-      if (this.argv["clean"]) {
-        await maker.eraseOutputDir();
-        await qx.tool.utils.files.Utils.safeUnlink(maker.getAnalyser().getDbFilename());
-        await qx.tool.utils.files.Utils.safeUnlink(maker.getAnalyser().getResDbFilename());
-      }
-      var analyser = maker.getAnalyser();
-      if (config.ignores) {
-        analyser.setIgnores(config.ignores);
-      }
-
-      var target = maker.getTarget();
       if (this.__gauge) {
-        maker.addListener("writingApplications", () => this.__gauge.show("Writing Applications", 0));
-        maker.addListener("writtenApplications", () => this.__gauge.show("Writing Applications", 1));
-        maker.addListener("writingApplication", evt => this.__gauge.pulse("Writing Application " + evt.getData().getName()));
-        analyser.addListener("compilingClass", evt => this.__gauge.pulse("Compiling " + evt.getData().classFile.getClassName()));
-        if (target instanceof qx.tool.compiler.targets.BuildTarget) {
-          target.addListener("minifyingApplication", evt => this.__gauge.pulse("Minifying " + evt.getData().application.getName() + " " + evt.getData().filename));
-        }
+        this.addListener("writingApplications", () => this.__gauge.show("Writing Applications", 0));
+        this.addListener("writtenApplications", () => this.__gauge.show("Writing Applications", 1));
+        this.addListener("writingApplication", evt => this.__gauge.pulse("Writing Application " + evt.getData().getName()));
+        this.addListener("compilingClass", evt => this.__gauge.pulse("Compiling " + evt.getData().classFile.getClassName()));
+        this.addListener("minifyingApplication", evt => this.__gauge.pulse("Minifying " + evt.getData().application.getName() + " " + evt.getData().filename));
       } else {
-        maker.addListener("writingApplication", evt => qx.tool.compiler.Console.print("qx.tool.cli.compile.writingApplication", evt.getData().getName()));
-        if (target instanceof qx.tool.compiler.targets.BuildTarget) {
-          target.addListener("minifyingApplication", evt => qx.tool.compiler.Console.print("qx.tool.cli.compile.minifyingApplication", evt.getData().application.getName(), evt.getData().filename));
-        }
+        this.addListener("writingApplication", evt => qx.tool.compiler.Console.print("qx.tool.cli.compile.writingApplication", evt.getData().getName()));
+        this.addListener("minifyingApplication", evt => qx.tool.compiler.Console.print("qx.tool.cli.compile.minifyingApplication", evt.getData().application.getName(), evt.getData().filename));
         if (this.argv.verbose) {
           var startTimes = {};
-          analyser.addListener("compilingClass", evt => {
+          this.addListener("compilingClass", evt => {
             var classname = evt.getData().classFile.getClassName();
             startTimes[classname] = new Date();
             qx.tool.compiler.Console.print("qx.tool.cli.compile.compilingClass", classname);
           });
-          analyser.addListener("compiledClass", evt => {
+          this.addListener("compiledClass", evt => {
             var classname = evt.getData().classFile.getClassName();
             var startTime = startTimes[classname];
             var endTime = new Date();
@@ -398,46 +349,106 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
           });
         }
       }
-      maker.addListener("writingApplications", e => this.dispatchEvent(e.clone()));
-      maker.addListener("writtenApplications", e => {
-        this.dispatchEvent(e.clone());
+      
+      var config = this.__config = await this.parse(this.argv);
+      if (!config) {
+        throw new qx.tool.utils.Utils.UserError("Error: Cannot find any configuration");
+      }
+      var makers = this.__makers = await this.createMakersFromConfig(config);
+      if (!makers || !makers.length) {
+        throw new qx.tool.utils.Utils.UserError("Error: Cannot find anything to make");
+      }
+      
+      this.addListener("writtenApplications", e => {
         if (this.argv.verbose) {
           qx.tool.compiler.Console.log("\nCompleted all applications, libraries used are:");
-          maker.getAnalyser().getLibraries().forEach(lib => {
-            qx.tool.compiler.Console.log(`   ${lib.getNamespace()} (${lib.getRootDir()})`);
-          });
+          Object.values(this.__libraries).forEach(lib => qx.tool.compiler.Console.log(`   ${lib.getNamespace()} (${lib.getRootDir()})`));
         }
       });
-      maker.addListener("writingApplication", e => this.dispatchEvent(e.clone()));
-      maker.addListener("writtenApplication", e => this.dispatchEvent(e.clone()));
-      analyser.addListener("compilingClass", e => this.dispatchEvent(e.clone()));
-      analyser.addListener("compiledClass", e => this.dispatchEvent(e.clone()));
-      analyser.addListener("saveDatabase", e => this.dispatchEvent(e.clone()));
-      target.addListener("checkEnvironment", e => this.dispatchEvent(e.clone()));
+      
+      let countMaking = 0;
+      const collateDispatchEvent = evt => {
+        if (countMaking == 1)
+          this.dispatchEvent(evt.clone());
+      };
+      
+      await qx.Promise.all(makers.map(async maker => {
+        var analyser = maker.getAnalyser();
+        let cfg = await qx.tool.cli.ConfigDb.getInstance();
+        analyser.setWritePoLineNumbers(cfg.db("qx.translation.strictPoCompatibility", false));
 
-      var p = qx.tool.utils.files.Utils.safeStat("source/index.html")
-        .then(stat => stat && qx.tool.compiler.Console.print("qx.tool.cli.compile.legacyFiles", "source/index.html"));
+        if (this.argv["clean"]) {
+          await maker.eraseOutputDir();
+          await qx.tool.utils.files.Utils.safeUnlink(analyser.getDbFilename());
+          await qx.tool.utils.files.Utils.safeUnlink(analyser.getResDbFilename());
+        }
+        if (config.ignores) {
+          analyser.setIgnores(config.ignores);
+        }
+        
+        var target = maker.getTarget();
+        maker.addListener("writingApplications", collateDispatchEvent);
+        maker.addListener("writtenApplications", collateDispatchEvent);
+        maker.addListener("writingApplication", e => this.dispatchEvent(e.clone()));
+        maker.addListener("writtenApplication", e => this.dispatchEvent(e.clone()));
+        analyser.addListener("compilingClass", e => this.dispatchEvent(e.clone()));
+        analyser.addListener("compiledClass", e => this.dispatchEvent(e.clone()));
+        analyser.addListener("saveDatabase", e => this.dispatchEvent(e.clone()));
+        target.addListener("checkEnvironment", e => this.dispatchEvent(e.clone()));
+        target.addListener("minifyingApplication", e => this.dispatchEvent(e.clone()));
 
-      // Simple one of make
-      if (!this.argv.watch) {
-        return p.then(() => {
-          this.fireEvent("making");
-          maker.addListener("writtenApplications", e => this.fireEvent("made"));
-          return maker.make()
-            .then(() => {
-              if (this.__gauge) {
-                this.__gauge.show("Compiling", 1);
-              }
-            });
-        });
-      }
+        var p = qx.tool.utils.files.Utils.safeStat("source/index.html")
+          .then(stat => stat && qx.tool.compiler.Console.print("qx.tool.cli.compile.legacyFiles", "source/index.html"));
 
-      // Continuous make
-      let watch = new qx.tool.cli.Watch(maker);
-      watch.addListener("making", e => this.dispatchEvent(e.clone()));
-      watch.addListener("remaking", e => this.dispatchEvent(e.clone()));
-      watch.addListener("made", e => this.dispatchEvent(e.clone()));
-      return p.then(() => watch.start());
+        // Simple one of make
+        if (!this.argv.watch) {
+          maker.addListener("making", () => {
+            countMaking++;
+            if (countMaking == 1)
+              this.fireEvent("making");
+          });
+          maker.addListener("made", () => {
+            countMaking--;
+            if (countMaking == 0)
+              this.fireEvent("made");
+          });
+          
+          return p.then(() => maker.make());
+          
+          // Continuous make
+        } else {
+          let watch = new qx.tool.cli.Watch(maker);
+          
+          watch.addListener("making", () => {
+            countMaking++;
+            if (countMaking == 1)
+              this.fireEvent("making");
+          });
+          watch.addListener("made", () => {
+            countMaking--;
+            if (countMaking == 0)
+              this.fireEvent("made");
+          });
+          
+          return p.then(() => watch.start());
+        }
+      }));
+      
+      this.addListener("making", evt => {
+        if (this.__gauge) {
+          this.__gauge.show("Compiling", 1);
+        } else {
+          qx.tool.compiler.Console.print("qx.tool.cli.compile.makeBegins");
+        }
+      });
+      
+      this.addListener("made", evt => {
+        if (this.__gauge) {
+          this.__gauge.show("Compiling", 1);
+        } else {
+          qx.tool.compiler.Console.print("qx.tool.cli.compile.makeEnds");
+        }
+      });
     },
 
 
@@ -447,149 +458,201 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
      * @param data {Map}
      * @return {Maker}
      */
-    createMakerFromConfig: async function(data) {
+    createMakersFromConfig: async function(data) {
       const Console = qx.tool.compiler.Console.getInstance();
       var t = this;
-      var maker = null;
-
-      var outputPath = data.target.outputPath;
-      if (!outputPath) {
-        throw new qx.tool.utils.Utils.UserError("Missing output-path for target " + data.target.type);
+      
+      var argvAppNames = null;
+      if (t.argv["app-name"]) {
+        argvAppNames = t.argv["app-name"].split(",");
       }
-
-      maker = new qx.tool.compiler.makers.AppMaker();
-      if (!this.argv["erase"]) {
-        maker.setNoErase(true);
+      
+      
+      /*
+       * Calculate the the list of targets and applications; this is a many to many list, where an 
+       * application can be compiled for many targets, and each target has many applications.
+       * 
+       * Each target configuration is updated to have `appConfigs[]` and each application configuration
+       * is updated to have `targetConfigs[]`.
+       */
+      data.targets.forEach((targetConfig, index) => targetConfig.index = index);
+      let targetConfigs = [];
+      let defaultTargetConfig = null;
+      data.targets.forEach(targetConfig => {
+        if (targetConfig.type === data.targetType) {
+          if (!targetConfig["application-names"] && !targetConfig["application-types"]) {
+            if (defaultTargetConfig) {
+              qx.tool.compiler.Console.print("qx.tool.cli.compile.multipleDefaultTargets");
+            } else {
+              defaultTargetConfig = targetConfig;
+            }
+          } else {
+            targetConfigs.push(targetConfig);
+          }
+        }
+      });
+      
+      data.applications.forEach((appConfig, index) => {
+        appConfig.index = index;
+        let appType = appConfig.type||"browser";
+        let appTargetConfigs = targetConfigs.filter(targetConfig => {
+          let appTypes = targetConfig["application-types"];
+          if (appTypes && !qx.lang.Array.contains(appTypes, appType))
+            return false;
+          
+          let appNames = targetConfig["application-names"];
+          if (appConfig.name && appNames && !qx.lang.Array.contains(appNames, appConfig.name))
+            return false;
+          if (appConfig.name && argvAppNames && !qx.lang.Array.contains(argvAppNames, appConfig.name))
+            return false;
+          return true;
+        });
+        
+        if (appTargetConfigs.length == 0) {
+          if (defaultTargetConfig) {
+            appTargetConfigs = [defaultTargetConfig];
+          } else {
+            throw new qx.tool.utils.Utils.UserError(`Cannot find any suitable targets for application #${index} (named ${appConfig.name||"unnamed"})`);
+          }
+        }
+        
+        appTargetConfigs.forEach(targetConfig => {
+          if (!targetConfig.appConfigs) {
+            targetConfig.appConfigs = [];
+          }
+          targetConfig.appConfigs.push(appConfig);
+          if (!appConfig.targetConfigs) {
+            appConfig.targetConfigs = [];
+          }
+          appConfig.targetConfigs.push(targetConfig);
+        });
+      });
+      if (defaultTargetConfig.appConfigs) {
+        targetConfigs.push(defaultTargetConfig);
       }
-
-      if (!data.target) {
-        throw new qx.tool.utils.Utils.UserError("No target specified");
+      
+      
+      /*
+       * Locate and load libraries
+       */
+      if (!data.libraries.every(libData => fs.existsSync(libData + "/Manifest.json"))) {
+        Console.log("One or more libraries not found - trying to install them from library repository...");
+        const installer = new qx.tool.cli.commands.package.Install({
+          quiet: true,
+          save: false
+        });
+        await installer.process();
       }
-      var targetClass = data.target.targetClass ? this.resolveTargetClass(data.target.targetClass): null;
-      if (!targetClass && data.target.type) {
-        targetClass = this.resolveTargetClass(data.target.type);
+      
+      let libraries = this.__libraries = {};
+      await qx.Promise.all(data.libraries.map(async libPath => {
+        var library = new qx.tool.compiler.app.Library();
+        await library.loadManifest(libPath);
+        libraries[library.getNamespace()] = library;
+      }));
+      
+      // Search for Qooxdoo library if not already provided
+      var qxLib = libraries["qx"];
+      if (!qxLib) {
+        var library = new qx.tool.compiler.app.Library();
+        await library.loadManifest(await this.getGlobalQxPath());
+        libraries[library.getNamespace()] = library;
+        qxLib = libraries["qx"];
       }
-      if (!targetClass) {
-        throw new qx.tool.utils.Utils.UserError("Cannot find target class: " + (data.target.targetClass||data.target.type));
+      if (this.argv.verbose) {
+        Console.log("QooxDoo found in " + qxLib.getRootDir());
       }
-      /* eslint-disable new-cap */
-      var target = new targetClass(outputPath);
-      /* eslint-enable new-cap */
-      if (data.target.uri) {
-        qx.tool.compiler.Console.print("qx.tool.cli.compile.deprecatedUri", "target.uri", data.target.uri);
-      }
-      if (data.target.writeCompileInfo) {
-        target.setWriteCompileInfo(true);
-      }
-      target.setWriteLibraryInfo(this.argv.writeLibraryInfo);
-      target.setUpdatePoFiles(this.argv.updatePoFiles);
-      maker.setTarget(target);
-
-      maker.setLocales(data.locales||[ "en" ]);
-      if (data.writeAllTranslations) {
-        maker.setWriteAllTranslations(data.writeAllTranslations);
-      }
-
-      if (typeof data.target.typescript == "string") {
-        maker.set({ outputTypescript: true, outputTypescriptTo: data.target.typescript });
-      } else if (typeof data.target.typescript == "boolean") {
-        maker.set({ outputTypescript: true });
-      }
-      if (this.argv["typescript"]) {
-        maker.set({ outputTypescript: true });
-      }
-
-      if (data.environment) {
-        maker.setEnvironment(data.environment);
-      }
-      if (data.target.environment) {
-        target.setEnvironment(data.target.environment);
-      }
-
-      if (data["path-mappings"]) {
-        for (var from in data["path-mappings"]) {
-          var to = data["path-mappings"][from];
-          target.addPathMapping(from, to);
+      let errors = await this.__checkDependencies(Object.values(libraries), data.packages);
+      if (errors.length > 0) {
+        if (this.argv.warnAsError) {
+          throw new qx.tool.utils.Utils.UserError(errors.join("\n"));
+        } else {
+          qx.tool.compiler.Console.log(errors.join("\n"));
         }
       }
-
-      function mergeArray(dest, ...srcs) {
-        srcs.forEach(function(src) {
-          if (src) {
-            src.forEach(function(elem) {
-              if (!qx.lang.Array.contains(dest, src)) {
-                dest.push(elem);
-              }
-            });
-          }
-        });
-        return dest;
-      }
-      let babelOptions = data.babelOptions || {};
-      qx.lang.Object.mergeWith(babelOptions, data.target.babelOptions || {});
-      maker.getAnalyser().setBabelOptions(babelOptions);
-
-      var addCreatedAt = data.target["addCreatedAt"] || t.argv["addCreatedAt"];
-      if (addCreatedAt) {
-        maker.getAnalyser().setAddCreatedAt(true);
-      }
-
-      var appNames = null;
-      if (t.argv["app-name"]) {
-        appNames = t.argv["app-name"].split(",");
-      }
-
+      
+      
+      /*
+       * Figure out which will be the default application; this will need some work for situations
+       * where there are multiple browser based targets
+       */
       let hasExplicitDefaultApp = false;
-      let defaultApp = null;
-      let allApplicationTypes = {};
-      data.applications.forEach(function(appData, appIndex) {
-        if (appNames && appNames.indexOf(appData.name) === -1) {
+      let defaultAppConfig = null;
+      targetConfigs.forEach(targetConfig => {
+        if (targetConfigs.appConfigs) {
+          targetConfig.appConfigs.forEach(appConfig => {
+            if (appConfig.type && appConfig.type != "browser")
+              return;
+            
+            let setDefault;
+            if (appConfig.writeIndexHtmlToRoot !== undefined) {
+              qx.tool.compiler.Console.print("qx.tool.cli.compile.deprecatedCompileSeeOther", "application.writeIndexHtmlToRoot", "application.default");
+              setDefault = appConfig.writeIndexHtmlToRoot;
+            } else if (appConfig["default"] !== undefined) {
+              setDefault = appConfig["default"];
+            }
+
+            if (setDefault !== undefined) {
+              if (setDefault) {
+                if (hasExplicitDefaultApp) {
+                  throw new qx.tool.utils.Utils.UserError("Error: Can only set one application to be the default application!");
+                }
+                hasExplicitDefaultApp = true;
+                defaultAppConfig = appConfig;
+              }
+            } else if (!defaultAppConfig) {
+              defaultAppConfig = appConfig;
+            }
+          });
+        }
+      });
+      
+      
+      /*
+       * There is still only one target per maker, so convert our list of targetConfigs into an array of makers 
+       */
+      let makers = [];
+      targetConfigs.forEach(targetConfig => {
+        if (!targetConfig.appConfigs) {
+          qx.tool.compiler.Console.print("qx.tool.cli.compile.unusedTarget", target.type, target.index);
           return;
         }
-        var app = new qx.tool.compiler.app.Application(appData["class"]);
-        app.setTemplatePath(t.getTemplateDir());
-
-        [ "type", "theme", "name", "environment", "outputPath", "bootPath", "loaderTemplate"].forEach(name => {
-          if (appData[name] !== undefined) {
-            var fname = "set" + qx.lang.String.firstUp(name);
-            app[fname](appData[name]);
-          }
-        });
-        allApplicationTypes[app.getType()] = true;
-        if (app.isBrowserApp()) {
-          var setDefault;
-          if (appData.writeIndexHtmlToRoot !== undefined) {
-            qx.tool.compiler.Console.print("qx.tool.cli.compile.deprecatedCompileSeeOther", "application.writeIndexHtmlToRoot", "application.default");
-            setDefault = appData.writeIndexHtmlToRoot;
-          } else if (appData["default"] !== undefined) {
-            setDefault = appData["default"];
-          }
-
-          if (setDefault !== undefined) {
-            if (setDefault) {
-              if (hasExplicitDefaultApp) {
-                throw new qx.tool.utils.Utils.UserError("Error: Can only set one application to be the default application!");
-              }
-              hasExplicitDefaultApp = true;
-              defaultApp = app;
-            }
-          } else if (!defaultApp) {
-            defaultApp = app;
-          }
-        }
-        if (appData.uri) {
-          qx.tool.compiler.Console.print("qx.tool.cli.compile.deprecatedUri", "application.uri", appData.uri);
-        }
-        if (appData.title) {
-          app.setTitle(appData.title);
+        
+        var outputPath = targetConfig.outputPath;
+        if (!outputPath) {
+          throw new qx.tool.utils.Utils.UserError("Missing output-path for target " + targetConfig.type);
         }
 
+        var maker = new qx.tool.compiler.makers.AppMaker();
+        if (!this.argv["erase"]) {
+          maker.setNoErase(true);
+        }
+
+        var targetClass = targetConfig.targetClass ? this.resolveTargetClass(targetConfig.targetClass): null;
+        if (!targetClass && targetConfig.type) {
+          targetClass = this.resolveTargetClass(targetConfig.type);
+        }
+        if (!targetClass) {
+          throw new qx.tool.utils.Utils.UserError("Cannot find target class: " + (targetConfig.targetClass||targetConfig.type));
+        }
+        /* eslint-disable new-cap */
+        var target = new targetClass(outputPath);
+        /* eslint-enable new-cap */
+        if (targetConfig.uri) {
+          qx.tool.compiler.Console.print("qx.tool.cli.compile.deprecatedUri", "target.uri", targetConfig.uri);
+        }
+        if (targetConfig.writeCompileInfo) {
+          target.setWriteCompileInfo(true);
+        }
+        target.setWriteLibraryInfo(this.argv.writeLibraryInfo);
+        target.setUpdatePoFiles(this.argv.updatePoFiles);
+        
         // Take the command line for `minify` as most precedent only if provided
         var minify;
         if ((process.argv.indexOf("--minify") > -1)) {
           minify = t.argv["minify"];
         }
-        minify = minify || appData["minify"] || data.target["minify"] || t.argv["minify"];
+        minify = minify || targetConfig["minify"] || t.argv["minify"];
         if (typeof minify == "boolean") {
           minify = minify ? "minify" : "off";
         }
@@ -599,118 +662,176 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         if (typeof target.setMinify == "function") {
           target.setMinify(minify);
         }
-        var saveUnminified = appData["save-unminified"] || data.target["save-unminified"] || t.argv["save-unminified"];
+        var saveUnminified = targetConfig["save-unminified"] || t.argv["save-unminified"];
         if (typeof saveUnminified == "boolean" && typeof target.setSaveUnminified == "function") {
           target.setSaveUnminified(saveUnminified);
         }
+        
+        maker.setTarget(target);
 
-        var parts = appData.parts || data.target.parts || data.parts;
-        if (parts) {
-          if (!parts.boot) {
-            throw new qx.tool.utils.Utils.UserError("Cannot determine a boot part for application " + (appIndex + 1) + " " + (appData.name||""));
-          }
-          for (var partName in parts) {
-            var partData = parts[partName];
-            var include = typeof partData.include == "string" ? [ partData.include ] : partData.include;
-            var exclude = typeof partData.exclude == "string" ? [ partData.exclude ] : partData.exclude;
-            var part = new qx.tool.compiler.app.Part(partName, include, exclude).set({
-              combine: Boolean(partData.combine),
-              minify: Boolean(partData.minify)
-            });
-            app.addPart(part);
+        maker.setLocales(data.locales||[ "en" ]);
+        if (data.writeAllTranslations) {
+          maker.setWriteAllTranslations(data.writeAllTranslations);
+        }
+
+        if (typeof targetConfig.typescript == "string") {
+          maker.set({ outputTypescript: true, outputTypescriptTo: targetConfig.typescript });
+        } else if (typeof targetConfig.typescript == "boolean") {
+          maker.set({ outputTypescript: true });
+        }
+        if (this.argv["typescript"]) {
+          maker.set({ outputTypescript: true });
+        }
+
+        if (data.environment) {
+          maker.setEnvironment(data.environment);
+        }
+        if (targetConfig.environment) {
+          target.setEnvironment(targetConfig.environment);
+        }
+
+        if (data["path-mappings"]) {
+          for (var from in data["path-mappings"]) {
+            var to = data["path-mappings"][from];
+            target.addPathMapping(from, to);
           }
         }
 
-        if (target.getType() == "source" && t.argv.bundling) {
-          var bundle = appData.bundle || data.target.bundle || data.bundle;
-          if (bundle) {
-            if (bundle.include) {
-              app.setBundleInclude(bundle.include);
+        function mergeArray(dest, ...srcs) {
+          srcs.forEach(function(src) {
+            if (src) {
+              src.forEach(function(elem) {
+                if (!qx.lang.Array.contains(dest, src)) {
+                  dest.push(elem);
+                }
+              });
             }
-            if (bundle.exclude) {
-              app.setBundleExclude(bundle.exclude);
-            }
-          }
+          });
+          return dest;
+        }
+        let babelOptions = data.babelOptions || {};
+        qx.lang.Object.mergeWith(babelOptions, targetConfig.babelOptions || {});
+        maker.getAnalyser().setBabelOptions(babelOptions);
+
+        var addCreatedAt = targetConfig["addCreatedAt"] || t.argv["addCreatedAt"];
+        if (addCreatedAt) {
+          maker.getAnalyser().setAddCreatedAt(true);
         }
 
-        app.set({
-          exclude: mergeArray([], data.exclude, data.target.exclude, appData.exclude),
-          include: mergeArray([], data.include, data.target.include, appData.include)
+        for (let ns in libraries)
+          maker.getAnalyser().addLibrary(libraries[ns]);
+        
+        
+        let allApplicationTypes = {};
+        targetConfig.appConfigs.forEach(appConfig => {
+          var app = appConfig.app = new qx.tool.compiler.app.Application(appConfig["class"]);
+          app.setTemplatePath(t.getTemplateDir());
+
+          [ "type", "theme", "name", "environment", "outputPath", "bootPath", "loaderTemplate"].forEach(name => {
+            if (appConfig[name] !== undefined) {
+              var fname = "set" + qx.lang.String.firstUp(name);
+              app[fname](appConfig[name]);
+            }
+          });
+          allApplicationTypes[app.getType()] = true;
+          if (appConfig.uri) {
+            qx.tool.compiler.Console.print("qx.tool.cli.compile.deprecatedUri", "application.uri", appConfig.uri);
+          }
+          if (appConfig.title) {
+            app.setTitle(appConfig.title);
+          }
+          
+          var parts = appConfig.parts || targetConfig.parts || data.parts;
+          if (parts) {
+            if (!parts.boot) {
+              throw new qx.tool.utils.Utils.UserError("Cannot determine a boot part for application " + (appConfig.index + 1) + " " + (appConfig.name||""));
+            }
+            for (var partName in parts) {
+              var partData = parts[partName];
+              var include = typeof partData.include == "string" ? [ partData.include ] : partData.include;
+              var exclude = typeof partData.exclude == "string" ? [ partData.exclude ] : partData.exclude;
+              var part = new qx.tool.compiler.app.Part(partName, include, exclude).set({
+                combine: Boolean(partData.combine),
+                minify: Boolean(partData.minify)
+              });
+              app.addPart(part);
+            }
+          }
+
+          if (target.getType() == "source" && t.argv.bundling) {
+            var bundle = appConfig.bundle || targetConfig.bundle || data.bundle;
+            if (bundle) {
+              if (bundle.include) {
+                app.setBundleInclude(bundle.include);
+              }
+              if (bundle.exclude) {
+                app.setBundleExclude(bundle.exclude);
+              }
+            }
+          }
+
+          app.set({
+            exclude: mergeArray([], data.exclude, targetConfig.exclude, appConfig.exclude),
+            include: mergeArray([], data.include, targetConfig.include, appConfig.include)
+          });
+          maker.addApplication(app);
         });
-        maker.addApplication(app);
+        
+        const CF = qx.tool.compiler.ClassFile;
+        let globalSymbols = [];
+        qx.lang.Array.append(globalSymbols, CF.QX_GLOBALS);
+        qx.lang.Array.append(globalSymbols, CF.COMMON_GLOBALS);
+        if (allApplicationTypes["browser"]) {
+          qx.lang.Array.append(globalSymbols, CF.BROWSER_GLOBALS);
+        }
+        if (allApplicationTypes["node"]) {
+          qx.lang.Array.append(globalSymbols, CF.NODE_GLOBALS);
+        }
+        if (allApplicationTypes["rhino"]) {
+          qx.lang.Array.append(globalSymbols, CF.RHINO_GLOBALS);
+        }
+        maker.getAnalyser().setGlobalSymbols(globalSymbols);
+
+        if (defaultAppConfig) {
+          defaultAppConfig.app.setWriteIndexHtmlToRoot(true);
+        } else {
+          qx.tool.utils.files.Utils.safeUnlink(target.getOutputDir() + target.getScriptPrefix() + "index.html");
+        }
+
+        // Note - this will cause output multiple times, once per maker/target; but this is largely unavoidable
+        //  because different targets can cause different warnings for the same code due to different compilation
+        //  options (eg node vs browser)
+        maker.getAnalyser().addListener("compiledClass", function(evt) {
+          var data = evt.getData();
+          var markers = data.dbClassInfo.markers;
+          if (markers) {
+            markers.forEach(function(marker) {
+              var str = qx.tool.compiler.Console.decodeMarker(marker);
+              Console.warn(data.classFile.getClassName() + ": " + str);
+            });
+          }
+        });
+        
+        makers.push(maker);
       });
       
-      const CF = qx.tool.compiler.ClassFile;
-      let globalSymbols = [];
-      qx.lang.Array.append(globalSymbols, CF.QX_GLOBALS);
-      qx.lang.Array.append(globalSymbols, CF.COMMON_GLOBALS);
-      if (allApplicationTypes["browser"]) {
-        qx.lang.Array.append(globalSymbols, CF.BROWSER_GLOBALS);
-      }
-      if (allApplicationTypes["node"]) {
-        qx.lang.Array.append(globalSymbols, CF.NODE_GLOBALS);
-      }
-      if (allApplicationTypes["rhino"]) {
-        qx.lang.Array.append(globalSymbols, CF.RHINO_GLOBALS);
-      }
-      maker.getAnalyser().setGlobalSymbols(globalSymbols);
-
-      if (defaultApp) {
-        defaultApp.setWriteIndexHtmlToRoot(true);
-      } else {
-        qx.tool.utils.files.Utils.safeUnlink(target.getOutputDir() + target.getScriptPrefix() + "index.html");
-      }
-
-      maker.getAnalyser().addListener("compiledClass", function(evt) {
-        var data = evt.getData();
-        var markers = data.dbClassInfo.markers;
-        if (markers) {
-          markers.forEach(function(marker) {
-            var str = qx.tool.compiler.Console.decodeMarker(marker);
-            Console.warn(data.classFile.getClassName() + ": " + str);
-          });
-        }
-      });
-
-      if (!data.libraries.every(libData => fs.existsSync(libData + "/Manifest.json"))) {
-        Console.log("One or more libraries not found - trying to install them from library repository...");
-        const installer = new qx.tool.cli.commands.package.Install({
-          quiet: true,
-          save: false
-        });
-        await installer.process();
-      }
-
-      const addLibraryAsync = qx.tool.utils.Promisify.promisify(maker.addLibrary, maker);
-      await qx.Promise.all(data.libraries.map(libData => addLibraryAsync(libData)));
-
-      // Search for Qooxdoo library if not already provided
-      var qxLib = maker.getAnalyser().findLibrary("qx");
-      if (!qxLib) {
-        await addLibraryAsync(await this.getGlobalQxPath());
-      }
-      if (this.argv.verbose) {
-        qxLib = maker.getAnalyser().findLibrary("qx");
-        Console.log("QooxDoo found in " + qxLib.getRootDir());
-      }
-      return maker;
+      return makers;
     },
 
     /**
      * Checks the dependencies of the current library
-     * @param  {qx.tool.compiler.makers.Maker} maker
-     *    The maker object
+     * @param  {qx.tool.compiler.app.Library[]} libs
+     *    The list of libraries to check
      * @param {Object|*} packages
      *    If given, an object mapping library uris to library paths
      * @return {Promise<Array>} Array of error messages
      * @private
      */
-    __checkDependencies: async function(maker, packages) {
+    async __checkDependencies(libs, packages) {
       const Console = qx.tool.compiler.Console.getInstance();
       let errors = [];
-      let libs = maker.getAnalyser().getLibraries();
       const SDK_VERSION = await this.getUserQxVersion();
-      // check all requieres
+      // check all requires
       for (let lib of libs) {
         let requires = lib.getRequires();
         if (!requires) {
@@ -826,6 +947,56 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         return targetClass;
       }
       return null;
+    },
+
+    /**
+     * Returns the list of makers to make
+     * 
+     * @return  {Maker[]}
+     */
+    getMakers() {
+      return this.__makers;
+    },
+    
+    /**
+     * Returns the one maker; this is for backwards compatibility with the compiler API, because it is
+     * possible to define multiple targets and therefore have multiple makers.  This method will return
+     * the one maker, when there is only one maker defined (ie one target), which is fine for any existing
+     * configurations.
+     * 
+     * @deprected
+     * @return {Maker}
+     */
+    getMaker() {
+      if (this.__makers.length == 1)
+        return this.__makers[0];
+      throw new Error("Cannot get a single maker - there are " + this.__makers.length + " available"); 
+    },
+    
+    /**
+     * Returns the makers for a given application name
+     * 
+     * @param appName {String} the name of the application
+     * @return {Maker}
+     */
+    getMakersForApp(appName) {
+      return this.__makers.filter(maker => maker.getApplication().getName() == appName);
+    },
+
+    /**
+     * Returns the configuration object being compiled
+     */
+    _getConfig() {
+      return this.__config;
+    },
+    
+    /**
+     * Returns a list of libraries which are used
+     * 
+     * @return {Library[]}
+     */
+    getLibraries() {
+      return this.__libraries; 
     }
   },
 
@@ -834,7 +1005,9 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
       "qx.tool.cli.compile.writingApplication": "Writing application %1",
       "qx.tool.cli.compile.minifyingApplication": "Minifying %1 %2",
       "qx.tool.cli.compile.compilingClass": "Compiling class %1",
-      "qx.tool.cli.compile.compiledClass": "Compiled class %1 in %2s"
+      "qx.tool.cli.compile.compiledClass": "Compiled class %1 in %2s",
+      "qx.tool.cli.compile.makeBegins": "Making applications...",
+      "qx.tool.cli.compile.makeEnds": "Applications are made"
     });
     qx.tool.compiler.Console.addMessageIds({
       "qx.tool.cli.compile.legacyFiles": "File %1 exists but is no longer used",

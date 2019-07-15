@@ -35,8 +35,6 @@ qx.Class.define("qxl.compilertests.testapp.LibraryApi", {
       if (this.__startedSassWatch)
         return;
       let command = this.getCompilerApi().getCommand();
-      let maker = command.getMaker();
-      let analyser = maker.getAnalyser();
       
       // Figure out the command line to execute
       let sassType = "update";
@@ -45,9 +43,10 @@ qx.Class.define("qxl.compilertests.testapp.LibraryApi", {
         sassType = "watch";
       }
       
-      let qxPath = analyser.getQooxdooPath();
+      let qxLibrary = command.getLibraries()["qx"];
+      let qxPath = qxLibrary.getRootDir();
       let cmd = `sass -C -t compressed -I ${qxPath}/source/resource/qx/mobile/scss -I ${qxPath}/source/resource/qx/scss --${sassType}`;
-      analyser.getLibraries().forEach(library => {
+      Object.values(command.getLibraries()).forEach(library => {
         let name = library.getNamespace();
         if (fs.existsSync(`source/theme/${name}/scss`))
           cmd += ` source/theme/${name}/scss:source/resource/${name}/css` 

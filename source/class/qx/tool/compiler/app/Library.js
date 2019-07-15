@@ -120,6 +120,7 @@ qx.Class.define("qx.tool.compiler.app.Library", {
   members: {
     __knownSymbols: null,
     __sourceFileExtensions: null,
+    __promiseLoadManifest: null,
 
     /**
      * Transform for rootDir; converts it to an absolute path
@@ -139,12 +140,18 @@ qx.Class.define("qx.tool.compiler.app.Library", {
      * @param rootDir
      * @param cb
      */
-    loadManifest: function(loadFromDir, cb) {
+    loadManifest: function(loadFromDir) {
+      if (this.__promiseLoadManifest)
+        return this.__promiseLoadManifest;
+      return this.__promiseLoadManifest = this.__loadManifestImpl(loadFromDir);
+    },
+    
+    __loadManifestImpl(loadFromDir) {
       var Console = qx.tool.compiler.Console.getInstance();
       var t = this;
       let rootDir = loadFromDir;
 
-      qx.tool.utils.files.Utils.correctCase(path.resolve(loadFromDir))
+      return qx.tool.utils.files.Utils.correctCase(path.resolve(loadFromDir))
         .then(tmp => this.setRootDir(rootDir = tmp))
         .then(() => qx.tool.utils.Json.loadJsonAsync(rootDir + "/Manifest.json"))
         .then(data => {
@@ -171,7 +178,7 @@ qx.Class.define("qx.tool.compiler.app.Library", {
               });
           }
 
-          fixLibraryPath(data.provides["class"])
+          return fixLibraryPath(data.provides["class"])
             .then(sourcePath => t.setSourcePath(sourcePath))
             .then(() => fixLibraryPath(data.provides.resource))
             .then(resourcePath => t.setResourcePath(data.provides.resource))
@@ -213,10 +220,8 @@ qx.Class.define("qx.tool.compiler.app.Library", {
               if (data.provides && data.provides.boot) {
                 qx.tool.compiler.Console.print("qx.tool.cli.compile.deprecatedProvidesBoot", rootDir);
               }
-              return cb && cb();
             });
-        })
-        .catch(err => cb(err));
+        });
     },
 
     /**
@@ -371,6 +376,20 @@ qx.Class.define("qx.tool.compiler.app.Library", {
      */
     getFilename: function(filename) {
       return path.join(this.getRootDir(), this.getSourcePath(), filename);
+    }
+  },
+  
+  statics: {
+    /**
+     * Helper method to create a Library instance and load it's manifest
+     * 
+     * @param rootDir {String} directory of the library (must contain a Manifest.json)
+     * @return {Library}
+     */
+    async createLibrary(rootDir) {
+      let lib = new qx.tool.compiler.app.Library();
+      await lib.loadManifest(rootDir);
+      return lib;
     }
   }
 });

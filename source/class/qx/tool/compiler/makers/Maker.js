@@ -78,6 +78,8 @@ qx.Class.define("qx.tool.compiler.makers.Maker", {
   },
 
   events: {
+    "making": "qx.event.type.Event",
+    "made": "qx.event.type.Event",
     "writingApplications": "qx.event.type.Event",
     "writingApplication": "qx.event.type.Data",
     "writtenApplication": "qx.event.type.Data",
@@ -215,24 +217,7 @@ qx.Class.define("qx.tool.compiler.makers.Maker", {
       var analyser = this._analyser = new (require("../Analyser"))(path.join(this.getOutputDir(), (this.getDbFilename()||"db.json")));
       analyser.setOutputDir(this.getOutputDir());
       return analyser;
-    },
-
-    /**
-     * Adds a library
-     * @param rootDir
-     * @param cb
-     */
-    addLibrary: function(rootDir, cb) {
-      var t = this;
-      var lib = new qx.tool.compiler.app.Library();
-      lib.loadManifest(rootDir, function(err) {
-        if (!err) {
-          t.getAnalyser().addLibrary(lib);
-        }
-        return cb && cb(err, lib);
-      });
     }
-
   }
 });
 

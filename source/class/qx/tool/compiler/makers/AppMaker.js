@@ -71,6 +71,8 @@ qx.Class.define("qx.tool.compiler.makers.AppMaker", {
      */
     make: function() {
       var analyser = this.getAnalyser();
+      
+      this.fireEvent("making");
 
       // merge all environment settings for the analyser
       const compileEnv = qx.tool.utils.Values.merge({},
@@ -181,7 +183,8 @@ qx.Class.define("qx.tool.compiler.makers.AppMaker", {
               return undefined;
             });
         })
-        .then(() => analyser.saveDatabase());
+        .then(() => analyser.saveDatabase())
+        .then(() => this.fireEvent("made"));
     }
   }
 });
