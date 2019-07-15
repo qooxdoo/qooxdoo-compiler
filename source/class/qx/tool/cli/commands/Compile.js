@@ -368,8 +368,9 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
       
       let countMaking = 0;
       const collateDispatchEvent = evt => {
-        if (countMaking == 1)
+        if (countMaking == 1) {
           this.dispatchEvent(evt.clone());
+        }
       };
       
       await qx.Promise.all(makers.map(async maker => {
@@ -404,34 +405,37 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         if (!this.argv.watch) {
           maker.addListener("making", () => {
             countMaking++;
-            if (countMaking == 1)
+            if (countMaking == 1) {
               this.fireEvent("making");
+            }
           });
           maker.addListener("made", () => {
             countMaking--;
-            if (countMaking == 0)
+            if (countMaking == 0) {
               this.fireEvent("made");
+            }
           });
           
           return p.then(() => maker.make());
-          
-          // Continuous make
-        } else {
-          let watch = new qx.tool.cli.Watch(maker);
-          
-          watch.addListener("making", () => {
-            countMaking++;
-            if (countMaking == 1)
-              this.fireEvent("making");
-          });
-          watch.addListener("made", () => {
-            countMaking--;
-            if (countMaking == 0)
-              this.fireEvent("made");
-          });
-          
-          return p.then(() => watch.start());
         }
+        
+        // Continuous make
+        let watch = new qx.tool.cli.Watch(maker);
+        
+        watch.addListener("making", () => {
+          countMaking++;
+          if (countMaking == 1) {
+            this.fireEvent("making");
+          }
+        });
+        watch.addListener("made", () => {
+          countMaking--;
+          if (countMaking == 0) {
+            this.fireEvent("made");
+          }
+        });
+        
+        return p.then(() => watch.start());
       }));
       
       this.addListener("making", evt => {
@@ -497,14 +501,17 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         let appType = appConfig.type||"browser";
         let appTargetConfigs = targetConfigs.filter(targetConfig => {
           let appTypes = targetConfig["application-types"];
-          if (appTypes && !qx.lang.Array.contains(appTypes, appType))
+          if (appTypes && !qx.lang.Array.contains(appTypes, appType)) {
             return false;
+          }
           
           let appNames = targetConfig["application-names"];
-          if (appConfig.name && appNames && !qx.lang.Array.contains(appNames, appConfig.name))
+          if (appConfig.name && appNames && !qx.lang.Array.contains(appNames, appConfig.name)) {
             return false;
-          if (appConfig.name && argvAppNames && !qx.lang.Array.contains(argvAppNames, appConfig.name))
+          }
+          if (appConfig.name && argvAppNames && !qx.lang.Array.contains(argvAppNames, appConfig.name)) {
             return false;
+          }
           return true;
         });
         
@@ -581,8 +588,9 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
       targetConfigs.forEach(targetConfig => {
         if (targetConfigs.appConfigs) {
           targetConfig.appConfigs.forEach(appConfig => {
-            if (appConfig.type && appConfig.type != "browser")
+            if (appConfig.type && appConfig.type != "browser") {
               return;
+            }
             
             let setDefault;
             if (appConfig.writeIndexHtmlToRoot !== undefined) {
@@ -718,8 +726,9 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
           maker.getAnalyser().setAddCreatedAt(true);
         }
 
-        for (let ns in libraries)
+        for (let ns in libraries) {
           maker.getAnalyser().addLibrary(libraries[ns]);
+        }
         
         
         let allApplicationTypes = {};
@@ -968,8 +977,9 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
      * @return {Maker}
      */
     getMaker() {
-      if (this.__makers.length == 1)
+      if (this.__makers.length == 1) {
         return this.__makers[0];
+      }
       throw new Error("Cannot get a single maker - there are " + this.__makers.length + " available"); 
     },
     

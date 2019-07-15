@@ -572,7 +572,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
 
       function checkJsDocDirectives(jsdoc, loc) {
         if (!jsdoc) {
-          return;
+          return jsdoc;
         }
         if (jsdoc["@use"]) {
           jsdoc["@use"].forEach(function(elem) {

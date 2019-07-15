@@ -141,8 +141,9 @@ qx.Class.define("qx.tool.compiler.app.Library", {
      * @param cb
      */
     loadManifest: function(loadFromDir) {
-      if (this.__promiseLoadManifest)
+      if (this.__promiseLoadManifest) {
         return this.__promiseLoadManifest;
+      }
       return this.__promiseLoadManifest = this.__loadManifestImpl(loadFromDir);
     },
     
