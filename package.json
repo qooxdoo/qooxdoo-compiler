@@ -69,6 +69,7 @@
     "mkdirp": "^0.5.1",
     "node-fetch": "^1.7.3",
     "node-sass": "^4.12.0",
+    "ps-tree": "^1.2.0",
     "replace-in-file": "^4.1.0",
     "rimraf": "^2.6.2",
     "runscript": "^1.3.1",

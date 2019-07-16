@@ -172,23 +172,7 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
      */
     _mergeArguments: function(parsedArgs, config, lockfileContent) {
       config.targetType = parsedArgs.target||config.defaultTarget||"source";
-      if (parsedArgs.config) {
-        /*
-        var defaultTarget = parsedArgs.target||config.defaultTarget;
-        if (defaultTarget) {
-          for (var i = 0; i < config.targets.length; i++) {
-            if (config.targets[i].type === defaultTarget) {
-              config.target = config.targets[i];
-              break;
-            }
-          }
-        }
-        if (!config.target) {
-          if (config.targets && (config.targets.length > 0)) {
-            config.target = config.targets[0];
-          }
-        }*/
-      } else {
+      if (!parsedArgs.config) {
         config.targets = [
           {
             type: parsedArgs.target||"source",
