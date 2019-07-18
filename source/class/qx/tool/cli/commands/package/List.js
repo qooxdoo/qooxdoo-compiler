@@ -86,6 +86,10 @@ qx.Class.define("qx.tool.cli.commands.package.List", {
           "prereleases": {
             alias: "p",
             describe: "Include prereleases into latest compatible releases"
+          },
+          "uris-only": {
+            alias: "u",
+            describe: "Output only the GitHub URIs of the packages which are used to install the packages. Implies --noheaders and --libraries."
           }
         },
         handler: function(argv) {
@@ -166,9 +170,17 @@ qx.Class.define("qx.tool.cli.commands.package.List", {
       }
 
       // list output
-      let columns = this.argv.short ?
-        ["uri", "installedVersion", "latestVersion", "latestCompatible"] :
-        ["uri", "name", "description", "installedVersion", "latestVersion", "latestCompatible"];
+
+      let columns;
+      if (this.argv.urisOnly) {
+        columns = ["uri"];
+        this.argv.noheaders = true;
+        this.argv.libraries = true;
+      } else if (this.argv.short) {
+        columns = ["uri", "installedVersion", "latestVersion", "latestCompatible"];
+      } else {
+        columns = ["uri", "name", "description", "installedVersion", "latestVersion", "latestCompatible"];
+      }
       if (this.argv.namespace || this.argv.installed) {
         columns.splice(1, 0, "namespace");
       }
@@ -235,7 +247,7 @@ qx.Class.define("qx.tool.cli.commands.package.List", {
         }
 
         // add title to multiple-library repos
-        if (repo_libs.length > 1 && !(this.argv["only-libraries"] || this.argv.short || repo.name === localPathRepoName)) {
+        if (repo_libs.length > 1 && !(this.argv.libraries || this.argv.short || repo.name === localPathRepoName)) {
           expanded_list.push({
             type: "repository",
             uri: repo.name,
@@ -245,7 +257,7 @@ qx.Class.define("qx.tool.cli.commands.package.List", {
             latestVersion: repo.latestVersion,
             latestCompatible: repo.latestCompatible
           });
-          if (!this.argv.json && !this.argv.installed && !this.argv.match) {
+          if (!this.argv.json && !this.argv.installed && !this.argv.match && !this.argv.urisOnly) {
             // add an indent to group libraries in a repository
             repo_libs = repo_libs.map(lib => {
               lib.uri = "| " + lib.uri;
