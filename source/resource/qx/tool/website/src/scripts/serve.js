@@ -1,7 +1,7 @@
 $(function() {
   
   function get(uri) {
-    return new Promise((resolve, reject) => {
+    return new Promise(function(resolve, reject) {
       $.ajax("/serve.api/apps.json", {
         cache: false,
         dataType: "json",
@@ -21,12 +21,12 @@ $(function() {
   };
   
   $.qxcli.pages = {
-    homepage() {
+    homepage: function() {
       $.qxcli.serve.apps
-        .then((data) => {
+        .then(function(data) {
           console.log(JSON.stringify(data, null, 2));
           var $ul = $("<ul>");
-          data.apps.forEach((appData) => {
+          data.apps.forEach(function(appData) {
             var $li = $("<li>");
             var $a = $("<a>");
             $a.text(appData.title||appData.name);

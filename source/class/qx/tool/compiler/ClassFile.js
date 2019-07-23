@@ -88,6 +88,15 @@ function collapseMemberExpression(node) {
   return doCollapse(node);
 }
 
+function isCollapsibleLiteral(node) {
+  let nodeType = node.type;
+  return nodeType === "Literal" || 
+    nodeType === "StringLiteral" || 
+    nodeType === "NumericLiteral" || 
+    nodeType === "BooleanLiteral" || 
+    nodeType === "BigIntLiteral";
+}
+
 /**
  * Helper method that expands a dotted string into MemberExpression
  * @param str
@@ -484,6 +493,10 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         if (item === undefined) {
           continue;
         }
+        // One of multiple classes defined in this file
+        if (this.__metaDefinitions[name]) {
+          continue;
+        }
         var info = t.__analyser.getSymbolType(name);
         if (info && info.className) {
           t._requireClass(info.className, { load: item.load, defer: item.defer });
@@ -621,8 +634,12 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
             t.addDeclaration(param.argument.name);
           } else if (param.type == "Identifier") {
             t.addDeclaration(param.name);
+          } else if (param.type == "ArrayPattern") {
+            param.elements.forEach(elem => t.addDeclaration(elem.name));
+          } else if (param.type == "ObjectPattern") {
+            param.properties.forEach(prop => t.addDeclaration(prop.value.name));
           } else {
-            qx.tool.compiler.Console.warn("Unexpected type of parameter " + param.type + " at " + node.loc.start.line + "," + node.loc.start.column);
+            t.addMarker("testForFunctionParameterType", node.loc, param.type);
           }
         });
         checkNodeJsDocDirectives(node);
@@ -773,7 +790,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         BinaryExpression: {
           exit(path) {
             var node = path.node;
-            if (types.isLiteral(node.left) && types.isLiteral(node.right) && "+-*/".indexOf(node.operator) > -1) {
+            if (isCollapsibleLiteral(node.left) && isCollapsibleLiteral(node.right) && "+-*/".indexOf(node.operator) > -1) {
               var result;
               switch (node.operator) {
                 case "+":
@@ -932,7 +949,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
           allowedKeys = allowedKeys[t.__classMeta.isStatic ? "static" : "normal"];
         }
         if (allowedKeys[keyName] === undefined) {
-          t.addMarker("compiler.invalidClassDefinitionEntry", prop.value.loc, t.__classMeta.type, keyName);
+          t.addMarker("compiler.invalidClassDefinitionEntry", prop.loc, t.__classMeta.type, keyName);
         }
       }
       function handleTopLevelMethods(path, keyName, functionNode) {
@@ -1342,6 +1359,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
                 path.skip();
                 path.traverse(CLASS_DEF_VISITOR, {classDefPath: path});
                 t.__popMeta(className);
+                
               } else if (name == "qx.core.Environment.add") {
                 let arg = path.node.arguments[0];
                 if (types.isLiteral(arg)) {
@@ -1352,6 +1370,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
                   }
                 }
                 t._requireClass("qx.core.Environment", { usage: "dynamic", location: path.node.loc });
+                
               } else if (name == "qx.core.Environment.get") {
                 let arg = path.node.arguments[0];
                 if (types.isLiteral(arg)) {
@@ -1364,6 +1383,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
                 t._requireClass("qx.core.Environment", { usage: "dynamic", location: path.node.loc });
                 path.skip();
                 path.traverse(VISITOR);
+                
               } else if (name == "qx.core.Environment.select") {
                 let arg = path.node.arguments[0];
                 if (types.isLiteral(arg)) {
@@ -1377,6 +1397,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
                 t._requireClass("qx.core.Environment", { usage: "dynamic", location: path.node.loc });
                 path.skip();
                 path.traverse(VISITOR);
+                
               } else if (name == "this.base") {
                 let expr;
 
@@ -1398,6 +1419,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
                 }
                 let callExpr = types.callExpression(expr, path.node.arguments);
                 path.replaceWith(callExpr);
+                
               } else if (name == "this.base.apply" || name == "this.base.call") {
                 let methodName = name == "this.base.apply" ? "apply" : "call";
 
@@ -1418,9 +1440,11 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
                 let exprUnshift = types.callExpression(types.memberExpression(exprSplice, types.identifier("shift")), []);
                 let callExpr = types.callExpression(expr, [ path.node.arguments[0], exprUnshift ]);
                 path.replaceWith(callExpr);
+                
               } else if (name == "this.self") {
                 let expr = expandMemberExpression(t.__className);
                 path.replaceWith(expr);
+                
               } else if (name == "this.tr" || name == "this.marktr" || name == "qx.locale.Manager.tr" || name == "qx.locale.Manager.marktr") {
                 let arg0 = getStringArg(0);
                 if (!arg0) {
@@ -1428,6 +1452,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
                 } else {
                   addTranslation({ msgid: arg0 });
                 }
+                
               } else if (name == "this.trn" || name == "qx.locale.Manager.trn") {
                 let arg0 = getStringArg(0);
                 let arg1 = getStringArg(1);
@@ -1436,6 +1461,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
                 } else {
                   addTranslation({ msgid: arg0, msgid_plural: arg1 });
                 }
+                
               } else if (name == "this.trc" || name == "qx.locale.Manager.trc") {
                 let arg0 = getStringArg(0);
                 let arg1 = getStringArg(1);
@@ -1444,6 +1470,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
                 } else {
                   addTranslation({ msgid: arg1, comment: arg0 });
                 }
+                
               } else if (name == "this.trnc" || name == "qx.locale.Manager.trnc") {
                 let arg0 = getStringArg(0);
                 let arg1 = getStringArg(1);
@@ -1453,6 +1480,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
                 } else {
                   addTranslation({ msgid: arg1, msgid_plural: arg2, comment: arg0 });
                 }
+                
               } else {
                 let pos = name.lastIndexOf(".");
                 // name can be ".concat" when used with "[].concat"
@@ -1631,7 +1659,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         BinaryExpression: {
           exit(path) {
             let node = path.node;
-            if (types.isLiteral(node.left) && types.isLiteral(node.right)) {
+            if (isCollapsibleLiteral(node.left) && isCollapsibleLiteral(node.right)) {
               let result;
               switch (node.operator) {
                 case "==":

@@ -31,6 +31,16 @@ qx.Class.define("qx.tool.cli.commands.Run", {
   statics: {
 
     YARGS_BUILDER: {
+      "inspect": {
+        describe: "Whether to start node for debugging (ie with the --inspect argument)",
+        type: "boolean",
+        default: false
+      },
+      "inspect-brk": {
+        describe: "Whether to start node for debugging and break immediately (ie with the --inspect-brk argument)",
+        type: "boolean",
+        default: false
+      }
     },
 
     getYargsCommand: function() {
@@ -110,7 +120,13 @@ qx.Class.define("qx.tool.cli.commands.Run", {
       
       let scriptname = path.join(target.getApplicationRoot(app), app.getName() + ".js");
       let args = config.run.arguments||"";
-      let cmd = `node ${scriptname} ${args}`;
+      let debug = "";
+      if (this.argv["inspect-brk"]) {
+        debug = " --inspect-brk";
+      } else if (this.argv["inspect"]) {
+        debug = " --inspect";
+      }
+      let cmd = `node${debug} ${scriptname} ${args}`;
       /* eslint-disable @qooxdoo/qx/no-illegal-private-usage */
       this.addListener("made", async e => {
         if (this.__process) {

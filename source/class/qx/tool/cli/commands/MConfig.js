@@ -172,71 +172,20 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
      */
     _mergeArguments: function(parsedArgs, config, lockfileContent) {
       config.targetType = parsedArgs.target||config.defaultTarget||"source";
-      if (!parsedArgs.config) {
-        config.targets = [
-          {
-            type: parsedArgs.target||"source",
-            outputPath: parsedArgs.outputPath||"compiled/source"
-          }
-        ];
-      }
 
       if (!config.locales) {
         config.locales = [];
-      }
-      if (parsedArgs.locales) {
-        parsedArgs.locales.forEach(function(locale) {
-          if (config.locales.indexOf(locale) < 0) {
-            config.locales.push(locale);
-          }
-        });
       }
       if (typeof parsedArgs.writeAllTranslations == "boolean") {
         config.writeAllTranslations = parsedArgs.writeAllTranslations;
       }
 
-      if (parsedArgs.environment) {
-        if (!config.environment) {
-          config.environment = {};
-        }
-        /* eslint-disable guard-for-in */
-        for (var key in parsedArgs.environment) {
-          config.environment[key] = parsedArgs.environment[key];
-        }
-        /* eslint-enable guard-for-in */
+      if (!config.environment) {
+        config.environment = {};
       }
 
-      if (!config.applications) {
-        config.applications = [];
-      }
-      parsedArgs.applications.forEach(function(app) {
-        if (!app.appClass) {
-          throw new Error("Missing --app-class <classname> argument");
-        }
-        var configApp = {
-          class: app.appClass
-        };
-        if (app.theme) {
-          configApp.theme = app.theme;
-        }
-        if (app.name) {
-          configApp.name = app.name;
-        }
-        config.applications.push(configApp);
-      });
-
-      if (parsedArgs.libraries) {
-        if (!config.libraries) {
-          config.libraries = [];
-        }
-        parsedArgs.libraries.forEach(function(aPath) {
-          config.libraries.push(aPath);
-        });
-      }
-
-      // Add default library for this project
-      if (!config.libraries.length) {
-        config.libraries.push(".");
+      if (!config.libraries) {
+        config.libraries = [ "." ];
       }
 
       if (lockfileContent.libraries) {
@@ -263,36 +212,16 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
      * @return {Object}
      */
     __parseImpl: async function() {
-      let apps = [];
       let argv = this.argv;
       let result = {
         target: argv.target,
-        outputPath: argv.outputPath||null,
+        outputPath: null,
         locales: null,
         writeAllTranslations: argv.writeAllTranslations,
         environment: {},
-        applications: apps,
-        libraries: argv.library||[],
         config: argv.configFile||qx.tool.config.Compile.config.fileName,
-        continuous: argv.continuous,
         verbose: argv.verbose
       };
-      if (argv.set) {
-        argv.set.forEach(function(kv) {
-          var m = kv.match(/^([^=\s]+)(=(.+))?$/);
-          if (m) {
-            var key = m[1];
-            var value = m[3];
-            try {
-              result.environment[key] = Function("\"use strict\";return (" + value + ")")();
-            } catch (error) {
-              throw new Error("Failed to translate environment value '"+value+"' to a js datatype - "+error);
-            }
-          } else {
-            throw new Error("Failed to parse environment setting commandline option '"+kv+"'");
-          }
-        });
-      }
 
       if (argv.locale && argv.locale.length) {
         result.locales = argv.locale;

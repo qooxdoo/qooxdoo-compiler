@@ -150,6 +150,7 @@ qx.Class.define("qx.tool.cli.commands.Lint", {
         let libs = s.split(".");
         result[libs[0]] = false;
       }));
+      return result;
     }
 
   }
