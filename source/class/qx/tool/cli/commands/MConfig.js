@@ -267,32 +267,14 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
       let argv = this.argv;
       let result = {
         target: argv.target,
-        outputPath: argv.outputPath||null,
+        outputPath: null,
         locales: null,
         writeAllTranslations: argv.writeAllTranslations,
         environment: {},
         applications: apps,
-        libraries: argv.library||[],
         config: argv.configFile||qx.tool.config.Compile.config.fileName,
-        continuous: argv.continuous,
         verbose: argv.verbose
       };
-      if (argv.set) {
-        argv.set.forEach(function(kv) {
-          var m = kv.match(/^([^=\s]+)(=(.+))?$/);
-          if (m) {
-            var key = m[1];
-            var value = m[3];
-            try {
-              result.environment[key] = Function("\"use strict\";return (" + value + ")")();
-            } catch (error) {
-              throw new Error("Failed to translate environment value '"+value+"' to a js datatype - "+error);
-            }
-          } else {
-            throw new Error("Failed to parse environment setting commandline option '"+kv+"'");
-          }
-        });
-      }
 
       if (argv.locale && argv.locale.length) {
         result.locales = argv.locale;

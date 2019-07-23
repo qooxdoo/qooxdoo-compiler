@@ -58,8 +58,23 @@ qx.Class.define("qx.tool.cli.commands.Command", {
 
   members: {
     argv: null,
-
+    
     async process() {
+      let argv = this.argv;
+      if (argv.set) {
+        let configDb = await qx.tool.cli.ConfigDb.getInstance();
+        argv.set.forEach(function(kv) {
+          var m = kv.match(/^([^=\s]+)(=(.+))?$/);
+          if (m) {
+            var key = m[1];
+            var value = m[3];
+            configDb.setOverride(key, value);
+          } else {
+            throw new Error(`Failed to parse environment setting commandline option '--set ${kv}'`);
+          }
+        });
+      }
+      
       // check if we have to migrate files
       await (new qx.tool.cli.commands.package.Migrate(this.argv)).process(true);
     },

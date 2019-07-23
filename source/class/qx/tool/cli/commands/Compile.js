@@ -51,13 +51,6 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         type: "boolean",
         default: true
       },
-      "output-path": {
-        alias: "o",
-        describe: "Base path for output",
-        nargs: 1,
-        requiresArg: true,
-        type: "string"
-      },
       "locale": {
         alias: "l",
         describe: "Compile for a given locale",
@@ -76,13 +69,6 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         describe: "enables output of all translations, not just those that are explicitly referenced",
         type: "boolean"
       },
-      "set": {
-        describe: "sets an environment value",
-        nargs: 1,
-        requiresArg: true,
-        type: "string",
-        array: true
-      },
       "app-class": {
         describe: "sets the application class",
         nargs: 1,
@@ -100,13 +86,6 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         nargs: 1,
         requiresArg: true,
         type: "string"
-      },
-      "library": {
-        describe: "adds a library",
-        nargs: 1,
-        requiresArg: true,
-        type: "string",
-        array: true
       },
       "watch": {
         describe: "enables watching for changes and continuous compilation",
@@ -273,8 +252,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
      * @Override
      */
     process: async function() {
-      // check if we need to migrate files
-      await (new qx.tool.cli.commands.package.Migrate(this.argv)).process(true);
+      await this.base(arguments);
 
       let configDb = await qx.tool.cli.ConfigDb.getInstance();
       if (this.argv["feedback"] === null) {
