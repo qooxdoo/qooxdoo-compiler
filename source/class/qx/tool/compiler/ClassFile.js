@@ -932,7 +932,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
           allowedKeys = allowedKeys[t.__classMeta.isStatic ? "static" : "normal"];
         }
         if (allowedKeys[keyName] === undefined) {
-          t.addMarker("compiler.invalidClassDefinitionEntry", prop.value.loc, t.__classMeta.type, keyName);
+          t.addMarker("compiler.invalidClassDefinitionEntry", prop.loc, t.__classMeta.type, keyName);
         }
       }
       function handleTopLevelMethods(path, keyName, functionNode) {
