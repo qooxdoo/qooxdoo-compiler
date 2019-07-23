@@ -121,10 +121,11 @@ qx.Class.define("qx.tool.cli.commands.Run", {
       let scriptname = path.join(target.getApplicationRoot(app), app.getName() + ".js");
       let args = config.run.arguments||"";
       let debug = "";
-      if (this.argv["inspect-brk"])
+      if (this.argv["inspect-brk"]) {
         debug = " --inspect-brk";
-      else if (this.argv["inspect"])
+      } else if (this.argv["inspect"]) {
         debug = " --inspect";
+      }
       let cmd = `node${debug} ${scriptname} ${args}`;
       /* eslint-disable @qooxdoo/qx/no-illegal-private-usage */
       this.addListener("made", async e => {

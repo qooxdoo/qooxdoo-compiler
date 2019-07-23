@@ -91,10 +91,10 @@ function collapseMemberExpression(node) {
 function isCollapsibleLiteral(node) {
   let nodeType = node.type;
   return nodeType === "Literal" || 
-      "StringLiteral" === nodeType || 
-      "NumericLiteral" === nodeType || 
-      "BooleanLiteral" === nodeType || 
-      "BigIntLiteral" === nodeType;
+    nodeType === "StringLiteral" || 
+    nodeType === "NumericLiteral" || 
+    nodeType === "BooleanLiteral" || 
+    nodeType === "BigIntLiteral";
 }
 
 /**
