@@ -135,6 +135,8 @@
               euri = "./" + uri[1];
             else
               euri = pathName + "/" + uri[1];
+          } else if (uri[0] == "__external__") {
+            continue;
           } else {
             euri = compressedUris[i];
           }

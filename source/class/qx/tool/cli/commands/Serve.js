@@ -99,14 +99,21 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
     /* @ignore qx.tool.$$resourceDir */
 
     runWebServer: async function() {
-      var maker = this.getMaker();
+      let makers = this.getMakers().filter(maker => maker.getApplications().some(app => app.isBrowserApp()));
+      let apps = [];
+      makers.forEach(maker => { 
+        maker.getApplications().forEach(app => {
+          if (app.isBrowserApp()) {
+            apps.push(app); 
+          }
+        });
+      });
       var config = this._getConfig();
-      var target = maker.getTarget();
-      var apps = maker.getApplications().filter(app => app.isBrowserApp());
 
       const app = express();
       const website = new qx.tool.utils.Website();
       if (apps.length === 1 && apps[0].getWriteIndexHtmlToRoot() && this.argv.showStartpage === false) {
+        let target = makers[0].getTarget();
         app.use("/", express.static(target.getOutputDir()));
       } else {
         let s = await this.getAppQxPath();
@@ -116,22 +123,28 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
         app.use("/docs", express.static(path.join(s, "docs")));
         app.use("/apps", express.static(path.join(s, "apps")));
         app.use("/", express.static(website.getTargetDir()));
-        app.use("/" + target.getOutputDir(), express.static(target.getOutputDir()));
-        var obj = {
-          target: {
-            type: target.getType(),
-            outputDir: "/" + target.getOutputDir()
-          },
-          apps: apps.map(app => ({
-            name: app.getName(),
-            type: app.getType(),
-            title: app.getTitle() || app.getName(),
-            outputPath: target.getProjectDir(app) // no trailing slash or link will break
-          }))
-        };
+        var appsData = [];
+        makers.forEach(maker => {
+          let target = maker.getTarget();
+          app.use("/" + target.getOutputDir(), express.static(target.getOutputDir()));
+          appsData.push({
+            target: {
+              type: target.getType(),
+              outputDir: "/" + target.getOutputDir()
+            },
+            apps: maker.getApplications()
+              .filter(app => app.isBrowserApp())
+              .map(app => ({
+                name: app.getName(),
+                type: app.getType(),
+                title: app.getTitle() || app.getName(),
+                outputPath: target.getProjectDir(app) // no trailing slash or link will break
+              }))
+          });
+        });
         app.get("/serve.api/apps.json", (req, res) => {
           res.set("Content-Type", "application/json");
-          res.send(JSON.stringify(obj, null, 2));
+          res.send(JSON.stringify(appsData, null, 2));
         });
       }
       this.addListenerOnce("made", e => {

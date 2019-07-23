@@ -6,6 +6,31 @@
       "environment": {
         "test.overridden4": "target",
         "test.overridden5": "target"
+      },
+      "application-types": [ "browser" ]
+    },
+    {
+      "type": "source",
+      "outputPath": "compiled/source-chrome",
+      "environment": {
+        "test.overridden4": "target",
+        "test.overridden5": "target"
+      },
+      "application-types": [ "browser" ],
+      "babelOptions": {
+        "targets": "chrome >= 69"
+      }
+    },
+    {
+      "type": "source",
+      "outputPath": "compiled/source-node",
+      "environment": {
+        "test.overridden4": "target",
+        "test.overridden5": "target"
+      },
+      "application-types": [ "node" ],
+      "babelOptions": {
+        "targets": "node >= 11"
       }
     },
     {
@@ -23,6 +48,7 @@
       "class": "testapp.Application",
       "theme": "qx.theme.Indigo",
       "name": "testapp",
+      "default": true,
       "environment": {
         "test.overridden1": true,
         "test.overridden2": false,
@@ -40,6 +66,11 @@
       "include": [
         "testapp.test.*"
       ]
+    },
+    {
+        "class": "testapp.NodeApplication",
+        "type": "node",
+        "name": "nodeapp"
     }
   ],
   "libraries": [

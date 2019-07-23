@@ -24,6 +24,11 @@ const path = require("path");
  */
 qx.Class.define("qx.tool.cli.ConfigDb", {
   extend: qx.core.Object,
+  
+  construct() {
+    this.base(arguments);
+    this.__overrides = {};
+  },
 
   properties: {
     path: {
@@ -35,6 +40,7 @@ qx.Class.define("qx.tool.cli.ConfigDb", {
 
   members: {
     __db: null,
+    __overrides: null,
 
     /**
      * Apply for path property
@@ -58,6 +64,17 @@ qx.Class.define("qx.tool.cli.ConfigDb", {
       await qx.tool.utils.Utils.makeParentDir(this.getPath());
       await qx.tool.utils.Json.saveJsonAsync(this.getPath(), this.__db);
     },
+    
+    /**
+     * Sets a temporary override
+     */
+    setOverride(key, value) {
+      if (value === undefined) {
+        delete this.__overrides[key];
+      } else {
+        this.__overrides[key] = value;
+      }
+    },
 
     /**
      * Returns the database root.  If the `path` parameter is provided, this will try and locate it;
@@ -70,6 +87,10 @@ qx.Class.define("qx.tool.cli.ConfigDb", {
      */
     db: function(path, defaultValue) {
       if (path) {
+        let override = this.__overrides[path];
+        if (override) {
+          return override;
+        }
         var result = this.__db;
         var segs = path.split(".");
         for (var i = 0; i < segs.length; i++) {

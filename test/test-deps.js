@@ -52,22 +52,12 @@ async function createMaker() {
     },
     templatePath: "../source/resource/qx/tool/cli/templates"
   }));
-
-  return new Promise((resolve, reject) => {
-    maker.addLibrary("testapp", function (err) {
-      if (err) {
-        return reject(err);
-      }
-      maker.addLibrary(QOOXDOO_PATH, function (err) {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(maker);
-        }
-      });
-      return null;
-    });
-  });
+  
+  let analyser = maker.getAnalyser();
+  analyser.addLibrary(await qx.tool.compiler.app.Library.createLibrary("testapp"));
+  analyser.addLibrary(await qx.tool.compiler.app.Library.createLibrary(QOOXDOO_PATH));
+  
+  return maker;
 }
 
 test("Checks dependencies and environment settings", assert => {
@@ -176,44 +166,75 @@ test("Checks dependencies and environment settings", assert => {
         assert.ok(Boolean(map["c"]), "missing unresolved dontKnow in testapp.Issue488");
         assert.ok(arr.length === 6, "unexpected unresolved " + JSON.stringify(arr) + " in testapp.Issue488");
       })
+      
+      /*
+       * Test Issue494
+       */
+      .then(src => {
+        var ci = db.classInfo["testapp.Issue494"];
+        var arr = ci.unresolved||[];
+        assert.ok(arr.length === 0, "unexpected unresolved " + JSON.stringify(arr) + " in testapp.Issue494");
+      })
+      
+      /*
+       * Test Issue495
+       */
+      .then(src => {
+        var ci = db.classInfo["testapp.Issue495"];
+        var arr = ci.unresolved||[];
+        assert.ok(arr.length === 0, "unexpected unresolved " + JSON.stringify(arr) + " in testapp.Issue495");
+      })
+      
+      /*
+       * Test Issue500
+       */
+      .then(() => readFile("unit-tests-output/transpiled/testapp/Issue500.js", "utf8"))
+      .then(src => {
+        assert.ok(src.match(/Unable to launch monitor/), "Template Literals");
+        assert.ok(src.match(/abcdef/), "Template Literals", "Ordinary Literals");
+      })
+      
 
       /*
        * Test environment settings
        */
       .then(() => readFile("unit-tests-output/transpiled/testapp/Application.js", "utf8")
-            .then(src => {
-              assert.ok(!src.match(/ELIMINATION_FAILED/), "Code elimination");
-              assert.ok(src.match(/TEST_OVERRIDDEN_1/), "Overridden environment vars #1");
-              assert.ok(src.match(/TEST_OVERRIDDEN_2/), "Overridden environment vars #2");
-              assert.ok(src.match(/var envVar1 = "ONE"/), "environment setting for envVar1");
-              assert.ok(src.match(/var envVar2 = qx.core.Environment.get\("envVar2"\)/), "environment setting for envVar2");
-              assert.ok(src.match(/var envVar3 = qx.core.Environment.get\("envVar3"\)/), "environment setting for envVar3");
-              assert.ok(src.match(/var envVar4 = "four"/), "environment setting for envVar4");
-              assert.ok(src.match(/var envTestOverriden3 = "global"/), "environment setting for envTestOverriden3");
-              assert.ok(src.match(/var envTestOverriden4 = "target"/), "environment setting for envTestOverriden4");
-              assert.ok(src.match(/var envTestOverriden5 = qx.core.Environment.get\("test.overridden5"\)/), "environment setting for envTestOverriden5");
-              assert.ok(src.match(/var envVarSelect3 = 0/), "environment setting for envVarSelect3");
-              assert.ok(src.match(/var envVarDefault1 = "some"/), "environment setting for envVarDefault1");
-              assert.ok(src.match(/var envVarDefault2 = qx.core.Environment.get("test.noValue") || "default2"/), "environment setting for envVarDefault2");
-              assert.ok(src.match(/var mergeStrings = "abcdefghi";/), "merging binary expressions: mergeStrings");
-              assert.ok(src.match(/var mergeStringsAndNumbers = "abc23def45ghi";/), "merging binary expressions: mergeStringsAndNumbers");
-              assert.ok(src.match(/var addNumbers = 138;/), "merging binary expressions: addNumbers");
-              assert.ok(src.match(/var multiplyNumbers = 2952;/), "merging binary expressions: multiplyNumbers");
-              assert.ok(src.match(/qx.core.Environment.get\("qx.promise"\)/), "override default env setting");
-            }))
+      .then(src => {
+        assert.ok(!src.match(/ELIMINATION_FAILED/), "Code elimination");
+        assert.ok(src.match(/TEST_OVERRIDDEN_1/), "Overridden environment vars #1");
+        assert.ok(src.match(/TEST_OVERRIDDEN_2/), "Overridden environment vars #2");
+        assert.ok(src.match(/var envVar1 = "ONE"/), "environment setting for envVar1");
+        assert.ok(src.match(/var envVar2 = qx.core.Environment.get\("envVar2"\)/), "environment setting for envVar2");
+        assert.ok(src.match(/var envVar3 = qx.core.Environment.get\("envVar3"\)/), "environment setting for envVar3");
+        assert.ok(src.match(/var envVar4 = "four"/), "environment setting for envVar4");
+        assert.ok(src.match(/var envTestOverriden3 = "global"/), "environment setting for envTestOverriden3");
+        assert.ok(src.match(/var envTestOverriden4 = "target"/), "environment setting for envTestOverriden4");
+        assert.ok(src.match(/var envTestOverriden5 = qx.core.Environment.get\("test.overridden5"\)/), "environment setting for envTestOverriden5");
+        assert.ok(src.match(/var envVarSelect3 = 0/), "environment setting for envVarSelect3");
+        assert.ok(src.match(/var envVarDefault1 = "some"/), "environment setting for envVarDefault1");
+        assert.ok(src.match(/var envVarDefault2 = qx.core.Environment.get("test.noValue") || "default2"/), "environment setting for envVarDefault2");
+        assert.ok(src.match(/var mergeStrings = "abcdefghi";/), "merging binary expressions: mergeStrings");
+        assert.ok(src.match(/var mergeStringsAndNumbers = "abc23def45ghi";/), "merging binary expressions: mergeStringsAndNumbers");
+        assert.ok(src.match(/var addNumbers = 138;/), "merging binary expressions: addNumbers");
+        assert.ok(src.match(/var multiplyNumbers = 2952;/), "merging binary expressions: multiplyNumbers");
+        assert.ok(src.match(/qx.core.Environment.get\("qx.promise"\)/), "override default env setting");
+      }))
+      
       .then(() => readFile("unit-tests-output/transpiled/testapp/MMyMixin.js", "utf8")
-            .then(src => {
-              assert.ok(src.match(/mixedInIsTrue/), "Conditional Mixin part 1");
-              assert.ok(!src.match(/mixedInIsFalse/), "Conditional Mixin part 2");
-            }))
+      .then(src => {
+        assert.ok(src.match(/mixedInIsTrue/), "Conditional Mixin part 1");
+        assert.ok(!src.match(/mixedInIsFalse/), "Conditional Mixin part 2");
+      }))
+      
       .then(() => readFile("unit-tests-output/transpiled/testapp/TestThat1.js", "utf8")
-            .then(src => {
-              assert.ok(src.match(/testapp\.TestThat1\.prototype\.toHashCode\.base\.call\(other\)/), "Aliased this");
-            }))
+      .then(src => {
+        assert.ok(src.match(/testapp\.TestThat1\.prototype\.toHashCode\.base\.call\(other\)/), "Aliased this");
+      }))
+      
       .then(() => readFile("unit-tests-output/transpiled/testapp/TestThat2.js", "utf8")
-            .then(src => {
-              assert.ok(src.match(/testapp\.TestThat2\.prototype\.toHashCode\.base\.call\(other\)/), "Aliased this");
-            }))
+      .then(src => {
+        assert.ok(src.match(/testapp\.TestThat2\.prototype\.toHashCode\.base\.call\(other\)/), "Aliased this");
+      }))
 
       .then(() => assert.end())
       .catch(err => assert.end(err));

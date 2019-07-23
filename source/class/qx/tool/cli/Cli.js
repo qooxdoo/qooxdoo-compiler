@@ -44,6 +44,13 @@ qx.Class.define("qx.tool.cli.Cli", {
       Type qx <command> --help for options and subcommands.`;
 
       let yargs = require("yargs").locale("en");
+      yargs.option("set", {
+        describe: "sets an environment value",
+        nargs: 1,
+        requiresArg: true,
+        type: "string",
+        array: true
+      });
       qx.tool.cli.Cli.addYargsCommands(yargs,
         [
           "Add",

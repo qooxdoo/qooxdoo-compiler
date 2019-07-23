@@ -62,7 +62,7 @@ qx.Class.define("testapp.Application", {
       }catch(ex) {
         console.log("Found intentionally uindefined value");
       }
-
+      
       // Enable logging in debug variant
       if (qx.core.Environment.get("qx.debug")) {
         // support native logging capabilities, e.g. Firebug for Firefox
@@ -173,6 +173,10 @@ qx.Class.define("testapp.Application", {
       new testapp.Issue186();
       new testapp.Issue461().unusedDestructedArray();
       new testapp.Issue488();
+      new testapp.Issue494();
+      new testapp.Issue494PartTwo();
+      new testapp.Issue495();
+      new testapp.Issue500();
       new testapp.InnerEs6Classes();
       
       qx.core.Assert.assertTrue(TEST_EXTERNAL === "loaded");

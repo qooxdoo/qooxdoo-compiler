@@ -31,6 +31,16 @@ qx.Class.define("qx.tool.cli.commands.Run", {
   statics: {
 
     YARGS_BUILDER: {
+      "inspect": {
+        describe: "Whether to start node for debugging (ie with the --inspect argument)",
+        type: "boolean",
+        default: false
+      },
+      "inspect-brk": {
+        describe: "Whether to start node for debugging and break immediately (ie with the --inspect-brk argument)",
+        type: "boolean",
+        default: false
+      }
     },
 
     getYargsCommand: function() {
@@ -70,19 +80,33 @@ qx.Class.define("qx.tool.cli.commands.Run", {
         process.exit(-1);
       }
       
-      let maker = this.getMaker();
-      let target = maker.getTarget();
-      let apps = maker.getApplications().filter(app => app.getName() == config.run.application);
-      if (apps.length != 1) {
+      let maker = null;
+      let app = null;
+      this.getMakers().forEach(tmp => {
+        let apps = tmp.getApplications().filter(app => app.getName() == config.run.application);
+        if (apps.length) {
+          if (maker) {
+            qx.tool.compiler.Console.print("qx.tool.cli.run.tooManyMakers");
+            process.exit(-1);
+          }
+          if (apps.length != 1) {
+            qx.tool.compiler.Console.print("qx.tool.cli.run.tooManyApplications");
+            process.exit(-1);
+          }
+          maker = tmp;
+          app = apps[0];
+        }
+      });
+      if (!app) {
         qx.tool.compiler.Console.print("qx.tool.cli.run.noAppName");
         process.exit(-1);
       }
-      
-      let app = apps[0];
       if (app.getType() != "node") {
         qx.tool.compiler.Console.print("qx.tool.cli.run.mustBeNode");
         process.exit(-1);
       }
+      
+      let target = maker.getTarget();
       
       function kill(parentId) {
         return new qx.Promise((resolve, reject) => {
@@ -110,7 +134,13 @@ qx.Class.define("qx.tool.cli.commands.Run", {
       
       let scriptname = path.join(target.getApplicationRoot(app), app.getName() + ".js");
       let args = config.run.arguments||"";
-      let cmd = `node ${scriptname} ${args}`;
+      let debug = "";
+      if (this.argv["inspect-brk"]) {
+        debug = " --inspect-brk";
+      } else if (this.argv["inspect"]) {
+        debug = " --inspect";
+      }
+      let cmd = `node${debug} ${scriptname} ${args}`;
       /* eslint-disable @qooxdoo/qx/no-illegal-private-usage */
       this.addListener("made", async e => {
         if (this.__process) {
@@ -147,7 +177,9 @@ qx.Class.define("qx.tool.cli.commands.Run", {
     qx.tool.compiler.Console.addMessageIds({
       "qx.tool.cli.run.noRunConfig": "Cannot run anything because the config.json does not have a `run` configuration",
       "qx.tool.cli.run.noAppName": "Cannot run anything because the config.json does not specify a unique application name",
-      "qx.tool.cli.run.mustBeNode": "The application %1 is not a node application (only node applications are supported)"
+      "qx.tool.cli.run.mustBeNode": "The application %1 is not a node application (only node applications are supported)",
+      "qx.tool.cli.run.tooManyMakers": "Cannot run anything because multiple targets are detected",
+      "qx.tool.cli.run.tooManyApplications": "Cannot run anything because multiple applications are detected"
     }, "error");
   }
 });

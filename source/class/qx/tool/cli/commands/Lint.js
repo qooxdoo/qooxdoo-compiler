@@ -19,7 +19,6 @@
 require("@qooxdoo/framework");
 
 const CLIEngine = require("eslint").CLIEngine;
-const async = require("async");
 const fs = qx.tool.utils.Promisify.fs;
 
 require("./Command");
@@ -144,36 +143,14 @@ qx.Class.define("qx.tool.cli.commands.Lint", {
      * Scan all libraries and add the namespace to globals
      */
     __addGlobals: async function(data) {
-      let t = this;
       let result = {};
-      return new Promise((resolve, reject) => {
-        async.forEach(data.libraries,
-          function(path, cb) {
-            t.__addLibrary(path, result, cb);
-          },
-          function(err) {
-            if (err) {
-              reject(err);
-            } else {
-              resolve(result);
-            }
-          });
-      });
-    },
-
-    /**
-     * Load library and add namespace to result
-     */
-    __addLibrary: function(rootDir, result, cb) {
-      var lib = new qx.tool.compiler.app.Library();
-      lib.loadManifest(rootDir, function(err) {
-        if (!err) {
-          let s = lib.getNamespace();
-          let libs = s.split(".");
-          result[libs[0]] = false;
-        }
-        return cb && cb(err, lib);
-      });
+      await qx.Promise.all(data.libraries.map(async dir => {
+        let lib = await qx.tool.compiler.app.Library.createLibrary(dir);
+        let s = lib.getNamespace();
+        let libs = s.split(".");
+        result[libs[0]] = false;
+      }));
+      return result;
     }
 
   }
