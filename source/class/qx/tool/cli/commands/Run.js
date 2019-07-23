@@ -80,19 +80,33 @@ qx.Class.define("qx.tool.cli.commands.Run", {
         process.exit(-1);
       }
       
-      let maker = this.getMaker();
-      let target = maker.getTarget();
-      let apps = maker.getApplications().filter(app => app.getName() == config.run.application);
-      if (apps.length != 1) {
+      let maker = null;
+      let app = null;
+      this.getMakers().forEach(tmp => {
+        let apps = tmp.getApplications().filter(app => app.getName() == config.run.application);
+        if (apps.length) {
+          if (maker) {
+            qx.tool.compiler.Console.print("qx.tool.cli.run.tooManyMakers");
+            process.exit(-1);
+          }
+          if (apps.length != 1) {
+            qx.tool.compiler.Console.print("qx.tool.cli.run.tooManyApplications");
+            process.exit(-1);
+          }
+          maker = tmp;
+          app = apps[0];
+        }
+      });
+      if (!app) {
         qx.tool.compiler.Console.print("qx.tool.cli.run.noAppName");
         process.exit(-1);
       }
-      
-      let app = apps[0];
       if (app.getType() != "node") {
         qx.tool.compiler.Console.print("qx.tool.cli.run.mustBeNode");
         process.exit(-1);
       }
+      
+      let target = maker.getTarget();
       
       function kill(parentId) {
         return new qx.Promise((resolve, reject) => {
@@ -163,7 +177,9 @@ qx.Class.define("qx.tool.cli.commands.Run", {
     qx.tool.compiler.Console.addMessageIds({
       "qx.tool.cli.run.noRunConfig": "Cannot run anything because the config.json does not have a `run` configuration",
       "qx.tool.cli.run.noAppName": "Cannot run anything because the config.json does not specify a unique application name",
-      "qx.tool.cli.run.mustBeNode": "The application %1 is not a node application (only node applications are supported)"
+      "qx.tool.cli.run.mustBeNode": "The application %1 is not a node application (only node applications are supported)",
+      "qx.tool.cli.run.tooManyMakers": "Cannot run anything because multiple targets are detected",
+      "qx.tool.cli.run.tooManyApplications": "Cannot run anything because multiple applications are detected"
     }, "error");
   }
 });
