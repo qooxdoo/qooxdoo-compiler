@@ -168,6 +168,15 @@ test("Checks dependencies and environment settings", assert => {
       })
       
       /*
+       * Test Issue495
+       */
+      .then(src => {
+        var ci = db.classInfo["testapp.Issue495"];
+        var arr = ci.unresolved.map(entry => entry.name);
+        assert.ok(arr.length === 0, "unexpected unresolved " + JSON.stringify(arr) + " in testapp.Issue495");
+      }))
+      
+      /*
        * Test Issue500
        */
       .then(() => readFile("unit-tests-output/transpiled/testapp/Issue500.js", "utf8")

@@ -630,8 +630,12 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
             t.addDeclaration(param.argument.name);
           } else if (param.type == "Identifier") {
             t.addDeclaration(param.name);
+          } else if (param.type == "ArrayPattern") {
+            param.elements.forEach(elem => t.addDeclaration(elem.name));
+          } else if (param.type == "ObjectPattern") {
+            param.properties.forEach(prop => t.addDeclaration(prop.value.name));
           } else {
-            qx.tool.compiler.Console.warn("Unexpected type of parameter " + param.type + " at " + node.loc.start.line + "," + node.loc.start.column);
+            t.addMarker("testForFunctionParameterType", node.loc, param.type);
           }
         });
         checkNodeJsDocDirectives(node);
