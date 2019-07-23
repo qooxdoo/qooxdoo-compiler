@@ -493,6 +493,10 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         if (item === undefined) {
           continue;
         }
+        // One of multiple classes defined in this file
+        if (this.__metaDefinitions[name]) {
+          continue;
+        }
         var info = t.__analyser.getSymbolType(name);
         if (info && info.className) {
           t._requireClass(info.className, { load: item.load, defer: item.defer });
@@ -1355,6 +1359,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
                 path.skip();
                 path.traverse(CLASS_DEF_VISITOR, {classDefPath: path});
                 t.__popMeta(className);
+                
               } else if (name == "qx.core.Environment.add") {
                 let arg = path.node.arguments[0];
                 if (types.isLiteral(arg)) {
@@ -1365,6 +1370,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
                   }
                 }
                 t._requireClass("qx.core.Environment", { usage: "dynamic", location: path.node.loc });
+                
               } else if (name == "qx.core.Environment.get") {
                 let arg = path.node.arguments[0];
                 if (types.isLiteral(arg)) {
@@ -1377,6 +1383,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
                 t._requireClass("qx.core.Environment", { usage: "dynamic", location: path.node.loc });
                 path.skip();
                 path.traverse(VISITOR);
+                
               } else if (name == "qx.core.Environment.select") {
                 let arg = path.node.arguments[0];
                 if (types.isLiteral(arg)) {
@@ -1390,6 +1397,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
                 t._requireClass("qx.core.Environment", { usage: "dynamic", location: path.node.loc });
                 path.skip();
                 path.traverse(VISITOR);
+                
               } else if (name == "this.base") {
                 let expr;
 
@@ -1411,6 +1419,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
                 }
                 let callExpr = types.callExpression(expr, path.node.arguments);
                 path.replaceWith(callExpr);
+                
               } else if (name == "this.base.apply" || name == "this.base.call") {
                 let methodName = name == "this.base.apply" ? "apply" : "call";
 
@@ -1431,9 +1440,11 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
                 let exprUnshift = types.callExpression(types.memberExpression(exprSplice, types.identifier("shift")), []);
                 let callExpr = types.callExpression(expr, [ path.node.arguments[0], exprUnshift ]);
                 path.replaceWith(callExpr);
+                
               } else if (name == "this.self") {
                 let expr = expandMemberExpression(t.__className);
                 path.replaceWith(expr);
+                
               } else if (name == "this.tr" || name == "this.marktr" || name == "qx.locale.Manager.tr" || name == "qx.locale.Manager.marktr") {
                 let arg0 = getStringArg(0);
                 if (!arg0) {
@@ -1441,6 +1452,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
                 } else {
                   addTranslation({ msgid: arg0 });
                 }
+                
               } else if (name == "this.trn" || name == "qx.locale.Manager.trn") {
                 let arg0 = getStringArg(0);
                 let arg1 = getStringArg(1);
@@ -1449,6 +1461,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
                 } else {
                   addTranslation({ msgid: arg0, msgid_plural: arg1 });
                 }
+                
               } else if (name == "this.trc" || name == "qx.locale.Manager.trc") {
                 let arg0 = getStringArg(0);
                 let arg1 = getStringArg(1);
@@ -1457,6 +1470,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
                 } else {
                   addTranslation({ msgid: arg1, comment: arg0 });
                 }
+                
               } else if (name == "this.trnc" || name == "qx.locale.Manager.trnc") {
                 let arg0 = getStringArg(0);
                 let arg1 = getStringArg(1);
@@ -1466,6 +1480,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
                 } else {
                   addTranslation({ msgid: arg1, msgid_plural: arg2, comment: arg0 });
                 }
+                
               } else {
                 let pos = name.lastIndexOf(".");
                 // name can be ".concat" when used with "[].concat"
