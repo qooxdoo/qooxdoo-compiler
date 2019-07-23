@@ -103,8 +103,9 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
       let apps = [];
       makers.forEach(maker => { 
         maker.getApplications().forEach(app => {
-          if (app.isBrowserApp()) 
+          if (app.isBrowserApp()) {
             apps.push(app); 
+          }
         });
       });
       var config = this._getConfig();
