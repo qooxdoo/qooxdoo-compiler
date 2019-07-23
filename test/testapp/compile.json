@@ -6,6 +6,19 @@
       "environment": {
         "test.overridden4": "target",
         "test.overridden5": "target"
+      },
+      "application-types": [ "browser" ]
+    },
+    {
+      "type": "source",
+      "outputPath": "compiled/source-chrome",
+      "environment": {
+        "test.overridden4": "target",
+        "test.overridden5": "target"
+      },
+      "application-types": [ "browser" ],
+      "babelOptions": {
+        "targets": "chrome >= 69"
       }
     },
     {

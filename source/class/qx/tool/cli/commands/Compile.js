@@ -512,7 +512,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
           appConfig.targetConfigs.push(targetConfig);
         });
       });
-      if (defaultTargetConfig.appConfigs) {
+      if (defaultTargetConfig && defaultTargetConfig.appConfigs) {
         targetConfigs.push(defaultTargetConfig);
       }
       
