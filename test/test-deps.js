@@ -172,27 +172,27 @@ test("Checks dependencies and environment settings", assert => {
        */
       .then(src => {
         var ci = db.classInfo["testapp.Issue494"];
-        var arr = ci.unresolved.map(entry => entry.name);
+        var arr = ci.unresolved||[];
         assert.ok(arr.length === 0, "unexpected unresolved " + JSON.stringify(arr) + " in testapp.Issue494");
-      }))
+      })
       
       /*
        * Test Issue495
        */
       .then(src => {
         var ci = db.classInfo["testapp.Issue495"];
-        var arr = ci.unresolved.map(entry => entry.name);
+        var arr = ci.unresolved||[];
         assert.ok(arr.length === 0, "unexpected unresolved " + JSON.stringify(arr) + " in testapp.Issue495");
-      }))
+      })
       
       /*
        * Test Issue500
        */
-      .then(() => readFile("unit-tests-output/transpiled/testapp/Issue500.js", "utf8")
+      .then(() => readFile("unit-tests-output/transpiled/testapp/Issue500.js", "utf8"))
       .then(src => {
         assert.ok(src.match(/Unable to launch monitor/), "Template Literals");
         assert.ok(src.match(/abcdef/), "Template Literals", "Ordinary Literals");
-      }))
+      })
       
 
       /*
