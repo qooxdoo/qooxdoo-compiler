@@ -88,6 +88,15 @@ function collapseMemberExpression(node) {
   return doCollapse(node);
 }
 
+function isCollapsibleLiteral(node) {
+  let nodeType = node.type;
+  return nodeType === "Literal" || 
+      "StringLiteral" === nodeType || 
+      "NumericLiteral" === nodeType || 
+      "BooleanLiteral" === nodeType || 
+      "BigIntLiteral" === nodeType;
+}
+
 /**
  * Helper method that expands a dotted string into MemberExpression
  * @param str
@@ -773,7 +782,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         BinaryExpression: {
           exit(path) {
             var node = path.node;
-            if (types.isLiteral(node.left) && types.isLiteral(node.right) && "+-*/".indexOf(node.operator) > -1) {
+            if (isCollapsibleLiteral(node.left) && isCollapsibleLiteral(node.right) && "+-*/".indexOf(node.operator) > -1) {
               var result;
               switch (node.operator) {
                 case "+":
@@ -1631,7 +1640,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         BinaryExpression: {
           exit(path) {
             let node = path.node;
-            if (types.isLiteral(node.left) && types.isLiteral(node.right)) {
+            if (isCollapsibleLiteral(node.left) && isCollapsibleLiteral(node.right)) {
               let result;
               switch (node.operator) {
                 case "==":
