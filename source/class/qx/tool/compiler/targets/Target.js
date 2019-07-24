@@ -199,26 +199,8 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
      *
      * @param compileInfo
      */
-    _syncAssets: async function(compileInfo) {
-      var t = this;
-
-      const analyser = compileInfo.application.getAnalyser();
-      await new Promise((resolve, reject) => {
-        var queue = async.queue(
-          function (asset, cb) {
-            var library = analyser.findLibrary(asset.libraryName);
-            qx.tool.utils.files.Utils.sync(
-              library.getRootDir() + "/" + library.getResourcePath() + "/" + asset.filename,
-              path.join(t.getOutputDir(), "resource", asset.filename))
-              .then(() => cb())
-              .catch(err => cb(err));
-          },
-          100
-        );
-        queue.drain = resolve;
-        queue.error = err => t.error(err.stack||err);
-        queue.push(compileInfo.assets);
-      });
+    async _syncAssets(compileInfo) {
+      await qx.tool.utils.Promisify.poolEachOf(compileInfo.assets, 10, asset => asset.sync(this));
     },
 
     /**
@@ -511,7 +493,7 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
 
                 new qx.Promise((resolve, reject) => {
                   var assetUris = application.getAssetUris(rm, configdata.environment);
-                  var assets = rm.getAssets(assetUris);
+                  var assets = rm.getAssets(this, assetUris);
                   compileInfo.assets = assets;
 
                   // Save any changes that getAssets collected
@@ -519,17 +501,20 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
                     .then(() => {
                       for (var i = 0; i < assets.length; i++) {
                         var asset = assets[i];
-                        var m = asset.filename.match(/\.(\w+)$/);
-                        var arr = pkgdata.resources[asset.filename] = [
-                          asset.fileInfo.width,
-                          asset.fileInfo.height,
-                          (m && m[1]) || "",
-                          asset.libraryName
+                        let ext = path.extname(asset.getFilename());
+                        if (ext.length)
+                          ext = ext.substring(1);
+                        let fileInfo = asset.getFileInfo();
+                        var arr = pkgdata.resources[asset.getFilename()] = [
+                          fileInfo.width,
+                          fileInfo.height,
+                          ext,
+                          asset.getLibrary().getNamespace()
                         ];
-                        if (asset.fileInfo.composite !== undefined) {
-                          arr.push(asset.fileInfo.composite);
-                          arr.push(asset.fileInfo.x);
-                          arr.push(asset.fileInfo.y);
+                        if (fileInfo.composite !== undefined) {
+                          arr.push(fileInfo.composite);
+                          arr.push(fileInfo.x);
+                          arr.push(fileInfo.y);
                         }
                       }
                     })
@@ -835,7 +820,7 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
             Libinfo: compileInfo.configdata.libraries,
             UrisBefore: compileInfo.configdata.urisBefore,
             CssBefore: compileInfo.configdata.cssBefore,
-            Assets: compileInfo.assets,
+            Assets: compileInfo.assets.map(asset => asset.getFilename()),
             Parts: compileInfo.parts
           };
           var outputDir = path.join(appRootDir, t.getScriptPrefix());

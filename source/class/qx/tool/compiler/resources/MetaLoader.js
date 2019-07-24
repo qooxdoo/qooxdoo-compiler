@@ -21,29 +21,17 @@
  * *********************************************************************** */
 
 var fs = require("fs");
-require("@qooxdoo/framework");
-var jsonlint = require("jsonlint");
-require("./Handler");
 
-qx.Class.define("qx.tool.compiler.resources.MetaHandler", {
-  extend: qx.tool.compiler.resources.Handler,
+qx.Class.define("qx.tool.compiler.resources.MetaLoader", {
+  extend: qx.tool.compiler.resources.ResourceLoader,
 
   construct: function() {
-    this.base(arguments, /\.meta$/);
+    this.base(arguments, ".meta");
   },
 
   members: {
-    compile: function(filename, library, fileInfo) {
-      return new Promise((resolve, reject) => {
-        fs.readFile(filename, { encoding: "utf-8" }, function(err, data) {
-          if (err) {
-            reject(err);
-            return;
-          }
-          fileInfo.meta = jsonlint.parse(data);
-          resolve();
-        });
-      });
+    async load(asset) {
+      asset.getFileInfo().meta = await qx.tool.utils.Json.loadJsonAsync(asset.getSourceFilename());
     }
   }
 });

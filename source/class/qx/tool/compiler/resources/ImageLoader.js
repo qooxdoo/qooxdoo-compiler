@@ -20,44 +20,37 @@
  *
  * *********************************************************************** */
 
-require("@qooxdoo/framework");
-var util = require("../util");
-var imageSize = require("image-size");
-require("./Handler");
+var imageSize = qx.tool.utils.Promisify.promisify(require("image-size"));
 
-var log = util.createLog("resource-manager");
+var log = require("../util").createLog("resource-manager");
 
-qx.Class.define("qx.tool.compiler.resources.ImageHandler", {
-  extend: qx.tool.compiler.resources.Handler,
+qx.Class.define("qx.tool.compiler.resources.ImageLoader", {
+  extend: qx.tool.compiler.resources.ResourceLoader,
 
   construct: function() {
-    this.base(arguments, /\.(png|gif|jpg|jpeg)$/);
+    this.base(arguments, [ ".png", ".gif", ".jpg", ".jpeg" ]);
   },
 
   members: {
-    needsCompile: function(filename, fileInfo, stat) {
+    needsLoad(filename, fileInfo, stat) {
       if (!fileInfo || fileInfo.width === undefined || fileInfo.height === undefined) {
         return true;
       }
       return this.base(arguments, filename, fileInfo, stat);
     },
 
-    compile: function(filename, library, fileInfo) {
-      return new Promise((resolve, reject) => {
-        log.trace("Getting size of " + filename);
-        imageSize(filename, function(err, dimensions) {
-          if (err) {
-            log.warn("Cannot get image size of " + filename + ": " + err);
-            delete fileInfo.width;
-            delete fileInfo.height;
-            resolve();
-            return;
-          }
-          fileInfo.width = dimensions.width;
-          fileInfo.height = dimensions.height;
-          resolve();
-        });
-      });
+    async load(asset) {
+      let filename = asset.getSourceFilename();
+      log.trace("Getting size of " + filename);
+      try {
+        let dimensions = await imageSize(filename);
+        fileInfo.width = dimensions.width;
+        fileInfo.height = dimensions.height;
+      }catch(ex) {
+        log.warn("Cannot get image size of " + filename + ": " + err);
+        delete fileInfo.width;
+        delete fileInfo.height;
+      }
     }
   }
 });
