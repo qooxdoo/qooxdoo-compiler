@@ -194,6 +194,15 @@ test("Checks dependencies and environment settings", assert => {
         assert.ok(src.match(/abcdef/), "Template Literals", "Ordinary Literals");
       })
       
+      /*
+       * Test Issue503
+       */
+      .then(src => {
+        var ci = db.classInfo["testapp.Issue503"];
+        var arr = ci.unresolved||[];
+        assert.ok(arr.length === 0, "unexpected unresolved " + JSON.stringify(arr) + " in testapp.Issue503");
+      })
+      
 
       /*
        * Test environment settings
