@@ -34,6 +34,19 @@ qx.Class.define("qx.tool.utils.files.Utils", {
   extend: qx.core.Object,
 
   statics: {
+    
+    async findAllFiles(dir, fnEach) {
+      let filenames = await readdir(dir);
+      await qx.Promise.all(dir.map(async shortName => {
+        let filename = path.join(dir, shortName)
+        let tmp = stat(filename);
+        if (tmp.isDirectory())
+          await qx.tool.utils.files.Utils.findAllFiles(filename, fnEach);
+        else {
+          await fnEach(filename);
+        }
+      }));
+    },
 
     /**
      * Synchronises two files or folders; files are copied from/to but only if their

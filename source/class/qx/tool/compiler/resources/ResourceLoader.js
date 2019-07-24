@@ -26,7 +26,7 @@ require("@qooxdoo/framework");
  * Instances of Handler are used by the resource manager to handle different types of resources that 
  *  need compilation.
  */
-qx.Class.define("qx.tool.compiler.resources.Handler", {
+qx.Class.define("qx.tool.compiler.resources.ResourceLoader", {
   extend: qx.core.Object,
   type: "abstract",
   

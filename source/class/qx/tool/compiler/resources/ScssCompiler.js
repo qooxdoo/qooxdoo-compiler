@@ -26,8 +26,8 @@ var sass = require("node-sass");
 require("@qooxdoo/framework");
 require("./Handler");
 
-qx.Class.define("qx.tool.compiler.resources.ScssHandler", {
-  extend: qx.tool.compiler.resources.Handler,
+qx.Class.define("qx.tool.compiler.resources.ScssCompiler", {
+  extend: qx.tool.compiler.resources.ResourceConverter,
 
   construct: function (analyser) {
     this.base(arguments, /\.scss$/);
