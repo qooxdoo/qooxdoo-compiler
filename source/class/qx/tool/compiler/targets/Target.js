@@ -203,8 +203,6 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
       var t = this;
 
       const analyser = compileInfo.application.getAnalyser();
-      let rm = analyser.getResourceManager();
-      
       await new Promise((resolve, reject) => {
         var queue = async.queue(
           function (asset, cb) {
@@ -513,7 +511,7 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
 
                 new qx.Promise((resolve, reject) => {
                   var assetUris = application.getAssetUris(rm, configdata.environment);
-                  var assets = rm.exportAssets(this, assetUris);
+                  var assets = rm.getAssets(assetUris);
                   compileInfo.assets = assets;
 
                   // Save any changes that getAssets collected

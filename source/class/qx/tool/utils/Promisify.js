@@ -22,7 +22,6 @@
 
 require("@qooxdoo/framework");
 const nodePromisify = require("util").promisify;
-const PromisePool = require('es6-promise-pool');
 
 qx.Class.define("qx.tool.utils.Promisify", {
   statics: {
@@ -72,17 +71,6 @@ qx.Class.define("qx.tool.utils.Promisify", {
         fn = fn.bind(context);
       }
       return fn;
-    },
-    
-    async promisePool(arr, size, fn) {
-      let index = 0;
-      let pool = new PromisePool(() => {
-        if (index >= arr.length)
-          return null;
-        let item = arr[index++];
-        return fn(item);
-      }, 10);
-      await pool.start();
     },
 
     call: function(fn) {

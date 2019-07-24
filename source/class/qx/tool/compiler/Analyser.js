@@ -245,9 +245,14 @@ qx.Class.define("qx.tool.compiler.Analyser", {
               return;
             }
 
-            t.__resManager.findAllResources()
-              .then(() => cb())
-              .catch(cb);
+            t.__resManager.findAllResources(function(err) {
+              if (err) {
+                cb(err);
+                return;
+              }
+              log.debug("found all resources");
+              cb(null);
+            });
           },
 
           // Find all classes

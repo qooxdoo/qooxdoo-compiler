@@ -55,7 +55,6 @@
     "columnify": "^1.5.4",
     "console-control-strings": "^1.1.0",
     "download": "^6.0.0",
-    "es6-promise-pool": "^2.5.0",
     "eslint": "^5.16.0",
     "express": "^4.17.1",
     "fontkit": "^1.8.0",

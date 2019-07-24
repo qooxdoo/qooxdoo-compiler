@@ -27,8 +27,8 @@ require("./Handler");
 
 var log = util.createLog("resource-manager");
 
-qx.Class.define("qx.tool.compiler.resources.ImageLoader", {
-  extend: qx.tool.compiler.resources.ResourceLoader,
+qx.Class.define("qx.tool.compiler.resources.ImageHandler", {
+  extend: qx.tool.compiler.resources.Handler,
 
   construct: function() {
     this.base(arguments, /\.(png|gif|jpg|jpeg)$/);

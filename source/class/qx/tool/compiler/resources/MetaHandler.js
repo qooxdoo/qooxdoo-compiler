@@ -25,8 +25,8 @@ require("@qooxdoo/framework");
 var jsonlint = require("jsonlint");
 require("./Handler");
 
-qx.Class.define("qx.tool.compiler.resources.MetaLoader", {
-  extend: qx.tool.compiler.resources.ResourceLoader,
+qx.Class.define("qx.tool.compiler.resources.MetaHandler", {
+  extend: qx.tool.compiler.resources.Handler,
 
   construct: function() {
     this.base(arguments, /\.meta$/);

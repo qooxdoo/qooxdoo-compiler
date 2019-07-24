@@ -51,12 +51,10 @@ qx.Class.define("qx.tool.compiler.resources.Manager", {
     this.base(arguments);
     this.__analyser = analyser;
     this.__dbFilename = analyser.getResDbFilename() || "resource-db.json";
-    this.__loaders = [
-      new qx.tool.compiler.resources.ImageLoader(),
-      new qx.tool.compiler.resources.MetaLoader()
-    ];
-    this.__converters = [
-      new qx.tool.compiler.resources.ScssCompiler()
+    this.__handlers = [
+      new qx.tool.compiler.resources.ImageHandler(),
+      new qx.tool.compiler.resources.MetaHandler(),
+      new qx.tool.compiler.resources.ScssHandler(this.__analyser)
     ];
   },
 
@@ -76,11 +74,10 @@ qx.Class.define("qx.tool.compiler.resources.Manager", {
     /** {String[]} Array of all resource URIs, sorted alphabetically (ie these are the keys in __librariesByResourceUri) */
     __allResourceUris: null,
 
-    /** {ResourceLoader[]} list of resource loaders, used to add info to the database */
-    __loaders: null,
+    /** {Map{String,Library}} Lookup of libraries, indexed by resource folder URI */
+    __librariesByResourceFolderUri: null,
 
-    /** {ResourceConverter[]} list of resource converters, used to copy resources to the target */
-    __converters: null,
+    __handlers: null,
 
     /**
      * Loads the cached database
@@ -171,7 +168,7 @@ qx.Class.define("qx.tool.compiler.resources.Manager", {
 
       // Fast folder match
       if (isFolderMatch) {
-        library = t.__librariesByResourceUri[uri] || null;
+        library = t.__librariesByResourceFolderUri[uri] || null;
         return library;
       }
 
@@ -179,7 +176,7 @@ qx.Class.define("qx.tool.compiler.resources.Manager", {
       pos = qx.tool.utils.Values.binaryStartsWith(t.__allResourceUris, uri);
       if (pos > -1) {
         var firstUri = t.__allResourceUris[pos];
-        library = t.__librariesByResourceUri[firstUri] || null;
+        library = t.__librariesByResourceUri[firstUri] || t.__librariesByResourceFolderUri[firstUri] || null;
         return library;
       }
 
@@ -192,89 +189,187 @@ qx.Class.define("qx.tool.compiler.resources.Manager", {
      *
      * @param callback
      */
-    async findAllResources() {
+    findAllResources: function(callback) {
       var t = this;
       var db = this.__db;
       if (!db.resources) {
         db.resources = {};
       }
       t.__librariesByResourceUri = {};
-      this.__assets = {};
-      
-      await qx.Promise.all(t.__analyser.getLibraries().map(library => {
-        var resources = db.resources[library.getNamespace()];
-        if (!resources) {
-          db.resources[library.getNamespace()] = resources = {};
-        }
-        var unconfirmed = {};
-        for (let relFile in resources) {
-          unconfirmed[relFile] = true;
-        }
-        
-        const scanResources = (resourcePath, doNotCopy) => {
-          // If the root folder exists, scan it
-          var rootDir = path.join(library.getRootDir(), library.get(resourcePath));
-          await qx.tool.utils.files.Utils.findAllFiles(rootDir, filename => {
-            var relFile = filename.substring(rootDir.length + 1).replace(/\\/g, "/");
-            var fileInfo = resources[relFile];
-            delete unconfirmed[relFile];
-            if (!fileInfo) {
-              fileInfo = resources[relFile] = {};
-            }
-            fileInfo.doNotCopy = doNotCopy;
-            fileInfo.resource = resourcePath;
-            fileInfo.mtime = await qx.tool.utils.files.Utils.safeStat(filename).mtime;
-            let asset = this.__assets[filename] = new qx.tool.compiler.resources.Asset(library, filename, fileInfo);
-            
-            let tmp = "";
-            filename.split('/').forEach(seg => {
-              if (tmp.length) {
-                tmp += "/";
-              }
-              tmp += seg;
-              t.__librariesByResourceUri[tmp] = library;
-            });
+      t.__librariesByResourceFolderUri = {};
 
-            asset.setLoaders(t.__loaders.filter(loader => loader.matches(filename)));
-            asset.setConverters(t.__converters.filter(converter => converter.matches(filename)));
-          });
-        };
-        
-        await scanResources("resourcePath", false);
-        await scanResources("themePath", true);
-        
-        // Check the unconfirmed resources to make sure that they still exist;
-        //  delete from the database if they don't
-        await qx.Promise.all(Object.keys(unconfirmed).map(async filename => {
-          let fileInfo = resources[filename];
-          if (!fileInfo) {
-            delete resources[filename];
-          } else {
-            let rootDir = path.join(library.getRootDir(), library.get(fileInfo.resourcePath));
-            let stat = await qx.tool.utils.files.Utils.safeStat(filename);
-            if (!stat) {
-              delete resources[filename];
-            }
+      // Scan all the libraries
+      async.forEach(t.__analyser.getLibraries(),
+        function(library, callback) {
+          var resources = db.resources[library.getNamespace()];
+          if (!resources) {
+            db.resources[library.getNamespace()] = resources = {};
           }
-        }));
-      }));
-      
-      await qx.tool.utils.Promisify.promisePool(this.__assets, 10, asset => {
-        asset.load();
-      });
+          var unconfirmed = {};
+          for (let relFile in resources) {
+            unconfirmed[relFile] = true;
+          }
+          var tasks = [];
+
+          // Scans a folder, recursively, looking for resource files
+          function scanDir(rootDir, dir, resource, doNotCopy, callback) {
+            // Get the list of files
+            fs.readdir(dir, function(err, files) {
+              if (err) {
+                callback(err);
+                return;
+              }
+
+              // and process each one
+              async.forEach(files,
+                function(file, callback) {
+                  var absFile = path.join(dir, file);
+                  fs.stat(absFile, function(err, stat) {
+                    if (err) {
+                      callback(err);
+                      return;
+                    }
+
+                    // Directory? recurse
+                    if (stat.isDirectory()) {
+                      scanDir(rootDir, absFile, resource, doNotCopy, callback);
+                    } else {
+                      var relFile = absFile.substring(rootDir.length + 1).replace(/\\/g, "/");
+                      var fileInfo = resources[relFile];
+                      delete unconfirmed[relFile];
+                      if (!fileInfo) {
+                        fileInfo = resources[relFile] = {};
+                      }
+                      fileInfo.doNotCopy = doNotCopy;
+                      fileInfo.resource = resource;
+                      t.__librariesByResourceUri[relFile] = library;
+                      var relDir = dir.substring(rootDir.length + 1).replace(/\\/g, "/");
+                      t.__librariesByResourceFolderUri[relDir] = library;
+                      var tmp = "";
+                      relDir.split("/").forEach(seg => {
+                        if (tmp.length) {
+                          tmp += "/";
+                        }
+                        tmp += seg;
+                        t.__librariesByResourceFolderUri[tmp] = library;
+                      });
+
+                      var handlers = t.__handlers.filter(handler => handler.matches(absFile));
+                      if (!handlers.length) {
+                        callback();
+                        return;
+                      }
+
+                      if (handlers.some(handler => handler.needsCompile(absFile, fileInfo, stat))) {
+                        fileInfo.mtime = stat.mtime;
+                        tasks.push({
+                          fileInfo: fileInfo,
+                          absFile: absFile,
+                          library: library,
+                          handlers: handlers
+                        });
+                      }
+                      callback();
+                    }
+                  });
+                },
+                callback);
+            });
+          }
+
+          function testUntested(callback) {
+            // Check the unconfirmed resources to make sure that they still exist;
+            //  delete from the database if they don't
+            async.forEach(Object.keys(unconfirmed),
+              function(relFile, callback) {
+                let fileInfo = resources[relFile];
+                if (!fileInfo) {
+                  delete resources[relFile];
+                  callback();
+                } else {
+                  let rootDir = path.join(library.getRootDir(), library.get(fileInfo.resource));
+                  fs.stat(path.join(rootDir, relFile), function(err, stat) {
+                    if (err) {
+                      delete resources[relFile];
+                    }
+                    callback();
+                  });
+                }
+              },
+              callback);
+          }
+
+          function flushTasks(callback) {
+            if (tasks.length == 0) {
+              callback(null);
+              return;
+            }
+
+            // inspect all the files that need it
+            var identifyQueue = async.queue(function(task, callback) {
+              var promises = [];
+              task.handlers.forEach(handler => {
+                promises.push(handler.compile(task.absFile, task.library, task.fileInfo));
+              });
+              Promise.all(promises)
+                .then(() => {
+                  callback();
+                })
+                .catch(err => {
+                  callback(err);
+                });
+            }, 20);
+
+            identifyQueue.push(tasks);
+            identifyQueue.drain = callback;
+            identifyQueue.error = function(err) {
+              t.error(err.stack || err);
+            };
+          }
+
+          function scanResource(resource, doNotCopy, callback) {
+            // If the root folder exists, scan it
+            var rootDir = path.join(library.getRootDir(), library.get(resource));
+            fs.exists(rootDir, function(exists) {
+              if (!exists) {
+                callback(null);
+                return;
+              }
+              scanDir(rootDir, rootDir, resource, doNotCopy, function(err) {
+                if (err) {
+                  callback(err);
+                  return;
+                }
+                callback();
+              });
+            });
+          }
+
+          scanResource("resourcePath", false, function() {
+            scanResource("themePath", true, function() {
+              testUntested(err => {
+                if (err) {
+                  callback(err);
+                  return;
+                }
+                flushTasks(function(err) {
+                  t.__allResourceUris = Object.keys(t.__librariesByResourceUri).sort();
+                  callback(err);
+                });
+              });
+            });
+          });
+        },
+        callback);
     },
 
     /**
      * Collects information about the assets listed in srcPaths;
      * @param srcPaths
      */
-    exportAssets: function(target, srcPaths) {
+    getAssets: function(srcPaths) {
       var t = this;
       var db = this.__db;
-      
-      srcPaths.forEach(srcPath => {
-        
-      });
 
       // Generate a lookup that maps the resource name to the meta file that
       //  contains the composite
@@ -362,18 +457,6 @@ qx.Class.define("qx.tool.compiler.resources.Manager", {
       }
 
       return assets;
-    },
-    
-    async copyResource(target, library, filename, fileInfo) {
-      let converters = this.__converters.filter(converter => converter.matches(filename));
-      if (converters.length == 0) {
-        return qx.tool.utils.files.Utils.sync(library.getResourceFilename(filename),
-            path.join(t.getOutputDir(), "resource", filename));
-      } else if (converters.length == 1) {
-        converters[0].convert(target, library, filename, fileInfo)
-      } else {
-        throw new Error("Multiple resource converters found for " + filename + " in " + library.getNamespace());
-      }
     }
   }
 });
