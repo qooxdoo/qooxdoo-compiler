@@ -41,13 +41,14 @@ qx.Class.define("qx.tool.compiler.resources.ImageLoader", {
 
     async load(asset) {
       let filename = asset.getSourceFilename();
+      let fileInfo = asset.getFileInfo();
       log.trace("Getting size of " + filename);
       try {
         let dimensions = await imageSize(filename);
         fileInfo.width = dimensions.width;
         fileInfo.height = dimensions.height;
-      }catch(ex) {
-        log.warn("Cannot get image size of " + filename + ": " + err);
+      } catch (ex) {
+        log.warn("Cannot get image size of " + filename + ": " + ex);
         delete fileInfo.width;
         delete fileInfo.height;
       }

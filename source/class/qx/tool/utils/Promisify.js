@@ -22,7 +22,7 @@
 
 require("@qooxdoo/framework");
 const nodePromisify = require("util").promisify;
-const PromisePool = require('es6-promise-pool');
+const PromisePool = require("es6-promise-pool");
 
 qx.Class.define("qx.tool.utils.Promisify", {
   statics: {
@@ -77,8 +77,9 @@ qx.Class.define("qx.tool.utils.Promisify", {
     async poolEachOf(arr, size, fn) {
       let index = 0;
       let pool = new PromisePool(() => {
-        if (index >= arr.length)
+        if (index >= arr.length) {
           return null;
+        }
         let item = arr[index++];
         return fn(item);
       }, 10);
@@ -100,8 +101,9 @@ qx.Class.define("qx.tool.utils.Promisify", {
                 resolve(true);
                 resolve = null;
               }
-              if (count == arr.length && resolve)
+              if (count == arr.length && resolve) {
                 resolve(false);
+              }
               return null;
             });
         });
@@ -111,13 +113,15 @@ qx.Class.define("qx.tool.utils.Promisify", {
     async someEach(arr, fn) {
       let index = 0;
       const next = () => {
-        if (index >= arr.length)
+        if (index >= arr.length) {
           return qx.Promise.resolve(false);
+        }
         let item = arr[index++];
         return qx.Promise.resolve(fn(item))
           .then(result => {
-            if (result)
+            if (result) {
               return true;
+            }
             return next();
           });
       };
@@ -128,8 +132,9 @@ qx.Class.define("qx.tool.utils.Promisify", {
       return await new qx.Promise((resolve, reject) => {
         let index = 0;
         let pool = new PromisePool(() => {
-          if (!resolve)
+          if (!resolve) {
             return null;
+          }
           if (index >= arr.length) {
             resolve(false);
             return null;

@@ -20,8 +20,6 @@
  *
  * *********************************************************************** */
 
-var fs = require("fs");
-
 qx.Class.define("qx.tool.compiler.resources.MetaLoader", {
   extend: qx.tool.compiler.resources.ResourceLoader,
 

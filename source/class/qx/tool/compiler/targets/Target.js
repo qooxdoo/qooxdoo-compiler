@@ -23,7 +23,6 @@
 const fs = qx.tool.utils.Promisify.fs;
 
 require("@qooxdoo/framework");
-const async = require("async");
 const util = require("../util");
 const path = require("upath");
 
@@ -493,7 +492,7 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
 
                 new qx.Promise((resolve, reject) => {
                   var assetUris = application.getAssetUris(rm, configdata.environment);
-                  var assets = rm.getAssets(this, assetUris);
+                  var assets = rm.getAssetsForPaths(assetUris);
                   compileInfo.assets = assets;
 
                   // Save any changes that getAssets collected
@@ -502,8 +501,9 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
                       for (var i = 0; i < assets.length; i++) {
                         var asset = assets[i];
                         let ext = path.extname(asset.getFilename());
-                        if (ext.length)
+                        if (ext.length) {
                           ext = ext.substring(1);
+                        }
                         let fileInfo = asset.getFileInfo();
                         var arr = pkgdata.resources[asset.getFilename()] = [
                           fileInfo.width,

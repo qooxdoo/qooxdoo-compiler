@@ -35,6 +35,9 @@ qx.Class.define("qx.tool.compiler.resources.Asset", {
     /** {Asset[]?} list of assets which this asset depends on */
     __dependsOn: null,
     
+    /** {Asset[]?} list of assets which depend on this asset */
+    __dependsOnThisAsset: null,
+    
     getLibrary() {
       return this.__library;
     },
@@ -47,8 +50,14 @@ qx.Class.define("qx.tool.compiler.resources.Asset", {
       return this.__fileInfo;
     },
     
+    isThemeFile() {
+      return this.__fileInfo.resourcePath == "themePath";
+    },
+    
     getSourceFilename() {
-      return path.relative(process.cwd(), this.__library.getResourceFilename(this.__filename));
+      return path.relative(process.cwd(), this.isThemeFile() ? 
+        this.__library.getThemeFilename(this.__filename) :
+        this.__library.getResourceFilename(this.__filename));
     },
     
     getDestFilename(target) {
@@ -68,10 +77,12 @@ qx.Class.define("qx.tool.compiler.resources.Asset", {
     },
     
     addMetaReferee(asset) {
-      if (!this.__metaReferees)
+      if (!this.__metaReferees) {
         this.__metaReferees = [];
-      if (!qx.lang.Array.contains(this.__metaReferees, asset))
+      }
+      if (!qx.lang.Array.contains(this.__metaReferees, asset)) {
         this.__metaReferees.push(asset);
+      }
     },
     
     getMetaReferees() {
@@ -79,10 +90,12 @@ qx.Class.define("qx.tool.compiler.resources.Asset", {
     },
     
     addMetaReferTo(asset) {
-      if (!this.__metaReferTo)
+      if (!this.__metaReferTo) {
         this.__metaReferTo = [];
-      if (!qx.lang.Array.contains(this.__metaReferTo, asset))
+      }
+      if (!qx.lang.Array.contains(this.__metaReferTo, asset)) {
         this.__metaReferTo.push(asset);
+      }
     },
     
     getMetaReferTo() {
@@ -90,9 +103,18 @@ qx.Class.define("qx.tool.compiler.resources.Asset", {
     },
     
     setDependsOn(assets) {
-      if (assets) {
+      if (this.__dependsOn) {
+        this.__dependsOn.forEach(thatAsset => delete thatAsset.__dependsOnThisAsset[this.getFilename]);
+      }
+      if (assets && assets.length) {
         this.__dependsOn = assets;
         this.__fileInfo.dependsOn = assets.map(asset => asset.toUri());
+        assets.forEach(thatAsset => {
+          if (!thatAsset.__dependsOnThisAsset) {
+            thatAsset.__dependsOnThisAsset = {};
+          }
+          thatAsset.__dependsOnThisAsset[this.getFilename()] = this;
+        });
       } else {
         this.__dependsOn = null;
         delete this.__fileInfo.dependsOn;
@@ -101,6 +123,10 @@ qx.Class.define("qx.tool.compiler.resources.Asset", {
     
     getDependsOn() {
       return this.__dependsOn;
+    },
+    
+    getDependsOnThisAsset() {
+      return this.__dependsOnThisAsset ? Object.values(this.__dependsOnThisAsset) : null;
     },
     
     async load() {
@@ -115,19 +141,19 @@ qx.Class.define("qx.tool.compiler.resources.Asset", {
       
       if (this.__converters) {
         let doNotCopy = await qx.tool.utils.Promisify.some(this.__converters, converter => converter.isDoNotCopy(srcFilename));
-        if (doNotCopy)
+        if (doNotCopy) {
           return;
+        }
       }
       
       let destStat = await qx.tool.utils.files.Utils.safeStat(destFilename);
       if (destStat) {
-        let filenames = [ this.__filename ];
+        let filenames = [ this.getSourceFilename() ];
         if (this.__dependsOn) {
           this.__dependsOn.forEach(asset => filenames.push(asset.getSourceFilename()));
         }
         let needsIt = await qx.tool.utils.Promisify.some(filenames, async filename => {
-          let srcTmp = path.join(this.__library.getResourceFilename(filename));
-          let srcStat = await qx.tool.utils.files.Utils.safeStat(srcTmp);
+          let srcStat = await qx.tool.utils.files.Utils.safeStat(filename);
           return srcStat && srcStat.mtime.getTime() > destStat.mtime.getTime();
         });
         if (!needsIt && this.__converters) {
@@ -141,19 +167,24 @@ qx.Class.define("qx.tool.compiler.resources.Asset", {
       await qx.tool.utils.Utils.makeParentDir(destFilename);
       
       if (this.__converters) {
+        let dependsOn = [];
         if (this.__converters.length == 1) {
-          await this.__converters[0].convert(target, this, srcFilename, destFilename);
+          dependsOn = (await this.__converters[0].convert(target, this, srcFilename, destFilename)) || [];
         } else {
           let lastTempFilename = null;
           qx.tool.utils.Promisify.each(this.__converters, async (converter, index) => {
             let tmpSrc = lastTempFilename ? lastTempFilename : srcFilename;
             let tmpDest = index === this.__converters.length - 1 ? 
-                destFilename : 
-                path.join(os.tmpdir(), path.basename(srcFilename) + "-pass" + (i + 1) + "-");
-            await converter.convert(target, this, tmpSrc, tmpDest);
+              destFilename : 
+              path.join(require("os").tmpdir(), path.basename(srcFilename) + "-pass" + (index + 1) + "-");
+            let tmpDependsOn = (await converter.convert(target, this, tmpSrc, tmpDest)) || [];
+            tmpDependsOn.forEach(str => dependsOn.push(str));
             lastTempFilename = tmpDest;
           });
         }
+        let rm = target.getAnalyser().getResourceManager();
+        dependsOn = dependsOn.map(filename => rm.getAsset(path.resolve(filename), true)).filter(tmp => tmp !== this);
+        this.setDependsOn(dependsOn);
       } else {
         await qx.tool.utils.files.Utils.copyFile(srcFilename, destFilename);
       }

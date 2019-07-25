@@ -70,8 +70,9 @@ qx.Class.define("qx.tool.compiler.resources.ResourceConverter", {
      * @param asset {Asset} the asset to copy
      * @param srcFilename {String} full path to the file
      * @param destFilename {String} full path to the destination file
+     * @return {String[]?} list of filenames that are required for the compilation (dependencies)
      */
-    async convert(target, asset, srcFilename, destFilename) {
+    async compile(target, asset, srcFilename, destFilename) {
       throw new Error("No implementation for " + this.classname + ".convert");
     }
   }

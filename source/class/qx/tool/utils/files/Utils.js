@@ -40,17 +40,18 @@ qx.Class.define("qx.tool.utils.files.Utils", {
       let filenames;
       try {
         filenames = await readdir(dir);
-      } catch(ex) {
-        if (ex.code = "ENOENT")
+      } catch (ex) {
+        if (ex.code == "ENOENT") {
           return;
+        }
         throw ex;
       }
       await qx.Promise.all(filenames.map(async shortName => {
-        let filename = path.join(dir, shortName)
+        let filename = path.join(dir, shortName);
         let tmp = await stat(filename);
-        if (tmp.isDirectory())
+        if (tmp.isDirectory()) {
           await qx.tool.utils.files.Utils.findAllFiles(filename, fnEach);
-        else {
+        } else {
           await fnEach(filename);
         }
       }));

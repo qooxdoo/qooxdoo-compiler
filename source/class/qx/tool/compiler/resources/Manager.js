@@ -20,10 +20,9 @@
  *
  * *********************************************************************** */
 
-var fs = require("fs");
+/* eslint-disable @qooxdoo/qx/no-illegal-private-usage */
+
 var path = require("path");
-var async = require("async");
-var jsonlint = require("jsonlint");
 
 var log = require("../util").createLog("resource-manager");
 
@@ -117,6 +116,14 @@ qx.Class.define("qx.tool.compiler.resources.Manager", {
         var library = this.__analyser.findLibrary(ns);
         return library || null;
       }
+      
+      // Absolute path
+      if (uri[0] == "/") {
+        let library = this.__analyser.getLibraries().find(lib => uri.startsWith(path.resolve(lib.getRootDir())));
+        if (library) {
+          return library;
+        }
+      }
 
       // Non-wildcards are a direct lookup
       // check for $ and *. less pos wins
@@ -181,7 +188,7 @@ qx.Class.define("qx.tool.compiler.resources.Manager", {
           unconfirmed[relFile] = true;
         }
         
-        const scanResources = async (resourcePath, doNotCopy) => {
+        const scanResources = async resourcePath => {
           // If the root folder exists, scan it
           var rootDir = path.join(library.getRootDir(), library.get(resourcePath));
           await qx.tool.utils.files.Utils.findAllFiles(rootDir, async filename => {
@@ -191,28 +198,16 @@ qx.Class.define("qx.tool.compiler.resources.Manager", {
             if (!fileInfo) {
               fileInfo = resources[relFile] = {};
             }
-            fileInfo.doNotCopy = doNotCopy;
-            fileInfo.resource = resourcePath;
+            fileInfo.resourcePath = resourcePath;
             fileInfo.mtime = await qx.tool.utils.files.Utils.safeStat(filename).mtime;
-            let asset = new qx.tool.compiler.resources.Asset(library, relFile, fileInfo);
-            this.__assets[asset.toUri()] = asset;
             
-            let tmp = "";
-            relFile.split('/').forEach(seg => {
-              if (tmp.length) {
-                tmp += "/";
-              }
-              tmp += seg;
-              t.__librariesByResourceUri[tmp] = library;
-            });
-
-            asset.setLoaders(t.__loaders.filter(loader => loader.matches(filename)));
-            asset.setConverters(t.__converters.filter(converter => converter.matches(filename)));
+            let asset = new qx.tool.compiler.resources.Asset(library, relFile, fileInfo);
+            this.__addAsset(asset);
           });
         };
         
-        await scanResources("resourcePath", false);
-        await scanResources("themePath", true);
+        await scanResources("resourcePath");
+        await scanResources("themePath");
         
         // Check the unconfirmed resources to make sure that they still exist;
         //  delete from the database if they don't
@@ -221,7 +216,6 @@ qx.Class.define("qx.tool.compiler.resources.Manager", {
           if (!fileInfo) {
             delete resources[filename];
           } else {
-            let rootDir = path.join(library.getRootDir(), library.get(fileInfo.resourcePath));
             let stat = await qx.tool.utils.files.Utils.safeStat(filename);
             if (!stat) {
               delete resources[filename];
@@ -231,7 +225,6 @@ qx.Class.define("qx.tool.compiler.resources.Manager", {
       }));
       
       await qx.tool.utils.Promisify.poolEachOf(Object.values(this.__assets), 10, async asset => {
-        return null;
         await asset.load();
         let fileInfo = asset.getFileInfo();
         if (fileInfo.meta) {
@@ -262,16 +255,58 @@ qx.Class.define("qx.tool.compiler.resources.Manager", {
         return null;
       });
     },
-
+    
+    __addAsset(asset) {
+      this.__assets[asset.toUri()] = asset;
+      
+      let library = asset.getLibrary();
+      let filename = asset.getFilename();
+      let tmp = "";
+      filename.split("/").forEach((seg, index) => {
+        if (index) {
+          tmp += "/";
+        }
+        tmp += seg;
+        this.__librariesByResourceUri[tmp] = library;
+      });
+      
+      asset.setLoaders(this.__loaders.filter(loader => loader.matches(filename)));
+      asset.setConverters(this.__converters.filter(converter => converter.matches(filename)));
+    },
+    
+    getAsset(srcPath, create) {
+      let pos = srcPath.indexOf(":");
+      let library = null;
+      if (pos > -1) {
+        let ns = srcPath.substring(0, pos);
+        library = this.__analyser.findLibrary(ns);
+        srcPath = srcPath.substring(pos + 1);
+      } else {
+        library = this.findLibraryForResource(srcPath);
+      }
+      
+      if (!library) {
+        this.warn("Cannot find library for " + srcPath);
+        return null;
+      }
+      let resourceName = path.relative(path.join(library.getRootDir(), library.getResourcePath()), srcPath);
+      let asset = this.__assets[library.getNamespace() + ":" + resourceName];
+      if (!asset && create) {
+        asset = new qx.tool.compiler.resources.Asset(library, resourceName, {
+          resourcePath: "resourcePath"
+        });
+        this.__addAsset(asset);
+      }
+      return asset;
+    },
+    
     /**
      * Collects information about the assets listed in srcPaths;
      * 
-     * @param target
      * @param srcPaths
      * @return {Asset[]}
      */
-    getAssets(target, srcPaths) {
-      var t = this;
+    getAssetsForPaths(srcPaths) {
       var db = this.__db;
       
       // Generate a lookup that maps the resource name to the meta file that
@@ -323,7 +358,7 @@ qx.Class.define("qx.tool.compiler.resources.Manager", {
           if (assetPaths[resourceName] !== undefined) {
             return;
           }
-          let asset = this.__assets[library.getNamespace() + ":" + resourceName]
+          let asset = this.__assets[library.getNamespace() + ":" + resourceName];
           
           let fileInfo = asset.getFileInfo();
           if (fileInfo.doNotCopy === true) {

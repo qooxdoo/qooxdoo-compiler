@@ -41,9 +41,9 @@ qx.Class.define("qx.tool.compiler.resources.AbstractMatcher", {
           if (elem[0] != ".") {
             elem = "." + elem;
           }
+          return elem;
         });
         this.__match = filename => match.some(elem => filename.endsWith(elem));
-        
       } else if (typeof match == "string") {
         if (match[0] != ".") {
           match = "." + match;
