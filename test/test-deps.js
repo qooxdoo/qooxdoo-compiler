@@ -50,7 +50,8 @@ async function createMaker() {
       "test.overridden2": false,
       "test.overridden5": "application"
     },
-    templatePath: "../source/resource/qx/tool/cli/templates"
+    templatePath: "../source/resource/qx/tool/cli/templates",
+    writeIndexHtmlToRoot: true
   }));
   
   let analyser = maker.getAnalyser();
@@ -194,6 +195,15 @@ test("Checks dependencies and environment settings", assert => {
         assert.ok(src.match(/abcdef/), "Template Literals", "Ordinary Literals");
       })
       
+      /*
+       * Test Issue503
+       */
+      .then(src => {
+        var ci = db.classInfo["testapp.Issue503"];
+        var arr = ci.unresolved||[];
+        assert.ok(arr.length === 0, "unexpected unresolved " + JSON.stringify(arr) + " in testapp.Issue503");
+      })
+      
 
       /*
        * Test environment settings
@@ -235,6 +245,14 @@ test("Checks dependencies and environment settings", assert => {
       .then(src => {
         assert.ok(src.match(/testapp\.TestThat2\.prototype\.toHashCode\.base\.call\(other\)/), "Aliased this");
       }))
+      
+      /*
+       * Test index.html generation
+       */
+      .then(async () => {
+        let src = await readFile("unit-tests-output/index.html", "utf8");
+        assert.ok(src.match(/src="appone\/boot.js"/), "Default application");
+      })
 
       .then(() => assert.end())
       .catch(err => assert.end(err));

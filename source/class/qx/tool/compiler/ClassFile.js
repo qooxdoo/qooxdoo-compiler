@@ -1587,11 +1587,25 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
 
             // Object destructuring `var {a,b} = {...}`
             } else if (decl.id.type == "ObjectPattern") {
-              decl.id.properties.forEach(prop => t.addDeclaration(prop.value.name));
+              decl.id.properties.forEach(prop => {
+                if (prop.value.type == "AssignmentPattern") {
+                  t.addDeclaration(prop.value.left.name);
+                } else {
+                  t.addDeclaration(prop.value.name);
+                }
+              });
 
             // Array destructuring `var [a,b] = [...]`
             } else if (decl.id.type == "ArrayPattern") {
-              decl.id.elements.forEach(prop => prop && t.addDeclaration(prop.name));
+              decl.id.elements.forEach(prop => {
+                if (prop) {
+                  if (prop.type == "AssignmentPattern") {
+                    t.addDeclaration(prop.left.name);
+                  } else {
+                    t.addDeclaration(prop.name);
+                  }
+                }
+              });
             }
           });
         },
@@ -1900,6 +1914,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
       }
       var segs = name.split(",");
       segs.forEach(name => {
+        name = name.trim();
         if (name.endsWith(".*")) {
           scope.ignore[name] = name.substring(0, name.length - 2);
         } else if (name.endsWith("*")) {
@@ -2319,27 +2334,35 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
       "console",
       "clearInterval",
       "clearTimeout",
+      "decodeURI",
       "decodeURIComponent",
+      "document",
+      "encodeURI",
       "encodeURIComponent",
       "escape",
       "error",
       "eval",
       "isNaN",
       "isFinite",
+      "navigator",
       "parseInt",
       "parseFloat",
       "setInterval",
       "setTimeout",
       "undefined",
-      "unescape"
+      "unescape",
+      "window"
     ],
     
     BROWSER_GLOBALS: [
       "ActiveXObject",
+      "Blob",
       "CustomEvent",
       "DOMParser",
       "DOMException",
       "Event",
+      "FileReader",
+      "FormData",
       "Image",
       "MutationObserver",
       "XPathResult",
@@ -2354,7 +2377,6 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
     ],
     
     NODE_GLOBALS: [
-      "Blob",
       "Module",
       "require",
       "module",

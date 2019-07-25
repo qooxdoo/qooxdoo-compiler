@@ -76,19 +76,19 @@
               },
               "githubUser": {
                 "type": "string",
-                "pattern": "^\\S+$"
+                "pattern": "[^\\s]+"
               },
               "gitlabUser": {
                 "type": "string",
-                "pattern": "^\\S+$"
+                "pattern": "[^\\s]+"
               },
               "facebookUser": {
                 "type": "string",
-                "pattern": "^\\S+$"
+                "pattern": "[^\\s]+"
               },
               "twitterHandle": {
                 "type": "string",
-                "pattern": "^@\\S+$"
+                "pattern": "^@[^\\s]+"
               }
             }
           }

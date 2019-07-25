@@ -20,6 +20,7 @@ setup() {
   npx qx package list -v
   npx qx package list --all --short --noheaders --match=qooxdoo/
   npx qx package list --json --installed
+  npx qx package list --uris-only
 }
 
 @test "Add package" {
