@@ -67,6 +67,12 @@
             "description": "A description of what the application does. This information is displayed in the package browser.",
             "type": "string"
           },
+          "showInPackageBrowser": {
+            "description": "Whether this application show be shown in qooxdoo's package browser (default). Set to 'off' if doesn't work as a standalone demo or is an internal app.",
+            "type": "string",
+            "pattern": "^(on|off)$",
+            "default": "on"
+          },
           "environment": {
             "$ref": "#/properties/environment"
            },
