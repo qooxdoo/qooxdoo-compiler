@@ -559,10 +559,10 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
        * Figure out which will be the default application; this will need some work for situations
        * where there are multiple browser based targets
        */
-      let hasExplicitDefaultApp = false;
-      let defaultAppConfig = null;
       targetConfigs.forEach(targetConfig => {
-        if (targetConfigs.appConfigs) {
+        let hasExplicitDefaultApp = false;
+        targetConfig.defaultAppConfig = null;
+        if (targetConfig.appConfigs) {
           targetConfig.appConfigs.forEach(appConfig => {
             if (appConfig.type && appConfig.type != "browser") {
               return;
@@ -582,10 +582,10 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
                   throw new qx.tool.utils.Utils.UserError("Error: Can only set one application to be the default application!");
                 }
                 hasExplicitDefaultApp = true;
-                defaultAppConfig = appConfig;
+                targetConfig.defaultAppConfig = appConfig;
               }
-            } else if (!defaultAppConfig) {
-              defaultAppConfig = appConfig;
+            } else if (!targetConfig.defaultAppConfig) {
+              targetConfig.defaultAppConfig = appConfig;
             }
           });
         }
@@ -777,8 +777,8 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         }
         maker.getAnalyser().setGlobalSymbols(globalSymbols);
 
-        if (defaultAppConfig) {
-          defaultAppConfig.app.setWriteIndexHtmlToRoot(true);
+        if (targetConfig.defaultAppConfig) {
+          targetConfig.defaultAppConfig.app.setWriteIndexHtmlToRoot(true);
         } else {
           qx.tool.utils.files.Utils.safeUnlink(target.getOutputDir() + target.getScriptPrefix() + "index.html");
         }
