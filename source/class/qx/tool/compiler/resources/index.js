@@ -20,9 +20,15 @@
  *
  * *********************************************************************** */
 
-module.exports = {
-  Manager: require("./Manager"),
-  Handler: require("./Handler"),
-  ImageHandler: require("./ImageHandler"),
-  MetaHandler: require("./MetaHandler")
-};
+require("./AbstractMatcher");
+require("./Asset");
+
+require("./ResourceLoader");
+require("./ImageLoader");
+require("./MetaLoader");
+
+require("./ResourceConverter");
+require("./ScssConverter");
+require("./ScssFile");
+
+require("./Manager");

@@ -34,6 +34,7 @@ qx.Class.define("qx.tool.cli.Watch", {
     this.__stats = {
       classesCompiled: 0
     };
+    this.__debounceChanges = {};
   },
   events: {
     "making": "qx.event.type.Event",
@@ -49,6 +50,7 @@ qx.Class.define("qx.tool.cli.Watch", {
     __making: null,
     __outOfDate: null,
     __timerId: null,
+    __debounceChanges: null,
 
     start: function() {
       if (this.__runningPromise) {
@@ -197,53 +199,97 @@ qx.Class.define("qx.tool.cli.Watch", {
       }
     },
 
-    __onFileChange: function(type, filename) {
+    __onFileChange(type, filename) {
       if (!this.__watcherReady) {
-        return;
+        return null;
       }
 
-      var t = this;
-      var outOfDate = false;
-
-
-      t.__applications.forEach(function(data) {
-        if (data.dependsOn[filename]) {
-          outOfDate = true;
-        } else {
-          var boot = data.application.getBootPath();
-          if (boot) {
-            boot = path.resolve(boot);
-            if (filename.startsWith(boot)) {
-              outOfDate = true;
+      const handleFileChange = async () => {
+        var outOfDate = false;
+  
+        this.__applications.forEach(data => {
+          if (data.dependsOn[filename]) {
+            outOfDate = true;
+          } else {
+            var boot = data.application.getBootPath();
+            if (boot) {
+              boot = path.resolve(boot);
+              if (filename.startsWith(boot)) {
+                outOfDate = true;
+              }
+            }
+          }
+        });
+        
+        let analyser = this.__maker.getAnalyser();
+        let isResource = analyser.getLibraries()
+          .some(lib => {
+            var dir = path.resolve(path.join(lib.getRootDir(), lib.getResourcePath()));
+            if (filename.startsWith(dir)) {
+              return true;
+            }
+            dir = path.resolve(path.join(lib.getRootDir(), lib.getThemePath()));
+            if (filename.startsWith(dir)) {
+              return true;
+            }
+            return false;
+          });
+        
+        if (isResource) {
+          let rm = analyser.getResourceManager();
+          let target = this.__maker.getTarget();
+          let asset = rm.getAsset(filename, type != "unlink");
+          if (asset && type != "unlink") {
+            await asset.sync(target);
+            let dota = asset.getDependsOnThisAsset();
+            if (dota) {
+              await qx.Promise.all(dota.map(asset => asset.sync(target)));
             }
           }
         }
-      });
+  
+        if (outOfDate) {
+          this.__outOfDate = true;
+          this.__scheduleMake();
+        }
+      };
+      
+      const runIt = dbc => {
+        console.log("runIt: " + filename);
+        dbc.timerId = null;
+        dbc.promise = handleFileChange()
+          .then(() => {
+            if (dbc.restart) {
+              console.log("runIt: restarting " + filename);
+              runIt(dbc);
+            } else {
+              console.log("runIt: done " + filename);
+              delete this.__debounceChanges[filename];
+            }
+          });
+      };
+      
+      let dbc = this.__debounceChanges[filename];
+      if (!dbc) {
+        console.log("runIt: NEW " + filename);
+        dbc = this.__debounceChanges[filename] = {
+          types: {}
+        };
+      } else {
+        console.log("runIt: REUSE " + filename);
+      }
 
-      if (!outOfDate) {
-        t.__maker.getAnalyser().getLibraries()
-          .forEach(function(lib) {
-            var dir = path.join(lib.getRootDir(), lib.getResourcePath());
-            dir = path.resolve(dir);
-            if (filename.startsWith(dir)) {
-              outOfDate = true;
-            }
-          });
+      dbc.types[type] = true;
+      if (dbc.promise) {
+        dbc.restart = 1;
+        return dbc.promise;
       }
-      if (!outOfDate) {
-        t.__maker.getAnalyser().getLibraries()
-          .forEach(function(lib) {
-            var dir = path.join(lib.getRootDir(), lib.getThemePath());
-            dir = path.resolve(dir);
-            if (filename.startsWith(dir)) {
-              outOfDate = true;
-            }
-          });
+      if (dbc.timerId) {
+        clearTimeout(dbc.timerId);
+        dbc.timerId = null;
       }
-      if (outOfDate) {
-        t.__outOfDate = true;
-        t.__scheduleMake();
-      }
+      dbc.timerId = setTimeout(() => runIt(dbc), 150);
+      return null;
     },
 
     __onStop: function() {

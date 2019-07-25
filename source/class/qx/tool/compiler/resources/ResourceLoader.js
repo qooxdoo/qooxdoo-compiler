@@ -20,37 +20,15 @@
  *
  * *********************************************************************** */
 
-require("@qooxdoo/framework");
-
 /**
  * Instances of Handler are used by the resource manager to handle different types of resources that 
  *  need compilation.
  */
-qx.Class.define("qx.tool.compiler.resources.Handler", {
-  extend: qx.core.Object,
+qx.Class.define("qx.tool.compiler.resources.ResourceLoader", {
+  extend: qx.tool.compiler.resources.AbstractMatcher,
   type: "abstract",
   
-  /**
-   * Constructor
-   * 
-   * @param matchEx {RegEx?} the reg ex to match filenames
-   */
-  construct: function(matchEx) {
-    this.base(arguments);
-    this.__matchEx = matchEx||null;
-  },
-  
   members: {
-    __matchEx: null,
-
-    /**
-     * Called to determine whether this handler is appropriate for the given filename;
-     * default implementation is to check the RegEx passed to the constructor
-     */
-    matches: function(filename) {
-      return this.__matchEx !== null && this.__matchEx.test(filename);
-    },
-
     /**
      * Detects whether the file needs to be recompiled/coverted/analysed/ etc; this should
      * not take any time or be asynchronous, if you need to do any real work it should be 
@@ -63,29 +41,21 @@ qx.Class.define("qx.tool.compiler.resources.Handler", {
      * 
      * @return {Boolean}
      */
-    needsCompile: function(filename, fileInfo, stat) {
-      if (this.matches(filename)) {
-        var mtime = null;
-        try {
-          mtime = fileInfo.mtime && new Date(fileInfo.mtime);
-        } catch (e) {
-        }
-        return !mtime || mtime.getTime() != stat.mtime.getTime();
+    needsLoad(filename, fileInfo, stat) {
+      var mtime = null;
+      try {
+        mtime = fileInfo.mtime && new Date(fileInfo.mtime);
+      } catch (e) {
       }
-      return false;
+      return !mtime || mtime.getTime() != stat.mtime.getTime();
     },
     
     /**
-     * Allows a file to be recompiled/coverted/analysed/ etc; must return a Promise which resolves
-     * when complete.  Data can be stored in the resource database by modifying the fileInfo
+     * Allows a file to be loadeddata can be stored in the resource database by modifying the fileInfo
      * 
-     * @param filename {String} absolute path to the file
-     * @param library {Library} library which contains the resource
-     * @param fileInfo {Map} this is the object in the resource database, contains info about the resource;
-     *  guaranteed to not be null
-     *  @return {Promise}
+     * @param asset {Asset} the asset to load
      */
-    compile: function(filename, library, fileInfo) {
+    async load(asset) {
       throw new Error("No implementation for " + this.classname + ".compile");
     }
   }

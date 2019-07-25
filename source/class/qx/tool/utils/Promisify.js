@@ -22,6 +22,7 @@
 
 require("@qooxdoo/framework");
 const nodePromisify = require("util").promisify;
+const PromisePool = require("es6-promise-pool");
 
 qx.Class.define("qx.tool.utils.Promisify", {
   statics: {
@@ -71,6 +72,84 @@ qx.Class.define("qx.tool.utils.Promisify", {
         fn = fn.bind(context);
       }
       return fn;
+    },
+    
+    async poolEachOf(arr, size, fn) {
+      let index = 0;
+      let pool = new PromisePool(() => {
+        if (index >= arr.length) {
+          return null;
+        }
+        let item = arr[index++];
+        return fn(item);
+      }, 10);
+      await pool.start();
+    },
+    
+    async map(arr, fn) {
+      return await qx.Promise.all(arr.map(fn));
+    },
+    
+    async some(arr, fn) {
+      return await new qx.Promise((resolve, reject) => {
+        let count = 0;
+        arr.forEach((...args) => {
+          qx.Promise.resolve(fn(...args))
+            .then(result => {
+              count++;
+              if (result && resolve) {
+                resolve(true);
+                resolve = null;
+              }
+              if (count == arr.length && resolve) {
+                resolve(false);
+              }
+              return null;
+            });
+        });
+      });
+    },
+    
+    async someEach(arr, fn) {
+      let index = 0;
+      const next = () => {
+        if (index >= arr.length) {
+          return qx.Promise.resolve(false);
+        }
+        let item = arr[index++];
+        return qx.Promise.resolve(fn(item))
+          .then(result => {
+            if (result) {
+              return true;
+            }
+            return next();
+          });
+      };
+      return await next();
+    },
+
+    async somePool(arr, size, fn) {
+      return await new qx.Promise((resolve, reject) => {
+        let index = 0;
+        let pool = new PromisePool(() => {
+          if (!resolve) {
+            return null;
+          }
+          if (index >= arr.length) {
+            resolve(false);
+            return null;
+          }
+          let item = arr[index++];
+          return fn(item)
+            .then(result => {
+              if (result && resolve) {
+                resolve(true);
+                resolve = null;
+              }
+            });
+        }, 10);
+        pool.start();
+      });
     },
 
     call: function(fn) {

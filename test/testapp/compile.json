@@ -48,7 +48,6 @@
       "class": "testapp.Application",
       "theme": "qx.theme.Indigo",
       "name": "testapp",
-      "default": true,
       "environment": {
         "test.overridden1": true,
         "test.overridden2": false,

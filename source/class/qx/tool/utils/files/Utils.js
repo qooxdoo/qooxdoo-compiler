@@ -21,6 +21,7 @@
  * *********************************************************************** */
 
 const fs = qx.tool.utils.Promisify.fs;
+const path = require("path");
 const util = require("../../compiler/util");
 require("@qooxdoo/framework");
 const rimraf = require("rimraf");
@@ -34,6 +35,27 @@ qx.Class.define("qx.tool.utils.files.Utils", {
   extend: qx.core.Object,
 
   statics: {
+    
+    async findAllFiles(dir, fnEach) {
+      let filenames;
+      try {
+        filenames = await readdir(dir);
+      } catch (ex) {
+        if (ex.code == "ENOENT") {
+          return;
+        }
+        throw ex;
+      }
+      await qx.Promise.all(filenames.map(async shortName => {
+        let filename = path.join(dir, shortName);
+        let tmp = await stat(filename);
+        if (tmp.isDirectory()) {
+          await qx.tool.utils.files.Utils.findAllFiles(filename, fnEach);
+        } else {
+          await fnEach(filename);
+        }
+      }));
+    },
 
     /**
      * Synchronises two files or folders; files are copied from/to but only if their
