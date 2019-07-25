@@ -197,20 +197,10 @@ qx.Class.define("qx.tool.compiler.Analyser", {
           resManager = new qx.tool.compiler.resources.Manager(this);
         }
         this.__resManager = resManager;
-        p = Promise.all(
-          [
-            util.promisifyThis(t.loadDatabase, t),
-            new Promise((resolve, reject) => {
-              if (resManager) {
-                log.debug("Loading resource database");
-                return util.promisifyThis(resManager.loadDatabase, resManager)
-                  .then(resolve)
-                  .catch(reject);
-              }
-              resolve();
-              return undefined;
-            })
-          ]);
+        p = Promise.all([
+          this.loadDatabase(),
+          resManager && resManager.loadDatabase()
+        ]);
       } else {
         p = Promise.resolve();
       }
@@ -245,14 +235,9 @@ qx.Class.define("qx.tool.compiler.Analyser", {
               return;
             }
 
-            t.__resManager.findAllResources(function(err) {
-              if (err) {
-                cb(err);
-                return;
-              }
-              log.debug("found all resources");
-              cb(null);
-            });
+            t.__resManager.findAllResources()
+              .then(() => cb())
+              .catch(cb);
           },
 
           // Find all classes
@@ -278,61 +263,15 @@ qx.Class.define("qx.tool.compiler.Analyser", {
 
     /**
      * Loads the database if available
-     *
-     * @param cb
      */
-    loadDatabase: function(cb) {
-      var t = this;
-      async.waterfall(
-        [
-          /**
-             * Reads the db.json, if it exists
-             *
-             * @param cb
-             */
-          function readDb(cb) {
-            fs.exists(t.getDbFilename(), function(exists) {
-              if (exists) {
-                fs.readFile(t.getDbFilename(), {encoding: "utf-8"}, cb);
-              } else {
-                cb(null, null);
-              }
-            });
-          },
-
-          /**
-             * Parses the db.json into db
-             *
-             * @param data
-             * @param cb
-             */
-          function parseDb(data, cb) {
-            if (data && data.trim().length) {
-              log.debug("Parsing database");
-              t.__db = jsonlint.parse(data);
-            } else {
-              log.debug("No database to parse");
-              t.__db = {};
-            }
-            cb(null, t.__db);
-          }
-        ],
-
-        /**
-           * Done
-           * @param err
-           * @param result
-           */
-        function(err, result) {
-          log.debug("loaded database: err=" + err);
-          cb();
-        });
+    async loadDatabase() {
+      this.__db = (await qx.tool.utils.Json.loadJsonAsync(this.getDbFilename())||{});
     },
 
     /**
      * Saves the database
      */
-    saveDatabase: async function() {
+    async saveDatabase() {
       log.debug("saving generator database");
       this.fireDataEvent("saveDatabase", this.__db);
       await qx.tool.utils.Json.saveJsonAsync(this.getDbFilename(), this.__db)

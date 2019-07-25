@@ -377,6 +377,26 @@ qx.Class.define("qx.tool.compiler.app.Library", {
      */
     getFilename: function(filename) {
       return path.join(this.getRootDir(), this.getSourcePath(), filename);
+    },
+
+    /**
+     * Returns the full filename for the file within this library's resources
+     *
+     * @param filename {String} the filename relative to this library
+     * @return {String} the full filename
+     */
+    getResourceFilename: function(filename) {
+      return path.join(this.getRootDir(), this.getResourcePath(), filename);
+    },
+
+    /**
+     * Returns the full filename for the file within this library's theme
+     *
+     * @param filename {String} the filename relative to this library
+     * @return {String} the full filename
+     */
+    getThemeFilename: function(filename) {
+      return path.join(this.getRootDir(), this.getThemePath(), filename);
     }
   },
   
