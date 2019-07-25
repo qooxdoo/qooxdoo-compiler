@@ -68,7 +68,7 @@
             "type": "string"
           },
           "showInPackageBrowser": {
-            "description": "Whether this application show be shown in qooxdoo's package browser (default). Set to 'off' if doesn't work as a standalone demo or is an internal app.",
+            "description": "Whether this application is to be shown in qooxdoo's package browser (default). Set to 'off' if, e.g., it doesn't work as a standalone demo or is an internal app.",
             "type": "string",
             "pattern": "^(on|off)$",
             "default": "on"
