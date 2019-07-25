@@ -371,13 +371,15 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
           
           function addExternal(arr, type) {
             if (arr) {
-              arr.forEach(path => {
-                if (path.match(/^https?:/)) {
-                  configdata[type].push("__external__:" + path);
+              arr.forEach(filename => {
+                if (filename.match(/^https?:/)) {
+                  configdata[type].push("__external__:" + filename);
                 } else {
-                  let lib = rm.findLibraryForResource(path);
-                  if (lib) {
-                    configdata[type].push(lib.getNamespace() + ":" + path);
+                  let asset = rm.getAsset(filename);
+                  if (asset) {
+                    let str = asset.getDestFilename(t);
+                    str = path.relative(path.join(t.getOutputDir(), "resource"), str);
+                    configdata[type].push(asset.getLibrary().getNamespace() + ":" + str);
                   }
                 }
               });
@@ -491,7 +493,7 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
                 }),
 
                 new qx.Promise((resolve, reject) => {
-                  var assetUris = application.getAssetUris(rm, configdata.environment);
+                  var assetUris = application.getAssetUris(t, rm, configdata.environment);
                   var assets = rm.getAssetsForPaths(assetUris);
                   compileInfo.assets = assets;
 
