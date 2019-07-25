@@ -954,12 +954,7 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
           "resourcePath": "resource/",
           "targetPath": "",
           "appPath": t.getProjectDir(application) + "/",
-          "preBootJs":
-              "  <script type=\"text/javascript\">\n" +
-              "    if (!window.qx)\n" +
-              "      window.qx = {};\n" +
-              "    qx.$$$appRoot = \"" + t.getProjectDir(application) + "\";\n" +
-              "  </script>\n",
+          "preBootJs": "",
           "appTitle": (application.getTitle()||"Qooxdoo Application")
         };
         await fs.writeFileAsync(t.getOutputDir() + "index.html", replaceVars(indexHtml), { encoding: "utf8" });
