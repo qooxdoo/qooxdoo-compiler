@@ -63,6 +63,16 @@
             "description": "The human readable, customer facing name used to set the <title> tag of the application web page, i.e. in the application's index.html",
             "type": "string"
           },
+          "description": {
+            "description": "A description of what the application does. This information is displayed in the package browser.",
+            "type": "string"
+          },
+          "showInPackageBrowser": {
+            "description": "Whether this application is to be shown in qooxdoo's package browser (default). Set to 'off' if, e.g., it doesn't work as a standalone demo or is an internal app.",
+            "type": "string",
+            "pattern": "^(on|off)$",
+            "default": "on"
+          },
           "environment": {
             "$ref": "#/properties/environment"
            },
