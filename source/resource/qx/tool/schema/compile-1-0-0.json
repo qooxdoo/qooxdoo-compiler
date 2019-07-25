@@ -44,8 +44,7 @@
         "additionalItems": false,
         "required": [
           "class",
-          "name",
-          "outputPath"
+          "name"
         ],
         "properties": {
           "class" : {
