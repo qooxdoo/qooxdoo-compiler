@@ -44,7 +44,8 @@
         "additionalItems": false,
         "required": [
           "class",
-          "name"
+          "name",
+          "outputPath"
         ],
         "properties": {
           "class" : {
@@ -61,6 +62,10 @@
           },
           "title": {
             "description": "The human readable, customer facing name used to set the <title> tag of the application web page, i.e. in the application's index.html",
+            "type": "string"
+          },
+          "description": {
+            "description": "A description of what the application does. This information is displayed in the package browser.",
             "type": "string"
           },
           "environment": {
