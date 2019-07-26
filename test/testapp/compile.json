@@ -126,5 +126,8 @@
   "serve": {
     "listenPort": 9082
   },
+  "sass": {
+    "compiler": "latest"
+  },
   "$schema": "https://raw.githubusercontent.com/qooxdoo/qooxdoo-compiler/master/resource/schema/v1/compile.json"
 }
