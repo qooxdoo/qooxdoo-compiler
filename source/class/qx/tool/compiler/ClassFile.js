@@ -1235,7 +1235,9 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
             ContinueStatement: 1,
             ForStatement: 1,
             TemplateLiteral: 1,
-            AwaitExpression: 1
+            AwaitExpression: 1,
+            DoWhileStatement: 1,
+            ForOfStatement: 1
           };
           let root = path;
           while (root) {
@@ -2331,6 +2333,8 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
       "WeakMap",
       "WeakSet",
       "arguments",
+      "atob",
+      "btoa",
       "console",
       "clearInterval",
       "clearTimeout",
@@ -2367,6 +2371,8 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
       "MutationObserver",
       "XPathResult",
       "XMLHttpRequest",
+      "XMLSerializer",
+      "XPathEvaluator",
       "alert",
       "document",
       "history",
