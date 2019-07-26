@@ -80,7 +80,7 @@ qx.Class.define("qx.tool.compiler.resources.ScssConverter", {
   },
   
   statics:{
-    USE_V6_COMPILER: null,
+    USE_V6_COMPILER: true, // Default is true for the API, the CLI will set this to null
     
     isNewCompiler() {
       if (qx.tool.compiler.resources.ScssConverter.USE_V6_COMPILER === null) {

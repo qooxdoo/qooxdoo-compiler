@@ -258,8 +258,6 @@ test("Checks dependencies and environment settings", assert => {
        * Test SCSS generation
        */
       .then(async () => {
-        let src = await readFile("unit-tests-output/resource/testapp/css/sample.css", "utf8");
-        assert.ok(src.match(/background-color:red/), "Theme SCSS");
         src = await readFile("unit-tests-output/resource/testapp/scss/root.css", "utf8");
         assert.ok(src.match(/url\(\.\.\/sub5\/image.png\)/), "Resource SCSS");
       })
