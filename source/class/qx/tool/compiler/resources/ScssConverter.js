@@ -38,7 +38,7 @@ qx.Class.define("qx.tool.compiler.resources.ScssConverter", {
     
     getDestFilename(target, asset) {
       let filename;
-      if (asset.isThemeFile()) {
+      if (!qx.tool.compiler.resources.ScssConverter.isNewCompiler()) {
         filename = path.join(target.getOutputDir(), "resource", asset.getFilename().replace(/\bscss\b/g, "css"));
       } else {
         filename = path.join(target.getOutputDir(), "resource", asset.getFilename().replace(/\.scss$/, ".css"));
@@ -47,7 +47,7 @@ qx.Class.define("qx.tool.compiler.resources.ScssConverter", {
     },
     
     async convert(target, asset, srcFilename, destFilename) {
-      if (asset.isThemeFile()) {
+      if (!qx.tool.compiler.resources.ScssConverter.isNewCompiler()) {
         return this.legacyMobileSassConvert(target, asset, srcFilename, destFilename);
       }
       
@@ -77,5 +77,19 @@ qx.Class.define("qx.tool.compiler.resources.ScssConverter", {
       await fs.writeFileAsync(destFilename, result.css);
       await fs.writeFileAsync(destFilename + ".map", result.map);
     }
+  },
+  
+  statics:{
+    USE_V6_COMPILER: null,
+    
+    isNewCompiler() {
+      if (qx.tool.compiler.resources.ScssConverter.USE_V6_COMPILER === null) {
+        console.warn("DEPRECATED: Using the Qooxdoo v5 style of SASS Compilation; this is backwards compatible " +
+            "but the default will change in v7 to use the new style (see https://git.io/fjyqj for details, and how " +
+            "to disable this warning).");
+        qx.tool.compiler.resources.ScssConverter.USE_V6_COMPILER = false;
+      }
+      return qx.tool.compiler.resources.ScssConverter.USE_V6_COMPILER;
+    },
   }
 });
