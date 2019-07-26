@@ -20,7 +20,7 @@
  *
  * *********************************************************************** */
 
-var path = require("path");
+const path = require("path");
 require("@qooxdoo/framework");
 
 qx.Class.define("qx.tool.compiler.app.Application", {
@@ -592,10 +592,11 @@ qx.Class.define("qx.tool.compiler.app.Application", {
 
     /**
      * Returns a list of all of the assets required by all classes
+     * @param target {Target} the current target
      * @param resManager  {qx.tool.compiler.resources.Manager} the resource manager
      * @param environment {Map} environment
      */
-    getAssetUris: function(resManager, environment) {
+    getAssetUris: function(target, resManager, environment) {
       var assets = [];
       var analyser = this.getAnalyser();
       var db = analyser.getDatabase();
@@ -655,13 +656,15 @@ qx.Class.define("qx.tool.compiler.app.Application", {
       var rm = analyser.getResourceManager();
       function addExternalAssets(arr, msgId) {
         if (arr) {
-          arr.forEach(path => {
-            if (!path.match(/^https?:/)) {
-              let lib = rm.findLibraryForResource(path);
-              if (lib) {
-                assets.push(lib.getNamespace() + ":" + path);
+          arr.forEach(filename => {
+            if (!filename.match(/^https?:/)) {
+              let asset = rm.getAsset(filename);
+              if (asset) {
+                let str = asset.getDestFilename(target);
+                str = path.relative(path.join(target.getOutputDir(), "resource"), str);
+                assets.push(asset.getLibrary().getNamespace() + ":" + str);
               } else {
-                qx.tool.compiler.Console.print(msgId, path);
+                qx.tool.compiler.Console.print(msgId, filename);
               }
             }
           });
@@ -712,8 +715,8 @@ qx.Class.define("qx.tool.compiler.app.Application", {
         }
 
         if (lastAsset[lastAsset.length - 1] == "*") {
-          var path = lastAsset.substring(0, lastAsset.length - 1);
-          if (asset.substring(0, path.length) == path) {
+          var filename = lastAsset.substring(0, lastAsset.length - 1);
+          if (asset.substring(0, filename.length) == filename) {
             assets.splice(i--, 1);
             continue;
           }

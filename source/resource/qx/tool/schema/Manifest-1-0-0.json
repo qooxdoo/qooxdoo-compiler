@@ -206,7 +206,7 @@
           "uniqueItems": true,
           "items": {
             "type": "string",
-            "pattern": "[.]css$"
+            "pattern": "[.]s?css$"
           }
         },
         "script": {

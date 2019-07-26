@@ -35,6 +35,17 @@
         }
       }
     },
+    "sass": {
+      "type": "object",
+      "additionalItems": false,
+      "properties": {
+        "compiler": {
+          "description": "Which SASS compiler to use (default is deprecated \"legacy\" during v6, will default to \"latest\" in v7)",
+          "type": "string",
+          "pattern": "^(legacy|latest)$"
+        }
+      }
+    },
     "applications": {
       "type":"array",
       "description": "Each entry describes an application to be compiled.",
@@ -67,11 +78,10 @@
             "description": "A description of what the application does. This information is displayed in the package browser.",
             "type": "string"
           },
-          "showInPackageBrowser": {
-            "description": "Whether this application is to be shown in qooxdoo's package browser (default). Set to 'off' if, e.g., it doesn't work as a standalone demo or is an internal app.",
-            "type": "string",
-            "pattern": "^(on|off)$",
-            "default": "on"
+          "publish": {
+            "description": "Whether this application is to be shown in viewers like qooxdoo's package browser or not (if, e.g., it doesn't work as a standalone demo or is an internal test app which is not for general consumption). Defaults to true.",
+            "type": "boolean",
+            "default": true
           },
           "environment": {
             "$ref": "#/properties/environment"
