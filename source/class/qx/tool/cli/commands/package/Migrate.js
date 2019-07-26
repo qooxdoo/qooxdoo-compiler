@@ -167,7 +167,14 @@ qx.Class.define("qx.tool.cli.commands.package.Migrate", {
                 } else if (qx.lang.Type.isObject(authors)) {
                   return [authors];
                 } else if (qx.lang.Type.isArray(authors)) {
-                  return authors.map( r => { qx.lang.Type.isObject(r) ? { name: r.name, email: r.email } : { name: r } });
+                  return authors.map( r => { 
+                     qx.lang.Type.isObject(r) ? { 
+                        name: r.name, 
+                        email: r.email } 
+                     : { 
+                        name: r 
+                     } 
+                  });
                 }
                 return [];
               })
