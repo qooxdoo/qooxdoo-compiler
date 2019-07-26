@@ -90,6 +90,6 @@ qx.Class.define("qx.tool.compiler.resources.ScssConverter", {
         qx.tool.compiler.resources.ScssConverter.USE_V6_COMPILER = false;
       }
       return qx.tool.compiler.resources.ScssConverter.USE_V6_COMPILER;
-    },
+    }
   }
 });
