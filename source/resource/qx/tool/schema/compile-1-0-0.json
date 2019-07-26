@@ -35,6 +35,17 @@
         }
       }
     },
+    "sass": {
+      "type": "object",
+      "additionalItems": false,
+      "properties": {
+        "compiler": {
+          "description": "Which SASS compiler to use (default is deprecated \"legacy\" during v6, will default to \"latest\" in v7)",
+          "type": "string",
+          "pattern": "^(legacy|latest)$"
+        }
+      }
+    },
     "applications": {
       "type":"array",
       "description": "Each entry describes an application to be compiled.",

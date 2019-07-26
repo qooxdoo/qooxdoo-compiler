@@ -161,6 +161,12 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
         }
       }
       
+      if (config.sass && config.sass.compiler !== undefined) {
+        qx.tool.compiler.resources.ScssConverter.USE_V6_COMPILER = config.sass.compiler == "latest";
+      } else {
+        qx.tool.compiler.resources.ScssConverter.USE_V6_COMPILER = null;
+      }
+      
       await compilerApi.afterLibrariesLoaded();
       
       return compilerApi.getConfiguration();
