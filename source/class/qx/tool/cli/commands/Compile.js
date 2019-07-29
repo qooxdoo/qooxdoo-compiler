@@ -19,7 +19,6 @@
 require("@qooxdoo/framework");
 const process = require("process");
 const Gauge = require("gauge");
-const fs = qx.tool.utils.Promisify.fs;
 const semver = require("semver");
 const path = require("upath");
 const consoleControl = require("console-control-strings");
@@ -30,7 +29,7 @@ require("./Command");
 require("./MConfig");
 
 /**
- * Handles compilation of the project by qxcompiler
+ * Handles compilation of the project
  */
 qx.Class.define("qx.tool.cli.commands.Compile", {
   extend: qx.tool.cli.commands.Command,

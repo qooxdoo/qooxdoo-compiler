@@ -142,7 +142,6 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
       this._mergeArguments(parsedArgs, config, lockfile_content);
 
       if (config.libraries) {
-
         /*
          * Locate and load libraries
          */
