@@ -19,7 +19,6 @@
 require("@qooxdoo/framework");
 const process = require("process");
 const Gauge = require("gauge");
-const fs = qx.tool.utils.Promisify.fs;
 const semver = require("semver");
 const path = require("upath");
 const consoleControl = require("console-control-strings");
