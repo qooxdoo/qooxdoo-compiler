@@ -255,15 +255,12 @@ qx.Class.define("qx.tool.cli.Watch", {
       };
       
       const runIt = dbc => {
-        console.log("runIt: " + filename);
         dbc.timerId = null;
         dbc.promise = handleFileChange()
           .then(() => {
             if (dbc.restart) {
-              console.log("runIt: restarting " + filename);
               runIt(dbc);
             } else {
-              console.log("runIt: done " + filename);
               delete this.__debounceChanges[filename];
             }
           });
@@ -271,12 +268,9 @@ qx.Class.define("qx.tool.cli.Watch", {
       
       let dbc = this.__debounceChanges[filename];
       if (!dbc) {
-        console.log("runIt: NEW " + filename);
         dbc = this.__debounceChanges[filename] = {
           types: {}
         };
-      } else {
-        console.log("runIt: REUSE " + filename);
       }
 
       dbc.types[type] = true;
