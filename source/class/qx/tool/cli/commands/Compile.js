@@ -19,7 +19,6 @@
 require("@qooxdoo/framework");
 const process = require("process");
 const Gauge = require("gauge");
-const fs = qx.tool.utils.Promisify.fs;
 const semver = require("semver");
 const path = require("upath");
 const consoleControl = require("console-control-strings");
@@ -516,18 +515,6 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         targetConfigs.push(defaultTargetConfig);
       }
       
-      
-      /*
-       * Locate and load libraries
-       */
-      if (!data.libraries.every(libData => fs.existsSync(libData + "/Manifest.json"))) {
-        Console.log("One or more libraries not found - trying to install them from library repository...");
-        const installer = new qx.tool.cli.commands.package.Install({
-          quiet: true,
-          save: false
-        });
-        await installer.process();
-      }
       
       let libraries = this.__libraries = {};
       await qx.Promise.all(data.libraries.map(async libPath => {
