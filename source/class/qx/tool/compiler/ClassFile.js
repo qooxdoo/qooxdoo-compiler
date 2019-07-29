@@ -2397,7 +2397,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
     /**
      * These are the constants which are answered by Qooxdoo qx.core.Environment; we use out own copy here and
      * not the one available in qx.core.Environment._defaults because we need to use the version which is appropriate
-     * for the version of Qooxdoo being compiled, not the one that qxcompiler is compiled with
+     * for the version of Qooxdoo being compiled, not the one that this CLI is compiled with
      */
     ENVIRONMENT_CONSTANTS:     {
       // an always-true key (e.g. for use in qx.core.Environment.filter() calls)

@@ -3,7 +3,7 @@
  *    qxcompiler - node.js based replacement for the Qooxdoo python
  *    toolchain
  *
- *    https://github.com/johnspackman/qxcompiler
+ *    https://github.com/qooxdoo/qooxdoo-compiler
  *
  *    Copyright:
  *      2011-2016 Zenesis Limited, http://www.zenesis.com
