@@ -30,7 +30,7 @@ require("./Command");
 require("./MConfig");
 
 /**
- * Handles compilation of the project
+ * Handles compilation of the project by qxcompiler
  */
 qx.Class.define("qx.tool.cli.commands.Compile", {
   extend: qx.tool.cli.commands.Command,
@@ -516,21 +516,6 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         targetConfigs.push(defaultTargetConfig);
       }
       
-      
-      /*
-       * Locate and load libraries
-       */
-      let missingLibs = data.libraries.filter(libraryPath => !fs.existsSync(path.join(libraryPath, "/Manifest.json")));
-      if (missingLibs.length) {
-        Console.log("One or more libraries not found - trying to install them from library repository...");
-        const installer = new qx.tool.cli.commands.package.Install({
-          quiet: true,
-          save: false
-        });
-        await installer.process();
-        let addedLibs = missingLibs.filter(libraryPath => fs.existsSync(path.join(libraryPath, "/Manifest.json")));
-        addedLibs.forEach(libraryPath => this._discoverLibrary(libraryPath));
-      }
       
       let libraries = this.__libraries = {};
       await qx.Promise.all(data.libraries.map(async libPath => {

@@ -142,8 +142,35 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
       this._mergeArguments(parsedArgs, config, lockfile_content);
 
       if (config.libraries) {
-        for (const libraryPath of config.libraries) {
-          await this._discoverLibrary(libraryPath);
+
+        /*
+         * Locate and load libraries
+         */
+        if (!config.libraries.every(libData => fs.existsSync(libData + "/Manifest.json"))) {
+          qx.tool.compiler.Console.log("One or more libraries not found - trying to install them from library repository...");
+          const installer = new qx.tool.cli.commands.package.Install({
+            quiet: true,
+            save: false
+          });
+          await installer.process();
+        }
+
+        for (const aPath of config.libraries) {
+          let libCompileJsFilename = path.join(aPath, qx.tool.cli.commands.MConfig.compileJsFilename);
+          let LibraryApi = qx.tool.cli.api.LibraryApi;
+          if (await fs.existsAsync(libCompileJsFilename)) {
+            let compileJs = await this.__loadJs(libCompileJsFilename);
+            if (compileJs.LibraryApi) {
+              LibraryApi = compileJs.LibraryApi;
+            }
+          }
+          
+          let libraryApi = new LibraryApi().set({ 
+            rootDir: aPath,
+            compilerApi: compilerApi
+          });
+          compilerApi.addLibraryApi(libraryApi);
+          await libraryApi.load();
         }
       }
       
@@ -156,29 +183,6 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
       await compilerApi.afterLibrariesLoaded();
       
       return compilerApi.getConfiguration();
-    },
-    
-    /**
-     * Adds a library in a given directory, loading and initialising the API etc
-     * 
-     * @param libraryDir {String} the directory
-     */
-    async _discoverLibrary(libraryDir) {
-      let libCompileJsFilename = path.join(libraryDir, qx.tool.cli.commands.MConfig.compileJsFilename);
-      let LibraryApi = qx.tool.cli.api.LibraryApi;
-      if (await fs.existsAsync(libCompileJsFilename)) {
-        let compileJs = await this.__loadJs(libCompileJsFilename);
-        if (compileJs.LibraryApi) {
-          LibraryApi = compileJs.LibraryApi;
-        }
-      }
-      
-      let libraryApi = new LibraryApi().set({ 
-        rootDir: libraryDir,
-        compilerApi: this._compilerApi
-      });
-      this._compilerApi.addLibraryApi(libraryApi);
-      await libraryApi.load();
     },
 
     /*
