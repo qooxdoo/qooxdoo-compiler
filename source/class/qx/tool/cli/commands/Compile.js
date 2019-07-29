@@ -520,13 +520,16 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
       /*
        * Locate and load libraries
        */
-      if (!data.libraries.every(libData => fs.existsSync(libData + "/Manifest.json"))) {
+      let missingLibs = data.libraries.filter(libraryPath => !fs.existsSync(path.join(libraryPath, "/Manifest.json")));
+      if (missingLibs.length) {
         Console.log("One or more libraries not found - trying to install them from library repository...");
         const installer = new qx.tool.cli.commands.package.Install({
           quiet: true,
           save: false
         });
         await installer.process();
+        let addedLibs = missingLibs.filter(libraryPath => fs.existsSync(path.join(libraryPath, "/Manifest.json")));
+        addedLibs.forEach(libraryPath => this._discoverLibrary(libraryPath));
       }
       
       let libraries = this.__libraries = {};
