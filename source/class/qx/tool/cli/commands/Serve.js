@@ -112,7 +112,7 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
 
       const app = express();
       const website = new qx.tool.utils.Website();
-      if (apps.length === 1 && apps[0].getWriteIndexHtmlToRoot() && this.argv.showStartpage === false) {
+      if (((apps.length === 1) || apps[0].getWriteIndexHtmlToRoot()) && (this.argv.showStartpage === false)) {
         let target = makers[0].getTarget();
         app.use("/", express.static(target.getOutputDir()));
       } else {
