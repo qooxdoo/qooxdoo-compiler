@@ -27,7 +27,7 @@ require("app-module-path").addPath(process.cwd() + "/node_modules");
 require("./Compile");
 
 /**
- * Handles compilation of the project by qxcompiler
+ * Compiles the project and serves it up as a web page
  */
 qx.Class.define("qx.tool.cli.commands.Serve", {
   extend: qx.tool.cli.commands.Compile,

@@ -29,7 +29,7 @@ require("./Command");
 require("./MConfig");
 
 /**
- * Handles compilation of the project by qxcompiler
+ * Handles compilation of the project
  */
 qx.Class.define("qx.tool.cli.commands.Compile", {
   extend: qx.tool.cli.commands.Command,
