@@ -32,19 +32,19 @@ const appNamespace = "testCommandsApp";
     let expected;
     const manifestModel = await qx.tool.config.Manifest.getInstance().load();
 
-    // qx add script --rename=y.js test/testdata/x.js
-    let filename = "x.js";
+    // qx add script --rename=test-commands-renamed-to.js test/testdata/test-commands-rename.js
+    let filename = "test-commands-rename.js";
     let scriptpath = path.join(qx.tool.$$rootDir, "test/testdata", filename);
     let resourcedir = "js";
-    let args = {verbose:true, noninteractive:true, scriptpath, resourcedir, rename:"y.js"};
+    let args = {verbose:true, noninteractive:true, scriptpath, resourcedir, rename:"test-commands-renamed-to.js"};
     await (new commands.add.Script(args)).process();
     actual = manifestModel.getValue("externalResources.script.0");
-    expected = path.join(appNamespace, resourcedir, "y.js");
+    expected = path.join(appNamespace, resourcedir, "test-commands-renamed-to.js");
     assert.strictEqual(actual, expected);
     let filePath = path.join(process.cwd(), "source/resource", expected);
     assert.ok(await fs.existsAsync(filePath), "File was not copied.");
 
-    // qx add script --undo --rename=y.js test/testdata/x.js
+    // qx add script --undo --rename=test-commands-renamed-to.js test/testdata/test-commands-rename.js
     args.undo = true;
     await (new commands.add.Script(args)).process();
     actual = manifestModel.getValue("externalResources.script").length;
