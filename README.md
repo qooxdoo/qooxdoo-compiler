@@ -46,7 +46,7 @@ nvm use 8 # or 10
 ## Test drive
 
 For more detailed information about installation and use of the compiler, refer
-to the [documentation](docs/readme.md). 
+to the [documentation](https://www.qooxdoo.org/docs/#/cli/commands). 
 
 Here's how you can do a quick test drive using `npx` which doesn't install anything
 permanent
