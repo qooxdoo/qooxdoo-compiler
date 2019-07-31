@@ -5,9 +5,7 @@
   "scripts": {
     "test": "cross-os test.os",
     "prepare": "npm update --no-save @qooxdoo/framework",
-    "prepack": "npm update --save @qooxdoo/framework && npm shrinkwrap",
-    "compileWebSite": "cd source/resource/qx/tool/cli/serve && node compile.js",
-    "lint": "eslint lib"
+    "prepack": "npm update --save @qooxdoo/framework && npm shrinkwrap"
   },
   "cross-os": {
     "test.os": {

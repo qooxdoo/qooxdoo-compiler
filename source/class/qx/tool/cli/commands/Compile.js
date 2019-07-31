@@ -575,6 +575,9 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
               targetConfig.defaultAppConfig = appConfig;
             }
           });
+          if (!hasExplicitDefaultApp && (targetConfig.appConfigs.length > 1)) {
+            targetConfig.defaultAppConfig  = null;
+          }
         }
       });
       
