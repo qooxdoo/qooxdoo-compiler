@@ -101,20 +101,30 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
     runWebServer: async function() {
       let makers = this.getMakers().filter(maker => maker.getApplications().some(app => app.isBrowserApp()));
       let apps = [];
+      let defaultMaker = null;
+      let firstMaker = null;
       makers.forEach(maker => { 
         maker.getApplications().forEach(app => {
           if (app.isBrowserApp()) {
             apps.push(app); 
+            if (firstMaker === null) {
+              firstMaker = maker;
+            }
+            if ((defaultMaker === null) && app.getWriteIndexHtmlToRoot()) {                  
+              defaultMaker = maker;  
+            }
           }
         });
       });
+      if (!defaultMaker && (apps.length === 1)) {
+        defaultMaker = firstMaker;
+      }
       var config = this._getConfig();
 
       const app = express();
       const website = new qx.tool.utils.Website();
-      if (((apps.length === 1) || apps[0].getWriteIndexHtmlToRoot()) && (this.argv.showStartpage === false)) {
-        let target = makers[0].getTarget();
-        app.use("/", express.static(target.getOutputDir()));
+      if (defaultMaker && (this.argv.showStartpage === false)) {
+        app.use("/", express.static(defaultMaker.getTarget().getOutputDir()));
       } else {
         let s = await this.getAppQxPath();
         if (!await fs.existsAsync(path.join(s, "docs"))) {
