@@ -64,7 +64,7 @@ qx.Class.define("qx.tool.compiler.jsdoc.Parser", {
         }
 
         // Look for command at the begining of the line
-        m = line.match(/^(\@[a-zA-Z0-9_]+)(.*)$/);
+        m = line.match(/^\s*(\@[a-zA-Z0-9_]+)(.*)$/);
         if (!m) {
           if (current.body.length) {
             current.body += "\n";
