@@ -48,8 +48,18 @@ nvm use 8 # or 10
 For more detailed information about installation and use of the compiler, refer
 to the [documentation](https://www.qooxdoo.org/docs/#/cli/commands). 
 
-Here's how you can do a quick test drive using `npx` which doesn't install anything
-permanent
+Here's how you can do a quick test drive:
+
+First, create a directory for your test, initialize it for npm packages, and install this compiler:
+```bash
+mkdir testdrive
+cd testdrive
+npm init -y
+npm install @qooxdoo/compiler
+```
+
+Now, create your testdrive application using `npx` which doesn't install anything
+globally.
 
 ```bash
 npx qx create myapp --noninteractive
