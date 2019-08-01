@@ -79,11 +79,12 @@ qx.Class.define("qx.tool.utils.Json", {
       // throw fatal error
       let err = betterAjvErrors(schema.$id, json, ajv.errors, {format: "js"});
       let msg;
-      if (err.length) {
-        msg = err[0].error;
+      if (Array.isArray(err) && err.length) {
+        msg = err.reduce((prev, curr, index) => `${prev} ${index+1}) ${curr.error}`, "").trim();
+      } else if (Array.isArray(ajv.errors)) {
+        msg = ajv.errors.reduce((prev, curr, index) => `${prev} ${index+1}) ${curr.dataPath} ${curr.message}`, "").trim();
       } else {
-        err = ajv.errors[0];
-        msg = `${err.dataPath} ${err.message}`;
+        msg = "Unknown error during validation.";
       }
       throw new Error(msg);
     },
