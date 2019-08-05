@@ -99,6 +99,10 @@
           "description": "a semver compatible version string",
           "//pattern": "^(\\d|[1-9]\\d*)\\.(\\d|[1-9]\\d*)\\.(\\d|[1-9]\\d*)(?:-([-\\dA-Za-z]+(?:\\.[\\dA-Za-z-]+)*))?(?:\\+([-\\dA-Za-z]+(?:\\.[-\\d0-9A-Za-z]+)*))?$"
         },
+        "qooxdoo-versions": {
+          "type": "array",
+          "description": "(deprecated) An array of qooxdoo versions that this library is compatible with. This property is deprecated and will be removed in version 7."
+        },
         "sourceViewUri": {
           "type": "string",
           "description": "URL to view the library's class code online. This URL will be used in generated API documentation. It has a special syntax and allows for placeholders (e.g. for the class name and the source line number)."
