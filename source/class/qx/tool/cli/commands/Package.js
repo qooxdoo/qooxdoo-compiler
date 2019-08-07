@@ -125,14 +125,6 @@ qx.Class.define("qx.tool.cli.commands.Package", {
     },
 
     /**
-     * Returns the model of the compiler config
-     * @return {Promise<qx.tool.config.Compile>}
-     */
-    async getCompileConfigModel() {
-      return qx.tool.config.Compile.getInstance().load();
-    },
-
-    /**
      * Returns the model of the manifest
      * @return {Promise<qx.tool.config.Manifest>}
      */
@@ -148,8 +140,7 @@ qx.Class.define("qx.tool.cli.commands.Package", {
     async _getConfigData() {
       return [
         await this.getManifestModel(),
-        await this.getLockfileModel(),
-        await this.getCompileConfigModel()
+        await this.getLockfileModel()
       ];
     },
 
@@ -159,7 +150,7 @@ qx.Class.define("qx.tool.cli.commands.Package", {
      * @private
      */
     async _saveConfigData() {
-      const [manifestModel, lockfileModel, compileConfigModel] = await this._getConfigData();
+      const [manifestModel, lockfileModel] = await this._getConfigData();
       if (this.argv.save && manifestModel.isDirty()) {
         await manifestModel.save();
         if (this.argv.verbose) {
@@ -170,12 +161,6 @@ qx.Class.define("qx.tool.cli.commands.Package", {
         await lockfileModel.save();
         if (this.argv.verbose) {
           qx.tool.compiler.Console.info(`>>> Saved library data to ${lockfileModel.getRelativeDataPath()}`);
-        }
-      }
-      if (compileConfigModel.isDirty()) {
-        await compileConfigModel.save();
-        if (this.argv.verbose) {
-          qx.tool.compiler.Console.info(`>>> Saved compile config data to ${compileConfigModel.getRelativeDataPath()}`);
         }
       }
     },
