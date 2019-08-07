@@ -19,7 +19,6 @@
 require("@qooxdoo/framework");
 const process = require("process");
 const Gauge = require("gauge");
-const fs = qx.tool.utils.Promisify.fs;
 const semver = require("semver");
 const path = require("upath");
 const consoleControl = require("console-control-strings");
@@ -30,7 +29,7 @@ require("./Command");
 require("./MConfig");
 
 /**
- * Handles compilation of the project by qxcompiler
+ * Handles compilation of the project
  */
 qx.Class.define("qx.tool.cli.commands.Compile", {
   extend: qx.tool.cli.commands.Command,
@@ -517,18 +516,6 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
       }
       
       
-      /*
-       * Locate and load libraries
-       */
-      if (!data.libraries.every(libData => fs.existsSync(libData + "/Manifest.json"))) {
-        Console.log("One or more libraries not found - trying to install them from library repository...");
-        const installer = new qx.tool.cli.commands.package.Install({
-          quiet: true,
-          save: false
-        });
-        await installer.process();
-      }
-      
       let libraries = this.__libraries = {};
       await qx.Promise.all(data.libraries.map(async libPath => {
         var library = await qx.tool.compiler.app.Library.createLibrary(libPath);
@@ -588,6 +575,9 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
               targetConfig.defaultAppConfig = appConfig;
             }
           });
+          if (!hasExplicitDefaultApp && (targetConfig.appConfigs.length > 1)) {
+            targetConfig.defaultAppConfig = null;
+          }
         }
       });
       

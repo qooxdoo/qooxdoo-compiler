@@ -148,7 +148,7 @@
         "additionalProperties": false,
         "properties": {
           "type": {
-            "description": "Either `source`, `build`, or a class name in qooxdoo-compiler; using a class name is advanced usage, but ultimately the standard names just shortcuts to class names anyway (`source` is `qxcompiler.targets.SourceTarget`, etc)",
+            "description": "Either `source`, `build`, or a class name in qooxdoo-compiler; using a class name is advanced usage, but ultimately the standard names just shortcuts to class names anyway (`source` is `qx.tool.compiler.targets.SourceTarget`, etc)",
             "type": "string"
           },
           "application-types": {

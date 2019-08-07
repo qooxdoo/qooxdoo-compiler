@@ -6,6 +6,7 @@
   "type": "object",
   "required": [
     "provides",
+    "requires",
     "$schema"
   ],
   "additionalProperties": false,
@@ -97,6 +98,10 @@
           "type": "string",
           "description": "a semver compatible version string",
           "//pattern": "^(\\d|[1-9]\\d*)\\.(\\d|[1-9]\\d*)\\.(\\d|[1-9]\\d*)(?:-([-\\dA-Za-z]+(?:\\.[\\dA-Za-z-]+)*))?(?:\\+([-\\dA-Za-z]+(?:\\.[-\\d0-9A-Za-z]+)*))?$"
+        },
+        "qooxdoo-versions": {
+          "type": "array",
+          "description": "(deprecated) An array of qooxdoo versions that this library is compatible with. This property is deprecated and will be removed in version 7."
         },
         "sourceViewUri": {
           "type": "string",

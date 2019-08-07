@@ -261,8 +261,8 @@ qx.Class.define("qx.tool.compiler.Console", {
 
     /**
      * Message strings for markers, ie errors and warnings.  The strings are stored as statics
-     * here, but that's because qxcompile is currently assembled by hand and therefore does not
-     * support translations.  When qxcompiler is itself compiled by qxcompiler, these strings
+     * here, but that's because the CLI is currently assembled by hand and therefore does not
+     * support translations.  When the CLI is itself compiled by `qx compile`, these strings
      * will move into translation files.
      */
     MESSAGE_IDS: {},

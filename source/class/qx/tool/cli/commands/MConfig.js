@@ -142,6 +142,18 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
       this._mergeArguments(parsedArgs, config, lockfile_content);
 
       if (config.libraries) {
+        /*
+         * Locate and load libraries
+         */
+        if (!config.libraries.every(libData => fs.existsSync(libData + "/Manifest.json"))) {
+          qx.tool.compiler.Console.log("One or more libraries not found - trying to install them from library repository...");
+          const installer = new qx.tool.cli.commands.package.Install({
+            quiet: true,
+            save: false
+          });
+          await installer.process();
+        }
+
         for (const aPath of config.libraries) {
           let libCompileJsFilename = path.join(aPath, qx.tool.cli.commands.MConfig.compileJsFilename);
           let LibraryApi = qx.tool.cli.api.LibraryApi;

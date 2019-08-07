@@ -46,7 +46,7 @@ nvm use 8 # or 10
 ## Test drive
 
 For more detailed information about installation and use of the compiler, refer
-to the [documentation](docs/readme.md). 
+to the [documentation](https://www.qooxdoo.org/docs/#/cli/commands). 
 
 Here's how you can do a quick test drive using `npx` which doesn't install anything
 permanent
@@ -79,7 +79,7 @@ serve` command always used continuous compilation.
 
 ### What about config.json? QOOXDOO_PATH?
 
-`config.json` is not used by QxCompiler; the `qx` command is using a new, and much
+`config.json` is not used by the `qx` command - instead it uses a new, and much
 simpler configuration [file called `compile.json`](docs/configuration/compile.md).
 The path to the qooxdoo library does not need to be specified since the compiler
 comes with its own copy of the framework, if this is not what you want, you can

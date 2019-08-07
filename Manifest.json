@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/qooxdoo/qooxdoo-compiler/master/source/resource/qx/tool/schema/Manifest-1-0-0.json",
   "info": {
-    "name": "qxcompiler",
+    "name": "@qooxdoo/qooxdoo-compiler",
     "summary": "The new fast JavaScript Compiler for Qooxdoo",
     "description": "The Qooxdoo-Compiler is the new compiler and command line interface for Qooxdoo applications. It is written in Node.JS Javascript and replaces the Python-based generator.",
     "homepage": "https://github.com/qooxdoo/qooxdoo-compiler",

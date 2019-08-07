@@ -52,19 +52,19 @@ qx.Class.define("qx.tool.compiler.jsdoc.Parser", {
         if (m) {
           line = m[1];
         }
-        line = line.trim();
+        line = line.trimRight();
         
         let docComment = null;
         
         // Strip trailing single line comment
         m = line.match(/(^.*)(\/\/.*)$/);
         if (m) {
-          line = m[1].trim();
+          line = m[1].trimRight();
           docComment = m[2];
         }
 
         // Look for command at the begining of the line
-        m = line.match(/^(\@[a-zA-Z0-9_]+)(.*)$/);
+        m = line.match(/^\s*(\@[a-zA-Z0-9_]+)(.*)$/);
         if (!m) {
           if (current.body.length) {
             current.body += "\n";
