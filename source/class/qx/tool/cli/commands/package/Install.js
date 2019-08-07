@@ -536,6 +536,7 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
           app[key] = manifestApp[key];
         }
       }
+      await compileConfigModel.save();
       if (this.argv.verbose) {
         qx.tool.compiler.Console.info(">>> Installed application " + (app.name||app["class"]));
       }
