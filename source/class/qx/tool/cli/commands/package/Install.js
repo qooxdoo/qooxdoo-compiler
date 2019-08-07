@@ -515,9 +515,13 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
       if (!manifest.provides || !manifest.provides.application) {
         return false;
       }
-      // FIXME: this won't use compile.js
       let manifestApp = manifest.provides.application;
-      const compileConfigModel = await qx.tool.config.Compile.getInstance().load();
+      const compileConfigModel = await qx.tool.config.Compile.getInstance();
+      if (!await compileConfigModel.exists()) {
+        qx.tool.compiler.Console.info(">>> Cannot install application " + (manifestApp.name||manifestApp["class"]) + " because compile.json does not exist (you must manually add it)");
+        return false;
+      }
+      compileConfigModel.load();
       let app = compileConfigModel.getValue("applications").find(app => {
         if (manifestApp.name && app.name) {
           return manifestApp.name === app.name;
