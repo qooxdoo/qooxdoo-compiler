@@ -231,7 +231,11 @@ qx.Class.define("qx.tool.compiler.resources.Manager", {
         let fileInfo = asset.getFileInfo();
         if (fileInfo.meta) {
           for (var altPath in fileInfo.meta) {
-            let otherAsset = this.__assets[asset.getLibrary().getNamespace() + ":" + altPath];
+            let lib = this.findLibraryForResource(altPath);
+            if (!lib) {
+              lib = asset.getLibrary();
+            }
+            let otherAsset = this.__assets[lib.getNamespace() + ":" + altPath];
             if (otherAsset) {
               otherAsset.addMetaReferee(asset);
               asset.addMetaReferTo(otherAsset);
