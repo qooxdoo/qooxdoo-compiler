@@ -257,7 +257,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
       if (this.argv["feedback"] === null) {
         this.argv["feedback"] = configDb.db("qx.default.feedback", true);
       }
-            
+
       if (this.argv["machine-readable"]) {
         qx.tool.compiler.Console.getInstance().setMachineReadable(true);
       } else {
@@ -271,7 +271,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
           let Console = qx.tool.compiler.Console.getInstance();
           Console.setColorOn(colorOn);
         }
-        
+
         if (this.argv["feedback"]) {
           var themes = require("gauge/themes");
           var ourTheme = themes.newTheme(themes({hasUnicode: true, hasColor: true}));
@@ -280,7 +280,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
           ourTheme.preSubsection = colorOn + ourTheme.preSubsection;
           ourTheme.progressbarTheme.postComplete += colorOn;
           ourTheme.progressbarTheme.postRemaining += colorOn;
-       
+
           this.__gauge = new Gauge();
           this.__gauge.setTheme(ourTheme);
           this.__gauge.show("Compiling", 0);
@@ -326,7 +326,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
           });
         }
       }
-      
+
       var config = this.__config = await this.parse(this.argv);
       if (!config) {
         throw new qx.tool.utils.Utils.UserError("Error: Cannot find any configuration");
@@ -335,21 +335,21 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
       if (!makers || !makers.length) {
         throw new qx.tool.utils.Utils.UserError("Error: Cannot find anything to make");
       }
-      
+
       this.addListener("writtenApplications", e => {
         if (this.argv.verbose) {
           qx.tool.compiler.Console.log("\nCompleted all applications, libraries used are:");
           Object.values(this.__libraries).forEach(lib => qx.tool.compiler.Console.log(`   ${lib.getNamespace()} (${lib.getRootDir()})`));
         }
       });
-      
+
       let countMaking = 0;
       const collateDispatchEvent = evt => {
         if (countMaking == 1) {
           this.dispatchEvent(evt.clone());
         }
       };
-      
+
       await qx.Promise.all(makers.map(async maker => {
         var analyser = maker.getAnalyser();
         let cfg = await qx.tool.cli.ConfigDb.getInstance();
@@ -363,7 +363,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         if (config.ignores) {
           analyser.setIgnores(config.ignores);
         }
-        
+
         var target = maker.getTarget();
         maker.addListener("writingApplications", collateDispatchEvent);
         maker.addListener("writtenApplications", collateDispatchEvent);
@@ -392,13 +392,13 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
               this.fireEvent("made");
             }
           });
-          
+
           return p.then(() => maker.make());
         }
-        
+
         // Continuous make
         let watch = new qx.tool.cli.Watch(maker);
-        
+
         watch.addListener("making", () => {
           countMaking++;
           if (countMaking == 1) {
@@ -411,10 +411,10 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
             this.fireEvent("made");
           }
         });
-        
+
         return p.then(() => watch.start());
       }));
-      
+
       this.addListener("making", evt => {
         if (this.__gauge) {
           this.__gauge.show("Compiling", 1);
@@ -422,7 +422,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
           qx.tool.compiler.Console.print("qx.tool.cli.compile.makeBegins");
         }
       });
-      
+
       this.addListener("made", evt => {
         if (this.__gauge) {
           this.__gauge.show("Compiling", 1);
@@ -442,17 +442,17 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
     createMakersFromConfig: async function(data) {
       const Console = qx.tool.compiler.Console.getInstance();
       var t = this;
-      
+
       var argvAppNames = null;
       if (t.argv["app-name"]) {
         argvAppNames = t.argv["app-name"].split(",");
       }
-      
-      
+
+
       /*
-       * Calculate the the list of targets and applications; this is a many to many list, where an 
+       * Calculate the the list of targets and applications; this is a many to many list, where an
        * application can be compiled for many targets, and each target has many applications.
-       * 
+       *
        * Each target configuration is updated to have `appConfigs[]` and each application configuration
        * is updated to have `targetConfigs[]`.
        */
@@ -472,7 +472,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
           }
         }
       });
-      
+
       data.applications.forEach((appConfig, index) => {
         appConfig.index = index;
         let appType = appConfig.type||"browser";
@@ -481,7 +481,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
           if (appTypes && !qx.lang.Array.contains(appTypes, appType)) {
             return false;
           }
-          
+
           let appNames = targetConfig["application-names"];
           if (appConfig.name && appNames && !qx.lang.Array.contains(appNames, appConfig.name)) {
             return false;
@@ -491,7 +491,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
           }
           return true;
         });
-        
+
         if (appTargetConfigs.length == 0) {
           if (defaultTargetConfig) {
             appTargetConfigs = [defaultTargetConfig];
@@ -499,7 +499,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
             throw new qx.tool.utils.Utils.UserError(`Cannot find any suitable targets for application #${index} (named ${appConfig.name||"unnamed"})`);
           }
         }
-        
+
         appTargetConfigs.forEach(targetConfig => {
           if (!targetConfig.appConfigs) {
             targetConfig.appConfigs = [];
@@ -514,14 +514,14 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
       if (defaultTargetConfig && defaultTargetConfig.appConfigs) {
         targetConfigs.push(defaultTargetConfig);
       }
-      
-      
+
+
       let libraries = this.__libraries = {};
       await qx.Promise.all(data.libraries.map(async libPath => {
         var library = await qx.tool.compiler.app.Library.createLibrary(libPath);
         libraries[library.getNamespace()] = library;
       }));
-      
+
       // Search for Qooxdoo library if not already provided
       var qxLib = libraries["qx"];
       if (!qxLib) {
@@ -540,8 +540,8 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
           qx.tool.compiler.Console.log(errors.join("\n"));
         }
       }
-      
-      
+
+
       /*
        * Figure out which will be the default application; this will need some work for situations
        * where there are multiple browser based targets
@@ -554,7 +554,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
             if (appConfig.type && appConfig.type != "browser") {
               return;
             }
-            
+
             let setDefault;
             if (appConfig.writeIndexHtmlToRoot !== undefined) {
               qx.tool.compiler.Console.print("qx.tool.cli.compile.deprecatedCompileSeeOther", "application.writeIndexHtmlToRoot", "application.default");
@@ -580,10 +580,10 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
           }
         }
       });
-      
-      
+
+
       /*
-       * There is still only one target per maker, so convert our list of targetConfigs into an array of makers 
+       * There is still only one target per maker, so convert our list of targetConfigs into an array of makers
        */
       let makers = [];
       targetConfigs.forEach(targetConfig => {
@@ -591,7 +591,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
           qx.tool.compiler.Console.print("qx.tool.cli.compile.unusedTarget", target.type, target.index);
           return;
         }
-        
+
         var outputPath = targetConfig.outputPath;
         if (!outputPath) {
           throw new qx.tool.utils.Utils.UserError("Missing output-path for target " + targetConfig.type);
@@ -620,7 +620,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         }
         target.setWriteLibraryInfo(this.argv.writeLibraryInfo);
         target.setUpdatePoFiles(this.argv.updatePoFiles);
-        
+
         // Take the command line for `minify` as most precedent only if provided
         var minify;
         if ((process.argv.indexOf("--minify") > -1)) {
@@ -640,7 +640,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         if (typeof saveUnminified == "boolean" && typeof target.setSaveUnminified == "function") {
           target.setSaveUnminified(saveUnminified);
         }
-        
+
         maker.setTarget(target);
 
         maker.setLocales(data.locales||[ "en" ]);
@@ -695,8 +695,8 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         for (let ns in libraries) {
           maker.getAnalyser().addLibrary(libraries[ns]);
         }
-        
-        
+
+
         let allApplicationTypes = {};
         targetConfig.appConfigs.forEach(appConfig => {
           var app = appConfig.app = new qx.tool.compiler.app.Application(appConfig["class"]);
@@ -715,7 +715,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
           if (appConfig.title) {
             app.setTitle(appConfig.title);
           }
-          
+
           var parts = appConfig.parts || targetConfig.parts || data.parts;
           if (parts) {
             if (!parts.boot) {
@@ -751,7 +751,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
           });
           maker.addApplication(app);
         });
-        
+
         const CF = qx.tool.compiler.ClassFile;
         let globalSymbols = [];
         qx.lang.Array.append(globalSymbols, CF.QX_GLOBALS);
@@ -786,10 +786,10 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
             });
           }
         });
-        
+
         makers.push(maker);
       });
-      
+
       return makers;
     },
 
@@ -847,6 +847,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
 
         for (let reqUri of Object.getOwnPropertyNames(requires)) {
           let requiredRange = requires[reqUri];
+          const rangeIsCommitHash = /^[0-9a-f]{40}$/.test(requiredRange);
           switch (reqUri) {
             // npm release only
             case "qooxdoo-compiler":
@@ -879,6 +880,8 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
               let libVersion = l.getLibraryInfo().version;
               if (!semver.valid(libVersion, {loose: true})) {
                 Console.warn(`${reqUri}: Version is not valid: ${libVersion}`);
+              } else if (rangeIsCommitHash) {
+                Console.warn(`${reqUri}: Cannot check whether commit hash ${requiredRange} corresponds to version ${libVersion}`);
               } else if (!semver.satisfies(libVersion, requiredRange, {loose: true})) {
                 errors.push(`${lib.getNamespace()}: Needs ${reqUri} version ${requiredRange}, found ${libVersion}`);
               }
@@ -926,19 +929,19 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
 
     /**
      * Returns the list of makers to make
-     * 
+     *
      * @return  {Maker[]}
      */
     getMakers() {
       return this.__makers;
     },
-    
+
     /**
      * Returns the one maker; this is for backwards compatibility with the compiler API, because it is
      * possible to define multiple targets and therefore have multiple makers.  This method will return
      * the one maker, when there is only one maker defined (ie one target), which is fine for any existing
      * configurations.
-     * 
+     *
      * @deprected
      * @return {Maker}
      */
@@ -946,12 +949,12 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
       if (this.__makers.length == 1) {
         return this.__makers[0];
       }
-      throw new Error("Cannot get a single maker - there are " + this.__makers.length + " available"); 
+      throw new Error("Cannot get a single maker - there are " + this.__makers.length + " available");
     },
-    
+
     /**
      * Returns the makers for a given application name
-     * 
+     *
      * @param appName {String} the name of the application
      * @return {Maker}
      */
@@ -965,14 +968,14 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
     _getConfig() {
       return this.__config;
     },
-    
+
     /**
      * Returns a list of libraries which are used
-     * 
+     *
      * @return {Library[]}
      */
     getLibraries() {
-      return this.__libraries; 
+      return this.__libraries;
     }
   },
 
