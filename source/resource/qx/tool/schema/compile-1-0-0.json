@@ -151,6 +151,10 @@
             "description": "Either `source`, `build`, or a class name in qooxdoo-compiler; using a class name is advanced usage, but ultimately the standard names just shortcuts to class names anyway (`source` is `qx.tool.compiler.targets.SourceTarget`, etc)",
             "type": "string"
           },
+          "description": {
+            "description": "A description of the target's function.",
+            "type": "string"
+          },
           "application-types": {
             "description": "The application types which this target supports",
             "type": "array",
