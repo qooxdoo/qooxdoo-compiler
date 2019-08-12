@@ -51,6 +51,7 @@ if (!qx.$$appRoot) {
   if (qx.$$appRoot[qx.$$appRoot.length - 1] != "/")
     qx.$$appRoot += "/";
 }
+qx.$$resourceRoot = qx.$$appRoot;
 
 if (!qx.$$environment)
   qx.$$environment = {};

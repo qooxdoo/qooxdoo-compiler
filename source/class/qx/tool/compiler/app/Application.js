@@ -816,7 +816,7 @@ qx.Class.define("qx.tool.compiler.app.Application", {
      * Apply for `type` property
      */
     _applyType: function(value, oldValue) {
-      var loader = path.join(this.getTemplatePath(), "loader", "loader-" + (this.isBrowserApp() ? "browser" : "server") + ".tmpl.js");
+      var loader = path.join(this.getTemplatePath(), "loader", "loader-" + this.getType() + ".tmpl.js");
       this.setLoaderTemplate(loader);
       this.setTheme(null);
     },
