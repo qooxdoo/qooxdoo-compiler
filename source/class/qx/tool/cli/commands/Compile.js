@@ -687,6 +687,8 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         let babelOptions = data.babelOptions || {};
         qx.lang.Object.mergeWith(babelOptions, targetConfig.babelOptions || {});
         maker.getAnalyser().setBabelOptions(babelOptions);
+        if (data.jsx)
+          qx.tool.compiler.ClassFile.JSX_OPTIONS = data.jsx;
 
         var addCreatedAt = targetConfig["addCreatedAt"] || t.argv["addCreatedAt"];
         if (addCreatedAt) {

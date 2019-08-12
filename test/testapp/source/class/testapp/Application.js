@@ -189,6 +189,8 @@ qx.Class.define("testapp.Application", {
       qx.core.Assert.assertTrue(qx.core.Environment.get("testappLibraryApi") === "one");
       qx.core.Assert.assertTrue(qx.core.Environment.get("testlibCompilerApi") === undefined);
       qx.core.Assert.assertTrue(qx.core.Environment.get("testlibLibraryApi") === "one");
+      
+      var abc = (<div>Hello World</div>);
     },
 
     undocumentedMethod: function () {

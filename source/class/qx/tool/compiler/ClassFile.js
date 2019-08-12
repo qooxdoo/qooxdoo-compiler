@@ -328,7 +328,8 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
             sourceMaps: true,
             "presets": [
               [ require.resolve("@babel/preset-env"), options],
-              [ require.resolve("@babel/preset-typescript")]
+              [ require.resolve("@babel/preset-typescript") ],
+              [ require.resolve("@babel/preset-react"), qx.tool.compiler.ClassFile.JSX_OPTIONS ]
             ],
             plugins: [
               t._babelClassPlugin()
@@ -1108,7 +1109,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         "qx.Interface.define": "interface",
         "qx.Bootstrap.define": "class"
       };
-
+      
       var VISITOR = {
         NewExpression: {
           enter(path) {
@@ -2264,6 +2265,20 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
     getNamespace: function(className) {
       var m = className.match(/^([^.]+)\./);
       return (m && m[1])||null;
+    },
+    
+    /**
+     * These options are passed to Babel for JSX compilation; they can be changed by the CLI etc
+     * as needed.
+     * 
+     * Note that at the moment they use a class that does not exist!  `qx.bom.React` is coming soon
+     * to a PR near you, but in the mean time you could use the compile.json `jsx` setting to
+     * change these to something else, eg `{ pragma: "jsx.dom", pragmaFrag: "jsx.Fragment }` and
+     * use https://github.com/alecsgone/jsx-render in your application's code. 
+     */
+    JSX_OPTIONS: {
+      "pragma": "qx.bom.React.createElement",
+      "pragmaFrag": "qx.bom.React.Fragment"
     },
 
     /**

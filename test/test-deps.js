@@ -7,6 +7,11 @@ require("../index");
 
 async function createMaker() {
   var QOOXDOO_PATH = "../node_modules/@qooxdoo/framework";
+  
+  qx.tool.compiler.ClassFile.JSX_OPTIONS = {
+    "pragma": "jsx.dom",
+    "pragmaFrag": "jsx.Fragment"
+  };
 
   // Makers use an Analyser to figure out what the Target should write
   var maker = new qx.tool.compiler.makers.AppMaker().set({
@@ -202,6 +207,15 @@ test("Checks dependencies and environment settings", assert => {
         var ci = db.classInfo["testapp.Issue503"];
         var arr = ci.unresolved||[];
         assert.ok(arr.length === 0, "unexpected unresolved " + JSON.stringify(arr) + " in testapp.Issue503");
+      })
+      
+
+      /*
+       * Test JSX
+       */
+      .then(() => readFile("unit-tests-output/transpiled/testapp/Application.js", "utf8"))
+      .then(src => {
+        assert.ok(!!src.match(/jsx.dom\("div", null, "Hello World"\)/), "JSX");
       })
       
 
