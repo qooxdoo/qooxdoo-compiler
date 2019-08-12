@@ -50,6 +50,11 @@ qx.Class.define("qx.tool.compiler.resources.ScssFile", {
       nullable: false,
       check: "String",
       event: "changeFile"
+    },
+    
+    themeFile: {
+      init: false,
+      check: "Boolean"
     }
   },
   
@@ -162,7 +167,7 @@ qx.Class.define("qx.tool.compiler.resources.ScssFile", {
         return null;
       }
       
-      let libResourceDir = path.join(library.getRootDir(), library.getResourcePath());
+      let libResourceDir = path.join(library.getRootDir(), this.isThemeFile() ? library.getThemePath() : library.getResourcePath());
       return {
         namespace: library.getNamespace(),
         filename: path.relative(libResourceDir, filename),
@@ -181,7 +186,7 @@ qx.Class.define("qx.tool.compiler.resources.ScssFile", {
         return str.replace(/([\[\]\\])/g, "\\$1");
       }
       
-      filename = path.relative(process.cwd(), path.resolve(library.getResourceFilename(filename)));
+      filename = path.relative(process.cwd(), path.resolve(this.isThemeFile() ? library.getThemeFilename(filename) : library.getResourceFilename(filename)));
       let absFilename = filename;
       if (path.extname(absFilename) == "") {
         absFilename += ".scss";

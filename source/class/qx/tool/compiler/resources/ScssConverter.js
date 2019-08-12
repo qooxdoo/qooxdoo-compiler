@@ -46,12 +46,13 @@ qx.Class.define("qx.tool.compiler.resources.ScssConverter", {
       return filename;
     },
     
-    async convert(target, asset, srcFilename, destFilename) {
+    async convert(target, asset, srcFilename, destFilename, isThemeFile) {
       if (!qx.tool.compiler.resources.ScssConverter.isNewCompiler()) {
         return this.legacyMobileSassConvert(target, asset, srcFilename, destFilename);
       }
       
       let scssFile = new qx.tool.compiler.resources.ScssFile(target, asset.getLibrary(), asset.getFilename());
+      scssFile.setThemeFile(isThemeFile);
       return scssFile.compile(destFilename);
     },
     
