@@ -40,7 +40,8 @@ qx.Class.define("qx.tool.cli.commands.package.Upgrade", {
           },
           "releases-only": {
             alias: "r",
-            describe: "Upgrade regular releases only"
+            describe: "Upgrade regular releases only (this leaves versions based on branches, commits etc. untouched)",
+            default: true
           },
           "reinstall": {
             alias: "R",
