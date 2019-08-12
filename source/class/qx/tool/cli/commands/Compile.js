@@ -475,6 +475,11 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
 
       data.applications.forEach((appConfig, index) => {
         appConfig.index = index;
+        
+        if (appConfig.name && argvAppNames && !qx.lang.Array.contains(argvAppNames, appConfig.name)) {
+          return false;
+        }
+        
         let appType = appConfig.type||"browser";
         let appTargetConfigs = targetConfigs.filter(targetConfig => {
           let appTypes = targetConfig["application-types"];
@@ -484,9 +489,6 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
 
           let appNames = targetConfig["application-names"];
           if (appConfig.name && appNames && !qx.lang.Array.contains(appNames, appConfig.name)) {
-            return false;
-          }
-          if (appConfig.name && argvAppNames && !qx.lang.Array.contains(argvAppNames, appConfig.name)) {
             return false;
           }
           return true;
