@@ -1018,7 +1018,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
             path.skip();
             path.traverse(COLLECT_CLASS_NAMES_VISITOR, { collectedClasses: t.__classMeta.mixins });
             
-          } else if (keyName == "members" || keyName == "statics") {
+          } else if (keyName == "members" || keyName == "statics" || keyName == "@") {
             t.__classMeta._topLevel = {
               path,
               keyName
