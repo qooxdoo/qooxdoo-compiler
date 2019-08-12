@@ -879,9 +879,13 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
               // github release of a package
               let libVersion = l.getLibraryInfo().version;
               if (!semver.valid(libVersion, {loose: true})) {
-                Console.warn(`${reqUri}: Version is not valid: ${libVersion}`);
+                if (!this.argv.quiet) {
+                  Console.warn(`${reqUri}: Version is not valid: ${libVersion}`);
+                }
               } else if (rangeIsCommitHash) {
-                Console.warn(`${reqUri}: Cannot check whether commit hash ${requiredRange} corresponds to version ${libVersion}`);
+                if (!this.argv.quiet) {
+                  Console.warn(`${reqUri}: Cannot check whether commit hash ${requiredRange} corresponds to version ${libVersion}`);
+                }
               } else if (!semver.satisfies(libVersion, requiredRange, {loose: true})) {
                 errors.push(`${lib.getNamespace()}: Needs ${reqUri} version ${requiredRange}, found ${libVersion}`);
               }
