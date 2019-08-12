@@ -477,7 +477,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         appConfig.index = index;
         
         if (appConfig.name && argvAppNames && !qx.lang.Array.contains(argvAppNames, appConfig.name)) {
-          return false;
+          return;
         }
         
         let appType = appConfig.type||"browser";
@@ -687,8 +687,9 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         let babelOptions = data.babelOptions || {};
         qx.lang.Object.mergeWith(babelOptions, targetConfig.babelOptions || {});
         maker.getAnalyser().setBabelOptions(babelOptions);
-        if (data.jsx)
+        if (data.jsx) {
           qx.tool.compiler.ClassFile.JSX_OPTIONS = data.jsx;
+        }
 
         var addCreatedAt = targetConfig["addCreatedAt"] || t.argv["addCreatedAt"];
         if (addCreatedAt) {
