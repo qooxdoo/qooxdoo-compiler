@@ -187,14 +187,17 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
 
     /*** fired when application writing starts */
     "writingApplications": "qx.event.type.Event",
+    
     /** fired when writing of single application starts
      *  data: app {Application}
      */
     "writingApplication": "qx.event.type.Data",
+    
     /** fired when writing of single application is written
      *  data: app {Application}
      */
     "writtenApplication": "qx.event.type.Data",
+    
     /*** fired after writing of all applications */
     "writtenApplications" :"qx.event.type.Event",
 
