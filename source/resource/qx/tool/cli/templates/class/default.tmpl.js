@@ -67,7 +67,8 @@ qx.Class.define("${classname}",
       //
     },
     
-    /** Applies the foo property 
+    /** 
+	* Applies the foo property 
     * @param value new value
 	* @param old the old value
 	*/
