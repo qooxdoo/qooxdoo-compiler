@@ -42,7 +42,7 @@
     "@babel/types": "^7.5.5",
     "@octokit/rest": "^15.18.1",
     "@qooxdoo/eslint-config-jsdoc-disable": "^1.0.1",
-    "@qooxdoo/eslint-config-qx": "^1.2.4",
+    "@qooxdoo/eslint-config-qx": "^1.2.7",
     "@qooxdoo/eslint-plugin-qx": "^1.2.3",
     "@qooxdoo/framework": "^6.0.0-beta",
     "ajv": "^6.10.2",

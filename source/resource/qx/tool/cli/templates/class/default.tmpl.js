@@ -60,14 +60,17 @@ qx.Class.define("${classname}",
      * First method
      * @param {String} foo The foo parameter
      * @param {Number} bar The bar parameter
-     * @return {void} The result of the method.
+     * @return The result of the method.
      */
     myMethod : function(foo, bar)
     {
       //
     },
     
-    /** Applies the foo property */
+    /** Applies the foo property 
+    * @param value new value
+	* @param old the old value
+	*/
     _applyFoo : function(value, old)
     {
       //
