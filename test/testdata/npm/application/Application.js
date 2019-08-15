@@ -69,7 +69,7 @@ qx.Class.define("myapp.Application",
     /**
      * Converts the value of the "settings" command line option to qx settings.
      *
-     * @param args {String[]} Rhino arguments object
+     * @param {string[]} args Rhino arguments object
      */
     _argumentsToSettings : function(args) {
       var opts;
