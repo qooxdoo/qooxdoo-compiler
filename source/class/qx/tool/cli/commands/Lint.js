@@ -179,7 +179,7 @@ qx.Class.define("qx.tool.cli.commands.Lint", {
           to: "@param $2 $1"
         });
       }
-      this.migrate(null, replaceInFiles);
+      await this.migrate(null, replaceInFiles);
     }
   }
 });
