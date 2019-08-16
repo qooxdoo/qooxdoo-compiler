@@ -20,6 +20,7 @@ require("@qooxdoo/framework");
 
 const CLIEngine = require("eslint").CLIEngine;
 const fs = qx.tool.utils.Promisify.fs;
+const path = require("path");
 
 require("./Command");
 require("./MConfig");
@@ -37,6 +38,15 @@ qx.Class.define("qx.tool.cli.commands.Lint", {
           "fix": {
             describe: "runs eslint with --fix"
           },
+          "fix-jsdoc-params": {
+            describe: "changes the order or @param name and {Type} to make it compatible for the generator ('name-first') or with JSDoc linting ('type-first').",
+            choices: ["off", "name-first", "type-first"],
+            default: "off"
+          },
+          "use-eslintrc": {
+            describe: "Use the .eslintrc file for configuration, if it exists",
+            default: true
+          },
           "cache": {
             describe: "operate only on changed files",
             default: false
@@ -47,7 +57,7 @@ qx.Class.define("qx.tool.cli.commands.Lint", {
           },
           "config": {
             alias : "c",
-            describe: "prints the eslint configuration"
+            describe: "print the eslint configuration"
           },
           "format": {
             alias : "f",
@@ -65,6 +75,10 @@ qx.Class.define("qx.tool.cli.commands.Lint", {
             alias: "v",
             describe: "enables additional progress output to console",
             type: "boolean"
+          },
+          "quiet": {
+            alias: "q",
+            describe: "No output"
           }
         },
         handler: function(argv) {
@@ -82,23 +96,16 @@ qx.Class.define("qx.tool.cli.commands.Lint", {
   members: {
 
     process: async function() {
+      await this.__applyFixes();
       let config;
-      let useEslintrc = false;
-      try {
-        config = await this.parse(this.argv);
-      } catch (ex) {
-        useEslintrc = true;
-        config = {};
-      }
+      config = await this.parse();
       let lintOptions = config.eslintConfig || {};
-      if (!useEslintrc) {
-        lintOptions.extends = lintOptions.extends || ["@qooxdoo/qx/browser"];
-      }
+      lintOptions.extends = lintOptions.extends || ["@qooxdoo/qx/browser"];
       lintOptions.globals = Object.assign(lintOptions.globals || {}, await this.__addGlobals(config));
       let linter = new CLIEngine({
         cache: this.argv.cache || false,
         baseConfig: lintOptions,
-        useEslintrc: useEslintrc,
+        useEslintrc: this.argv.useEslintrc,
         fix: this.argv.fix
       });
       let files = this.argv.files || [];
@@ -125,7 +132,7 @@ qx.Class.define("qx.tool.cli.commands.Lint", {
               .then(() => {
                 if (this.argv.verbose) {
                   qx.tool.compiler.Console.info(`Report written to ${this.argv.outputFile}`);
-                } 
+                }
               })
               .catch(e => qx.tool.compiler.Console.error(`Error writing report to ${this.argv.outputFile}:` + e.message));
           } else if (report.errorCount > 0 || this.argv.warnAsError) {
@@ -141,8 +148,10 @@ qx.Class.define("qx.tool.cli.commands.Lint", {
 
     /**
      * Scan all libraries and add the namespace to globals
+     * @param {Object} data
+     * @return {Promise<void>}
      */
-    __addGlobals: async function(data) {
+   async __addGlobals(data) {
       let result = {};
       await qx.Promise.all(data.libraries.map(async dir => {
         let lib = await qx.tool.compiler.app.Library.createLibrary(dir);
@@ -151,8 +160,28 @@ qx.Class.define("qx.tool.cli.commands.Lint", {
         result[libs[0]] = false;
       }));
       return result;
-    }
+    },
 
+    /**
+     * Apply fixes before linting code
+     * @return {Promise<void>}
+     * @private
+     */
+    async __applyFixes() {
+      let replaceInFiles = [];
+      const fixParams = this.argv.fixJsdocParams;
+      if (fixParams && fixParams !== "off") {
+        const regex = fixParams === "type-first" ?
+          /@param\s+([\w$]+)\s+({[\w|[\]{}<>?. ]+})/g :
+          /@param\s+({[\w|[\]{}<>?. ]+})\s+([\w$]+)/g;
+        replaceInFiles.push({
+          files: "source/class/**/*.js",
+          from: regex,
+          to: "@param $2 $1"
+        });
+      }
+      this.migrate(null, replaceInFiles);
+    }
   }
 });
 
