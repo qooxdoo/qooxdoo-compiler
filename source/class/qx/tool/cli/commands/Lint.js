@@ -150,7 +150,7 @@ qx.Class.define("qx.tool.cli.commands.Lint", {
      * @param {Object} data
      * @return {Promise<void>}
      */
-   async __addGlobals(data) {
+    async __addGlobals(data) {
       let result = {};
       await qx.Promise.all(data.libraries.map(async dir => {
         let lib = await qx.tool.compiler.app.Library.createLibrary(dir);

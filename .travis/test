@@ -1,6 +1,5 @@
 #!/bin/bash
 exe() { echo "\$ ${@/eval/}" ; "$@" ; }
 
-exe npm install
 exe npm link
 exe npm test

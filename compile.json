@@ -81,6 +81,9 @@
     }
   ],
   "eslintConfig": {
+    "env": {
+      "node": true
+    },
       "extends": "@qooxdoo/qx",
       "parserOptions": {
          "ecmaVersion": 2017
