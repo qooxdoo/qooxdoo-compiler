@@ -81,10 +81,13 @@
     }
   ],
   "eslintConfig": {
-      "extends": "@qooxdoo/qx",
       "env": {
         "node": true
       },
+      "extends": [
+        "@qooxdoo/qx",
+        "@qooxdoo/jsdoc-disable"
+      ],
       "parserOptions": {
          "ecmaVersion": 2017
       },
