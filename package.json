@@ -95,11 +95,14 @@
     "tape": "^4.11.0"
   },
   "eslintConfig": {
+    "env": {
+      "node": true
+    },
     "extends": [
-      "qx"
+      "@qooxdoo/qx"
     ]
   },
-  "engine": "node >= 6.11.1",
+  "engine": "node >= 8",
   "bin": {
     "qx": "qx"
   },

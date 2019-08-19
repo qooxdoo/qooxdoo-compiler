@@ -81,6 +81,9 @@
     }
   ],
   "eslintConfig": {
+      "env": {
+        "node": true
+      },
       "extends": [
         "@qooxdoo/qx",
         "@qooxdoo/jsdoc-disable"
