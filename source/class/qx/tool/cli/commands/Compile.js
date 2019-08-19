@@ -964,9 +964,9 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
      */
     getMakersForApp(appName) {
       return this.__makers.filter(maker => {
-        let res = maker.getApplications().find(app => app.getName() == appName)
+        let res = maker.getApplications().find(app => app.getName() == appName);
         return res;
-      })  
+      });
     },
 
     /**
