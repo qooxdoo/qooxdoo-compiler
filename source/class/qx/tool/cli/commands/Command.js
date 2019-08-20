@@ -25,7 +25,6 @@ const process = require("process");
 const child_process = require("child_process");
 const path = require("upath");
 const semver = require("semver");
-const JsonToAst = require("json-to-ast");
 const replace_in_file = require("replace-in-file");
 
 /**
@@ -146,8 +145,8 @@ qx.Class.define("qx.tool.cli.commands.Command", {
     parseJsonFile : async function(filePath) {
       var data = await fs.readFileAsync(filePath, "utf8");
       try {
-        let compileAst = JsonToAst.parseToAst(data, {verbose: true});
-        let compileJson = JsonToAst.astToObject(compileAst);
+        let compileAst = qx.tool.utils.json.Parser.parseToAst(data, {verbose: true});
+        let compileJson = qx.tool.utils.json.Parser.astToObject(compileAst);
         return compileJson;
       } catch (e) {
         throw new qx.tool.utils.Utils.UserError(`Cannot parse ${filePath}:` + e.message);

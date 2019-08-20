@@ -24,3 +24,5 @@ require("./Values");
 require("./Utils.js");
 require("./Website.js");
 require("./files");
+require("./json/index.js");
+

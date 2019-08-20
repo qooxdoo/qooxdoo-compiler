@@ -65,7 +65,6 @@
     "glob": "^7.1.4",
     "image-size": "^0.6.3",
     "inquirer": "^6.5.1",
-    "json-to-ast": "github:johnspackman/json-to-ast#editable-json",
     "jsonlint": "^1.6.2",
     "jstransformer-dot": "^0.1.2",
     "metalsmith": "^2.3.0",
@@ -91,7 +90,9 @@
   "devDependencies": {
     "bats": "^1.1.0",
     "cross-os": "^1.2.2",
+    "mocha": "^6.2.0",
     "runscript": "^1.4.0",
+    "source-map-support": "^0.5.13",
     "tape": "^4.11.0"
   },
   "eslintConfig": {
