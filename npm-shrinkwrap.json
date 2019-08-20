@@ -957,9 +957,9 @@
       }
     },
     "@qooxdoo/eslint-plugin-qx": {
-      "version": "1.2.1",
-      "resolved": "https://registry.npmjs.org/@qooxdoo/eslint-plugin-qx/-/eslint-plugin-qx-1.2.1.tgz",
-      "integrity": "sha512-ZmP4s4UgxEQDQyrfcdzss2w5wZuG60WhdYzczFdc92ZFngwDZ6DSp2uNCS8pboBkTmdPONh9Re/fcaQfh82/eA=="
+      "version": "1.2.4",
+      "resolved": "https://registry.npmjs.org/@qooxdoo/eslint-plugin-qx/-/eslint-plugin-qx-1.2.4.tgz",
+      "integrity": "sha512-s+mHk2WWGBVhspJ5Xqj9XPrDJOhNZhfHVmrZNOLS9d1BcXSwo89NRWz4mJrOIYpDXxE7B7sekPSB4klCC6Qd1w=="
     },
     "@qooxdoo/framework": {
       "version": "6.0.0-beta-20190618-2102",
