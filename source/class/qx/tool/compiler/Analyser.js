@@ -339,6 +339,9 @@ qx.Class.define("qx.tool.compiler.Analyser", {
         var classIndex = 0;
         var classes = t.__classes = t.__initialClassesToScan.toArray();
 
+        /**
+         *
+         */
         function getConstructDependencies(className) {
           var deps = [];
           var info = t.__db.classInfo[className];
@@ -352,6 +355,9 @@ qx.Class.define("qx.tool.compiler.Analyser", {
           return deps;
         }
 
+        /**
+         *
+         */
         function getIndirectLoadDependencies(className) {
           var deps = [];
           var info = t.__db.classInfo[className];
@@ -415,12 +421,21 @@ qx.Class.define("qx.tool.compiler.Analyser", {
         );
       });
 
+      /**
+       *
+       */
       function fixupMetaData(classname, meta) {
+        /**
+         *
+         */
         function fixupEntry(obj) {
           if (obj && obj.jsdoc) {
             qx.tool.compiler.jsdoc.Parser.parseJsDoc(obj.jsdoc, classname, t);
           }
         }
+        /**
+         *
+         */
         function fixupSection(sectionName) {
           var section = meta[sectionName];
           if (section) {
@@ -440,12 +455,18 @@ qx.Class.define("qx.tool.compiler.Analyser", {
         fixupEntry(meta.defer);
       }
 
+      /**
+       *
+       */
       async function updateMetaData(classname, meta) {
         var classEntities = {
           members: {},
           properties: {}
         };
 
+        /**
+         *
+         */
         async function analyseClassEntities(meta, first) {
           if (typeof meta == "string") {
             meta = await loadMetaData(meta);
@@ -522,6 +543,9 @@ qx.Class.define("qx.tool.compiler.Analyser", {
           }
 
           if (meta.properties) {
+            /**
+             *
+             */
             function addPropertyAccessor(propertyMeta, methodName, accessorType, returnType, valueType, desc) {
               var entityInfo = classEntities.members[methodName];
               if (!entityInfo || entityInfo.abstract) {
@@ -606,12 +630,18 @@ qx.Class.define("qx.tool.compiler.Analyser", {
           }
         }
 
+        /**
+         *
+         */
         function hasSignature(jsdoc) {
           return jsdoc &&
             ((jsdoc["@param"] && jsdoc["@param"].length) ||
             (jsdoc["@return"] && jsdoc["@return"].length));
         }
 
+        /**
+         *
+         */
         function mergeSignature(src, meta) {
           if (!src) {
             return;
@@ -739,6 +769,9 @@ qx.Class.define("qx.tool.compiler.Analyser", {
 
       var cachedMeta = {};
 
+      /**
+       *
+       */
       async function saveMetaData(classname, meta) {
         if (metaWrittenLog[classname]) {
           qx.tool.compiler.Console.log(" *** ERROR *** Writing " + classname + " more than once");
@@ -749,6 +782,9 @@ qx.Class.define("qx.tool.compiler.Analyser", {
         return writeFile(filename, JSON.stringify(meta, null, 2), {encoding: "utf-8"});
       }
 
+      /**
+       *
+       */
       async function loadMetaData(classname) {
         if (classname == "Object" || classname == "Array" || classname == "Error") {
           return Promise.resolve(null);
@@ -765,6 +801,9 @@ qx.Class.define("qx.tool.compiler.Analyser", {
           });
       }
 
+      /**
+       *
+       */
       function calcDescendants(classname, meta) {
         meta.descendants = [];
         for (var name in db.classInfo) {
@@ -775,6 +814,9 @@ qx.Class.define("qx.tool.compiler.Analyser", {
         }
       }
 
+      /**
+       *
+       */
       async function analyzeMeta() {
         var toSave = {};
         for (let classname in compiledClasses) {
@@ -813,6 +855,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
 
     /**
      * Called when a reference to a class is made
+     *
      * @param className
      * @private
      */
@@ -833,6 +876,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
 
     /**
      * Returns the full list of required classes
+     *
      * @returns {null}
      */
     getDependentClasses: function() {
@@ -841,6 +885,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
 
     /**
      * Returns cached class info - returns null if not loaded or not in the database
+     *
      * @returb DbClassInfo
      */
     getCachedClassInfo: function(className) {
@@ -849,6 +894,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
 
     /**
      * Loads a class
+     *
      * @param className {String} the name of the class
      * @param forceScan {Boolean?} true if the class is to be compiled whether it needs it or not (default false)
      * @param cb(err, DbClassInfo)
@@ -879,6 +925,9 @@ qx.Class.define("qx.tool.compiler.Analyser", {
       var sourceClassFilename = qx.tool.compiler.ClassFile.getSourcePath(library, className);
       var outputClassFilename = qx.tool.compiler.ClassFile.getOutputPath(this, className);
 
+      /**
+       *
+       */
       function scanFile(stat, outputStat) {
         var dbClassInfo = db.classInfo[className];
         if (dbClassInfo && outputStat) {
@@ -954,6 +1003,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
 
     /**
      * Returns the CLDR data for a given locale
+     *
      * @param locale {String} the locale string
      * @returns Promise({cldr})
      */
@@ -969,6 +1019,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
 
     /**
      * Gets the translation for the locale and library, caching teh result.
+     *
      * @param library
      * @param locale
      * @returns {Promise(translation)}
@@ -987,6 +1038,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
 
     /**
      * Updates all translations to include all msgids found in code
+     *
      * @param the library to update
      * @param locales
      * @param cb
@@ -1088,6 +1140,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
 
     /**
      * Returns all libraries
+     *
      * @returns {null}
      */
     getLibraries: function() {
@@ -1115,6 +1168,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
 
     /**
      * Removes a class from the list of required classes to analyse
+     *
      * @param className
      */
     removeClass: function(classname) {
@@ -1141,6 +1195,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
 
     /**
      * Detects the symbol type, ie class, package, member, etc
+     *
      * @param name
      * @returns {{symbolType,name,clasName?}}
      */
@@ -1158,6 +1213,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
 
     /**
      * Returns the library for a given classname, supports private files
+     *
      * @param className
      * @returns {*}
      */
@@ -1181,6 +1237,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
 
     /**
      * Returns the classname
+     *
      * @param className
      * @returns {string}
      */
@@ -1231,7 +1288,8 @@ qx.Class.define("qx.tool.compiler.Analyser", {
 
     /**
      * Returns the version of Qooxdoo
-     * @returns {String}
+     *
+     * @returns {string}
      */
     getQooxdooVersion: function() {
       if (this.__qooxdooVersion) {
@@ -1248,6 +1306,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
 
     /**
      * Returns the database filename
+     *
      * @returns {null}
      */
     getDbFilename: function() {
@@ -1256,6 +1315,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
 
     /**
      * Returns the resource database filename
+     *
      * @returns {null}
      */
     getResDbFilename: function() {

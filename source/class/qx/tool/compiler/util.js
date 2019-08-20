@@ -62,6 +62,9 @@ function AbstractError(msg, code, constr) {
 util.inherits(AbstractError, Error);
 module.exports.AbstractError = AbstractError;
 
+/**
+ *
+ */
 function GenericError(msg, code) {
   GenericError.super_.call(this, msg, code, this.constructor);
 }
@@ -77,6 +80,9 @@ module.exports.GenericError = GenericError;
  */
 module.exports.merge = function() {
   var args = [].slice.call(arguments);
+  /**
+   *
+   */
   function mergeInto(dest, src) {
     for (var name in src) {
       var value = src[name];
@@ -170,6 +176,9 @@ module.exports.process = {
 
   execAndCapture : function(cmd, args, callback) {
     var stdout = [];
+    /**
+     *
+     */
     function capture(data) {
       stdout.push(data);
     }
@@ -218,12 +227,18 @@ module.exports.json = {
     if (!dt) {
       return null;
     }
+    /**
+     *
+     */
     function dp2(v) {
       if (v < 10) {
         return "0" + v;
       }
       return String(v);
     }
+    /**
+     *
+     */
     function dp3(v) {
       if (v < 10) {
         return "00" + v;
@@ -243,6 +258,9 @@ module.exports.json = {
     var PREFIX = this.__PREFIX;
     var SUFFIX = this.__SUFFIX;
 
+    /**
+     *
+     */
     function reviverImpl(key, value) {
       if (typeof value === "string" && value.substring(0, PREFIX.length) === PREFIX && value.slice(-SUFFIX.length) === SUFFIX) {
         var str = value.slice(PREFIX.length, -SUFFIX.length);
@@ -275,6 +293,9 @@ module.exports.json = {
     var PREFIX = this.__PREFIX;
     var SUFFIX = this.__SUFFIX;
 
+    /**
+     *
+     */
     function replacerImpl(key, value) {
       if (this[key] instanceof Date) {
         value = PREFIX + "Date(" + t.formatISO(this[key]) + ")" + SUFFIX;
@@ -313,6 +334,7 @@ module.exports.encodeURIPath = function(uri) {
 
 /**
  * Creates a dir
+ *
  * @param dir
  * @param cb
  */
@@ -353,6 +375,9 @@ function mkpath(dir, cb) {
     });
 }
 
+/**
+ *
+ */
 function mkParentPath(dir, cb) {
   var segs = dir.split(/[\\\/]/);
   segs.pop();
@@ -363,6 +388,9 @@ function mkParentPath(dir, cb) {
   return mkpath(dir, cb);
 }
 
+/**
+ *
+ */
 function newExternalPromise() {
   var resolve;
   var reject;
@@ -395,6 +423,9 @@ function promisify(fn, ...args) {
 module.exports.promisify = promisify;
 */
 
+/**
+ *
+ */
 function promisifyThis(fn, self, ...args) {
   return new Promise((resolve, reject) => {
     args = args.slice();

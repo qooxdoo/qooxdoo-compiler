@@ -28,6 +28,7 @@ qx.Class.define("qx.tool.compiler.app.Application", {
 
   /**
    * Constructor
+   *
    * @param classname[, classname...] {String|String[]}
    */
   construct: function(classname) {
@@ -264,6 +265,9 @@ qx.Class.define("qx.tool.compiler.app.Application", {
         parts.push(bootPart);
       }
 
+      /**
+       *
+       */
       function createClassData(classname) {
         if (classDataByClassname[classname]) {
           return classDataByClassname[classname];
@@ -339,11 +343,17 @@ qx.Class.define("qx.tool.compiler.app.Application", {
        *  @param classname {String}
        *  @param deps {String[]} array to modify
        */
+      /**
+       *
+       */
       function compileAllRemainingDeps(classname, deps) {
         var checked = {};
         var depNames = { };
         depNames[classname] = true;
 
+        /**
+         *
+         */
         function search(classname) {
           if (checked[classname]) {
             return;
@@ -371,6 +381,9 @@ qx.Class.define("qx.tool.compiler.app.Application", {
       }
 
       var addDepDepth = 0;
+      /**
+       *
+       */
       function addDep(classname) {
         if (exclude[classname]) {
           return;
@@ -464,6 +477,9 @@ qx.Class.define("qx.tool.compiler.app.Application", {
         // Calculate inter-part dependencies
         parts.forEach(part => {
           var checked = {};
+          /**
+           *
+           */
           function check(classname) {
             if (checked[classname]) {
               return;
@@ -484,6 +500,9 @@ qx.Class.define("qx.tool.compiler.app.Application", {
         // Check for recursive dependencies
         parts.forEach(part => {
           var checked = {};
+          /**
+           *
+           */
           function check(partname) {
             if (checked[partname]) {
               return false;
@@ -539,7 +558,7 @@ qx.Class.define("qx.tool.compiler.app.Application", {
     /**
      * Gets a list of class names that this Application requires which have fatal compile errors
      *
-     * @return {String[]}
+     * @return {string[]}
      */
     getFatalCompileErrors: function() {
       return this.__fatalCompileErrors;
@@ -548,12 +567,15 @@ qx.Class.define("qx.tool.compiler.app.Application", {
     /**
      * Gets a list of URIs for classes that are required, in load order
      *
-     * @returns {String[]}
+     * @returns {string[]}
      */
     getUris: function() {
       var uris = [];
       var db = this.getAnalyser().getDatabase();
 
+      /**
+       *
+       */
       function add(classname) {
         var def = db.classInfo[classname];
         uris.push(def.libraryName + ":" + classname.replace(/\./g, "/") + ".js");
@@ -566,7 +588,7 @@ qx.Class.define("qx.tool.compiler.app.Application", {
     /**
      * Gets a list of classnames that are required, in load order
      *
-     * @returns {String[]}
+     * @returns {string[]}
      */
     getDependencies: function() {
       return this.__loadDeps;
@@ -575,7 +597,7 @@ qx.Class.define("qx.tool.compiler.app.Application", {
     /**
      * Gets the parts dependencies structures
      *
-     * @returns {Object[]}
+     * @returns {object[]}
      */
     getPartsDependencies: function() {
       return this.__partsDeps;
@@ -584,7 +606,7 @@ qx.Class.define("qx.tool.compiler.app.Application", {
     /**
      * Returns a list of library names which are required by the application
      *
-     * @returns {String[]}
+     * @returns {string[]}
      */
     getRequiredLibraries: function() {
       return this.__requiredLibs;
@@ -592,6 +614,7 @@ qx.Class.define("qx.tool.compiler.app.Application", {
 
     /**
      * Returns a list of all of the assets required by all classes
+     *
      * @param target {Target} the current target
      * @param resManager  {qx.tool.compiler.resources.Manager} the resource manager
      * @param environment {Map} environment
@@ -603,6 +626,9 @@ qx.Class.define("qx.tool.compiler.app.Application", {
 
       // Compile theme resource aliases
       var aliases = {};
+      /**
+       *
+       */
       function getAliases(classname) {
         var tmp = db.classInfo[classname];
         if (tmp) {
@@ -654,6 +680,9 @@ qx.Class.define("qx.tool.compiler.app.Application", {
       }
 
       var rm = analyser.getResourceManager();
+      /**
+       *
+       */
       function addExternalAssets(arr, msgId) {
         if (arr) {
           arr.forEach(filename => {
@@ -728,7 +757,8 @@ qx.Class.define("qx.tool.compiler.app.Application", {
 
     /**
      * Returns the class name for the application
-     * @returns {String}
+     *
+     * @returns {string}
      */
     getClassName: function() {
       return this.__classes[0];
@@ -736,7 +766,8 @@ qx.Class.define("qx.tool.compiler.app.Application", {
 
     /**
      * Returns the classes required for the application
-     * @returns {String[]}
+     *
+     * @returns {string[]}
      */
     getRequiredClasses: function() {
       var result = {};
@@ -752,6 +783,7 @@ qx.Class.define("qx.tool.compiler.app.Application", {
 
     /**
      * Adds a part
+     *
      * @param part {Part} the part to add
      */
     addPart: function(part) {
@@ -763,6 +795,7 @@ qx.Class.define("qx.tool.compiler.app.Application", {
 
     /**
      * Returns the parts, or null if there are none defined
+     *
      * @return {Part[]}
      */
     getParts: function() {
@@ -772,6 +805,7 @@ qx.Class.define("qx.tool.compiler.app.Application", {
     /**
      * Expands a list of class names including wildcards (eg "qx.ui.*") into an
      * exhaustive list without wildcards
+     *
      * @param names {String[]}
      * @return String[]
      */

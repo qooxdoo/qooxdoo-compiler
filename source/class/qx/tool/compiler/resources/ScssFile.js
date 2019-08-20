@@ -65,7 +65,7 @@ qx.Class.define("qx.tool.compiler.resources.ScssFile", {
      * Compiles the SCSS, returns a list of files that were imported)
      * 
      * @param outputFilename {String} output
-     * @return {String[]} dependent files
+     * @return {string[]} dependent files
      */
     async compile(outputFilename) {
       this.__outputDir = path.dirname(outputFilename);
@@ -177,6 +177,9 @@ qx.Class.define("qx.tool.compiler.resources.ScssFile", {
     },
     
     async loadSource(filename, library) {
+      /**
+       *
+       */
       function esc(str) {
         return str.replace(/([\[\]\\])/g, "\\$1");
       }

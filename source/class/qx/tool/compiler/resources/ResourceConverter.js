@@ -45,7 +45,7 @@ qx.Class.define("qx.tool.compiler.resources.ResourceConverter", {
      * @param srcFilename {String} full path to the file
      * @param destFilename {String} full path to the destination file
      * 
-     * @return {Boolean}
+     * @return {boolean}
      */
     async needsConvert(target, asset, srcFilename, destFilename) {
       return false;
@@ -56,7 +56,7 @@ qx.Class.define("qx.tool.compiler.resources.ResourceConverter", {
      * 
      * @param target {Target} the target
      * @param asset {Asset} the asset to copy
-     * @return {String?} full path to the file
+     * @return {?string} full path to the file
      */
     getDestFilename(target, asset) {
       return null;

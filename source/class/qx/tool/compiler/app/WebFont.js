@@ -221,7 +221,7 @@ qx.Class.define("qx.tool.compiler.app.WebFont", {
      * @param target  {qx.tool.compiler.targets.Target} the target
      * @param application  {qx.tool.compiler.app.Application} the application being built
      * @param initial {Boolean} true if this is the first pass
-     * @return {String}
+     * @return {string}
      */
     getBootstrapCode : function(target, application, initial) {
       let res = "";
@@ -306,7 +306,7 @@ qx.Class.define("qx.tool.compiler.app.WebFont", {
     /**
      * Returns a string representation of this for debugging
      *
-     * @return {String} the name or resource of this font
+     * @return {string} the name or resource of this font
      */
     toString: function() {
       var str = this.getName();

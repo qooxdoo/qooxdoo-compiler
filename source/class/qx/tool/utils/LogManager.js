@@ -26,12 +26,18 @@ require("./Logger");
 
 var LEVELS = [ "trace", "debug", "info", "warn", "error", "fatal" ];
 
+/**
+ *
+ */
 function zeropad2(val) {
   if (val < 10) {
     return "0" + val;
   }
   return String(val);
 }
+/**
+ *
+ */
 function zeropad3(val) {
   if (val < 10) {
     return "00" + val;
@@ -42,12 +48,18 @@ function zeropad3(val) {
   return String(val);
 }
 var PADDING = "";
+/**
+ *
+ */
 function padding(minLen) {
   while (PADDING.length < minLen) {
     PADDING += "     ";
   }
   return PADDING;
 }
+/**
+ *
+ */
 function rpad(str, len) {
   str = String(str);
   if (str.length < len) {
@@ -79,6 +91,7 @@ qx.Class.define("qx.tool.utils.LogManager", {
 
     /**
      * Returns the global instance
+     *
      * @returns {null}
      */
     getInstance: function() {

@@ -107,7 +107,7 @@ qx.Class.define("qx.tool.compiler.makers.Maker", {
     /**
      * Returns the output directory, with a trailing slash
      *
-     * @returns {String}
+     * @returns {string}
      * @abstract
      */
     getOutputDir: function() {
@@ -149,6 +149,7 @@ qx.Class.define("qx.tool.compiler.makers.Maker", {
 
     /**
      * Writes the compiler version into the output directory
+     *
      * @async
      */
     writeCompileVersion: function() {
@@ -168,6 +169,7 @@ qx.Class.define("qx.tool.compiler.makers.Maker", {
 
     /**
      * Apply for databaseName property
+     *
      * @param value
      * @param oldValue
      * @private
@@ -180,6 +182,7 @@ qx.Class.define("qx.tool.compiler.makers.Maker", {
 
     /**
      * Gets the analyser, creating it if necessary
+     *
      * @returns {Analyser}
      */
     getAnalyser: function() {
@@ -210,6 +213,7 @@ qx.Class.define("qx.tool.compiler.makers.Maker", {
 
     /**
      * Creates the analyser
+     *
      * @returns {Analyser}
      * @protected
      */

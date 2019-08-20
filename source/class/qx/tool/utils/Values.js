@@ -32,7 +32,7 @@ qx.Class.define("qx.tool.utils.Values", {
      *
      * @param {*} array The array to search.
      * @param {*} searchElement The item to search for within the array.
-     * @return {Number} The index of the element which defaults to -1 when not found.
+     * @return {number} The index of the element which defaults to -1 when not found.
      */
     binaryIndexOf: function(array, searchElement) {
       var minIndex = 0;

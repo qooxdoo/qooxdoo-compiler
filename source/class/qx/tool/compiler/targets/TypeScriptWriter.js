@@ -143,6 +143,7 @@ qx.Class.define("qx.tool.compiler.targets.TypeScriptWriter", {
 
     /**
      * Load a single API file
+     *
      * @async
      */
     loadAPIFile: function(classname) {
@@ -160,6 +161,7 @@ qx.Class.define("qx.tool.compiler.targets.TypeScriptWriter", {
 
     /**
      * Write some util declarations out that will help with the rest
+     *
      * @async
      */
     writeBase: function() {
@@ -276,8 +278,8 @@ qx.Class.define("qx.tool.compiler.targets.TypeScriptWriter", {
      * Escapes the name with quote marks, only if necessary
      *
      * @param name
-     *          {String} the name to escape
-     * @return {String} the escaped (if necessary) name
+     *          {string} the name to escape
+     * @return {string} the escaped (if necessary) name
      */
     __escapeMethodName: function(name) {
       if (!name.match(/^[a-zA-Z_][a-zA-Z0-9_]*$/)) {
@@ -290,7 +292,7 @@ qx.Class.define("qx.tool.compiler.targets.TypeScriptWriter", {
      * Serializes all the arguments of a method. Once one parameter is optional,
      * the remaining ones are also optional (is a TypeScript requirement)
      *
-     * @return {String}
+     * @return {string}
      */
     serializeParameters: function(methodMeta, optional = false) {
       var result = "";

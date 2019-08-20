@@ -87,9 +87,9 @@ qx.Class.define("qx.tool.compiler.Console", {
     /**
      * Decodes the message ID and arguments into a string to be presented in the output
      *
-     * @param msgId {String} translatable message ID
+     * @param msgId {string} translatable message ID
      * @param args {Object...} arguments
-     * @return {String} complete message
+     * @return {string} complete message
      */
     decode: function(msgId, ...args) {
       var msg = qx.tool.compiler.Console.MESSAGE_IDS[msgId]||msgId;
@@ -215,9 +215,9 @@ qx.Class.define("qx.tool.compiler.Console", {
     /**
      * Decodes the message ID and arguments into a string to be presented in the output
      *
-     * @param msgId {String} translatable message ID
+     * @param msgId {string} translatable message ID
      * @param args {Object...} arguments
-     * @return {String} complete message
+     * @return {string} complete message
      */
     decode: function(...args) {
       return this.getInstance().decode(...args);
@@ -281,8 +281,9 @@ qx.Class.define("qx.tool.compiler.Console", {
 
     /**
      * Decodes a marker into a String description
+     *
      * @param marker {Map} containing:
-     *    msgId {String}
+     *    msgId {string}
      *    start {Map} containing:
      *        line {Integer}
      *        column? {Integer}
@@ -291,7 +292,7 @@ qx.Class.define("qx.tool.compiler.Console", {
      *        column? {Integer}
      *    args? {Object[]}
      * @param showPosition {Boolean?} whether to include line/column info (default is true)
-     * @return {String}
+     * @return {string}
      */
     decodeMarker: function(marker, showPosition) {
       var msg = qx.tool.compiler.Console.MESSAGE_IDS[marker.msgId] || marker.msgId;

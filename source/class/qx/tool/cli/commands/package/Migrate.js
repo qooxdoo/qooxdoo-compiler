@@ -36,6 +36,7 @@ qx.Class.define("qx.tool.cli.commands.package.Migrate", {
     migrationInProcess: false,
     /**
      * Return the Yargs configuration object
+     *
      * @return {{}}
      */
     getYargsCommand: function() {
@@ -67,7 +68,8 @@ qx.Class.define("qx.tool.cli.commands.package.Migrate", {
   members: {
     /**
      * Announces or applies a migration
-     * @param {Boolean} announceOnly If true, announce the migration without
+     *
+     * @param {boolean} announceOnly If true, announce the migration without
      * applying it.
      */
     process: async function(announceOnly=false) {

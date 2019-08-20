@@ -35,6 +35,7 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
   statics: {
     /**
      * Yarg commands data
+     *
      * @return {{}}
      */
     getYargsCommand: function() {
@@ -91,15 +92,16 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
   members: {
 
     /**
-     * @var {Boolean}
+     * @var {boolean}
      */
     __cacheUpdated: false,
 
 
     /**
      * API method to install a library via its URI and version tag
-     * @param {String} library_uri
-     * @param {String} release_tag
+     *
+     * @param {string} library_uri
+     * @param {string} release_tag
      * @return {Promise<void>}
      */
     async install(library_uri, release_tag) {
@@ -114,8 +116,9 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
 
     /**
      * API method to install a library from a local path
-     * @param {String} local_path
-     * @param {String} library_uri Optional library URI.
+     *
+     * @param {string} local_path
+     * @param {string} library_uri Optional library URI.
      * @return {Promise<void>}
      */
     async installFromLocaPath(local_path, library_uri) {
@@ -132,9 +135,10 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
 
     /**
      * API method to check if a library has been installed
-     * @param {String} library_uri
-     * @param {String} release_tag
-     * @return {Promise<Boolean>}
+     *
+     * @param {string} library_uri
+     * @param {string} release_tag
+     * @return {Promise<boolean>}
      */
     async isInstalled(library_uri, release_tag) {
       return (await this.getLockfileModel())
@@ -198,6 +202,7 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
 
     /**
      * Update repo cache
+     *
      * @return {Promise<void>}
      * @private
      */
@@ -216,7 +221,8 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
 
     /**
      * Returns information on the given URI
-     * @param {String} uri
+     *
+     * @param {string} uri
      * @return {{package_path: string | string, repo_name: string}}
      * @private
      */
@@ -239,10 +245,11 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
 
     /**
      * Installs libraries in a repository from a given release tag name
-     * @param {String} uri The name of the repository (e.g. qooxdoo/qxl.apiviewer),
+     *
+     * @param {string} uri The name of the repository (e.g. qooxdoo/qxl.apiviewer),
      *  or of a library within a repository (such as ergobyte/qookery/qookeryace)
-     * @param {String} tag_name The tag name of the release, such as "v1.1.0"
-     * @param {Boolean} writeToManifest Whether the library should be written to
+     * @param {string} tag_name The tag name of the release, such as "v1.1.0"
+     * @param {boolean} writeToManifest Whether the library should be written to
      * Manifest.json as a dependency
      * @return {Promise<void>}
      * @private
@@ -301,12 +308,13 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
      * Installs libraries in a given repository from the given hash of a code tree
      * independent from the library cache. This ignores dependency constraints.
      * The given uri must point to a folder containing Manifest.json
-     * @param {String} uri
+     *
+     * @param {string} uri
      *  The path to a library in a a repository
      *  (e.g. qooxdoo/qxl.apiviewer or ergobyte/qookery/qookeryace)
-     * @param {String} hash
+     * @param {string} hash
      *  A path into the code tree on GitHub such as "tree/892f44d1d1ae5d65c7dd99b18da6876de2f2a920"
-     * @param {Boolean} writeToManifest Whether the library should be written to
+     * @param {boolean} writeToManifest Whether the library should be written to
      * Manifest.json as a dependency
      * @return {Promise<void>}
      * @private
@@ -323,12 +331,13 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
 
     /**
      * Installs libraries from a local path
-     * @param {String} uri
+     *
+     * @param {string} uri
      *  The URI identifying a library (e.g. qooxdoo/qxl.apiviewer or
      *  ergobyte/qookery/qookeryace)
-     * @param {String} dir
+     * @param {string} dir
      *  The path to a local directory
-     * @param {Boolean} writeToManifest
+     * @param {boolean} writeToManifest
      *  Whether the library should be written to Manifest.json as a dependency
      * @return {Promise<void>}
      * @private
@@ -343,13 +352,14 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
 
     /**
      * Updates the data in the lockfile and (optionally) in the manifest
-     * @param {String} uri The path to a library in a a repository
+     *
+     * @param {string} uri The path to a library in a a repository
      * (e.g. qooxdoo/qxl.apiviewer or ergobyte/qookery/qookeryace)
-     * @param {String} id
+     * @param {string} id
      *  The tag name of a release such as "v1.1.0" or a tree hash such as
      *  tree/892f44d1d1ae5d65c7dd99b18da6876de2f2a920
-     * @param {String} download_path The path to the downloaded repository
-     * @param {Boolean} writeToManifest
+     * @param {string} download_path The path to the downloaded repository
+     * @param {boolean} writeToManifest
      *  Whether the library should be written to Manifest.json as a dependency
      * @return {Promise<void>}
      * @private
@@ -412,8 +422,9 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
 
     /**
      * Given a download path of a library, install its dependencies
-     * @param {String} downloadPath
-     * @return {Promise<Boolean>} Wether any libraries were installed
+     *
+     * @param {string} downloadPath
+     * @return {Promise<boolean>} Wether any libraries were installed
      */
     __installDependenciesFromPath: async function(downloadPath) {
       let manifest_file = path.join(downloadPath, qx.tool.config.Manifest.config.fileName);
@@ -432,8 +443,9 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
 
     /**
      * Given a library's manifest data, install its dependencies
-     * @param {Object} manifest
-     * @return {Promise<Boolean>} Wether any libraries were installed
+     *
+     * @param {object} manifest
+     * @return {Promise<boolean>} Wether any libraries were installed
      */
     async __installDependenciesFromManifest(manifest) {
       for (let lib_uri of Object.getOwnPropertyNames(manifest.requires)) {
@@ -489,8 +501,9 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
     /**
      * Given the URI of a library repo and a semver range, returns the highest
      * release compatible with the semver range
-     * @param {String} lib_uri The URI of the library
-     * @param {String} lib_range The semver range
+     *
+     * @param {string} lib_uri The URI of the library
+     * @param {string} lib_range The semver range
      * @private
      */
     __getHighestCompatibleVersion(lib_uri, lib_range) {
@@ -507,8 +520,9 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
     /**
      * Given the download path of a library, install its applications
      * todo use config API, use compile.js where it exists
-     * @param {String} downloadPath
-     * @return {Promise<Boolean>} Returns true if applications were installed
+     *
+     * @param {string} downloadPath
+     * @return {Promise<boolean>} Returns true if applications were installed
      */
     __installApplication: async function(downloadPath) {
       let manifest = await qx.tool.utils.Json.loadJsonAsync(path.join(downloadPath, qx.tool.config.Manifest.config.fileName));
@@ -547,6 +561,7 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
 
     /**
      * Download repos listed in the lockfile
+     *
      * @return {Promise<void>}
      * @private
      */
@@ -562,13 +577,14 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
 
     /**
      * Downloads a release
-     * @return {Object} A map containing {release_data, download_path}
-     * @param {String} repo_name The name of the repository
-     * @param {String} treeish
+     *
+     * @return {object} A map containing {release_data, download_path}
+     * @param {string} repo_name The name of the repository
+     * @param {string} treeish
      *  If prefixed by "v", the name of a release tag. Otherwise, arbitrary
      *  tree-ish expression (see https://help.github.com/en/articles/getting-permanent-links-to-files)
-     * @param {Boolean} force Overwrite existing downloads
-     * @return {{download_path:String}}
+     * @param {boolean} force Overwrite existing downloads
+     * @return {{download_path: string}}
      */
     __download: async function(repo_name, treeish=null, force = false) {
       qx.core.Assert.assertNotNull(treeish, "Empty tree-ish id is not allowed");

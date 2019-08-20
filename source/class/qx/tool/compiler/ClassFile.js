@@ -36,11 +36,15 @@ var log = util.createLog("analyser");
 
 /**
  * Helper method that collapses the MemberExpression into a string
+ *
  * @param node
  * @returns {string}
  */
 function collapseMemberExpression(node) {
   var done = false;
+  /**
+   *
+   */
   function doCollapse(node) {
     if (node.type == "ThisExpression") {
       return "this";
@@ -88,6 +92,9 @@ function collapseMemberExpression(node) {
   return doCollapse(node);
 }
 
+/**
+ *
+ */
 function isCollapsibleLiteral(node) {
   let nodeType = node.type;
   return nodeType === "Literal" || 
@@ -99,6 +106,7 @@ function isCollapsibleLiteral(node) {
 
 /**
  * Helper method that expands a dotted string into MemberExpression
+ *
  * @param str
  * @returns {*}
  */
@@ -111,6 +119,9 @@ function expandMemberExpression(str) {
   return expr;
 }
 
+/**
+ *
+ */
 function literalValueToExpression(value) {
   if (value === null || value === undefined) {
     return types.nullLiteral();
@@ -153,6 +164,9 @@ function literalValueToExpression(value) {
   return types.objectExpression(properties);
 }
 
+/**
+ *
+ */
 function formatValueAsCode(value) {
   if (value === undefined) {
     return "undefined";
@@ -286,6 +300,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
 
     /**
      * Returns the absolute path to the class file
+     *
      * @returns {string}
      */
     getSourcePath: function() {
@@ -294,6 +309,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
 
     /**
      * Returns the path to the rewritten class file
+     *
      * @returns {string}
      */
     getOutputPath: function() {
@@ -391,6 +407,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
     /**
      * Writes the data for the database; updates the record, which may have been previously
      * used (so needs to be zero'd out)
+     *
      * @param dbClassInfo {Map}
      */
     writeDbInfo: function(dbClassInfo) {
@@ -424,6 +441,9 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         }
       }
 
+      /**
+       *
+       */
       function fixAnnos(section) {
         if (!section) {
           return;
@@ -570,11 +590,17 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
     _babelClassPlugin: function() {
       var t = this;
 
+      /**
+       *
+       */
       function getKeyName(key) {
         var keyName = key.type == "StringLiteral" ? key.value : key.name;
         return keyName;
       }
       
+      /**
+       *
+       */
       function checkNodeJsDocDirectives(node) {
         var jsdoc = getJsDoc(node.leadingComments);
         if (jsdoc) {
@@ -583,6 +609,9 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         return jsdoc;
       }
 
+      /**
+       *
+       */
       function checkJsDocDirectives(jsdoc, loc) {
         if (!jsdoc) {
           return jsdoc;
@@ -615,6 +644,9 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         return jsdoc;
       }
 
+      /**
+       *
+       */
       function enterFunction(path, node, idNode) {
         node = node || path.node;
         idNode = idNode || node.id || null;
@@ -645,6 +677,9 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         checkNodeJsDocDirectives(node);
       }
 
+      /**
+       *
+       */
       function exitFunction(path, node) {
         node = node||path.node;
         t.popScope(node);
@@ -655,6 +690,9 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         exit: path => exitFunction(path)
       };
 
+      /**
+       *
+       */
       function getJsDoc(comment) {
         if (!comment) {
           return null;
@@ -678,6 +716,9 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         return result;
       }
 
+      /**
+       *
+       */
       function makeMeta(sectionName, functionName, node) {
         var meta;
         if (functionName) {
@@ -813,6 +854,9 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         }
       };
 
+      /**
+       *
+       */
       function collectJson(node) {
         var result;
         if (node.type == "ObjectExpression") {
@@ -923,6 +967,9 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         }
       };
 
+      /**
+       *
+       */
       function isValidExtendClause(prop) {
         if (prop.value.type == "MemberExpression" || prop.value.type == "Identifier" || prop.value.type == "NullLiteral") {
           return true;
@@ -941,6 +988,9 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         destruct: "$$destructor",
         defer: null
       };
+      /**
+       *
+       */
       function checkValidTopLevel(path) {
         var prop = path.node;
         var keyName = getKeyName(prop.key);
@@ -952,6 +1002,9 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
           t.addMarker("compiler.invalidClassDefinitionEntry", prop.loc, t.__classMeta.type, keyName);
         }
       }
+      /**
+       *
+       */
       function handleTopLevelMethods(path, keyName, functionNode) {
         if (keyName == "defer") {
           t.__hasDefer = true;
@@ -1266,6 +1319,9 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
 
         CallExpression: {
           enter: function(path) {
+            /**
+             *
+             */
             function getStringArg(index) {
               if (index >= path.node.arguments.length) {
                 return null;
@@ -1277,6 +1333,9 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
               return null;
             }
 
+            /**
+             *
+             */
             function addTranslation(entry) {
               let lineNo = path.node.loc.start.line;
               let cur = t.__translations[entry.msgid];
@@ -1641,6 +1700,9 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
           exit(path) {
             let node = path.node;
 
+            /**
+             *
+             */
             function apply(value) {
               if (!value) {
                 if (!node.alternate) {
@@ -1790,7 +1852,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
     /**
      * Tests whether the current scope is load-time scope
      *
-     * @returns {Boolean}
+     * @returns {boolean}
      */
     isLoadScope: function() {
       return !this.__scope.parent;
@@ -1799,7 +1861,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
     /**
      * Tests whether this class has a defer method
      *
-     * @returns {Boolean}
+     * @returns {boolean}
      */
     hasDefer: function() {
       return this.__hasDefer;
@@ -1831,7 +1893,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
      * scope, ie including parent scope
      *
      * @param name
-     * @returns {Boolean}
+     * @returns {boolean}
      */
     hasDeclaration: function(name) {
       var pos = name.indexOf(".");
@@ -1848,6 +1910,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
 
     /**
      * Adds a reference to a symbol; unknown symbols are marked as unresolved
+     *
      * @param name
      * @param loc
      */
@@ -1894,6 +1957,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
 
     /**
      * Removes a reference from scope; this should only really be used after scanning is complete
+     *
      * @param name
      */
     deleteReference: function(name) {
@@ -1908,6 +1972,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
 
     /**
      * Adds an ignored symbol
+     *
      * @param name {String} name of the symbol
      */
     addIgnore: function(name) {
@@ -1930,8 +1995,9 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
 
     /**
      * Tests whether a symbol has already been marked as ignore
+     *
      * @param name {String} symbol name
-     * @param {Boolean} true if ignored
+     * @param {boolean} true if ignored
      */
     isIgnored: function(name) {
       for (var tmp = this.__scope; tmp; tmp = tmp.parent) {
@@ -1953,6 +2019,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
 
     /**
      * Removes an ignored symbol
+     *
      * @param name {String} name of the symbol
      */
     removeIgnore: function(name) {
@@ -2162,6 +2229,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
 
     /**
      * Adds a required asset
+     *
      * @param path
      */
     _requireAsset: function(path) {
@@ -2175,6 +2243,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
 
     /**
      * Returns the assets required by the class
+     *
      * @returns
      */
     getAssets: function() {
@@ -2224,6 +2293,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
 
     /**
      * Returns the name of the class being compiled
+     *
      * @returns {null}
      */
     getClassName: function() {
@@ -2237,8 +2307,8 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
      * Returns the absolute path to the class file
      *
      * @param library  {qx.tool.compiler.app.Library}
-     * @param className {String}
-     * @returns {String}
+     * @param className {string}
+     * @returns {string}
      */
     getSourcePath: function(library, className) {
       return pathModule.join(library.getRootDir(), library.getSourcePath(), className.replace(/\./g, pathModule.sep) + library.getSourceFileExtension(className));
@@ -2248,8 +2318,8 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
      * Returns the path to the rewritten class file
      *
      * @param library  {qx.tool.compiler.app.Library}
-     * @param className {String}
-     * @returns {String}
+     * @param className {string}
+     * @returns {string}
      */
     getOutputPath: function(analyser, className) {
       var filename = pathModule.join(analyser.getOutputDir(), "transpiled", className.replace(/\./g, pathModule.sep) + ".js");
@@ -2258,6 +2328,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
 
     /**
      * Returns the root namespace from the classname, or null if it cannot be determined
+     *
      * @param className
      * @returns {*|null}
      */

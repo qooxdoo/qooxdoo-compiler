@@ -147,7 +147,8 @@ qx.Class.define("qx.tool.cli.commands.Lint", {
 
     /**
      * Scan all libraries and add the namespace to globals
-     * @param {Object} data
+     *
+     * @param {object} data
      * @return {Promise<void>}
      */
     async __addGlobals(data) {
@@ -163,6 +164,7 @@ qx.Class.define("qx.tool.cli.commands.Lint", {
 
     /**
      * Apply fixes before linting code
+     *
      * @return {Promise<void>}
      * @private
      */

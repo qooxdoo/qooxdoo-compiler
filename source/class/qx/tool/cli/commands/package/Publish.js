@@ -365,6 +365,7 @@ qx.Class.define("qx.tool.cli.commands.package.Publish", {
 
     /**
      * Creates a qooxdoo.json file with paths to Manifest.json files in this repository
+     *
      * @private
      */
     __createIndexFile: async argv => new Promise((resolve, reject) => {

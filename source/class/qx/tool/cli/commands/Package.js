@@ -60,6 +60,7 @@ qx.Class.define("qx.tool.cli.commands.Package", {
     repository_cache_url: "https://raw.githubusercontent.com/qooxdoo/qx-contrib/master/cache.json",
     /**
      * The yargs command data
+     *
      * @return {{}}
      */
     getYargsCommand: function() {
@@ -93,7 +94,8 @@ qx.Class.define("qx.tool.cli.commands.Package", {
 
     /**
      * Returns the absolute path to the lockfile.
-     * @return {String}
+     *
+     * @return {string}
      */
     getLockfilePath: function() {
       return path.join(process.cwd(), qx.tool.config.Lockfile.config.fileName);
@@ -101,6 +103,7 @@ qx.Class.define("qx.tool.cli.commands.Package", {
 
     /**
      * Deletes the lockfile
+     *
      * @return {Promise<void>}
      */
     async deleteLockfile() {
@@ -109,8 +112,9 @@ qx.Class.define("qx.tool.cli.commands.Package", {
 
     /**
      * Returns the lockfile data. Deprecated. Use {@link qx.tool.cli.commands.Package#getLockfileModel}
+     *
      * @deprecated
-     * @return {Object}
+     * @return {object}
      */
     async getLockfileData() {
       return (await this.getLockfileModel()).getData();
@@ -118,6 +122,7 @@ qx.Class.define("qx.tool.cli.commands.Package", {
 
     /**
      * Returns the model of the lockfile
+     *
      * @return {Promise<qx.tool.config.Lockfile>}
      */
     async getLockfileModel() {
@@ -126,6 +131,7 @@ qx.Class.define("qx.tool.cli.commands.Package", {
 
     /**
      * Returns the model of the manifest
+     *
      * @return {Promise<qx.tool.config.Manifest>}
      */
     async getManifestModel() {
@@ -134,6 +140,7 @@ qx.Class.define("qx.tool.cli.commands.Package", {
 
     /**
      * Convenience method to return all config file models as an array
+     *
      * @return {Promise<[{qx.tool.config.Manifest}, {qx.tool.config.Lockfile}, {qx.tool.config.Compile}]>}
      * @private
      */
@@ -146,6 +153,7 @@ qx.Class.define("qx.tool.cli.commands.Package", {
 
     /**
      * Save configuration data if their content has changed
+     *
      * @return {Promise<void>}
      * @private
      */
@@ -168,9 +176,10 @@ qx.Class.define("qx.tool.cli.commands.Package", {
     /**
      * Returns the tag name of the given library in the given package, if installed.
      * Returns false if not installed.
-     * @param {String} repo_name
-     * @param {String} library_name
-     * @return {String|false}
+     *
+     * @param {string} repo_name
+     * @param {string} library_name
+     * @return {string|false}
      */
     async getInstalledLibraryTag(repo_name, library_name) {
       let library = (await this.getLockfileModel())
@@ -182,8 +191,9 @@ qx.Class.define("qx.tool.cli.commands.Package", {
     /**
      * Returns the data of the given library, if installed.
      * Returns false if not installed.
-     * @param {String} library_name
-     * @return {Object|false}
+     *
+     * @param {string} library_name
+     * @return {object|false}
      */
     async getInstalledLibraryData(library_name) {
       return (await this.getLockfileModel())
@@ -193,7 +203,8 @@ qx.Class.define("qx.tool.cli.commands.Package", {
 
     /**
      * Returns the absolute path to the file that persists the cache object
-     * @return {String}
+     *
+     * @return {string}
      */
     getCachePath : function() {
       return path.join(qx.tool.cli.ConfigDb.getDirectory(), this.self(arguments).package_cache_name);
@@ -201,7 +212,8 @@ qx.Class.define("qx.tool.cli.commands.Package", {
 
     /**
      * Returns the URL of the package registry data on GitHub
-     * @return {String}
+     *
+     * @return {string}
      */
     getRepositoryCacheUrl : function() {
       return this.self(arguments).repository_cache_url;
@@ -209,7 +221,8 @@ qx.Class.define("qx.tool.cli.commands.Package", {
 
     /**
      * Returns the cache object, retrieving it from a local file if necessary
-     * @return {Object}
+     *
+     * @return {object}
      * @todo use config model API for cache file
      */
     getCache : function(readFromFile = false) {
@@ -232,6 +245,7 @@ qx.Class.define("qx.tool.cli.commands.Package", {
 
     /**
      * Manually overwrite the cache data
+     *
      * @param data {Object}
      * @return {void}
      */
@@ -241,6 +255,7 @@ qx.Class.define("qx.tool.cli.commands.Package", {
 
     /**
      * Saves the cache to a hidden local file
+     *
      * @return {void}
      */
     saveCache : async function() {
@@ -251,6 +266,7 @@ qx.Class.define("qx.tool.cli.commands.Package", {
     /**
      * Exports the cache to an external file. Note that the structure of the cache
      * data can change any time. Do not build anything on it. You have been warned.
+     *
      * @param path {String}
      * @return {void}
      */

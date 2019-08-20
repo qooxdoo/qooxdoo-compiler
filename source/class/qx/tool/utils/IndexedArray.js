@@ -103,7 +103,7 @@ qx.Class.define("qx.tool.utils.IndexedArray", {
      * Tests whether the entry exsts
      *
      * @param name {String} the entry to check for
-     * @return {Boolean} true if found
+     * @return {boolean} true if found
      */
     contains: function(name) {
       return this.__lookup[name] !== undefined;
@@ -126,7 +126,7 @@ qx.Class.define("qx.tool.utils.IndexedArray", {
     /**
      * Removes the last entry from the array and returns it
      *
-     * @returns {String}
+     * @returns {string}
      */
     pop: function() {
       if (this.__array.length == 0) {
@@ -148,7 +148,7 @@ qx.Class.define("qx.tool.utils.IndexedArray", {
     /**
      * Removes the first entry from the array and returns it
      *
-     * @returns {String}
+     * @returns {string}
      */
     shift: function() {
       if (this.__array.length == 0) {
@@ -179,7 +179,7 @@ qx.Class.define("qx.tool.utils.IndexedArray", {
     /**
      * Returns the indexed item of the array
      *
-     * @returns {String}
+     * @returns {string}
      */
     getItem: function(index) {
       if (this.__dirtySort && this.isKeepSorted()) {
@@ -191,7 +191,7 @@ qx.Class.define("qx.tool.utils.IndexedArray", {
     /**
      * Detects whether the array is empty
      *
-     * @returns {Boolean}
+     * @returns {boolean}
      */
     isEmpty: function() {
       return this.__array.length > 0;
@@ -200,7 +200,7 @@ qx.Class.define("qx.tool.utils.IndexedArray", {
     /**
      * Returns a native array (a copy)
      *
-     * @returns {String[]}
+     * @returns {string[]}
      */
     toArray: function() {
       if (this.__dirtySort && this.isKeepSorted()) {
@@ -221,7 +221,7 @@ qx.Class.define("qx.tool.utils.IndexedArray", {
     /**
      * Returns a native object (a copy)
      *
-     * @returns {Object}
+     * @returns {object}
      */
     toObject: function() {
       if (this.__dirtySort && this.isKeepSorted()) {

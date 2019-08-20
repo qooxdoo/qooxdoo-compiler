@@ -227,7 +227,7 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
     /**
      * Parses the command line, and produces a normalised configuration;
      *
-     * @return {Object}
+     * @return {object}
      */
     __parseImpl: async function() {
       let argv = this.argv;

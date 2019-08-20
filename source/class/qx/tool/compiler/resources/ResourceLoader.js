@@ -39,7 +39,7 @@ qx.Class.define("qx.tool.compiler.resources.ResourceLoader", {
      *  this will be null if not yet in the resource database
      * @param stat {fs.Stats} Stats object from fs.stat
      * 
-     * @return {Boolean}
+     * @return {boolean}
      */
     needsLoad(filename, fileInfo, stat) {
       var mtime = null;

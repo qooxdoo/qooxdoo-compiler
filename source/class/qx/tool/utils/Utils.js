@@ -51,6 +51,7 @@ qx.Class.define("qx.tool.utils.Utils", {
     /**
      * Error that can be thrown to indicate wrong user input  and which doesn't
      * need a stack trace
+     *
      * @param {string} message
      * @return {Error}
      */
@@ -66,7 +67,7 @@ qx.Class.define("qx.tool.utils.Utils", {
      * Formats the time in a human readable format, eg "1h 23m 45.678s"
      *
      * @param {Integer} milliseconds
-     * @return {String} formatted string
+     * @return {string} formatted string
      */
     formatTime: function(millisec) {
       var seconds = Math.floor(millisec / 1000);

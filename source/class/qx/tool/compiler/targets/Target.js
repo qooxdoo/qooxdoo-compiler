@@ -35,6 +35,7 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
 
   /**
    * Constructor
+   *
    * @param outputDir {String} output directory
    */
   construct: function(outputDir) {
@@ -176,6 +177,9 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
      * @private
      */
     _mergeEnvironment: function(app, environment) {
+      /**
+       *
+       */
       function merge(obj) {
         if (obj) {
           for (var name in obj) {
@@ -245,8 +249,8 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
      * Converts a filename to a URI, taking into account mappings added via `addMapping`.  If there is
      * no mapping, null is returned
      *
-     * @param filename {String} the filename to map
-     * @return {String} the URI for the file, null if not found
+     * @param filename {string} the filename to map
+     * @return {string} the URI for the file, null if not found
      */
     getPathMapping: function(filename) {
       if (this.__pathMappings) {
@@ -270,9 +274,9 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
      * no mapping, the filename can be modified to be relative to a given path (ie the directory where
      * the index.html is located)
      *
-     * @param filename {String} the filename to map
+     * @param filename {string} the filename to map
      * @param relativeTo {String?} optional path that the filename needs to be relative to if there is no mapping
-     * @return {String} the URI for the file
+     * @return {string} the URI for the file
      */
     mapToUri: function(filename, relativeTo) {
       var mapTo = this.getPathMapping(filename);
@@ -369,6 +373,9 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
             "preBootCode": []
           };
           
+          /**
+           *
+           */
           function addExternal(arr, type) {
             if (arr) {
               arr.forEach(filename => {
@@ -552,8 +559,8 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
      * Transform method for locales property; ensures that all locales are case correct, ie
      * have the form aa_BB (for example "en_GB" is correct but "en_gb" is invalid)
      *
-     * @param value {String[]} array of locale IDs
-     * @return {String[]} the modified array
+     * @param value {string[]} array of locale IDs
+     * @return {string[]} the modified array
      */
     _transformLocales: function(value) {
       if (!value) {
@@ -584,9 +591,15 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
       var analyser = compileInfo.application.getAnalyser();
       var pkgdata = compileInfo.pkgdata;
 
+      /**
+       *
+       */
       function loadLocaleData(localeId) {
         var combinedCldr = null;
 
+        /**
+         *
+         */
         function accumulateCldr(localeId) {
           return analyser.getCldr(localeId)
             .then(cldr => {
@@ -627,6 +640,9 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
       var analyser = compileInfo.application.getAnalyser();
       var pkgdata = compileInfo.pkgdata;
 
+      /**
+       *
+       */
       function writeEntry(entry, localeId) {
         if (entry) {
           var pkgdataTranslations = compileInfo.pkgdata.translations[localeId];
@@ -667,6 +683,9 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
       var db = analyser.getDatabase();
       var pkgdata = compileInfo.pkgdata;
 
+      /**
+       *
+       */
       function writeEntry(localeId, entry) {
         if (entry) {
           var msgstr = entry.msgstr;
@@ -719,6 +738,7 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
 
     /**
      * Writes the application
+     *
      * @param assets {Object[]} list of assets, where each asset is (see @link(qx.tool.compiler.resources.Manager) for details)
      *  - libraryName {String}
      *  - filename {String}
@@ -730,6 +750,9 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
       var analyser = this.getAnalyser();
       var appRootDir = this.getApplicationRoot(application);
 
+      /**
+       *
+       */
       async function writeBootJs() {
         var MAP = {
           EnvSettings: compileInfo.configdata.environment,
@@ -840,6 +863,7 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
     /**
      * After the first part of boot.js has been written, this is called so to optionally
      * append to the stream
+     *
      * @param writeStream {Stream} for writing
      * @returns {*}
      */
@@ -848,6 +872,7 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
 
     /**
      * Called to generate index.html
+     *
      * @private
      */
     _writeIndexHtml: async function(compileInfo) {
@@ -873,6 +898,9 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
         "appTitle": (application.getTitle()||"Qooxdoo Application")
       };
 
+      /**
+       *
+       */
       function replaceVars(code) {
         for (let varName in TEMPLATE_VARS) {
           code = code.replace(new RegExp(`\\$\{${varName}\}`, "g"), TEMPLATE_VARS[varName]);

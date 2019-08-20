@@ -32,8 +32,9 @@ qx.Class.define("qx.tool.utils.Json", {
   statics: {
     /**
      * Parses JSON string into an object
+     *
      * @param str {String} the data to parse
-     * @return {Object}
+     * @return {object}
      * @todo similar to qx.tool.cli.commands.Command.parseJsonFile()
      */
     parseJson: function(str) {
@@ -47,13 +48,14 @@ qx.Class.define("qx.tool.utils.Json", {
     /**
      * Validates a json object against the given schema signature and outputs
      * diagnostic information if validation failed
+     *
      * @param json {Object} The json object to check
      * @param schema {Array|Object}
      *    The json-schema object or an array of schema objects. If array,
      *    only the first is used to validate, but the first schema can
      *    refer to the others.
-     * @param warnOnly {Boolean} If true, do not throw a fatal error
-     * @return {Boolean}
+     * @param warnOnly {boolean} If true, do not throw a fatal error
+     * @return {boolean}
      *    Returns true if successful and false on failure if the
      *    'warnOnly' parameter is true
      */
@@ -93,6 +95,7 @@ qx.Class.define("qx.tool.utils.Json", {
      * has been passed. Return an object containing type and version of the json
      * schema, or null if no schema could been detected
      * Todo: This needs to be rewritten.
+     *
      * @param data {Object} JSON data
      * @return {{type,version}|null}
      */
@@ -134,7 +137,7 @@ qx.Class.define("qx.tool.utils.Json", {
      * null is returned
      *
      * @param filename {String} the filename to load
-     * @return {Object|null} the parsed contents, or null if the file does not exist
+     * @return {object|null} the parsed contents, or null if the file does not exist
      */
     loadJsonAsync: async function(filename) {
       if (!await fs.existsAsync(filename)) {

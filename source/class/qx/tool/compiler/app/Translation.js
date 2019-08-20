@@ -36,6 +36,7 @@ qx.Class.define("qx.tool.compiler.app.Translation", {
 
   /**
    * Constructor
+   *
    * @param library {Library}
    * @param locale {String}
    */
@@ -78,6 +79,7 @@ qx.Class.define("qx.tool.compiler.app.Translation", {
     
     /**
      * Filename for the .po file
+     *
      * @returns {string}
      */
     getPoFilename: function() {
@@ -131,6 +133,9 @@ qx.Class.define("qx.tool.compiler.app.Translation", {
               var entry = null;
               var lastKey = null;
 
+              /**
+               *
+               */
               function saveEntry() {
                 if (entry) {
                   var key;
@@ -145,6 +150,9 @@ qx.Class.define("qx.tool.compiler.app.Translation", {
                 lastKey = null;
               }
 
+              /**
+               *
+               */
               function set(key, value, append) {
                 var index = null;
                 var m = key.match(/^([^[]+)\[([0-9]+)\]$/);
@@ -284,12 +292,16 @@ qx.Class.define("qx.tool.compiler.app.Translation", {
 
     /**
      * Writes the .po file to a specific filename
+     *
      * @param filename {String}
      */
     writeTo: function(filename, cb) {
       var t = this;
       var lines = [];
 
+      /**
+       *
+       */
       function write(key, value) {
         if (value === undefined || value === null) {
           return;
@@ -370,6 +382,7 @@ qx.Class.define("qx.tool.compiler.app.Translation", {
 
     /**
      * Returns the entry with the given msgid, null if it does not exist
+     *
      * @param id
      * @returns {*|null}
      */
@@ -379,6 +392,7 @@ qx.Class.define("qx.tool.compiler.app.Translation", {
 
     /**
      * Deletes the entry with the given msgid; return the deleted value, or null if it does not exist
+     *
      * @param id
      * @returns {*|null}
      */
@@ -390,6 +404,7 @@ qx.Class.define("qx.tool.compiler.app.Translation", {
 
     /**
      * Returns the entry with the given msgid, creating it if it does not exist
+     *
      * @param id
      * @returns {*|null}
      */
@@ -406,6 +421,7 @@ qx.Class.define("qx.tool.compiler.app.Translation", {
 
     /**
      * Returns all entries
+     *
      * @returns {null}
      */
     getEntries: function() {
@@ -414,6 +430,7 @@ qx.Class.define("qx.tool.compiler.app.Translation", {
 
     /**
      * Returns the translation headers
+     *
      * @returns {null}
      */
     getHeaders: function() {

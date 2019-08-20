@@ -230,12 +230,12 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
 
     /**
      * Fired when making of apps begins
-    */
+     */
     "making": "qx.event.type.Event",
 
     /**
      * Fired when making of apps is done.
-    */
+     */
     "made": "qx.event.type.Event"
 
   },
@@ -671,6 +671,9 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
           }
         }
 
+        /**
+         *
+         */
         function mergeArray(dest, ...srcs) {
           srcs.forEach(function(src) {
             if (src) {
@@ -795,9 +798,10 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
 
     /**
      * Checks the dependencies of the current library
+     *
      * @param  {qx.tool.compiler.app.Library[]} libs
      *    The list of libraries to check
-     * @param {Object|*} packages
+     * @param {object|*} packages
      *    If given, an object mapping library uris to library paths
      * @return {Promise<Array>} Array of error messages
      * @private
@@ -900,6 +904,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
     /**
      * Resolves the target class instance from the type name; accepts "source" or "build" or
      * a class name
+     *
      * @param type {String}
      * @returns {Maker}
      */
