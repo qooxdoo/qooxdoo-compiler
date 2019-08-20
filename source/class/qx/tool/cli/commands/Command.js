@@ -146,7 +146,7 @@ qx.Class.define("qx.tool.cli.commands.Command", {
       var data = await fs.readFileAsync(filePath, "utf8");
       try {
         let compileAst = qx.tool.utils.json.Parser.parseToAst(data, {verbose: true});
-        let compileJson = qx.tool.utils.json.Parser.astToObject(compileAst);
+        let compileJson = qx.tool.utils.json.Stringify.astToObject(compileAst);
         return compileJson;
       } catch (e) {
         throw new qx.tool.utils.Utils.UserError(`Cannot parse ${filePath}:` + e.message);

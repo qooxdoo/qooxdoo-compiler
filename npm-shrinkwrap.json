@@ -940,115 +940,26 @@
       }
     },
     "@qooxdoo/eslint-config-qx": {
-      "version": "1.2.9",
-      "resolved": "https://registry.npmjs.org/@qooxdoo/eslint-config-qx/-/eslint-config-qx-1.2.9.tgz",
-      "integrity": "sha512-AVG7AWZxM9nq5P74i7od7Q1sx9obriuYbRoMPYcNA8zChFH6y1cdTUL8WLu3U5maQcz5hVG0+nNp+Q3wlNIXsw==",
+      "version": "1.2.1",
+      "resolved": "https://registry.npmjs.org/@qooxdoo/eslint-config-qx/-/eslint-config-qx-1.2.1.tgz",
+      "integrity": "sha512-fYZYQZb99uXbZIo/SiQU3p/iq8hdNcTS52Tg1NrKEbjQSibU8P/FAcjrDUAMo6dI3j5ekfbgrfeKN7ngzXCIuQ==",
       "requires": {
-        "@qooxdoo/eslint-plugin-qx": "^1.2.2",
-        "eslint": "^6.1.0",
-        "eslint-plugin-jsdoc": "^15.8.0"
+        "@qooxdoo/eslint-plugin-qx": "^1.2.1",
+        "eslint": "^5.16.0",
+        "eslint-plugin-jsdoc": "^7.2.3"
       },
       "dependencies": {
-        "ansi-regex": {
-          "version": "4.1.0",
-          "resolved": "https://registry.npmjs.org/ansi-regex/-/ansi-regex-4.1.0.tgz",
-          "integrity": "sha512-1apePfXM1UOSqw0o9IiFAovVz9M5S1Dg+4TrDwfMewQ6p/rmMueb7tWZjQ1rx4Loy1ArBggoqGpfqqdI4rondg=="
-        },
-        "eslint": {
-          "version": "6.1.0",
-          "resolved": "https://registry.npmjs.org/eslint/-/eslint-6.1.0.tgz",
-          "integrity": "sha512-QhrbdRD7ofuV09IuE2ySWBz0FyXCq0rriLTZXZqaWSI79CVtHVRdkFuFTViiqzZhkCgfOh9USpriuGN2gIpZDQ==",
-          "requires": {
-            "@babel/code-frame": "^7.0.0",
-            "ajv": "^6.10.0",
-            "chalk": "^2.1.0",
-            "cross-spawn": "^6.0.5",
-            "debug": "^4.0.1",
-            "doctrine": "^3.0.0",
-            "eslint-scope": "^5.0.0",
-            "eslint-utils": "^1.3.1",
-            "eslint-visitor-keys": "^1.0.0",
-            "espree": "^6.0.0",
-            "esquery": "^1.0.1",
-            "esutils": "^2.0.2",
-            "file-entry-cache": "^5.0.1",
-            "functional-red-black-tree": "^1.0.1",
-            "glob-parent": "^5.0.0",
-            "globals": "^11.7.0",
-            "ignore": "^4.0.6",
-            "import-fresh": "^3.0.0",
-            "imurmurhash": "^0.1.4",
-            "inquirer": "^6.4.1",
-            "is-glob": "^4.0.0",
-            "js-yaml": "^3.13.1",
-            "json-stable-stringify-without-jsonify": "^1.0.1",
-            "levn": "^0.3.0",
-            "lodash": "^4.17.14",
-            "minimatch": "^3.0.4",
-            "mkdirp": "^0.5.1",
-            "natural-compare": "^1.4.0",
-            "optionator": "^0.8.2",
-            "progress": "^2.0.0",
-            "regexpp": "^2.0.1",
-            "semver": "^6.1.2",
-            "strip-ansi": "^5.2.0",
-            "strip-json-comments": "^3.0.1",
-            "table": "^5.2.3",
-            "text-table": "^0.2.0",
-            "v8-compile-cache": "^2.0.3"
-          }
-        },
-        "eslint-scope": {
-          "version": "5.0.0",
-          "resolved": "https://registry.npmjs.org/eslint-scope/-/eslint-scope-5.0.0.tgz",
-          "integrity": "sha512-oYrhJW7S0bxAFDvWqzvMPRm6pcgcnWc4QnofCAqRTRfQC0JcwenzGglTtsLyIuuWFfkqDG9vz67cnttSd53djw==",
-          "requires": {
-            "esrecurse": "^4.1.0",
-            "estraverse": "^4.1.1"
-          }
-        },
-        "espree": {
-          "version": "6.0.0",
-          "resolved": "https://registry.npmjs.org/espree/-/espree-6.0.0.tgz",
-          "integrity": "sha512-lJvCS6YbCn3ImT3yKkPe0+tJ+mH6ljhGNjHQH9mRtiO6gjhVAOhVXW1yjnwqGwTkK3bGbye+hb00nFNmu0l/1Q==",
-          "requires": {
-            "acorn": "^6.0.7",
-            "acorn-jsx": "^5.0.0",
-            "eslint-visitor-keys": "^1.0.0"
-          }
-        },
-        "glob-parent": {
-          "version": "5.0.0",
-          "resolved": "https://registry.npmjs.org/glob-parent/-/glob-parent-5.0.0.tgz",
-          "integrity": "sha512-Z2RwiujPRGluePM6j699ktJYxmPpJKCfpGA13jz2hmFZC7gKetzrWvg5KN3+OsIFmydGyZ1AVwERCq1w/ZZwRg==",
-          "requires": {
-            "is-glob": "^4.0.1"
-          }
-        },
-        "semver": {
-          "version": "6.3.0",
-          "resolved": "https://registry.npmjs.org/semver/-/semver-6.3.0.tgz",
-          "integrity": "sha512-b39TBaTSfV6yBrapU89p5fKekE2m/NwnDocOVruQFS1/veMgdzuPcnOM34M6CwxW8jH/lxEa5rBoDeUwu5HHTw=="
-        },
-        "strip-ansi": {
-          "version": "5.2.0",
-          "resolved": "https://registry.npmjs.org/strip-ansi/-/strip-ansi-5.2.0.tgz",
-          "integrity": "sha512-DuRs1gKbBqsMKIZlrffwlug8MHkcnpjs5VPmL1PAh+mA30U0DTotfDZ0d2UUsXpPmPmMMJ6W773MaA3J+lbiWA==",
-          "requires": {
-            "ansi-regex": "^4.1.0"
-          }
-        },
-        "strip-json-comments": {
-          "version": "3.0.1",
-          "resolved": "https://registry.npmjs.org/strip-json-comments/-/strip-json-comments-3.0.1.tgz",
-          "integrity": "sha512-VTyMAUfdm047mwKl+u79WIdrZxtFtn+nBxHeb844XBQ9uMNTuTHdx2hc5RiAJYqwTj3wc/xe5HLSdJSkJ+WfZw=="
+        "@qooxdoo/eslint-plugin-qx": {
+          "version": "1.2.4",
+          "resolved": "https://registry.npmjs.org/@qooxdoo/eslint-plugin-qx/-/eslint-plugin-qx-1.2.4.tgz",
+          "integrity": "sha512-s+mHk2WWGBVhspJ5Xqj9XPrDJOhNZhfHVmrZNOLS9d1BcXSwo89NRWz4mJrOIYpDXxE7B7sekPSB4klCC6Qd1w=="
         }
       }
     },
     "@qooxdoo/eslint-plugin-qx": {
-      "version": "1.2.3",
-      "resolved": "https://registry.npmjs.org/@qooxdoo/eslint-plugin-qx/-/eslint-plugin-qx-1.2.3.tgz",
-      "integrity": "sha512-VpGpP8ZxihsFEdaTpWgO7vEGp3H0G5wjtKizeLBydloGsg3XoktVfC6ZKF5bA7TtklKweJMAMp8fBRcSRb7Z1Q=="
+      "version": "1.2.1",
+      "resolved": "https://registry.npmjs.org/@qooxdoo/eslint-plugin-qx/-/eslint-plugin-qx-1.2.1.tgz",
+      "integrity": "sha512-ZmP4s4UgxEQDQyrfcdzss2w5wZuG60WhdYzczFdc92ZFngwDZ6DSp2uNCS8pboBkTmdPONh9Re/fcaQfh82/eA=="
     },
     "@qooxdoo/framework": {
       "version": "6.0.0-beta-20190618-2102",
@@ -2089,9 +2000,9 @@
       }
     },
     "comment-parser": {
-      "version": "0.6.1",
-      "resolved": "https://registry.npmjs.org/comment-parser/-/comment-parser-0.6.1.tgz",
-      "integrity": "sha512-Putzd7Ilyvknmb1KxGf5el9uw0sPx9gEVnDrm8tlvXGN1i8Uaa2VBxB32hUhfzTlrEhhxNQ+pKq4ZNe8wNxjmw=="
+      "version": "0.5.5",
+      "resolved": "https://registry.npmjs.org/comment-parser/-/comment-parser-0.5.5.tgz",
+      "integrity": "sha512-oB3TinFT+PV3p8UwDQt71+HkG03+zwPwikDlKU6ZDmql6QX2zFlQ+G0GGSDqyJhdZi4PSlzFBm+YJ+ebOX3Vgw=="
     },
     "component-emitter": {
       "version": "1.3.0",
@@ -2738,24 +2649,13 @@
       }
     },
     "eslint-plugin-jsdoc": {
-      "version": "15.8.0",
-      "resolved": "https://registry.npmjs.org/eslint-plugin-jsdoc/-/eslint-plugin-jsdoc-15.8.0.tgz",
-      "integrity": "sha512-J6ozWkaAgBh1eLdQE+C2wcXhoEgDmGJOSB6zMF5ktEtMBnU62xT3wfHcUacuTnv6rt+ollC0uZThaEpGA+sTNg==",
+      "version": "7.2.3",
+      "resolved": "https://registry.npmjs.org/eslint-plugin-jsdoc/-/eslint-plugin-jsdoc-7.2.3.tgz",
+      "integrity": "sha512-233HUc5ftIlmswaNmck++gkoW2iubcDDbM4KCzTHaawJFODuTNriDmZyKm8+7GgNnnwlkrE0mmD4TCzrdMTnsA==",
       "requires": {
-        "comment-parser": "^0.6.1",
-        "debug": "^4.1.1",
-        "flat-map-polyfill": "^0.3.8",
-        "jsdoctypeparser": "5.0.1",
-        "lodash": "^4.17.15",
-        "object.entries-ponyfill": "^1.0.1",
-        "regextras": "^0.6.1"
-      },
-      "dependencies": {
-        "lodash": {
-          "version": "4.17.15",
-          "resolved": "https://registry.npmjs.org/lodash/-/lodash-4.17.15.tgz",
-          "integrity": "sha512-8xOcRHvCjnocdS5cpwXQXVzmmh5e5+saE2QGoeQmbKmRS6J3VQppPOIt0MnmE+4xlZoumy0GPG0D0MVIQbNA1A=="
-        }
+        "comment-parser": "^0.5.4",
+        "jsdoctypeparser": "3.1.0",
+        "lodash": "^4.17.11"
       }
     },
     "eslint-scope": {
@@ -4787,9 +4687,9 @@
       "integrity": "sha1-peZUwuWi3rXyAdls77yoDA7y9RM="
     },
     "jsdoctypeparser": {
-      "version": "5.0.1",
-      "resolved": "https://registry.npmjs.org/jsdoctypeparser/-/jsdoctypeparser-5.0.1.tgz",
-      "integrity": "sha512-dYwcK6TKzvq+ZKtbp4sbQSW9JMo6s+4YFfUs5D/K7bZsn3s1NhEhZ+jmIPzby0HbkbECBe+hNPEa6a+E21o94w=="
+      "version": "3.1.0",
+      "resolved": "https://registry.npmjs.org/jsdoctypeparser/-/jsdoctypeparser-3.1.0.tgz",
+      "integrity": "sha512-JNbkKpDFqbYjg+IU3FNo7qjX7Opy7CwjHywT32zgAcz/d4lX6Umn5jOHVETUdnNNgGrMk0nEx1gvP0F4M0hzlQ=="
     },
     "jsesc": {
       "version": "2.5.2",

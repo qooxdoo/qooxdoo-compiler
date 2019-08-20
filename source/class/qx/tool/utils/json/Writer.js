@@ -40,22 +40,22 @@ qx.Class.define("qx.tool.utils.json.Writer", {
      * start of each line
      */
     write(str) {
-      var t = this;
-
-      if (str === null)
-        str = "null";
-      else if (str === undefined)
-        str = "undefined";
-      else if (typeof str === "number")
-        str = str.toString();
-      else if (typeof str === "boolean")
-        str = !!str ? "true" : "false";
-      else if (typeof str !== "string")
-        throw new Error("Can only write strings and numbers");
+      if (str === null) {
+        str = "null"; 
+      } else if (str === undefined) {
+        str = "undefined"; 
+      } else if (typeof str === "number") {
+        str = str.toString(); 
+      } else if (typeof str === "boolean") {
+        str = str ? "true" : "false"; 
+      } else if (typeof str !== "string") {
+        throw new Error("Can only write strings and numbers"); 
+      }
 
       var startPos = 0;
+      /* eslint-disable no-constant-condition */
       while (true) {
-        var pos = str.indexOf('\n', startPos);
+        var pos = str.indexOf("\n", startPos);
         if (pos > -1) {
           this.buffer += str.substring(startPos, pos + 1);
           this.__currentLine = this.buffer.length;
@@ -88,15 +88,17 @@ qx.Class.define("qx.tool.utils.json.Writer", {
      * @param count {Number} number to increase/decrease by
      */
     indent(count) {
-      if (this.__indent + count < 0)
-        throw new Error("Unbalanced indent");
+      if (this.__indent + count < 0) {
+        throw new Error("Unbalanced indent"); 
+      }
       this.__indent += count;
       
       var indentStr = this.__indentStr;
       if (count > 0) {
         var str = "";
-        for (var i = 0; i < count; i++)
-          str += "  ";
+        for (var i = 0; i < count; i++) {
+          str += "  "; 
+        }
         indentStr += str;
       } else {
         indentStr = indentStr.substring(0, indentStr.length + (count * 2));

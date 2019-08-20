@@ -34,7 +34,7 @@ qx.Class.define("qx.tool.utils.Utils", {
      * Creates a Promise which can be resolved/rejected externally - it has
      * the resolve/reject methods as properties
      *
-     * @return {Promise}
+     * @returns {Promise} a promise
      */
     newExternalPromise: function() {
       var resolve;
@@ -51,8 +51,9 @@ qx.Class.define("qx.tool.utils.Utils", {
     /**
      * Error that can be thrown to indicate wrong user input  and which doesn't
      * need a stack trace
+     *
      * @param {string} message
-     * @return {Error}
+     * @returns {Error}
      */
     UserError:  class extends Error {
       constructor(message) {
@@ -65,10 +66,10 @@ qx.Class.define("qx.tool.utils.Utils", {
     /**
      * Formats the time in a human readable format, eg "1h 23m 45.678s"
      *
-     * @param {Integer} milliseconds
-     * @return {String} formatted string
+     * @param {number} millisec
+     * @returns {string} formatted string
      */
-    formatTime: function(millisec) {
+    formatTime(millisec) {
       var seconds = Math.floor(millisec / 1000);
       var minutes = Math.floor(seconds / 60);
       var hours = Math.floor(minutes / 60);
@@ -93,7 +94,7 @@ qx.Class.define("qx.tool.utils.Utils", {
     /**
      * Creates the parent directory of a filename, if it does not already exist
      *
-     * @param filename {String}
+     * @param {string} filename the filename to create the parent directory of
      */
     makeParentDir: async function(filename) {
       var parentDir = path.dirname(filename);
@@ -103,11 +104,11 @@ qx.Class.define("qx.tool.utils.Utils", {
     /**
      * Creates a directory, if it does not exist, including all intermediate paths
      *
-     * @param filename {String}
+     * @param {string} filename the directory to create
      */
     makeDirs: async function(filename) {
       const mkpath = promisify(util.mkpath);
-      return await mkpath(filename);
+      await mkpath(filename);
     },
 
     /*  Function to test if an object is a plain object, i.e. is constructed
