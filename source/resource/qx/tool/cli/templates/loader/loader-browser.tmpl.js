@@ -89,6 +89,7 @@ qx.$$createdAt = function(obj, filename, lineNumber, column) {
 
 var isWebkit = /AppleWebKit\/([^ ]+)/.test(navigator.userAgent);
 var isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
+var isIE11 = !!window.MSInputMethodContext && !!document.documentMode;
 
 qx.$$loader = {
   parts : %{Parts},
@@ -99,7 +100,7 @@ qx.$$loader = {
   closureParts : %{ClosureParts},
   bootIsInline : %{BootIsInline},
   addNoCacheParam : %{NoCacheParam},
-  isLoadParallel: !isFirefox && 'async' in document.createElement('script'),
+  isLoadParallel: !isFirefox && !isIE11 && 'async' in document.createElement('script'),
   delayDefer: false,
   splashscreen: window.QOOXDOO_SPLASH_SCREEN || null,
   isLoadChunked: false,
@@ -235,6 +236,8 @@ if (document.location.search) {
       var value = match[3];
       if (value === undefined || value === "true" || value === "1")
         value = true;
+      else if (value === "false" || value === "0")
+        value = false;
       URL_PARAMETERS[key] = value;
     }
   });
