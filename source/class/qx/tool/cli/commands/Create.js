@@ -93,7 +93,6 @@ qx.Class.define("qx.tool.cli.commands.Create", {
     },
     /**
      * Returns the names of the skeleton directories in the template folder
-     *
      * @returns {string[]}
      */
     getSkeletonNames: function() {
@@ -248,9 +247,6 @@ qx.Class.define("qx.tool.cli.commands.Create", {
       }
 
       // copy template, replacing template vars
-      /**
-       *
-       */
       function traverseFileSystem(sourceDir, targetDir) {
         let files = fs.readdirSync(sourceDir);
         for (let part of files) {

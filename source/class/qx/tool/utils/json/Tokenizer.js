@@ -23,17 +23,17 @@
  * *********************************************************************** */
 
 const __tokenTypes = {
-  LEFT_BRACE: 0, // {
-  RIGHT_BRACE: 1, // }
-  LEFT_BRACKET: 2, // [
+  LEFT_BRACE: 0,    // {
+  RIGHT_BRACE: 1,   // }
+  LEFT_BRACKET: 2,  // [
   RIGHT_BRACKET: 3, // ]
-  COLON: 4, // :
-  COMMA: 5, // ,
-  STRING: 6, //
-  NUMBER: 7, //
-  TRUE: 8, // true
-  FALSE: 9, // false
-  NULL: 10, // null
+  COLON: 4,     // :
+  COMMA: 5,     // ,
+  STRING: 6,      //
+  NUMBER: 7,      //
+  TRUE: 8,      // true
+  FALSE: 9,     // false
+  NULL: 10,     // null
   COMMENT: 11,
   WHITESPACE: 12
 };
@@ -55,38 +55,32 @@ qx.Class.define("qx.tool.utils.json.Tokenizer", {
   
   members: {
     token() {
-      if (this.tokens === null) {
-        throw new Error("No tokens to return (have you called tokenize?)"); 
-      }
-      if (this.tokenIndex >= this.tokens.length) {
-        throw new Error("No more tokens available"); 
-      }
-      if (this.tokenIndex < 0) {
-        return this.next(); 
-      }
+      if (this.tokens === null)
+        throw new Error("No tokens to return (have you called tokenize?)");
+      if (this.tokenIndex >= this.tokens.length)
+        throw new Error("No more tokens available");
+      if (this.tokenIndex < 0)
+        return this.next();
       return this.tokens[this.tokenIndex];
     },
     
     hasMore() {
       const tokenTypes = qx.tool.utils.json.Tokenizer.tokenTypes;
       
-      if (this.tokens === null) {
-        throw new Error("No tokens to return (have you called tokenize?)"); 
-      }
+      if (this.tokens === null)
+        throw new Error("No tokens to return (have you called tokenize?)");
       
       if (this.settings.returnWhitespace) {
         return this.tokenIndex < this.tokens.length;
       }
       
       var tokenIndex = this.tokenIndex;
-      if (tokenIndex < 0) {
-        tokenIndex = 0; 
-      }
+      if (tokenIndex < 0)
+        tokenIndex = 0;
       for (; tokenIndex < this.tokens.length; tokenIndex++) {
         var token = this.tokens[tokenIndex];
-        if (token.type != tokenTypes.COMMENT && token.type != tokenTypes.WHITESPACE) {
-          return true; 
-        }
+        if (token.type != tokenTypes.COMMENT && token.type != tokenTypes.WHITESPACE)
+          return true;
       }
       return false;
     },
@@ -94,23 +88,20 @@ qx.Class.define("qx.tool.utils.json.Tokenizer", {
     next() {
       const tokenTypes = qx.tool.utils.json.Tokenizer.tokenTypes;
       
-      if (this.tokens === null) {
-        throw new Error("No tokens to return (have you called tokenize?)"); 
-      }
-      if (this.tokenIndex >= this.tokens.length) {
-        throw new Error("No more tokens to get"); 
-      }
+      if (this.tokens === null)
+        throw new Error("No tokens to return (have you called tokenize?)");
+      if (this.tokenIndex >= this.tokens.length)
+        throw new Error("No more tokens to get");
       
       if (this.settings.returnWhitespace) {
-        if (this.tokenIndex < this.tokens.length) {
-          return this.tokens[++this.tokenIndex]; 
-        }
+        if (this.tokenIndex < this.tokens.length)
+          return this.tokens[++this.tokenIndex];
+        
       } else {
         for (++this.tokenIndex; this.tokenIndex < this.tokens.length; this.tokenIndex++) {
           var token = this.tokens[this.tokenIndex];
-          if (token.type != tokenTypes.COMMENT && token.type != tokenTypes.WHITESPACE) {
-            return token; 
-          }
+          if (token.type != tokenTypes.COMMENT && token.type != tokenTypes.WHITESPACE)
+            return token;
         }
       }
       
@@ -131,12 +122,12 @@ qx.Class.define("qx.tool.utils.json.Tokenizer", {
         const args = [input, index, line, column, this.settings];
 
         const matched = (
-          Tokenizer.parseWhitespace(...args) ||
-          Tokenizer.parseComment(...args) ||
-          Tokenizer.parseChar(...args) ||
-          Tokenizer.parseKeyword(...args) ||
-          Tokenizer.parseString(...args) ||
-          Tokenizer.parseNumber(...args)
+             Tokenizer.parseWhitespace(...args)
+          || Tokenizer.parseComment(...args)
+          || Tokenizer.parseChar(...args)
+          || Tokenizer.parseKeyword(...args)
+          || Tokenizer.parseString(...args)
+          || Tokenizer.parseNumber(...args)
         );
 
         if (matched) {
@@ -153,14 +144,14 @@ qx.Class.define("qx.tool.utils.json.Tokenizer", {
               this.settings.source
             )
           };
-          if (matched.rawValue) {
-            token.rawValue = matched.rawValue; 
-          }
+          if (matched.rawValue)
+            token.rawValue = matched.rawValue;
 
           tokens.push(token);
           index = matched.index;
           line = matched.line;
           column = matched.column;
+
         } else {
           error(
             Tokenizer.cannotTokenizeSymbol(input.charAt(index), line, column),
@@ -168,6 +159,7 @@ qx.Class.define("qx.tool.utils.json.Tokenizer", {
             line,
             column
           );
+
         }
       }
 
@@ -179,18 +171,18 @@ qx.Class.define("qx.tool.utils.json.Tokenizer", {
     tokenTypes: __tokenTypes,
 
     punctuatorTokensMap: { // Lexeme: Token
-      "{": __tokenTypes.LEFT_BRACE,
-      "}": __tokenTypes.RIGHT_BRACE,
-      "[": __tokenTypes.LEFT_BRACKET,
-      "]": __tokenTypes.RIGHT_BRACKET,
-      ":": __tokenTypes.COLON,
-      ",": __tokenTypes.COMMA
+      '{': __tokenTypes.LEFT_BRACE,
+      '}': __tokenTypes.RIGHT_BRACE,
+      '[': __tokenTypes.LEFT_BRACKET,
+      ']': __tokenTypes.RIGHT_BRACKET,
+      ':': __tokenTypes.COLON,
+      ',': __tokenTypes.COMMA
     },
 
     keywordTokensMap: { // Lexeme: Token config
-      "true": { type: __tokenTypes.TRUE, value: true },
-      "false": { type: __tokenTypes.FALSE, value: false },
-      "null": { type: __tokenTypes.NULL, value: null }
+      'true': { type: __tokenTypes.TRUE, value: true },
+      'false': { type: __tokenTypes.FALSE, value: false },
+      'null': { type: __tokenTypes.NULL, value: null }
     },
 
     stringStates: {
@@ -200,15 +192,15 @@ qx.Class.define("qx.tool.utils.json.Tokenizer", {
     },
 
     escapes: {
-      "\"": 0, // Quotation mask
-      "\\": 1, // Reverse solidus
-      "/": 2, // Solidus
-      "b": 3, // Backspace
-      "f": 4, // Form feed
-      "n": 5, // New line
-      "r": 6, // Carriage return
-      "t": 7, // Horizontal tab
-      "u": 8 // 4 hexadecimal digits
+      '"': 0,   // Quotation mask
+      '\\': 1,  // Reverse solidus
+      '/': 2,   // Solidus
+      'b': 3,   // Backspace
+      'f': 4,   // Form feed
+      'n': 5,   // New line
+      'r': 6,   // Carriage return
+      't': 7,   // Horizontal tab
+      'u': 8    // 4 hexadecimal digits
     },
 
     numberStates: {
@@ -225,23 +217,23 @@ qx.Class.define("qx.tool.utils.json.Tokenizer", {
     // HELPERS
 
     isDigit1to9(char) {
-      return char >= "1" && char <= "9";
+      return char >= '1' && char <= '9';
     },
 
     isDigit(char) {
-      return char >= "0" && char <= "9";
+      return char >= '0' && char <= '9';
     },
 
     isHex(char) {
       return (
-        qx.tool.utils.json.Tokenizer.isDigit(char) ||
-        (char >= "a" && char <= "f") ||
-        (char >= "A" && char <= "F")
+          qx.tool.utils.json.Tokenizer.isDigit(char)
+        || (char >= 'a' && char <= 'f')
+        || (char >= 'A' && char <= 'F')
       );
     },
 
     isExp(char) {
-      return char === "e" || char === "E";
+      return char === 'e' || char === 'E';
     },
     
     // ERRORS
@@ -257,31 +249,30 @@ qx.Class.define("qx.tool.utils.json.Tokenizer", {
 
       while (true) {
         var char = input.charAt(index);
-        if (char === "\r") { // CR (Unix)
-          index++;
-          line++;
+        if (char === '\r') { // CR (Unix)
+          index ++;
+          line ++;
           column = 1;
           value += char;
-          if (input.charAt(index) === "\n") { // CRLF (Windows)
-            index++;
-            value += "\n";
+          if (input.charAt(index) === '\n') { // CRLF (Windows)
+            index ++;
+            value += '\n';
           }
-        } else if (char === "\n") { // LF (MacOS)
-          index++;
-          line++;
+        } else if (char === '\n') { // LF (MacOS)
+          index ++;
+          line ++;
           column = 1;
           value += char;
-        } else if (char === "\t" || char === " ") {
-          index++;
-          column++;
+        } else if (char === '\t' || char === ' ') {
+          index ++;
+          column ++;
           value += char;
         } else {
           break;
         }
       }
-      if (value.length == 0) {
-        return null; 
-      }
+      if (value.length == 0)
+        return null;
 
       return {
         index,
@@ -299,24 +290,23 @@ qx.Class.define("qx.tool.utils.json.Tokenizer", {
       if (str === "/*") {
         for (index += 2; index < input.length; index++) {
           var char = input[index];
-          if (char === "*" && input[index + 1] === "/") {
+          if (char === '*' && input[index + 1] === '/') {
             index += 2;
             column += 2;
             break;
-          } else if (char === "\r") { // CR (Unix)
-            index++;
-            line++;
+          } else if (char === '\r') { // CR (Unix)
+            index ++;
+            line ++;
             column = 1;
-            if (input.charAt(index) === "\n") { // CRLF (Windows)
-              index++;
+            if (input.charAt(index) === '\n') { // CRLF (Windows)
+              index ++;
             }
-          } else if (char === "\n") { // LF (MacOS)
-            index++;
-            line++;
+          } else if (char === '\n') { // LF (MacOS)
+            index ++;
+            line ++;
             column = 1;
-          } else {
-            column++; 
-          }
+          } else
+            column++;
         }
         return {
           index,
@@ -325,20 +315,21 @@ qx.Class.define("qx.tool.utils.json.Tokenizer", {
           type: qx.tool.utils.json.Tokenizer.tokenTypes.COMMENT,
           value: input.substring(startIndex, index)
         };
+        
       } else if (str === "//") {
         for (index += 2; index < input.length; index++) {
           var char = input[index];
-          if (char === "\r") { // CR (Unix)
-            index++;
-            line++;
+          if (char === '\r') { // CR (Unix)
+            index ++;
+            line ++;
             column = 1;
-            if (input.charAt(index) === "\n") { // CRLF (Windows)
-              index++;
+            if (input.charAt(index) === '\n') { // CRLF (Windows)
+              index ++;
             }
             break;
-          } else if (char === "\n") { // LF (MacOS)
-            index++;
-            line++;
+          } else if (char === '\n') { // LF (MacOS)
+            index ++;
+            line ++;
             column = 1;
             break;
           }
@@ -398,7 +389,7 @@ qx.Class.define("qx.tool.utils.json.Tokenizer", {
       const tokenTypes = qx.tool.utils.json.Tokenizer.tokenTypes;
       
       const startIndex = index;
-      let buffer = "";
+      let buffer = '';
       let state = stringStates._START_;
 
       while (index < input.length) {
@@ -406,9 +397,9 @@ qx.Class.define("qx.tool.utils.json.Tokenizer", {
 
         switch (state) {
           case stringStates._START_: {
-            if (char === "\"") {
+            if (char === '"') {
               state = stringStates.START_QUOTE_OR_CHAR;
-              index++;
+              index ++;
             } else {
               return null;
             }
@@ -416,12 +407,12 @@ qx.Class.define("qx.tool.utils.json.Tokenizer", {
           }
 
           case stringStates.START_QUOTE_OR_CHAR: {
-            if (char === "\\") {
+            if (char === '\\') {
               state = stringStates.ESCAPE;
               buffer += char;
-              index++;
-            } else if (char === "\"") {
-              index++;
+              index ++;
+            } else if (char === '"') {
+              index ++;
               var result = {
                 type: tokenTypes.STRING,
                 line,
@@ -429,13 +420,12 @@ qx.Class.define("qx.tool.utils.json.Tokenizer", {
                 index,
                 value: buffer
               };
-              if (settings.verbose) {
-                result.rawValue = input.substring(startIndex, index); 
-              }
+              if (settings.verbose)
+                result.rawValue = input.substring(startIndex, index);
               return result;
             } else {
               buffer += char;
-              index++;
+              index ++;
             }
             break;
           }
@@ -443,13 +433,13 @@ qx.Class.define("qx.tool.utils.json.Tokenizer", {
           case stringStates.ESCAPE: {
             if (char in escapes) {
               buffer += char;
-              index++;
-              if (char === "u") {
-                for (let i = 0; i < 4; i++) {
+              index ++;
+              if (char === 'u') {
+                for (let i = 0; i < 4; i ++) {
                   const curChar = input.charAt(index);
                   if (curChar && qx.tool.utils.json.Tokenizer.isHex(curChar)) {
                     buffer += curChar;
-                    index++;
+                    index ++;
                   } else {
                     return null;
                   }
@@ -477,9 +467,9 @@ qx.Class.define("qx.tool.utils.json.Tokenizer", {
 
         switch (state) {
           case numberStates._START_: {
-            if (char === "-") {
+            if (char === '-') {
               state = numberStates.MINUS;
-            } else if (char === "0") {
+            } else if (char === '0') {
               passedValueIndex = index + 1;
               state = numberStates.ZERO;
             } else if (qx.tool.utils.json.Tokenizer.isDigit1to9(char)) {
@@ -492,7 +482,7 @@ qx.Class.define("qx.tool.utils.json.Tokenizer", {
           }
 
           case numberStates.MINUS: {
-            if (char === "0") {
+            if (char === '0') {
               passedValueIndex = index + 1;
               state = numberStates.ZERO;
             } else if (qx.tool.utils.json.Tokenizer.isDigit1to9(char)) {
@@ -505,7 +495,7 @@ qx.Class.define("qx.tool.utils.json.Tokenizer", {
           }
 
           case numberStates.ZERO: {
-            if (char === ".") {
+            if (char === '.') {
               state = numberStates.POINT;
             } else if (qx.tool.utils.json.Tokenizer.isExp(char)) {
               state = numberStates.EXP;
@@ -518,7 +508,7 @@ qx.Class.define("qx.tool.utils.json.Tokenizer", {
           case numberStates.DIGIT: {
             if (qx.tool.utils.json.Tokenizer.isDigit(char)) {
               passedValueIndex = index + 1;
-            } else if (char === ".") {
+            } else if (char === '.') {
               state = numberStates.POINT;
             } else if (qx.tool.utils.json.Tokenizer.isExp(char)) {
               state = numberStates.EXP;
@@ -550,7 +540,7 @@ qx.Class.define("qx.tool.utils.json.Tokenizer", {
           }
 
           case numberStates.EXP: {
-            if (char === "+" || char === "-") {
+            if (char === '+' || char === '-') {
               state = numberStates.EXP_DIGIT_OR_SIGN;
             } else if (qx.tool.utils.json.Tokenizer.isDigit(char)) {
               passedValueIndex = index + 1;
@@ -571,7 +561,7 @@ qx.Class.define("qx.tool.utils.json.Tokenizer", {
           }
         }
 
-        index++;
+        index ++;
       }
 
       if (passedValueIndex > 0) {

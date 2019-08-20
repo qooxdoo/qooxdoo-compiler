@@ -156,7 +156,6 @@ qx.Class.define("qx.tool.config.Abstract", {
     /**
      * Validates the given data against the schema that the model has been
      * initialized with. Throws if not valid.
-     *
      * @param data The config data
      * @private
      */
@@ -181,8 +180,7 @@ qx.Class.define("qx.tool.config.Abstract", {
 
     /**
      * The path to the configuration file
-     *
-     * @return {string}
+     * @return {String}
      */
     getDataPath() {
       return path.join(this.getBaseDir(), this.getFileName());
@@ -197,7 +195,6 @@ qx.Class.define("qx.tool.config.Abstract", {
 
     /**
      * Returns the part of the schema URI that is identical for all paths
-     *
      * @private
      */
     _getSchemaFileName() {
@@ -208,8 +205,7 @@ qx.Class.define("qx.tool.config.Abstract", {
 
     /**
      * Path to the schema json file in the file system
-     *
-     * @return {string}
+     * @return {String}
      */
     /* @ignore qx.tool.$$resourceDir */
     getSchemaPath() {
@@ -218,8 +214,7 @@ qx.Class.define("qx.tool.config.Abstract", {
 
     /**
      * Returns the URL of the JSON schema
-     *
-     * @return {string}
+     * @return {String}
      */
     getSchemaUri() {
       return qx.tool.config.Abstract.schemaBaseUrl + "/" + this._getSchemaFileName();
@@ -227,8 +222,7 @@ qx.Class.define("qx.tool.config.Abstract", {
 
     /**
      * Returns the json-schema object
-     *
-     * @return {object}
+     * @return {Object}
      */
     getSchema() {
       return this.__schema;
@@ -236,8 +230,7 @@ qx.Class.define("qx.tool.config.Abstract", {
 
     /**
      * Returns true if the config file exists, false if not
-     *
-     * @return {Promise<boolean>}
+     * @return {Promise<Boolean>}
      */
     async exists() {
       return await fs.existsAsync(this.getDataPath());
@@ -253,7 +246,7 @@ qx.Class.define("qx.tool.config.Abstract", {
      * backwards-compatibility). Returns the instance for chaining. To reload
      * the data, set the "loaded" property to false first.
      *
-     * @param {object|undefined} data The json data
+     * @param {Object|undefined} data The json data
      * @return {qx.tool.config.Abstract} Returns the instance for chaining
      */
     async load(data=undefined) {
@@ -313,11 +306,10 @@ qx.Class.define("qx.tool.config.Abstract", {
 
     /**
      * Migrates the data to a new schema if possible or throws otherwise
-     *
-     * @param {object} data
-     * @param {string} dataVersion (Semver)
-     * @param {string} schemaVersion (Semver)
-     * @return {object}
+     * @param {Object} data
+     * @param {String} dataVersion (Semver)
+     * @param {String} schemaVersion (Semver)
+     * @return {Object}
      * @private
      */
     _migrateData(data, dataVersion, schemaVersion) {
@@ -341,7 +333,6 @@ qx.Class.define("qx.tool.config.Abstract", {
 
     /**
      * Returns a value from the configuration map
-     *
      * @param prop_path {String|Array} The property path. See https://github.com/jonschlinkert/get-value#usage
      * @param options {*?} See https://github.com/jonschlinkert/get-value#options
      * @return {*}
@@ -353,7 +344,6 @@ qx.Class.define("qx.tool.config.Abstract", {
     /**
      * Sets a value from the configuration map and validates the result against
      * the json schema of the model
-     *
      * @param prop_path {String|Array} The property path. See https://github.com/jonschlinkert/set-value#usage
      * @param value {*}
      * @param options {*?} See https://github.com/jonschlinkert/get-value#options
@@ -380,7 +370,6 @@ qx.Class.define("qx.tool.config.Abstract", {
 
     /**
      * Unsets a property from the configuration map and validates the model
-     *
      * @param prop_path {String|Array} The property path. See https://github.com/jonschlinkert/set-value#usage
      * @param options {*?} See https://github.com/jonschlinkert/get-value#options
      * @return {qx.tool.config.Abstract} Returns the instance for chaining
@@ -402,7 +391,6 @@ qx.Class.define("qx.tool.config.Abstract", {
 
     /**
      * Transforms a value at a given property path, using a function.
-     *
      * @param prop_path {String|Array}
      *    The property path. See https://github.com/jonschlinkert/set-value#usage
      * @param transformFunc {Function}
@@ -424,7 +412,6 @@ qx.Class.define("qx.tool.config.Abstract", {
      * Given a map containing property paths as keys and arbitrary values,
      * return the map with values that are true if the property path exists
      * and false otherwise.
-     *
      * @param propOrMap
      * @return {boolean|*}
      */
@@ -452,7 +439,6 @@ qx.Class.define("qx.tool.config.Abstract", {
 
     /**
      * Save the data to the config file
-     *
      * @return {Promise<void>}
      */
     async save() {

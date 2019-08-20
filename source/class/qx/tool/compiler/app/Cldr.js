@@ -65,9 +65,6 @@ qx.Class.define("qx.tool.compiler.app.Cldr", {
       return readFile(path.join(cldrPath, data_path, locale + ".xml"), {encoding: "utf-8"})
         .then(data => util.promisifyThis(parser.parseString, parser, data))
         .then(src => {
-          /**
-           *
-           */
           function find(arr, name, value, cb) {
             if (!arr) {
               return null;
@@ -84,9 +81,6 @@ qx.Class.define("qx.tool.compiler.app.Cldr", {
             return null;
           }
 
-          /**
-           *
-           */
           function get(path, node) {
             if (node === undefined) {
               node = src;
@@ -118,9 +112,6 @@ qx.Class.define("qx.tool.compiler.app.Cldr", {
             return node;
           }
 
-          /**
-           *
-           */
           function getValue(path, node) {
             let result = get(path, node);
             if (result && typeof result != "string" && result["_"] !== undefined) {
@@ -137,9 +128,6 @@ qx.Class.define("qx.tool.compiler.app.Cldr", {
           cldr.quotationEnd = get("ldml.delimiters[0].quotationEnd[0]");
           cldr.quotationStart = get("ldml.delimiters[0].quotationStart[0]");
 
-          /**
-           *
-           */
           function getText(row) {
             if (typeof row == "string") {
               return row; 
@@ -150,9 +138,6 @@ qx.Class.define("qx.tool.compiler.app.Cldr", {
             return "";
           }
 
-          /**
-           *
-           */
           function getDateFormatPattern(row) {
             return row.dateFormat[0].pattern[0];
           }
@@ -249,9 +234,6 @@ qx.Class.define("qx.tool.compiler.app.Cldr", {
               }
             });
 
-            /**
-             *
-             */
             function getTimeFormatPattern(row) {
               return row.timeFormat.pattern;
             }
@@ -267,9 +249,6 @@ qx.Class.define("qx.tool.compiler.app.Cldr", {
           cldr.cldr_number_group_separator = getValue("ldml.numbers[0].symbols[0].group[0]");// ",";
           cldr.cldr_number_percent_format = getValue("ldml.numbers[0].percentFormats[0].percentFormatLength[0].percentFormat[0].pattern[0]");// "#,##0%";
 
-          /**
-           *
-           */
           function getDisplayName(row) {
             if (qx.lang.Type.isArray(row.displayName)) {
               return row.displayName.map(elem => getText(elem)); 

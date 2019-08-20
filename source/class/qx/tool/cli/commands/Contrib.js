@@ -30,7 +30,6 @@ qx.Class.define("qx.tool.cli.commands.Contrib", {
   statics: {
     /**
      * The yargs command data
-     *
      * @return {{}}
      */
     getYargsCommand: function() {

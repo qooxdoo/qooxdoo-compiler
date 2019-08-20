@@ -190,9 +190,6 @@ qx.Class.define("qx.tool.utils.Promisify", {
     eachOfSeries: function(coll, fn) {
       let keys = Object.keys(coll);
       let index = 0;
-      /**
-       *
-       */
       function next() {
         if (index == keys.length) {
           return qx.Promise.resolve();

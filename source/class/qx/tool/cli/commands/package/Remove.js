@@ -118,7 +118,6 @@ qx.Class.define("qx.tool.cli.commands.package.Remove", {
 
     /**
      * Removes installed applications
-     *
      * @param uri
      * @return {Promise<void>}
      * @private

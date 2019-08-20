@@ -35,8 +35,7 @@ qx.Class.define("qx.tool.cli.commands.package.List", {
 
     /**
      * Returns the yargs command data
-     *
-     * @return {object}
+     * @return {Object}
      */
     getYargsCommand: function() {
       return {
@@ -310,9 +309,8 @@ qx.Class.define("qx.tool.cli.commands.package.List", {
 
     /**
      * Create compatibilty indexes of repositories and the contained libraries
-     *
      * @param qooxdoo_version {String} The qooxdoo version to check compatibiity with
-     * @return {number} The number of repositories containing compatible libraries
+     * @return {Number} The number of repositories containing compatible libraries
      */
     __createIndexes : async function(qooxdoo_version) {
       if (this.argv.installed) {

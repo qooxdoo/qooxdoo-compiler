@@ -40,7 +40,6 @@ qx.Class.define("qx.tool.compiler.targets.SourceCodeCopier", {
 
   /**
    * Constructor
-   *
    * @param outputFilename {String} the destination file for combined output
    */
   construct(outputFilename) {
@@ -108,7 +107,6 @@ qx.Class.define("qx.tool.compiler.targets.SourceCodeCopier", {
 
     /**
      * Helper method to write output
-     *
      * @param str {String} data to write
      */
     __write(str) {

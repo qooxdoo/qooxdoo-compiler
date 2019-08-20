@@ -44,7 +44,6 @@ qx.Class.define("qx.tool.cli.ConfigDb", {
 
     /**
      * Apply for path property
-     *
      * @returns
      */
     _applyPath: async function(value, oldValue) {
@@ -83,8 +82,8 @@ qx.Class.define("qx.tool.cli.ConfigDb", {
      * along the way.  If `path` is not returned, then the root object is returned
      *
      * @param path {String?} optional path into the database; note array subscripts are not supported
-     * @param defaultValue {?object} optional value to assign if it does not exist.
-     * @return {?object} the value
+     * @param defaultValue {Object?} optional value to assign if it does not exist.
+     * @return {Object?} the value
      */
     db: function(path, defaultValue) {
       if (path) {

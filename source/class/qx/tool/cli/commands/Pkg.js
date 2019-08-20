@@ -27,7 +27,6 @@ qx.Class.define("qx.tool.cli.commands.Pkg", {
   statics: {
     /**
      * The yargs command data
-     *
      * @return {{}}
      */
     getYargsCommand: function() {

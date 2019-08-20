@@ -124,7 +124,6 @@ qx.Class.define("qx.tool.compiler.app.Library", {
 
     /**
      * Transform for rootDir; converts it to an absolute path
-     *
      * @param value
      * @returns {*}
      * @private
@@ -138,7 +137,6 @@ qx.Class.define("qx.tool.compiler.app.Library", {
     /**
      * Loads the Manifest.json from the directory and uses it to configure
      * properties
-     *
      * @param rootDir
      * @param cb
      */
@@ -164,9 +162,6 @@ qx.Class.define("qx.tool.compiler.app.Library", {
           t.setNamespace(data.provides.namespace);
           t.setVersion(data.info.version);
 
-          /**
-           *
-           */
           function fixLibraryPath(dir) {
             let d = path.resolve(rootDir, dir);
             if (!fs.existsSync(d)) {
@@ -234,15 +229,11 @@ qx.Class.define("qx.tool.compiler.app.Library", {
      * Scans the filing system looking for classes; there are occasions (ie Qooxdoo's qxWeb module)
      * where the class name does not comply with the namespace, this method is used to find those
      * files and also to prepopulate the known symbols list
-     *
      * @param cb(err, classes) returns an array of class names
      */
     scanForClasses: function(cb) {
       var t = this;
       var classes = [];
-      /**
-       *
-       */
       function scanDir(folder, packageName, cb) {
         fs.readdir(folder, function(err, filenames) {
           if (err) {
@@ -330,8 +321,7 @@ qx.Class.define("qx.tool.compiler.app.Library", {
 
     /**
      * Detects the type of a symbol, "class", "resource", "package", or null if not found
-     *
-     * @param {string} name
+     * @param {String} name
      * @return {{symbolType,name,className?}}
      */
     getSymbolType: function(name) {
@@ -373,7 +363,7 @@ qx.Class.define("qx.tool.compiler.app.Library", {
      * Returns the original extension of the class file that implemented the
      * given class name.
      *
-     * @param {string} className
+     * @param {String} className
      */
     getSourceFileExtension: function(className) {
       return this.__sourceFileExtensions[className];
@@ -382,8 +372,8 @@ qx.Class.define("qx.tool.compiler.app.Library", {
     /**
      * Returns the full filename for the file within this library
      *
-     * @param filename {string} the filename relative to this library
-     * @return {string} the full filename
+     * @param filename {String} the filename relative to this library
+     * @return {String} the full filename
      */
     getFilename: function(filename) {
       return path.join(this.getRootDir(), this.getSourcePath(), filename);
@@ -392,8 +382,8 @@ qx.Class.define("qx.tool.compiler.app.Library", {
     /**
      * Returns the full filename for the file within this library's resources
      *
-     * @param filename {string} the filename relative to this library
-     * @return {string} the full filename
+     * @param filename {String} the filename relative to this library
+     * @return {String} the full filename
      */
     getResourceFilename: function(filename) {
       return path.join(this.getRootDir(), this.getResourcePath(), filename);
@@ -402,8 +392,8 @@ qx.Class.define("qx.tool.compiler.app.Library", {
     /**
      * Returns the full filename for the file within this library's theme
      *
-     * @param filename {string} the filename relative to this library
-     * @return {string} the full filename
+     * @param filename {String} the filename relative to this library
+     * @return {String} the full filename
      */
     getThemeFilename: function(filename) {
       return path.join(this.getRootDir(), this.getThemePath(), filename);

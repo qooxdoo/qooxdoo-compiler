@@ -28,7 +28,7 @@
 
 
 
-qx.Class.define("qx.tool.utils.json.Parser", {
+qx.Class.define("qx.tool.utils.json.Parser",{
   statics: {
     literals: [
       qx.tool.utils.json.Tokenizer.tokenTypes.STRING,
@@ -82,9 +82,8 @@ qx.Class.define("qx.tool.utils.json.Parser", {
     comment(value, name, token) {
       if (token.comments !== undefined) {
         var valueComments = value[name];
-        if (valueComments === undefined) {
-          valueComments = value[name] = []; 
-        }
+        if (valueComments === undefined)
+          valueComments = value[name] = [];
         token.comments.forEach(function(comment) {
           valueComments.push({
             loc: comment.loc,
@@ -101,7 +100,7 @@ qx.Class.define("qx.tool.utils.json.Parser", {
       // object: LEFT_BRACE (property (COMMA property)*)? RIGHT_BRACE
       let startToken;
       let object = {
-        type: "object",
+        type: 'object',
         children: []
       };
       let state = objectStates._START_;
@@ -144,11 +143,11 @@ qx.Class.define("qx.tool.utils.json.Parser", {
               return {
                 value: object
               };
-            } 
-            const property = qx.tool.utils.json.Parser.parseProperty(input, tokenizer, settings);
-            object.children.push(property.value);
-            state = objectStates.PROPERTY;
-            
+            } else {
+              const property = qx.tool.utils.json.Parser.parseProperty(input, tokenizer, settings);
+              object.children.push(property.value);
+              state = objectStates.PROPERTY;
+            }
             break;
           }
 
@@ -222,7 +221,7 @@ qx.Class.define("qx.tool.utils.json.Parser", {
       // property: STRING COLON value
       let startToken;
       let property = {
-        type: "property",
+        type: 'property',
         key: null,
         value: null
       };
@@ -235,7 +234,7 @@ qx.Class.define("qx.tool.utils.json.Parser", {
           case propertyStates._START_: {
             if (token.type === tokenTypes.STRING) {
               const key = {
-                type: "identifier",
+                type: 'identifier',
                 value: token.value
               };
               if (settings.verbose) {
@@ -256,8 +255,8 @@ qx.Class.define("qx.tool.utils.json.Parser", {
           case propertyStates.KEY: {
             if (token.type === tokenTypes.COLON) {
               if (settings.verbose) {
-                qx.tool.utils.json.Parser.comment(property.key, "trailingComments", token);
-                property.colonToken = token;
+                  qx.tool.utils.json.Parser.comment(property.key, "trailingComments", token);
+                  property.colonToken = token;
               }
               state = propertyStates.COLON;
               tokenizer.next();
@@ -295,6 +294,7 @@ qx.Class.define("qx.tool.utils.json.Parser", {
               value: property
             };
           }
+
         }
       }
     },
@@ -306,7 +306,7 @@ qx.Class.define("qx.tool.utils.json.Parser", {
       // array: LEFT_BRACKET (value (COMMA value)*)? RIGHT_BRACKET
       let startToken;
       let array = {
-        type: "array",
+        type: 'array',
         children: []
       };
       let state = arrayStates._START_;
@@ -350,11 +350,11 @@ qx.Class.define("qx.tool.utils.json.Parser", {
               return {
                 value: array
               };
-            } 
-            let value = qx.tool.utils.json.Parser.parseValue(input, tokenizer, settings);
-            array.children.push(value.value);
-            state = arrayStates.VALUE;
-            
+            } else {
+              let value = qx.tool.utils.json.Parser.parseValue(input, tokenizer, settings);
+              array.children.push(value.value);
+              state = arrayStates.VALUE;
+            }
             break;
           }
 
@@ -417,7 +417,7 @@ qx.Class.define("qx.tool.utils.json.Parser", {
 
       if (isLiteral) {
         const literal = {
-          type: "literal",
+          type: 'literal',
           value: token.value,
           rawValue: input.substring(token.loc.start.offset, token.loc.end.offset)
         };
@@ -429,7 +429,7 @@ qx.Class.define("qx.tool.utils.json.Parser", {
         tokenizer.next();
         return {
           value: literal
-        };
+        }
       }
 
       return null;
@@ -440,24 +440,25 @@ qx.Class.define("qx.tool.utils.json.Parser", {
       const token = tokenizer.token();
 
       const value = (
-        qx.tool.utils.json.Parser.parseLiteral(...arguments) ||
-        qx.tool.utils.json.Parser.parseObject(...arguments) ||
-        qx.tool.utils.json.Parser.parseArray(...arguments)
+        qx.tool.utils.json.Parser.parseLiteral(...arguments)
+        || qx.tool.utils.json.Parser.parseObject(...arguments)
+        || qx.tool.utils.json.Parser.parseArray(...arguments)
       );
 
       if (value) {
         return value;
-      } 
-      qx.tool.utils.json.Parser.error(
-        qx.tool.utils.json.Parser.unexpectedToken(
-          input.substring(token.loc.start.offset, token.loc.end.offset),
+      } else {
+        qx.tool.utils.json.Parser.error(
+          qx.tool.utils.json.Parser.unexpectedToken(
+            input.substring(token.loc.start.offset, token.loc.end.offset),
+            token.loc.start.line,
+            token.loc.start.column
+          ),
+          input,
           token.loc.start.line,
           token.loc.start.column
-        ),
-        input,
-        token.loc.start.line,
-        token.loc.start.column
-      );
+        );
+      }
     },
 
     parseToAst(input, settings) {
@@ -477,18 +478,19 @@ qx.Class.define("qx.tool.utils.json.Parser", {
           result.tokenizer = tokenizer;
         }
         return result;
-      } 
-      const token = tokenizer.next();
-      qx.tool.utils.json.Parser.error(
-        qx.tool.utils.json.Parser.unexpectedToken(
-          input.substring(token.loc.start.offset, token.loc.end.offset),
+      } else {
+        const token = tokenizer.next();
+        qx.tool.utils.json.Parser.error(
+          qx.tool.utils.json.Parser.unexpectedToken(
+            input.substring(token.loc.start.offset, token.loc.end.offset),
+            token.loc.start.line,
+            token.loc.start.column
+          ),
+          input,
           token.loc.start.line,
           token.loc.start.column
-        ),
-        input,
-        token.loc.start.line,
-        token.loc.start.column
-      );
+        );
+      }
     },
     
     parse(input, settings) {
@@ -497,7 +499,7 @@ qx.Class.define("qx.tool.utils.json.Parser", {
     
     
     unexpectedEnd() {
-      return "Unexpected end of JSON input";
+      return 'Unexpected end of JSON input';
     },
     
     unexpectedToken(token, line, column) {
@@ -505,22 +507,19 @@ qx.Class.define("qx.tool.utils.json.Parser", {
     },
     
     error(message, source, line, column) {
-      /**
-       *
-       */
       function showCodeFragment(source, linePosition, columnPosition) {
         const lines = source.split(/\n|\r\n?|\f/);
         const line = lines[linePosition - 1];
-        const marker = new Array(columnPosition).join(" ") + "^";
+        const marker = new Array(columnPosition).join(' ') + '^';
 
-        return line + "\n" + marker;
+        return line + '\n' + marker;
       }
 
       class ParseError extends SyntaxError {
         constructor(message, source, linePosition, columnPosition) {
-          const fullMessage = linePosition ?
-            message + "\n" + showCodeFragment(source, linePosition, columnPosition) :
-            message;
+          const fullMessage = linePosition
+            ? message + '\n' + showCodeFragment(source, linePosition, columnPosition)
+            : message;
           super(fullMessage);
           this.rawMessage = message;
         }

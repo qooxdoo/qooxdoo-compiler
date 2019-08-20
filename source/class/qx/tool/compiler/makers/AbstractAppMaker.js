@@ -65,7 +65,6 @@ qx.Class.define("qx.tool.compiler.makers.AbstractAppMaker", {
 
     /**
      * Apply for target property
-     *
      * @param value
      * @param oldValue
      * @private
@@ -84,7 +83,6 @@ qx.Class.define("qx.tool.compiler.makers.AbstractAppMaker", {
 
     /**
      * Apply for writeAllTranslations
-     *
      * @param value
      * @param oldValue
      * @private
@@ -97,7 +95,6 @@ qx.Class.define("qx.tool.compiler.makers.AbstractAppMaker", {
 
     /**
      * Apply for locales property
-     *
      * @param value
      * @param oldValue
      * @private

@@ -108,9 +108,6 @@ qx.Class.define("qx.tool.cli.commands.Run", {
       
       let target = maker.getTarget();
       
-      /**
-       *
-       */
       function kill(parentId) {
         return new qx.Promise((resolve, reject) => {
           psTree(parentId, function (err, children) {

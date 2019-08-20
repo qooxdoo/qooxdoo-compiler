@@ -51,7 +51,7 @@ qx.Class.define("qx.tool.cli.LogAppender", {
      *
      * @param entry
      *          {Map} The entry to process
-     * @return {string} the formatted log entry
+     * @return {String} the formatted log entry
      */
     toText: function(entry) {
       return this.toTextArray(entry).join(" ");
@@ -104,7 +104,7 @@ qx.Class.define("qx.tool.cli.LogAppender", {
      *          {Integer} Current offset value
      * @param length
      *          {Integer?6} Refine the length
-     * @return {string} Padded string
+     * @return {String} Padded string
      */
     formatOffset: function(offset, length) {
       var str = offset.toString();

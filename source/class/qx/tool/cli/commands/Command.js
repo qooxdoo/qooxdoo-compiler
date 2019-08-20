@@ -85,7 +85,7 @@ qx.Class.define("qx.tool.cli.commands.Command", {
      * 2) if a compile.json file exists in the current dir, it is assumed to be the application dir
      * 3) if not, the subdir demo/default is checked for a compile.json file.
      *
-     * @return {Promise<object>} A promise that resolves to a map containing the following keys:
+     * @return {Promise<Object>} A promise that resolves to a map containing the following keys:
      * 'libraries': an array of maps containing a 'path' property with a relative path to a library folder,
      * 'applications': an array of maps containing a 'path' property with a relative path to an
      * application folder. If no project data can be determined, resolves to an empty map.
@@ -109,7 +109,6 @@ qx.Class.define("qx.tool.cli.commands.Command", {
     /**
      * Returns the path to the current library. If the current directory contains several libraries,
      * the first one found is returned.
-     *
      * @throws {Error} Throws an error if no library can be found.
      * @return {Promise<String>)} A promise that resolves with the absolute path to the library
      */
@@ -125,9 +124,8 @@ qx.Class.define("qx.tool.cli.commands.Command", {
      * Returns the path to the current application, depending on the current
      * working directory. If a directory contains several applications, the first one found is
      * returned.
-     *
      * @throws {Error} Throws an error if no application can be found.
-     * @return {Promise<string>} A promise that resolves with the absolute path to the application
+     * @return {Promise<String>} A promise that resolves with the absolute path to the application
      */
     getApplicationPath: async function() {
       let {applications} = await this.getProjectData();
@@ -139,10 +137,9 @@ qx.Class.define("qx.tool.cli.commands.Command", {
 
     /**
      * Return the content of a json file in the library as an object.
-     *
-     * @param {string} filePath absolute path to the file
+     * @param {String} filePath absolute path to the file
      * @throws {Error} Throws if file cannot be parsed.
-     * @return {Promise<object>}
+     * @return {Promise<Object>}
      * @todo similar to qx.tool.utils.Json.parseJson()
      */
     parseJsonFile : async function(filePath) {
@@ -158,8 +155,7 @@ qx.Class.define("qx.tool.cli.commands.Command", {
 
     /**
      * Returns the absolute path to the qooxdoo framework used by the current project
-     *
-     * @return {Promise<string>} Promise that resolves with the path {String}
+     * @return {Promise<String>} Promise that resolves with the path {String}
      */
     getAppQxPath : async function() {
       if (!await fs.existsAsync(path.join(process.cwd(), qx.tool.config.Compile.config.fileName))) {
@@ -192,7 +188,6 @@ qx.Class.define("qx.tool.cli.commands.Command", {
 
     /**
      * Returns a promise that resolves to the path to the qooxdoo library
-     *
      * @return {Promise<*|never|string>}
      */
     getGlobalQxPath: async function() {
@@ -218,8 +213,7 @@ qx.Class.define("qx.tool.cli.commands.Command", {
     /**
      * Returns the absolute path to the qooxdoo framework used by the current project, unless
      * the user provided a CLI option "qxpath", in which case this value is returned.
-     *
-     * @return {Promise<string>} Promise that resolves with the absolute path
+     * @return {Promise<String>} Promise that resolves with the absolute path
      */
     getUserQxPath : async function() {
       let qxpath = await this.getAppQxPath();
@@ -228,9 +222,8 @@ qx.Class.define("qx.tool.cli.commands.Command", {
 
     /**
      * Returns the version of the qooxdoo framework used by the current project
-     *
      * @throws {Error} If the version cannot be determined
-     * @return {Promise<string>} Promise that resolves with the version string
+     * @return {Promise<String>} Promise that resolves with the version string
      */
     getUserQxVersion : async function() {
       let qxpath = await this.getUserQxPath();
@@ -240,9 +233,8 @@ qx.Class.define("qx.tool.cli.commands.Command", {
 
     /**
      * Given the path to a library folder, returns the library version from its manifest
-     *
-     * @param {string} libPath
-     * @return {string} Version
+     * @param {String} libPath
+     * @return {String} Version
      */
     getLibraryVersion : async function(libPath) {
       let manifestPath = path.join(libPath, qx.tool.config.Manifest.config.fileName);
@@ -263,10 +255,9 @@ qx.Class.define("qx.tool.cli.commands.Command", {
      * Awaitable wrapper around child_process.spawn.
      * Runs a command in a separate process. The output of the command
      * is ignored. Throws when the exit code is not 0.
-     *
-     * @param  {string} cmd Name of the command
+     * @param  {String} cmd Name of the command
      * @param  {Array} args Array of arguments to the command
-     * @return {Promise<number>} A promise that resolves with the exit code
+     * @return {Promise<Number>} A promise that resolves with the exit code
      */
     run : function(cmd, args) {
       let opts = {env: process.env};
@@ -298,9 +289,8 @@ qx.Class.define("qx.tool.cli.commands.Command", {
     /**
      * Awaitable wrapper around child_process.exec
      * Executes a command and return its result wrapped in a Promise.
-     *
      * @param cmd {String} Command with all parameters
-     * @return {Promise<string>} Promise that resolves with the result
+     * @return {Promise<String>} Promise that resolves with the result
      */
     exec : function(cmd) {
       return new Promise((resolve, reject) => {
@@ -318,8 +308,7 @@ qx.Class.define("qx.tool.cli.commands.Command", {
 
     /**
      * Returns the absolute path to the tempate directory
-     *
-     * @return {string}
+     * @return {String}
      */
     getTemplateDir : function() {
       return qx.tool.cli.commands.Command.TEMPLATE_DIR;
@@ -327,8 +316,7 @@ qx.Class.define("qx.tool.cli.commands.Command", {
 
     /**
      * Returns the absolute path to the node_module directory
-     *
-     * @return {string}
+     * @return {String}
      * not used
      */
     getNodeModuleDir : function() {
@@ -341,12 +329,9 @@ qx.Class.define("qx.tool.cli.commands.Command", {
      * actual, full option name.
      *
      * @param option {String} the name of the option, eg "listen-port"
-     * @return {boolean}
+     * @return {Boolean}
      */
     isExplicitArg(option) {
-      /**
-       *
-       */
       function searchForOption(option) {
         return process.argv.indexOf(option) > -1;
       }
@@ -356,7 +341,6 @@ qx.Class.define("qx.tool.cli.commands.Command", {
     /**
      * Given an array of [newPath,oldPath], return those array which need to be
      * renamed.
-     *
      * @param fileList {[]}
      * @return []
      */
@@ -372,12 +356,11 @@ qx.Class.define("qx.tool.cli.commands.Command", {
 
     /**
      * Migrate files/schemas or announces the migration.
-     *
      * @param {[]} fileList
      *    Array containing arrays of [new name, old name]
      * @param {[]} replaceInFilesArr
      *    Optional array containing objects compatible with https://github.com/adamreisnz/replace-in-file
-     * @param {boolean} annouceOnly
+     * @param {Boolean} annouceOnly
      *    If true, annouce the migration. If false (default), just apply it.
      * @private
      */

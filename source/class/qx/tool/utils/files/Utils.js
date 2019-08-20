@@ -60,7 +60,6 @@ qx.Class.define("qx.tool.utils.files.Utils", {
     /**
      * Synchronises two files or folders; files are copied from/to but only if their
      * modification time or size has changed.
-     *
      * @param from {String} path to copy from
      * @param to {String} path to copy to
      * @param filter {Function?} optional filter method to validate filenames before sync
@@ -69,9 +68,6 @@ qx.Class.define("qx.tool.utils.files.Utils", {
     sync: function(from, to, filter) {
       var t = this;
 
-      /**
-       *
-       */
       function copy(statFrom, statTo) {
         if (statFrom.isDirectory()) {
           var p;
@@ -120,7 +116,6 @@ qx.Class.define("qx.tool.utils.files.Utils", {
 
     /**
      * Copies a file
-     *
      * @param from {String} path to copy from
      * @param to {String} path to copy to
      * @param cb(err) {Function}
@@ -223,7 +218,6 @@ qx.Class.define("qx.tool.utils.files.Utils", {
 
     /**
      * Deletes a file or directory; directories are recursively removed
-     *
      * @param name {String} file or dir to delete
      * @async
      */
@@ -242,8 +236,8 @@ qx.Class.define("qx.tool.utils.files.Utils", {
     /**
      * Normalises the path and corrects the case of the path to match what is actually on the filing system
      *
-     * @param fsPath {string} the filename to normalise
-     * @returns {string} the new path
+     * @param fsPath {String} the filename to normalise
+     * @returns {String} the new path
      * @async
      */
     correctCase: function(dir) {
@@ -268,9 +262,6 @@ qx.Class.define("qx.tool.utils.files.Utils", {
         index = 1;
       }
 
-      /**
-       *
-       */
       function bumpToNext(nextSeg) {
         index++;
         if (currentDir.length && currentDir !== "/") {
@@ -280,9 +271,6 @@ qx.Class.define("qx.tool.utils.files.Utils", {
         return next();
       }
 
-      /**
-       *
-       */
       function next() {
         if (index == segs.length) {
           if (process.platform === "win32") {

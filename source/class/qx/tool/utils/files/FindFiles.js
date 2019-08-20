@@ -48,9 +48,6 @@ qx.Class.define("qx.tool.utils.files.FindFiles", {
 
       var t = this;
 
-      /**
-       *
-       */
       function scanImpl(path, cb) {
         async.waterfall([
           function(cb) {

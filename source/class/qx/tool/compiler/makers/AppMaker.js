@@ -32,7 +32,6 @@ qx.Class.define("qx.tool.compiler.makers.AppMaker", {
 
   /**
    * Constructor
-   *
    * @param className {String|String[]} classname(s) to generate
    * @param theme {String} the theme classname
    */
@@ -53,7 +52,6 @@ qx.Class.define("qx.tool.compiler.makers.AppMaker", {
 
     /**
      * Adds an Application to be made
-     *
      * @param app
      */
     addApplication: function(app) {
@@ -62,7 +60,6 @@ qx.Class.define("qx.tool.compiler.makers.AppMaker", {
 
     /**
      * Returns the array of applications
-     *
      * @returns {Application[]}
      */
     getApplications: function() {

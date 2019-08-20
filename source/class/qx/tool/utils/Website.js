@@ -96,9 +96,6 @@ qx.Class.define("qx.tool.utils.Website", {
       }
       var unorderedPages = [];
 
-      /**
-       *
-       */
       function addPage(url, title) {
         var page = {
           url: url,
@@ -162,7 +159,6 @@ qx.Class.define("qx.tool.utils.Website", {
 
     /**
      * Generates the site with Metalsmith
-     *
      * @returns {Promise}
      */
     async generateSite() {
@@ -224,7 +220,6 @@ qx.Class.define("qx.tool.utils.Website", {
 
     /**
      * Build the development tool apps (APIViewer, Playground, Widgetbrowser, Demobrowser)
-     *
      * @return {Promise<void>}
      */
     async buildDevtools() {
