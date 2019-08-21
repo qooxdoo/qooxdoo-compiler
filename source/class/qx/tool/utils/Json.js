@@ -34,7 +34,6 @@ qx.Class.define("qx.tool.utils.Json", {
      * Parses JSON string into an object
      * @param str {String} the data to parse
      * @return {Object}
-     * @todo similar to qx.tool.cli.commands.Command.parseJsonFile()
      */
     parseJson: function(str) {
       if (str === null || !str.trim()) {
