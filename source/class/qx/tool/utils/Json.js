@@ -26,7 +26,6 @@ require("@qooxdoo/framework");
 const Ajv = require("ajv");
 const betterAjvErrors = require("better-ajv-errors");
 const fs = qx.tool.utils.Promisify.fs;
-const JsonToAst = require("json-to-ast");
 
 qx.Class.define("qx.tool.utils.Json", {
 
@@ -35,14 +34,13 @@ qx.Class.define("qx.tool.utils.Json", {
      * Parses JSON string into an object
      * @param str {String} the data to parse
      * @return {Object}
-     * @todo similar to qx.tool.cli.commands.Command.parseJsonFile()
      */
     parseJson: function(str) {
       if (str === null || !str.trim()) {
         return null;
       }
-      let ast = JsonToAst.parseToAst(str.trim());
-      return JsonToAst.astToObject(ast);
+      let ast = qx.tool.utils.json.Parser.parseToAst(str.trim());
+      return qx.tool.utils.json.Stringify.astToObject(ast);
     },
 
     /**

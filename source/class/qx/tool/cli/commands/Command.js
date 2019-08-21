@@ -25,7 +25,6 @@ const process = require("process");
 const child_process = require("child_process");
 const path = require("upath");
 const semver = require("semver");
-const JsonToAst = require("json-to-ast");
 const replace_in_file = require("replace-in-file");
 
 /**
@@ -95,7 +94,7 @@ qx.Class.define("qx.tool.cli.commands.Command", {
       let qooxdooJsonPath = path.join(process.cwd(), qx.tool.config.Registry.config.fileName);
       let data = {};
       if (await fs.existsAsync(qooxdooJsonPath)) {
-        data = await this.parseJsonFile(qooxdooJsonPath);
+        data = await qx.tool.utils.Json.loadJsonAsync(qooxdooJsonPath);
       } else {
         if (await fs.existsAsync(path.join(process.cwd(), qx.tool.config.Manifest.config.fileName))) {
           data.libraries = [{path : "."}];
@@ -137,24 +136,6 @@ qx.Class.define("qx.tool.cli.commands.Command", {
     },
 
     /**
-     * Return the content of a json file in the library as an object.
-     * @param {String} filePath absolute path to the file
-     * @throws {Error} Throws if file cannot be parsed.
-     * @return {Promise<Object>}
-     * @todo similar to qx.tool.utils.Json.parseJson()
-     */
-    parseJsonFile : async function(filePath) {
-      var data = await fs.readFileAsync(filePath, "utf8");
-      try {
-        let compileAst = JsonToAst.parseToAst(data, {verbose: true});
-        let compileJson = JsonToAst.astToObject(compileAst);
-        return compileJson;
-      } catch (e) {
-        throw new qx.tool.utils.Utils.UserError(`Cannot parse ${filePath}:` + e.message);
-      }
-    },
-
-    /**
      * Returns the absolute path to the qooxdoo framework used by the current project
      * @return {Promise<String>} Promise that resolves with the path {String}
      */
@@ -173,7 +154,7 @@ qx.Class.define("qx.tool.cli.commands.Command", {
             manifestPath = path.join(appPath, manifestPath);
           }
           manifestPath = path.join(manifestPath, qx.tool.config.Manifest.config.fileName);
-          let manifest = await this.parseJsonFile(manifestPath);
+          let manifest = await qx.tool.utils.Json.loadJsonAsync(manifestPath);
           try {
             if (manifest.provides && manifest.provides.namespace === "qx") {
               qxpath = path.dirname(manifestPath);
@@ -239,7 +220,7 @@ qx.Class.define("qx.tool.cli.commands.Command", {
      */
     getLibraryVersion : async function(libPath) {
       let manifestPath = path.join(libPath, qx.tool.config.Manifest.config.fileName);
-      let manifest = await this.parseJsonFile(manifestPath);
+      let manifest = await qx.tool.utils.Json.loadJsonAsync(manifestPath);
       let version;
       try {
         version = manifest.info.version;

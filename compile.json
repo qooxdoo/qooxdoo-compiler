@@ -85,8 +85,7 @@
         "node": true
       },
       "extends": [
-        "@qooxdoo/qx",
-        "@qooxdoo/jsdoc-disable"
+        "@qooxdoo/qx"
       ],
       "parserOptions": {
          "ecmaVersion": 2017
