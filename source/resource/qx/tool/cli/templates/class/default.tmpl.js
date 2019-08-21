@@ -50,7 +50,6 @@ qx.Class.define("${classname}",
     /** The foo static property of the class object */
     FOO : "bar"
   },  
-
   /**
    * The methods and simple properties of this class
    */
@@ -58,27 +57,31 @@ qx.Class.define("${classname}",
   {
     /**
      * First method
+     *
      * @param {String} foo The foo parameter
-     * @param {Number} bar The bar parameter
-     * @return {void} The result of the method.
+     * @param {number} bar The bar parameter
+     * @return The result of the method.
      */
-    myMethod : function(foo, bar)
-    {
+    myMethod : function(foo, bar) {
       //
     },
-    
-    /** Applies the foo property */
-    _applyFoo : function(value, old)
-    {
+
+    /** 
+     * Applies the foo property 
+     *
+     * @param {string} value new value
+     * @param {string} old the old value
+     */
+    _applyFoo : function(value, old) {
       //
     }
-  },
 
+  },
+  
   /**
    * Use for disposing objects created by class instances
    */
-  destruct : function()
-  {
+  destruct : function() {
     //
   }  
 });

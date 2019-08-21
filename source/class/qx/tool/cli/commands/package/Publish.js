@@ -55,6 +55,10 @@ qx.Class.define("qx.tool.cli.commands.package.Publish", {
             alias: "V",
             describe: "Use given version number"
           },
+          "prerelease": {
+            alias: "p",
+            describe: "Publish as a prerelease (as opposed to a stable release)"
+          },
           "quiet": {
             alias: "q",
             describe: "No output"
@@ -337,7 +341,7 @@ qx.Class.define("qx.tool.cli.commands.package.Publish", {
           name: tag,
           body: message,
           draft: false,
-          prerelease: (argv.type.indexOf("pre")>=0)
+          prerelease: Boolean(argv.prerelease)
         };
         await octokit.repos.createRelease(release_data);
         if (!argv.quiet) {

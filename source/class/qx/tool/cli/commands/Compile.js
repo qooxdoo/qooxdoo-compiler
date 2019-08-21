@@ -588,7 +588,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
       let makers = [];
       targetConfigs.forEach(targetConfig => {
         if (!targetConfig.appConfigs) {
-          qx.tool.compiler.Console.print("qx.tool.cli.compile.unusedTarget", target.type, target.index);
+          qx.tool.compiler.Console.print("qx.tool.cli.compile.unusedTarget", targetConfig.type, targetConfig.index);
           return;
         }
 
@@ -963,7 +963,10 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
      * @return {Maker}
      */
     getMakersForApp(appName) {
-      return this.__makers.filter(maker => maker.getApplication().getName() == appName);
+      return this.__makers.filter(maker => {
+        let res = maker.getApplications().find(app => app.getName() == appName);
+        return res;
+      });
     },
 
     /**
@@ -993,6 +996,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
       "qx.tool.cli.compile.makeEnds": "Applications are made"
     });
     qx.tool.compiler.Console.addMessageIds({
+      "qx.tool.cli.compile.unusedTarget": "Target type %1, index %2 is unused",
       "qx.tool.cli.compile.legacyFiles": "File %1 exists but is no longer used",
       "qx.tool.cli.compile.deprecatedCompile": "The configuration setting %1 in compile.json is deprecated",
       "qx.tool.cli.compile.deprecatedCompileSeeOther": "The configuration setting %1 in compile.json is deprecated (see %2)",

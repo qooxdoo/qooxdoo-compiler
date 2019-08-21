@@ -63,7 +63,6 @@ setup() {
   npx qx add class myapp.Window --extend=qx.ui.window.Window
   npx qx add script ../testdata/npm/script/jszip.js --rename=zip.js
   cp ../testdata/npm/application/*.js source/class/myapp
-  npx qx lint --fix --warnAsError ||  exit $?
   npx qx compile -v --clean
   node compiled/source/myapp/myapp.js
 }
