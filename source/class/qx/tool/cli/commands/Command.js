@@ -94,7 +94,7 @@ qx.Class.define("qx.tool.cli.commands.Command", {
       let qooxdooJsonPath = path.join(process.cwd(), qx.tool.config.Registry.config.fileName);
       let data = {};
       if (await fs.existsAsync(qooxdooJsonPath)) {
-        Ωdata = await qx.tool.utils.Json.loadJsonAsync(qooxdooJsonPath);
+        data = await qx.tool.utils.Json.loadJsonAsync(qooxdooJsonPath);
       } else {
         if (await fs.existsAsync(path.join(process.cwd(), qx.tool.config.Manifest.config.fileName))) {
           data.libraries = [{path : "."}];
