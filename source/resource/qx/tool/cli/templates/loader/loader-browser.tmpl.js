@@ -141,13 +141,20 @@ qx.$$loader = {
    */
   on: function(eventType, handler) {
     if (qx.$$loader.applicationHandlerReady) {
-      if (eventType === "ready") {
-        handler(null);
-      } else {
-        qx.event.Registration.addListener(window, eventType, handler.handler);
+      if (window.qx && qx.event && qx.event.handler && qx.event.handler.Application) {
+        let Application = qx.event.handler.Application.$$instance;
+        if (eventType == "ready" && Application.isApplicationReady()) {
+          handler(null);
+          return;
+        } else if (eventType == "appinitialized" && Application.isApplicationInitialized()) {
+          handler(null);
+          return;
+        }
       }
+      qx.event.Registration.addListener(window, eventType, handler);
       return;
     }
+    
     if (this.deferredEvents === null)
       this.deferredEvents = {};
     var handlers = this.deferredEvents[eventType];
@@ -164,25 +171,29 @@ qx.$$loader = {
     qx.$$loader.delayDefer = false;
     qx.$$loader.scriptLoaded = true;
     function done() {
-      var readyHandlers = [];
-      if (qx.$$loader.deferredEvents) {
-        Object.keys(qx.$$loader.deferredEvents).forEach(function(eventType) {
-          var handlers = qx.$$loader.deferredEvents[eventType];
-          handlers.forEach(function(handler) {
-            qx.event.Registration.addListener(window, eventType, handler.handler);
-            if (eventType === "ready")
-              readyHandlers.push(handler.handler);
-          });
-        });
-      }
       if (window.qx && qx.event && qx.event.handler && qx.event.handler.Application) {
+        if (qx.$$loader.deferredEvents) {
+          Object.keys(qx.$$loader.deferredEvents).forEach(function(eventType) {
+            var handlers = qx.$$loader.deferredEvents[eventType];
+            handlers.forEach(function(handler) {
+              qx.event.Registration.addListener(window, eventType, handler.handler);
+            });
+          });
+        }
+        
         qx.event.handler.Application.onScriptLoaded();
         qx.$$loader.applicationHandlerReady = true;
       } else {
+        if (qx.$$loader.deferredEvents) {
+          Object.keys(qx.$$loader.deferredEvents).forEach(function(eventType) {
+            if (eventType === "ready") {
+              qx.$$loader.deferredEvents[eventType].forEach(function(handler) {
+                handler.handler(null);
+              });
+            }
+          });
+        }
         qx.$$loader.applicationHandlerReady = true;
-        readyHandlers.forEach(function(handler) {
-          handler(null);
-        });
       }
     }
     if (qx.$$loader.splashscreen)
