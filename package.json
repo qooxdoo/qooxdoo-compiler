@@ -105,7 +105,8 @@
   },
   "engine": "node >= 8",
   "bin": {
-    "qx": "qx"
+    "qx": "qx",
+    "qx-debug": "qx-debug"
   },
   "preferGlobal": true
 }
