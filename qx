@@ -1,8 +1,4 @@
 #!/usr/bin/env node
-const spawnSync = require("child_process").spawnSync;
-const process = require("process");
-spawnSync(`node --no-warnings ${__dirname}/main.js`, process.argv.slice(2), {
-  shell: true,
-  stdio: "inherit",
-  windowsHide: true
-});
+
+require("./index");
+new qx.tool.cli.Cli().run();
