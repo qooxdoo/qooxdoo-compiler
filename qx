@@ -1,8 +1,4 @@
-#!/usr/bin/env node --max-old-space-size=8192
-const spawnSync = require("child_process").spawnSync;
-const process = require("process");
-spawnSync(`node --max-old-space-size=8192 --no-warnings ${__dirname}/main.js`, process.argv.slice(2), {
-  shell: true,
-  stdio: "inherit",
-  windowsHide: true
-});
+#!/usr/bin/env node
+
+require("./index");
+new qx.tool.cli.Cli().run();

@@ -27,7 +27,7 @@ const PromisePool = require("es6-promise-pool");
 qx.Class.define("qx.tool.utils.Promisify", {
   statics: {
     MAGIC_KEY: "__isPromisified__",
-    IGNORED_PROPS: /^(?:length|name|arguments|caller|callee|prototype|__isPromisified__)$/,
+    IGNORED_PROPS: /^(?:promises|length|name|arguments|caller|callee|prototype|__isPromisified__)$/,
 
     promisifyAll: function(target, fn) {
       Object.getOwnPropertyNames(target).forEach(key => {
