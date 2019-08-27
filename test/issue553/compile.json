@@ -22,12 +22,12 @@
     {
       "class": "issue553.ApplicationOne",
       "theme": "qx.theme.Indigo",
-      "name": "issue553"
+      "name": "issue553one"
     },
     {
       "class": "issue553.ApplicationTwo",
       "theme": "qx.theme.Indigo",
-      "name": "issue553"
+      "name": "issue553two"
     }
   ]
 }

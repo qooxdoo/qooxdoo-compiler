@@ -187,17 +187,14 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
 
     /*** fired when application writing starts */
     "writingApplications": "qx.event.type.Event",
-    
     /** fired when writing of single application starts
      *  data: app {Application}
      */
     "writingApplication": "qx.event.type.Data",
-    
     /** fired when writing of single application is written
      *  data: app {Application}
      */
     "writtenApplication": "qx.event.type.Data",
-    
     /*** fired after writing of all applications */
     "writtenApplications" :"qx.event.type.Event",
 
@@ -476,13 +473,14 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         }
       });
 
+      let allAppNames = {};
       data.applications.forEach((appConfig, index) => {
-        appConfig.index = index;
-        
-        if (appConfig.name && argvAppNames && !qx.lang.Array.contains(argvAppNames, appConfig.name)) {
-          return;
+        if (appConfig.name) {
+          if (allAppNames[appConfig.name])
+            throw new qx.tool.utils.Utils.UserError(`Multiple applications with the same name '${appConfig.name}'`);
+          allAppNames[appConfig.name] = appConfig;
         }
-        
+        appConfig.index = index;
         let appType = appConfig.type||"browser";
         let appTargetConfigs = targetConfigs.filter(targetConfig => {
           let appTypes = targetConfig["application-types"];
@@ -581,7 +579,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
             }
           });
           if (!hasExplicitDefaultApp && (targetConfig.appConfigs.length > 1)) {
-            targetConfig.defaultAppConfig = null;
+            qx.tool.compiler.Console.print("qx.tool.cli.compile.selectingDefaultApp", targetConfig.defaultAppConfig.name);
           }
         }
       });
@@ -593,6 +591,12 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
       let makers = [];
       targetConfigs.forEach(targetConfig => {
         if (!targetConfig.appConfigs) {
+          qx.tool.compiler.Console.print("qx.tool.cli.compile.unusedTarget", targetConfig.type, targetConfig.index);
+          return;
+        }
+        let appConfigs = targetConfig.appConfigs.filter(appConfig => 
+          !appConfig.name || !argvAppNames || qx.lang.Array.contains(argvAppNames, appConfig.name));
+        if (!appConfigs.length) {
           return;
         }
 
@@ -690,9 +694,6 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         let babelOptions = data.babelOptions || {};
         qx.lang.Object.mergeWith(babelOptions, targetConfig.babelOptions || {});
         maker.getAnalyser().setBabelOptions(babelOptions);
-        if (data.jsx) {
-          qx.tool.compiler.ClassFile.JSX_OPTIONS = data.jsx;
-        }
 
         var addCreatedAt = targetConfig["addCreatedAt"] || t.argv["addCreatedAt"];
         if (addCreatedAt) {
@@ -705,7 +706,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
 
 
         let allApplicationTypes = {};
-        targetConfig.appConfigs.forEach(appConfig => {
+        appConfigs.forEach(appConfig => {
           var app = appConfig.app = new qx.tool.compiler.app.Application(appConfig["class"]);
           app.setTemplatePath(t.getTemplateDir());
 
@@ -970,7 +971,10 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
      * @return {Maker}
      */
     getMakersForApp(appName) {
-      return this.__makers.filter(maker => maker.getApplication().getName() == appName);
+      return this.__makers.filter(maker => {
+        let res = maker.getApplications().find(app => app.getName() == appName);
+        return res;
+      });
     },
 
     /**
@@ -1000,6 +1004,8 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
       "qx.tool.cli.compile.makeEnds": "Applications are made"
     });
     qx.tool.compiler.Console.addMessageIds({
+      "qx.tool.cli.compile.unusedTarget": "Target type %1, index %2 is unused",
+      "qx.tool.cli.compile.selectingDefaultApp": "You have multiple applications, none of which are marked as 'default'; the first application named %1 has been chosen as the default application",
       "qx.tool.cli.compile.legacyFiles": "File %1 exists but is no longer used",
       "qx.tool.cli.compile.deprecatedCompile": "The configuration setting %1 in compile.json is deprecated",
       "qx.tool.cli.compile.deprecatedCompileSeeOther": "The configuration setting %1 in compile.json is deprecated (see %2)",
