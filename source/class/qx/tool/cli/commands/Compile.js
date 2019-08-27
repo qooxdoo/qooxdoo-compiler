@@ -327,6 +327,34 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         }
       }
 
+      this.addListener("making", evt => {
+        if (this.__gauge) {
+          this.__gauge.show("Compiling", 1);
+        } else {
+          qx.tool.compiler.Console.print("qx.tool.cli.compile.makeBegins");
+        }
+      });
+
+      this.addListener("made", evt => {
+        if (this.__gauge) {
+          this.__gauge.show("Compiling", 1);
+        } else {
+          qx.tool.compiler.Console.print("qx.tool.cli.compile.makeEnds");
+        }
+      });
+
+      this.addListener("writtenApplications", e => {
+        if (this.argv.verbose) {
+          qx.tool.compiler.Console.log("\nCompleted all applications, libraries used are:");
+          Object.values(this.__libraries).forEach(lib => qx.tool.compiler.Console.log(`   ${lib.getNamespace()} (${lib.getRootDir()})`));
+        }
+      });
+      
+      await this.__loadConfigAndStartMaking();
+    },
+    
+    async __loadConfigAndStartMaking() {
+
       var config = this.__config = await this.parse(this.argv);
       if (!config) {
         throw new qx.tool.utils.Utils.UserError("Error: Cannot find any configuration");
@@ -335,13 +363,6 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
       if (!makers || !makers.length) {
         throw new qx.tool.utils.Utils.UserError("Error: Cannot find anything to make");
       }
-
-      this.addListener("writtenApplications", e => {
-        if (this.argv.verbose) {
-          qx.tool.compiler.Console.log("\nCompleted all applications, libraries used are:");
-          Object.values(this.__libraries).forEach(lib => qx.tool.compiler.Console.log(`   ${lib.getNamespace()} (${lib.getRootDir()})`));
-        }
-      });
 
       let countMaking = 0;
       const collateDispatchEvent = evt => {
@@ -411,25 +432,15 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
             this.fireEvent("made");
           }
         });
+        watch.addListener("configChanged", async () => {
+          await watch.stop();
+          setImmediate(() => this.__loadConfigAndStartMaking());
+        });
+        let arr = [ this._compileJsFilename, this._compileJsonFilename ].filter(str => !!str);
+        watch.setConfigFilenames(arr);
 
         return p.then(() => watch.start());
       }));
-
-      this.addListener("making", evt => {
-        if (this.__gauge) {
-          this.__gauge.show("Compiling", 1);
-        } else {
-          qx.tool.compiler.Console.print("qx.tool.cli.compile.makeBegins");
-        }
-      });
-
-      this.addListener("made", evt => {
-        if (this.__gauge) {
-          this.__gauge.show("Compiling", 1);
-        } else {
-          qx.tool.compiler.Console.print("qx.tool.cli.compile.makeEnds");
-        }
-      });
     },
 
 

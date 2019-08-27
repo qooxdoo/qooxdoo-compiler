@@ -35,12 +35,16 @@ qx.Class.define("qx.tool.cli.Watch", {
       classesCompiled: 0
     };
     this.__debounceChanges = {};
+    this.__configFilenames = [];
   },
+  
   events: {
     "making": "qx.event.type.Event",
     "remaking": "qx.event.type.Event",
-    "made": "qx.event.type.Event"
+    "made": "qx.event.type.Event",
+    "configChanged": "qx.event.type.Event",
   },
+  
   members: {
     __runningPromise: null,
     __applications: null,
@@ -48,9 +52,19 @@ qx.Class.define("qx.tool.cli.Watch", {
     __maker: null,
     __stats: null,
     __making: null,
+    __stopping: false,
     __outOfDate: null,
     __timerId: null,
     __debounceChanges: null,
+    __configFilenames: null,
+    
+    async setConfigFilenames(arr) {
+      if (!arr) {
+        this.__configFilenames = [];
+      } else {
+        this.__configFilenames = arr.map(filename => path.resolve(filename));
+      }
+    },
 
     start: function() {
       if (this.__runningPromise) {
@@ -123,18 +137,20 @@ qx.Class.define("qx.tool.cli.Watch", {
       });
     },
 
-    stop: function() {
+    async stop() {
+      this.__stopping = true;
       this._watcher.close();
+      if (this.__making)
+        await this.__making;
     },
 
     __make: function() {
       if (this.__making) {
-        return;
+        return this.__making;
       }
       this.fireEvent("making");
       var t = this;
-      this.__making = true;
-      var Console =qx.tool.compiler.Console;
+      var Console = qx.tool.compiler.Console;
 
       function make() {
         Console.print("qx.tool.cli.watch.makingApplications");
@@ -142,15 +158,21 @@ qx.Class.define("qx.tool.cli.Watch", {
         t.__stats.classesCompiled = 0;
         t.__outOfDate = false;
 
-        t.__maker.make()
+        return t.__maker.make()
           .then(() => {
-            if (t.__outOfDate) {
-              setImmediate(function() {
-                Console.print("qx.tool.cli.watch.restartingMake");
-                t.fireEvent("remaking");
-                make();
-              });
+            if (t.__stopping) {
+              Console.print("qx.tool.cli.watch.makeStopping");
               return;
+            }
+            
+            if (t.__outOfDate) {
+              return new qx.Promise(resolve => {
+                setImmediate(function() {
+                  Console.print("qx.tool.cli.watch.restartingMake");
+                  t.fireEvent("remaking");
+                  make().then(resolve);
+                });
+              });
             }
 
             var analyser = t.__maker.getAnalyser();
@@ -170,21 +192,23 @@ qx.Class.define("qx.tool.cli.Watch", {
               promises.push(qx.tool.utils.files.Utils.correctCase(filename)
                 .then(filename => data.dependsOn[filename] = true));
             });
-            Promise.all(promises).then(() => {
+            return Promise.all(promises).then(() => {
               var endTime = new Date().getTime();
               Console.print("qx.tool.cli.watch.compiledClasses", t.__stats.classesCompiled, qx.tool.utils.Utils.formatTime(endTime - startTime));
-              t.__making = false;
               t.fireEvent("made");
             });
           })
+          .then(() => {
+            t.__making = null;
+          })
           .catch(err => {
             Console.print("qx.tool.cli.watch.compileFailed", err);
-            t.__making = false;
+            t.__making = null;
             t.fireEvent("made");
           });
       }
 
-      make();
+      return this.__making = make();
     },
 
     __scheduleMake: function() {
@@ -206,6 +230,11 @@ qx.Class.define("qx.tool.cli.Watch", {
 
       const handleFileChange = async () => {
         var outOfDate = false;
+        
+        if (this.__configFilenames.find(str => str == filename)) {
+          this.fireEvent("configChanged");
+          return;
+        }
   
         this.__applications.forEach(data => {
           if (data.dependsOn[filename]) {
@@ -295,6 +324,7 @@ qx.Class.define("qx.tool.cli.Watch", {
     qx.tool.compiler.Console.addMessageIds({
       "qx.tool.cli.watch.makingApplications": ">>> Making the applications...",
       "qx.tool.cli.watch.restartingMake" : ">>> Code changed during make, restarting...",
+      "qx.tool.cli.watch.makeStopping" : ">>> Not restarting make because make is stopping...",
       "qx.tool.cli.watch.compiledClasses": ">>> Compiled %1 classes in %2"
     });
     qx.tool.compiler.Console.addMessageIds({
