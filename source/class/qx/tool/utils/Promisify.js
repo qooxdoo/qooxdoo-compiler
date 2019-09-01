@@ -163,6 +163,15 @@ qx.Class.define("qx.tool.utils.Promisify", {
         });
       });
     },
+    
+    callback: function(promise, cb) {
+      if (cb) {
+        promise = promise
+          .then((...args) => cb(null, ...args))
+          .catch(err => cb(err));
+      }
+      return promise;
+    },
 
     fs: null,
 

@@ -141,9 +141,25 @@ qx.Class.define("qx.tool.cli.commands.Run", {
         debug = " --inspect";
       }
       let cmd = `node${debug} ${scriptname} ${args}`;
+      
+      let restartNeeded = true;
+      this.addListener("making", evt => {
+        restartNeeded = false;
+      });
+      
+      this.addListener("writtenApplication", evt => {
+        if (app === evt.getData()) {
+          restartNeeded = true;
+        }
+      });
+      
       /* eslint-disable @qooxdoo/qx/no-illegal-private-usage */
       this.addListener("made", async e => {
         if (this.__process) {
+          if (!restartNeeded) {
+            return;
+          }
+          
           try {
             await kill(this.__process.pid);
           } catch (ex) {
@@ -165,6 +181,7 @@ qx.Class.define("qx.tool.cli.commands.Run", {
 
         child.on("close", function(code) {
           console.log("Application has terminated");
+          this.__process = null;
         });        
         child.on("error", function(err) {
           console.error("Application has failed: " + err);

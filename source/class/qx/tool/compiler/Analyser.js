@@ -876,21 +876,32 @@ qx.Class.define("qx.tool.compiler.Analyser", {
         cb && cb(err);
         return;
       }
+
       var sourceClassFilename = qx.tool.compiler.ClassFile.getSourcePath(library, className);
       var outputClassFilename = qx.tool.compiler.ClassFile.getOutputPath(this, className);
 
-      function scanFile(stat, outputStat) {
+      const scanFile = async () => {
+        let sourceStat = await qx.tool.utils.files.Utils.safeStat(sourceClassFilename);
+        if (!sourceStat) {
+          throw new Error("Cannot find " + sourceClassFilename);
+        }
+        
         var dbClassInfo = db.classInfo[className];
-        if (dbClassInfo && outputStat) {
-          var dbMtime = null;
-          try {
-            dbMtime = dbClassInfo.mtime && new Date(dbClassInfo.mtime);
-          } catch (e) {
-          }
-          if (dbMtime && dbMtime.getTime() == stat.mtime.getTime()) {
-            if (outputStat.mtime.getTime() >= stat.mtime.getTime()) {
-              cb && cb(null, dbClassInfo);
-              return;
+        
+        if (!forceScan) {
+          let outputStat = await qx.tool.utils.files.Utils.safeStat(outputClassFilename);
+          let outputJsonStat = await qx.tool.utils.files.Utils.safeStat(outputClassFilename + "on");
+  
+          if (dbClassInfo && outputStat && outputJsonStat) {
+            var dbMtime = null;
+            try {
+              dbMtime = dbClassInfo.mtime && new Date(dbClassInfo.mtime);
+            } catch (e) {
+            }
+            if (dbMtime && dbMtime.getTime() == sourceStat.mtime.getTime()) {
+              if (outputStat.mtime.getTime() >= sourceStat.mtime.getTime()) {
+                return dbClassInfo;
+              }
             }
           }
         }
@@ -898,58 +909,24 @@ qx.Class.define("qx.tool.compiler.Analyser", {
         // Add database entry
         var oldDbClassInfo = db.classInfo[className] ? Object.assign({}, db.classInfo[className]) : null;
         dbClassInfo = db.classInfo[className] = {
-          mtime: stat.mtime,
+          mtime: sourceStat.mtime,
           libraryName: library.getNamespace()
         };
 
         // Analyse it and collect unresolved symbols and dependencies
         var classFile = new qx.tool.compiler.ClassFile(t, className, library);
         t.fireDataEvent("compilingClass", { dbClassInfo: dbClassInfo, oldDbClassInfo: oldDbClassInfo, classFile: classFile });
-        classFile.load(function(err) {
-          if (err) {
-            cb && cb(err);
-            return;
-          }
+        await qx.tool.utils.Promisify.call(cb => classFile.load(cb));
+        
+        // Save it
+        classFile.writeDbInfo(dbClassInfo);
+        t.fireDataEvent("compiledClass", { dbClassInfo: dbClassInfo, oldDbClassInfo: oldDbClassInfo, classFile: classFile });
 
-          // Save it
-          classFile.writeDbInfo(dbClassInfo);
+        // Next!
+        return dbClassInfo;
+      };
 
-          t.fireDataEvent("compiledClass", { dbClassInfo: dbClassInfo, oldDbClassInfo: oldDbClassInfo, classFile: classFile });
-
-          // Next!
-          cb && cb(null, dbClassInfo, classFile);
-        });
-      }
-
-      // Detect whether we need to rescan the file
-      fs.stat(sourceClassFilename, function(err, stat) {
-        if (err) {
-          cb && cb(err);
-          return;
-        }
-
-        fs.exists(outputClassFilename, function(exists) {
-          if (!exists || forceScan) {
-            scanFile(stat);
-            return;
-          }
-          fs.exists(outputClassFilename + "on", function(exists) {
-            if (!exists) {
-              scanFile(stat);
-              return;
-            }
-
-            fs.stat(outputClassFilename, function(err, outputStat) {
-              if (err) {
-                cb && cb(err);
-                return;
-              }
-
-              scanFile(stat, outputStat);
-            });
-          });
-        });
-      });
+      qx.tool.utils.Promisify.callback(scanFile(), cb);
     },
 
     /**

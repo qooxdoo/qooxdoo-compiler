@@ -179,7 +179,7 @@ qx.Class.define("qx.tool.compiler.resources.Asset", {
           return srcStat && srcStat.mtime.getTime() > destStat.mtime.getTime();
         });
         if (!needsIt && this.__converters) {
-          needsIt = await qx.tool.utils.Promisify.some(this.__converters, converter => converter.needsConvert(target, this, srcFilename, destFilename)); 
+          needsIt = await qx.tool.utils.Promisify.some(this.__converters, converter => converter.needsConvert(target, this, srcFilename, destFilename, this.isThemeFile())); 
         }
         if (!needsIt) {
           return;
@@ -191,7 +191,7 @@ qx.Class.define("qx.tool.compiler.resources.Asset", {
       if (this.__converters) {
         let dependsOn = [];
         if (this.__converters.length == 1) {
-          dependsOn = (await this.__converters[0].convert(target, this, srcFilename, destFilename)) || [];
+          dependsOn = (await this.__converters[0].convert(target, this, srcFilename, destFilename, this.isThemeFile())) || [];
         } else {
           let lastTempFilename = null;
           qx.tool.utils.Promisify.each(this.__converters, async (converter, index) => {
@@ -199,7 +199,7 @@ qx.Class.define("qx.tool.compiler.resources.Asset", {
             let tmpDest = index === this.__converters.length - 1 ? 
               destFilename : 
               path.join(require("os").tmpdir(), path.basename(srcFilename) + "-pass" + (index + 1) + "-");
-            let tmpDependsOn = (await converter.convert(target, this, tmpSrc, tmpDest)) || [];
+            let tmpDependsOn = (await converter.convert(target, this, tmpSrc, tmpDest, this.isThemeFile())) || [];
             tmpDependsOn.forEach(str => dependsOn.push(str));
             lastTempFilename = tmpDest;
           });

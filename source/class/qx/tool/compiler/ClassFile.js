@@ -328,7 +328,8 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
             sourceMaps: true,
             "presets": [
               [ require.resolve("@babel/preset-env"), options],
-              [ require.resolve("@babel/preset-typescript")]
+              [ require.resolve("@babel/preset-typescript") ],
+              [ require.resolve("@babel/preset-react"), qx.tool.compiler.ClassFile.JSX_OPTIONS ]
             ],
             plugins: [
               t._babelClassPlugin()
@@ -1018,7 +1019,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
             path.skip();
             path.traverse(COLLECT_CLASS_NAMES_VISITOR, { collectedClasses: t.__classMeta.mixins });
             
-          } else if (keyName == "members" || keyName == "statics") {
+          } else if (keyName == "members" || keyName == "statics" || keyName == "@") {
             t.__classMeta._topLevel = {
               path,
               keyName
@@ -1108,7 +1109,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         "qx.Interface.define": "interface",
         "qx.Bootstrap.define": "class"
       };
-
+      
       var VISITOR = {
         NewExpression: {
           enter(path) {
@@ -2264,6 +2265,20 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
     getNamespace: function(className) {
       var m = className.match(/^([^.]+)\./);
       return (m && m[1])||null;
+    },
+    
+    /**
+     * These options are passed to Babel for JSX compilation; they can be changed by the CLI etc
+     * as needed.
+     * 
+     * Note that at the moment they use a class that does not exist!  `qx.html.Jsx` is coming soon
+     * to a PR near you, but in the mean time you could use the compile.json `jsx` setting to
+     * change these to something else, eg `{ pragma: "jsx.dom", pragmaFrag: "jsx.Fragment }` and
+     * use https://github.com/alecsgone/jsx-render in your application's code. 
+     */
+    JSX_OPTIONS: {
+      "pragma": "qx.html.Jsx.createElement",
+      "pragmaFrag": "qx.html.Jsx.Fragment"
     },
 
     /**

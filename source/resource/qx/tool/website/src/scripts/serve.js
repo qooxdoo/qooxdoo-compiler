@@ -33,9 +33,11 @@ $(function() {
             targetData.apps.forEach(function(appData) {
               var $li = $("<li>");
               var $a = $("<a>");
-              $a.text(appData.title||appData.name);
+              $a.text(appData.title || appData.name);
               $a.attr("href", targetData.target.outputDir + appData.outputPath + "/index.html");
               $li.append($a);
+              if (appData.description)
+                $li.append($("<p>").text(appData.description))
               $ul.append($li);
             });
             $root.append($ul);

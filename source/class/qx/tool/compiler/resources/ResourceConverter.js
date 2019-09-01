@@ -44,10 +44,11 @@ qx.Class.define("qx.tool.compiler.resources.ResourceConverter", {
      * @param asset {Asset} the asset to copy
      * @param srcFilename {String} full path to the file
      * @param destFilename {String} full path to the destination file
+     * @param isThemeFile {Booelan} true if the file is a theme file (as opposed to a normal resource file)
      * 
      * @return {Boolean}
      */
-    async needsConvert(target, asset, srcFilename, destFilename) {
+    async needsConvert(target, asset, srcFilename, destFilename, isThemeFile) {
       return false;
     },
     
@@ -72,7 +73,7 @@ qx.Class.define("qx.tool.compiler.resources.ResourceConverter", {
      * @param destFilename {String} full path to the destination file
      * @return {String[]?} list of filenames that are required for the compilation (dependencies)
      */
-    async compile(target, asset, srcFilename, destFilename) {
+    async compile(target, asset, srcFilename, destFilename, isThemeFile) {
       throw new Error("No implementation for " + this.classname + ".convert");
     }
   }

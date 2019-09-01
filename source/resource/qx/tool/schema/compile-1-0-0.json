@@ -334,6 +334,10 @@
       "type": "object",
       "description": "Options given to @babel/preset-env. With this options the output type of babel can be defined. For details see here: <https://babeljs.io/docs/en/babel-preset-env#options>. They can be overridden per target."
     },
+    "jsx": {
+      "type": "object",
+      "description": "Options given to @babel/preset-react to change how JSX HTML is transpiled"
+    },
     "eslintConfig": {
       "type": "object",
       "description": "The syntax is the same as in in package.json. Explanation can be found here: <https://eslint.org/docs/user-guide/configuring>"
