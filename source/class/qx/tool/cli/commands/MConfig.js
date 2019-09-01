@@ -79,8 +79,9 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
         }
       }
       
-      if (await fs.existsAsync(compileJsonFilename))
+      if (await fs.existsAsync(compileJsonFilename)) {
         this._compileJsonFilename = compileJsonFilename;
+      }
       
       let CompilerApi = qx.tool.cli.api.CompilerApi;
       if (await fs.existsAsync(compileJsFilename)) {

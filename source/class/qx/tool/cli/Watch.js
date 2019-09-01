@@ -42,7 +42,7 @@ qx.Class.define("qx.tool.cli.Watch", {
     "making": "qx.event.type.Event",
     "remaking": "qx.event.type.Event",
     "made": "qx.event.type.Event",
-    "configChanged": "qx.event.type.Event",
+    "configChanged": "qx.event.type.Event"
   },
   
   members: {
@@ -140,8 +140,9 @@ qx.Class.define("qx.tool.cli.Watch", {
     async stop() {
       this.__stopping = true;
       this._watcher.close();
-      if (this.__making)
+      if (this.__making) {
         await this.__making;
+      }
     },
 
     __make: function() {
@@ -162,7 +163,7 @@ qx.Class.define("qx.tool.cli.Watch", {
           .then(() => {
             if (t.__stopping) {
               Console.print("qx.tool.cli.watch.makeStopping");
-              return;
+              return null;
             }
             
             if (t.__outOfDate) {

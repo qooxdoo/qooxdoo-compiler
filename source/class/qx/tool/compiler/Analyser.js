@@ -924,7 +924,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
 
         // Next!
         return dbClassInfo;
-      }
+      };
 
       qx.tool.utils.Promisify.callback(scanFile(), cb);
     },

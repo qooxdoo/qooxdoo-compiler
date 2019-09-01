@@ -354,7 +354,6 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
     },
     
     async _loadConfigAndStartMaking() {
-
       var config = this.__config = await this.parse(this.argv);
       if (!config) {
         throw new qx.tool.utils.Utils.UserError("Error: Cannot find any configuration");
@@ -436,7 +435,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
           await watch.stop();
           setImmediate(() => this._loadConfigAndStartMaking());
         });
-        let arr = [ this._compileJsFilename, this._compileJsonFilename ].filter(str => !!str);
+        let arr = [ this._compileJsFilename, this._compileJsonFilename ].filter(str => Boolean(str));
         watch.setConfigFilenames(arr);
 
         return p.then(() => watch.start());
@@ -487,8 +486,9 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
       let allAppNames = {};
       data.applications.forEach((appConfig, index) => {
         if (appConfig.name) {
-          if (allAppNames[appConfig.name])
+          if (allAppNames[appConfig.name]) {
             throw new qx.tool.utils.Utils.UserError(`Multiple applications with the same name '${appConfig.name}'`);
+          }
           allAppNames[appConfig.name] = appConfig;
         }
         appConfig.index = index;
