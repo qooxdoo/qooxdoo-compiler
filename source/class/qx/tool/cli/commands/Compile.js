@@ -350,10 +350,10 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         }
       });
       
-      await this.__loadConfigAndStartMaking();
+      await this._loadConfigAndStartMaking();
     },
     
-    async __loadConfigAndStartMaking() {
+    async _loadConfigAndStartMaking() {
 
       var config = this.__config = await this.parse(this.argv);
       if (!config) {
@@ -434,7 +434,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         });
         watch.addListener("configChanged", async () => {
           await watch.stop();
-          setImmediate(() => this.__loadConfigAndStartMaking());
+          setImmediate(() => this._loadConfigAndStartMaking());
         });
         let arr = [ this._compileJsFilename, this._compileJsonFilename ].filter(str => !!str);
         watch.setConfigFilenames(arr);
@@ -733,6 +733,9 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
           }
           if (appConfig.title) {
             app.setTitle(appConfig.title);
+          }
+          if (appConfig.description) {
+            app.setDescription(appConfig.description);
           }
 
           var parts = appConfig.parts || targetConfig.parts || data.parts;

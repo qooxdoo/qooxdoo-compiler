@@ -101,6 +101,16 @@ qx.Class.define("qx.tool.compiler.app.Application", {
     },
 
     /**
+     * The human readable, customer facing description of the application - it's used to list applications
+     * in `qx serve`
+     */
+    description: {
+      init: null,
+      nullable: true,
+      check: "String"
+    },
+
+    /**
      * Output path, relative to the target's output path
      */
     outputPath: {
