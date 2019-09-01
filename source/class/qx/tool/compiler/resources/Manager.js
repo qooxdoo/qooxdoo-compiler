@@ -307,7 +307,9 @@ qx.Class.define("qx.tool.compiler.resources.Manager", {
         this.warn("Cannot find library for " + srcPath);
         return null;
       }
-      srcPath = path.relative(path.join(library.getRootDir(), library.getResourcePath()), srcPath);
+
+      let resourceDir = path.join(library.getRootDir(), library.getResourcePath());
+      srcPath = path.relative(resourceDir, path.join(resourceDir, srcPath));
       let asset = this.__assets[library.getNamespace() + ":" + srcPath];
       if (!asset && create) {
         asset = new qx.tool.compiler.resources.Asset(library, srcPath, {
