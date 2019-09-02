@@ -16,6 +16,7 @@ node $NODE_OPTS test-deps.js
 node $NODE_OPTS test-config-schemas.js
 node $NODE_OPTS test-pkg-migrate.js
 node $NODE_OPTS test-commands.js
+node $NODE_OPTS test-cli.js
 popd
 
 # bats CLI tests
