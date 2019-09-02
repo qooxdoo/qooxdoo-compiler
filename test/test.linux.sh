@@ -3,6 +3,8 @@ set -x
 set -e
 NODE_OPTS="--no-warnings"
 
+npm link
+
 echo "Testing qooxdoo-compiler version $(./qx --version)"
 echo
 

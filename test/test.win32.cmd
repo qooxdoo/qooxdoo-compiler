@@ -1,5 +1,5 @@
-:: lint
-call qx lint || EXIT /B 1
+call npm link
+
 
 :: node API tests
 cd test

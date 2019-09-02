@@ -1,8 +1,10 @@
+os:
+  - linux
+  - windows
 language: node_js
 cache: false
 node_js:
-- "11.14.0"
-# - "stable" node 12 has problems with sass
+- node
 # - lts/* # once we support on-the-fly transpilation
 
 
@@ -13,9 +15,6 @@ stages:
 
 jobs:
   include:
-    - stage: test
-      name: test
-      script: .travis/test
     - stage: deploy
       name: deploy
       script: .travis/deploy_npm
