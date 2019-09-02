@@ -22,7 +22,7 @@
 
 /* eslint-disable @qooxdoo/qx/no-illegal-private-usage */
 
-var path = require("path");
+var path = require("upath");
 
 var log = require("../util").createLog("resource-manager");
 
@@ -107,6 +107,12 @@ qx.Class.define("qx.tool.compiler.resources.Manager", {
      * @return {Library?} the library, null if not found
      */
     findLibraryForResource: function(uri) {
+      // check for absolute path first, in windows c:/ is a valid absolute name
+      if (path.isAbsolute(uri)) {
+        let library = this.__analyser.getLibraries().find(lib => uri.startsWith(path.resolve(lib.getRootDir())));
+        return library || null;
+      }
+
       // Explicit library?
       var pos = uri.indexOf(":");
       if (pos !== -1) {
@@ -115,14 +121,6 @@ qx.Class.define("qx.tool.compiler.resources.Manager", {
         return library || null;
       }
       
-      // Absolute path
-      if (uri[0] == "/") {
-        let library = this.__analyser.getLibraries().find(lib => uri.startsWith(path.resolve(lib.getRootDir())));
-        if (library) {
-          return library;
-        }
-      }
-
       // Non-wildcards are a direct lookup
       // check for $ and *. less pos wins
       // fix for https://github.com/qooxdoo/qooxdoo-compiler/issues/260
@@ -190,11 +188,13 @@ qx.Class.define("qx.tool.compiler.resources.Manager", {
           unconfirmed[relFile] = true;
         }
         
+        let resPath = path.join(library.getRootDir(), library.get("resourcePath"));
         const scanResources = async resourcePath => {
           // If the root folder exists, scan it
           var rootDir = path.join(library.getRootDir(), library.get(resourcePath));
           await qx.tool.utils.files.Utils.findAllFiles(rootDir, async filename => {
-            var relFile = filename.substring(rootDir.length + 1).replace(/\\/g, "/");
+            // store resources relative to resourcePath - otherwise resources in theme will not be found
+            var relFile = path.relative(resPath, path.toUnix(filename));
             var fileInfo = resources[relFile];
             delete unconfirmed[relFile];
             if (!fileInfo) {
@@ -293,23 +293,15 @@ qx.Class.define("qx.tool.compiler.resources.Manager", {
      * @return {Asset?} the asset, if found
      */
     getAsset(srcPath, create) {
-      let pos = srcPath.indexOf(":");
-      let library = null;
-      if (pos > -1) {
-        let ns = srcPath.substring(0, pos);
-        library = this.__analyser.findLibrary(ns);
-        srcPath = srcPath.substring(pos + 1);
-      } else {
-        library = this.findLibraryForResource(srcPath);
-      }
-      
+      library = this.findLibraryForResource(srcPath);
       if (!library) {
         this.warn("Cannot find library for " + srcPath);
         return null;
       }
 
+
       let resourceDir = path.join(library.getRootDir(), library.getResourcePath());
-      srcPath = path.relative(resourceDir, path.join(resourceDir, srcPath));
+      srcPath = path.relative(resourceDir, path.isAbsolute(srcPath)?srcPath:path.join(resourceDir, srcPath));
       let asset = this.__assets[library.getNamespace() + ":" + srcPath];
       if (!asset && create) {
         asset = new qx.tool.compiler.resources.Asset(library, srcPath, {
