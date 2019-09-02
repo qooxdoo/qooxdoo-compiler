@@ -6,6 +6,7 @@ call node test-deps.js           || EXIT /B 1
 call node test-config-schemas.js || EXIT /B 1
 call node test-pkg-migrate.js    || EXIT /B 1
 call node test-commands.js       || EXIT /B 1
+call node test-cli.js            || EXIT /B 1
 @echo setup
 cd ..
 rmdir  /Q /S myapp
