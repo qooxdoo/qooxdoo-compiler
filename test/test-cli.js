@@ -26,7 +26,7 @@ test("Issue553", async assert => {
 async function runCompiler(dir, ...cmd) {
   return new qx.Promise((resolve, reject) => {
     cmd.push("--machine-readable");
-    let proc = child_process.spawn("qx", cmd, {
+    let proc = child_process.spawn("qx" + (process.platform === "win32"?".cmd":""), cmd, {
       cwd: dir
     });
     let result = {
@@ -63,11 +63,6 @@ async function runCompiler(dir, ...cmd) {
     });
     proc.on('error', reject);
   });
-}
-
-function readJson(filename) {
-  return readFile(filename, {encoding: "utf8"})
-      .then(str => JSON.parse(str));
 }
 
 async function deleteRecursive(name) {
