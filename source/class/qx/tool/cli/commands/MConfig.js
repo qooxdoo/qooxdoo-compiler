@@ -43,6 +43,8 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
   members: {
     
     _compilerApi: null,
+    _compileJsFilename: null,
+    _compileJsonFilename: null,
 
     /**
      * Parses the command line and produces configuration data.
@@ -77,9 +79,14 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
         }
       }
       
+      if (await fs.existsAsync(compileJsonFilename)) {
+        this._compileJsonFilename = compileJsonFilename;
+      }
+      
       let CompilerApi = qx.tool.cli.api.CompilerApi;
       if (await fs.existsAsync(compileJsFilename)) {
         let compileJs = await this.__loadJs(compileJsFilename);
+        this._compileJsFilename = compileJsFilename;
         if (compileJs.CompilerApi) {
           CompilerApi = compileJs.CompilerApi;
         }

@@ -327,6 +327,33 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         }
       }
 
+      this.addListener("making", evt => {
+        if (this.__gauge) {
+          this.__gauge.show("Compiling", 1);
+        } else {
+          qx.tool.compiler.Console.print("qx.tool.cli.compile.makeBegins");
+        }
+      });
+
+      this.addListener("made", evt => {
+        if (this.__gauge) {
+          this.__gauge.show("Compiling", 1);
+        } else {
+          qx.tool.compiler.Console.print("qx.tool.cli.compile.makeEnds");
+        }
+      });
+
+      this.addListener("writtenApplications", e => {
+        if (this.argv.verbose) {
+          qx.tool.compiler.Console.log("\nCompleted all applications, libraries used are:");
+          Object.values(this.__libraries).forEach(lib => qx.tool.compiler.Console.log(`   ${lib.getNamespace()} (${lib.getRootDir()})`));
+        }
+      });
+      
+      await this._loadConfigAndStartMaking();
+    },
+    
+    async _loadConfigAndStartMaking() {
       var config = this.__config = await this.parse(this.argv);
       if (!config) {
         throw new qx.tool.utils.Utils.UserError("Error: Cannot find any configuration");
@@ -335,13 +362,6 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
       if (!makers || !makers.length) {
         throw new qx.tool.utils.Utils.UserError("Error: Cannot find anything to make");
       }
-
-      this.addListener("writtenApplications", e => {
-        if (this.argv.verbose) {
-          qx.tool.compiler.Console.log("\nCompleted all applications, libraries used are:");
-          Object.values(this.__libraries).forEach(lib => qx.tool.compiler.Console.log(`   ${lib.getNamespace()} (${lib.getRootDir()})`));
-        }
-      });
 
       let countMaking = 0;
       const collateDispatchEvent = evt => {
@@ -411,25 +431,15 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
             this.fireEvent("made");
           }
         });
+        watch.addListener("configChanged", async () => {
+          await watch.stop();
+          setImmediate(() => this._loadConfigAndStartMaking());
+        });
+        let arr = [ this._compileJsFilename, this._compileJsonFilename ].filter(str => Boolean(str));
+        watch.setConfigFilenames(arr);
 
         return p.then(() => watch.start());
       }));
-
-      this.addListener("making", evt => {
-        if (this.__gauge) {
-          this.__gauge.show("Compiling", 1);
-        } else {
-          qx.tool.compiler.Console.print("qx.tool.cli.compile.makeBegins");
-        }
-      });
-
-      this.addListener("made", evt => {
-        if (this.__gauge) {
-          this.__gauge.show("Compiling", 1);
-        } else {
-          qx.tool.compiler.Console.print("qx.tool.cli.compile.makeEnds");
-        }
-      });
     },
 
 
@@ -473,7 +483,14 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         }
       });
 
+      let allAppNames = {};
       data.applications.forEach((appConfig, index) => {
+        if (appConfig.name) {
+          if (allAppNames[appConfig.name]) {
+            throw new qx.tool.utils.Utils.UserError(`Multiple applications with the same name '${appConfig.name}'`);
+          }
+          allAppNames[appConfig.name] = appConfig;
+        }
         appConfig.index = index;
         let appType = appConfig.type||"browser";
         let appTargetConfigs = targetConfigs.filter(targetConfig => {
@@ -484,9 +501,6 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
 
           let appNames = targetConfig["application-names"];
           if (appConfig.name && appNames && !qx.lang.Array.contains(appNames, appConfig.name)) {
-            return false;
-          }
-          if (appConfig.name && argvAppNames && !qx.lang.Array.contains(argvAppNames, appConfig.name)) {
             return false;
           }
           return true;
@@ -576,7 +590,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
             }
           });
           if (!hasExplicitDefaultApp && (targetConfig.appConfigs.length > 1)) {
-            targetConfig.defaultAppConfig = null;
+            qx.tool.compiler.Console.print("qx.tool.cli.compile.selectingDefaultApp", targetConfig.defaultAppConfig.name);
           }
         }
       });
@@ -589,6 +603,11 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
       targetConfigs.forEach(targetConfig => {
         if (!targetConfig.appConfigs) {
           qx.tool.compiler.Console.print("qx.tool.cli.compile.unusedTarget", targetConfig.type, targetConfig.index);
+          return;
+        }
+        let appConfigs = targetConfig.appConfigs.filter(appConfig => 
+          !appConfig.name || !argvAppNames || qx.lang.Array.contains(argvAppNames, appConfig.name));
+        if (!appConfigs.length) {
           return;
         }
 
@@ -698,7 +717,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
 
 
         let allApplicationTypes = {};
-        targetConfig.appConfigs.forEach(appConfig => {
+        appConfigs.forEach(appConfig => {
           var app = appConfig.app = new qx.tool.compiler.app.Application(appConfig["class"]);
           app.setTemplatePath(t.getTemplateDir());
 
@@ -714,6 +733,9 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
           }
           if (appConfig.title) {
             app.setTitle(appConfig.title);
+          }
+          if (appConfig.description) {
+            app.setDescription(appConfig.description);
           }
 
           var parts = appConfig.parts || targetConfig.parts || data.parts;
@@ -997,6 +1019,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
     });
     qx.tool.compiler.Console.addMessageIds({
       "qx.tool.cli.compile.unusedTarget": "Target type %1, index %2 is unused",
+      "qx.tool.cli.compile.selectingDefaultApp": "You have multiple applications, none of which are marked as 'default'; the first application named %1 has been chosen as the default application",
       "qx.tool.cli.compile.legacyFiles": "File %1 exists but is no longer used",
       "qx.tool.cli.compile.deprecatedCompile": "The configuration setting %1 in compile.json is deprecated",
       "qx.tool.cli.compile.deprecatedCompileSeeOther": "The configuration setting %1 in compile.json is deprecated (see %2)",

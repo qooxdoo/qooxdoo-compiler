@@ -45,7 +45,7 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
         alias: "S",
         describe: "Show the startpage with the list of applications and additional information",
         type: "boolean",
-        default: false
+        default: null
       },
       "rebuild-startpage": {
         alias: "R",
@@ -119,11 +119,16 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
       if (!defaultMaker && (apps.length === 1)) {
         defaultMaker = firstMaker;
       }
+      
+      let showStartpage = this.argv.showStartpage;
+      if (showStartpage === null) {
+        showStartpage = apps.length > 1;
+      }
       var config = this._getConfig();
 
       const app = express();
       const website = new qx.tool.utils.Website();
-      if (defaultMaker && (this.argv.showStartpage === false)) {
+      if (!showStartpage) {
         app.use("/", express.static(defaultMaker.getTarget().getOutputDir()));
       } else {
         let s = await this.getAppQxPath();
@@ -148,6 +153,7 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
                 name: app.getName(),
                 type: app.getType(),
                 title: app.getTitle() || app.getName(),
+                description: app.getDescription(),
                 outputPath: target.getProjectDir(app) // no trailing slash or link will break
               }))
           });

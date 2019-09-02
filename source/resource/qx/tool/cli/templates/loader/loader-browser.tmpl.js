@@ -51,6 +51,7 @@ if (!qx.$$appRoot) {
   if (qx.$$appRoot[qx.$$appRoot.length - 1] != "/")
     qx.$$appRoot += "/";
 }
+qx.$$resourceRoot = qx.$$appRoot;
 
 if (!qx.$$environment)
   qx.$$environment = {};
@@ -88,6 +89,7 @@ qx.$$createdAt = function(obj, filename, lineNumber, column) {
 
 var isWebkit = /AppleWebKit\/([^ ]+)/.test(navigator.userAgent);
 var isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
+var isIE11 = !!window.MSInputMethodContext && !!document.documentMode;
 
 qx.$$loader = {
   parts : %{Parts},
@@ -98,7 +100,7 @@ qx.$$loader = {
   closureParts : %{ClosureParts},
   bootIsInline : %{BootIsInline},
   addNoCacheParam : %{NoCacheParam},
-  isLoadParallel: !isFirefox && 'async' in document.createElement('script'),
+  isLoadParallel: !isFirefox && !isIE11 && 'async' in document.createElement('script'),
   delayDefer: false,
   splashscreen: window.QOOXDOO_SPLASH_SCREEN || null,
   isLoadChunked: false,
@@ -139,13 +141,20 @@ qx.$$loader = {
    */
   on: function(eventType, handler) {
     if (qx.$$loader.applicationHandlerReady) {
-      if (eventType === "ready") {
-        handler(null);
-      } else {
-        qx.event.Registration.addListener(window, eventType, handler.handler);
+      if (window.qx && qx.event && qx.event.handler && qx.event.handler.Application) {
+        let Application = qx.event.handler.Application.$$instance;
+        if (eventType == "ready" && Application.isApplicationReady()) {
+          handler(null);
+          return;
+        } else if (eventType == "appinitialized" && Application.isApplicationInitialized()) {
+          handler(null);
+          return;
+        }
       }
+      qx.event.Registration.addListener(window, eventType, handler);
       return;
     }
+    
     if (this.deferredEvents === null)
       this.deferredEvents = {};
     var handlers = this.deferredEvents[eventType];
@@ -162,25 +171,29 @@ qx.$$loader = {
     qx.$$loader.delayDefer = false;
     qx.$$loader.scriptLoaded = true;
     function done() {
-      var readyHandlers = [];
-      if (qx.$$loader.deferredEvents) {
-        Object.keys(qx.$$loader.deferredEvents).forEach(function(eventType) {
-          var handlers = qx.$$loader.deferredEvents[eventType];
-          handlers.forEach(function(handler) {
-            qx.event.Registration.addListener(window, eventType, handler.handler);
-            if (eventType === "ready")
-              readyHandlers.push(handler.handler);
-          });
-        });
-      }
       if (window.qx && qx.event && qx.event.handler && qx.event.handler.Application) {
+        if (qx.$$loader.deferredEvents) {
+          Object.keys(qx.$$loader.deferredEvents).forEach(function(eventType) {
+            var handlers = qx.$$loader.deferredEvents[eventType];
+            handlers.forEach(function(handler) {
+              qx.event.Registration.addListener(window, eventType, handler.handler);
+            });
+          });
+        }
+        
         qx.event.handler.Application.onScriptLoaded();
         qx.$$loader.applicationHandlerReady = true;
       } else {
+        if (qx.$$loader.deferredEvents) {
+          Object.keys(qx.$$loader.deferredEvents).forEach(function(eventType) {
+            if (eventType === "ready") {
+              qx.$$loader.deferredEvents[eventType].forEach(function(handler) {
+                handler.handler(null);
+              });
+            }
+          });
+        }
         qx.$$loader.applicationHandlerReady = true;
-        readyHandlers.forEach(function(handler) {
-          handler(null);
-        });
       }
     }
     if (qx.$$loader.splashscreen)
@@ -234,6 +247,8 @@ if (document.location.search) {
       var value = match[3];
       if (value === undefined || value === "true" || value === "1")
         value = true;
+      else if (value === "false" || value === "0")
+        value = false;
       URL_PARAMETERS[key] = value;
     }
   });

@@ -92,8 +92,12 @@ qx.Class.define("qx.tool.compiler.Console", {
      * @return {String} complete message
      */
     decode: function(msgId, ...args) {
-      var msg = qx.tool.compiler.Console.MESSAGE_IDS[msgId]||msgId;
-      var str = qx.lang.String.format(msg.message, args||[]);
+      var msg = qx.tool.compiler.Console.MESSAGE_IDS[msgId];
+      if (msg) {
+        let str = qx.lang.String.format(msg.message, args||[]);
+        return str;
+      }
+      let str = msgId + JSON.stringify(args);
       return str;
     },
     

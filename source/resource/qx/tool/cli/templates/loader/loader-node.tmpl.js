@@ -1,32 +1,16 @@
 (function(){ 
 
-  var platformIsRhino = typeof Packages !== "undefined";
-  var platformIsNode = !platformIsRhino;
-
+  var path = require("path");
+  
   if (typeof window === "undefined") 
     window = this;
 
-  if (platformIsRhino && typeof console === "undefined") {
-    console = {
-        log: function() {
-          var out = java.lang.System.out;
-          for (var i = 0; i < arguments.length; i++)
-            out.print(arguments[i]);
-          out.println();
-          out.flush();
-        }
-    };
-    console.debug = console.log;
-    console.warn = console.log;
-  }
-  if (platformIsNode) {
-    // Node suppresses output to the "real" console when calling console.debug, it's only shown
-    //  in the debugger 
-    console.debug = function() {
-      var args = [].slice.apply(arguments);
-      console.log.apply(this, args);
-    };
-  }
+  // Node suppresses output to the "real" console when calling console.debug, it's only shown
+  //  in the debugger 
+  console.debug = function() {
+    var args = [].slice.apply(arguments);
+    console.log.apply(this, args);
+  };
 
   window.document = document = {
       readyState: "ready",
@@ -61,8 +45,10 @@
 
   if (!window.qx) 
     window.qx = {};
-  if (!qx.$$appRoot)
-    qx.$$appRoot = "";
+  
+  if (!qx.$$appRoot) {
+    qx.$$appRoot = __dirname + path.sep;
+  }
 
   if (!window.qxvariants) 
     qxvariants = {};
@@ -87,8 +73,7 @@
 
   var isDebug = qx.$$environment["qx.debugLoader"];
   var log = isDebug ? console.log : function() { };
-  var loaderMethod = qx.$$environment["qx.ooLoader"] ? this[qx.$$environment["qx.ooLoader"]] : 
-    platformIsRhino && typeof this.load == "function" ? this.load : require;
+  var loaderMethod = qx.$$environment["qx.ooLoader"] ? this[qx.$$environment["qx.ooLoader"]] : require;
   if (typeof loaderMethod !== "function")
     throw new Error("Cannot initialise Qooxdoo application - no URI loader method detected");
 
@@ -120,7 +105,7 @@
       boot : %{Boot},
       closureParts : %{ClosureParts},
       delayDefer: false,
-      transpiledPath: %{TranspiledPath},
+      transpiledPath: qx.$$appRoot + %{TranspiledPath},
 
       decodeUris : function(compressedUris, pathName) {
         if (!pathName)

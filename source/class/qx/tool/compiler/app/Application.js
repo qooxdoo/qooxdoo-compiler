@@ -101,6 +101,16 @@ qx.Class.define("qx.tool.compiler.app.Application", {
     },
 
     /**
+     * The human readable, customer facing description of the application - it's used to list applications
+     * in `qx serve`
+     */
+    description: {
+      init: null,
+      nullable: true,
+      check: "String"
+    },
+
+    /**
      * Output path, relative to the target's output path
      */
     outputPath: {
@@ -816,7 +826,7 @@ qx.Class.define("qx.tool.compiler.app.Application", {
      * Apply for `type` property
      */
     _applyType: function(value, oldValue) {
-      var loader = path.join(this.getTemplatePath(), "loader", "loader-" + (this.isBrowserApp() ? "browser" : "server") + ".tmpl.js");
+      var loader = path.join(this.getTemplatePath(), "loader", "loader-" + this.getType() + ".tmpl.js");
       this.setLoaderTemplate(loader);
       this.setTheme(null);
     },
