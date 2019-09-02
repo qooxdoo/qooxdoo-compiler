@@ -1,9 +1,9 @@
 require("../index");
-const rimraf = require("rimraf");
+const rimraf = qx.tool.utils.Promisify.promisify(require("rimraf"));
 const fs = qx.tool.utils.Promisify.fs;
 const process = require("process");
 const assert = require("assert");
-const path = require("path");
+const path = require("upath");
 
 const appNamespace = "testCommandsApp";
 
@@ -20,7 +20,7 @@ const appNamespace = "testCommandsApp";
 	
     // delete existing app
     if (await fs.existsAsync(appNamespace) && await fs.statAsync(appNamespace)) {
-      rimraf.sync(appNamespace);
+      await rimraf(appNamespace, {maxBusyTries: 10});
     }
     // create a test app
     const commands = qx.tool.cli.commands;
@@ -54,7 +54,7 @@ const appNamespace = "testCommandsApp";
 
     // delete the test app
     process.chdir("..");
-    rimraf.sync(appNamespace);
+    await rimraf(appNamespace, {maxBusyTries: 10});
     console.info("All tests passed.");
   } catch (e) {
     console.error(e);
