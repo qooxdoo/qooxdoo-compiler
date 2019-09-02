@@ -26,7 +26,7 @@ test("Issue553", async assert => {
 async function runCompiler(dir, ...cmd) {
   return new qx.Promise((resolve, reject) => {
     cmd.push("--machine-readable");
-    let proc = child_process.spawn("qx" + (process.platform === "win32"?".cmd":""), cmd, {
+    let proc = child_process.spawn("../../qx" + (process.platform === "win32"?".cmd":""), cmd, {
       cwd: dir
     });
     let result = {
