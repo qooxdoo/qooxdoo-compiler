@@ -293,7 +293,7 @@ qx.Class.define("qx.tool.compiler.resources.Manager", {
      * @return {Asset?} the asset, if found
      */
     getAsset(srcPath, create) {
-      library = this.findLibraryForResource(srcPath);
+      let library = this.findLibraryForResource(srcPath);
       if (!library) {
         this.warn("Cannot find library for " + srcPath);
         return null;
