@@ -5,7 +5,9 @@ language: node_js
 cache: false
 node_js:
 - node
-# - lts/* # once we support on-the-fly transpilation
+  - 10
+  - 12
+  - node
 
 
 stages:
