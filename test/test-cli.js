@@ -27,7 +27,8 @@ async function runCompiler(dir, ...cmd) {
   return new qx.Promise((resolve, reject) => {
     cmd.push("--machine-readable");
     let proc = child_process.spawn("qx", cmd, {
-      cwd: dir
+      cwd: dir,
+      shell: true
     });
     let result = {
         exitCode: null,
