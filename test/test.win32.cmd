@@ -1,3 +1,4 @@
+call npm link
 @echo [101;93m check version [0m
 call npx qx --version
 @echo on
