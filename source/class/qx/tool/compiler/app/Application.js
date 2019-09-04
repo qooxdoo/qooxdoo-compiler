@@ -20,7 +20,7 @@
  *
  * *********************************************************************** */
 
-const path = require("path");
+const path = require("upath");
 require("@qooxdoo/framework");
 
 qx.Class.define("qx.tool.compiler.app.Application", {
