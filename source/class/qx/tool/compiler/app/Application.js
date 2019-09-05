@@ -129,7 +129,7 @@ qx.Class.define("qx.tool.compiler.app.Application", {
     },
 
     /**
-     * template path 
+     * template path
      */
     templatePath: {
       init: "",
@@ -137,6 +137,24 @@ qx.Class.define("qx.tool.compiler.app.Application", {
       check: "String",
       apply: "_applyType"
 
+    },
+
+    /**
+     * Whether this app is to be published (e.g. in the PackageBrowser).
+     * Default is true.
+     */
+    publish: {
+      type: "Boolean",
+      init: true
+    },
+
+    /**
+     * Whether this app can run on its own (true, default) or is part of another
+     * application (false)
+     */
+    standalone: {
+      type: "Boolean",
+      init: true
     },
 
 
@@ -203,7 +221,7 @@ qx.Class.define("qx.tool.compiler.app.Application", {
     __fatalCompileErrors: null,
     __classes: null,
     __partsDeps: null,
-    
+
     /**
      * Checks if the application is for browser
      *
@@ -526,7 +544,7 @@ qx.Class.define("qx.tool.compiler.app.Application", {
             if (pos > -1) {
               var ns = asset.substring(0, pos);
               if (analyser.findLibrary(ns)) {
-                requiredLibs[ns] = true; 
+                requiredLibs[ns] = true;
               }
             }
           });
@@ -804,7 +822,7 @@ qx.Class.define("qx.tool.compiler.app.Application", {
                   }
                 }
               });
-          } 
+          }
           var postfix = name.substring(pos + 1);
           if (postfix) {
             t.getAnalyser().getLibraries()

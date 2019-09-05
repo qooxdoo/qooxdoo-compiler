@@ -83,6 +83,11 @@
             "type": "boolean",
             "default": true
           },
+          "standalone": {
+            "description": "Whether to hide this application can be opened in a browser on its own (true) or is part of a different application (false)",
+            "type": "boolean",
+            "default": true
+          },
           "environment": {
             "$ref": "#/properties/environment"
            },
