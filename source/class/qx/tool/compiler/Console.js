@@ -102,6 +102,17 @@ qx.Class.define("qx.tool.compiler.Console", {
     },
     
     /**
+     * Returns the type of the message, eg error, warning, etc
+     * 
+     * @param msgId {String} the message ID to lookup
+     * @return {String} the type of message, can be one of "message" (default) or "error", "warning"
+     */
+    getMessageType(msgId) {
+      let msg = qx.tool.compiler.Console.MESSAGE_IDS[msgId];
+      return msg ? msg.type : null;
+    },
+    
+    /**
      * console.log equivalent, with colorization
      */
     log(...args) {
@@ -142,7 +153,7 @@ qx.Class.define("qx.tool.compiler.Console", {
       // Compiler errors & warnings (@see {ClassFile})
       "qx.tool.compiler.class.invalidProperties": "Invalid 'properties' key in class definition",
       "qx.tool.compiler.compiler.missingClassDef": "FATAL Missing class definition - no call to qx.Class.define (or qx.Mixin.define etc)",
-      "qx.tool.compiler.compiler.syntaxError": "FATAL Syntax error: %1\n%2",
+      "qx.tool.compiler.compiler.syntaxError": "FATAL Syntax error: %1",
       "qx.tool.compiler.compiler.invalidExtendClause": "FATAL Invalid `extend` clause - expected to find a class name (without quotes or `new`)",
       "qx.tool.compiler.compiler.invalidClassDefinitionEntry": "Unexpected property %2 in %1 definition",
       "qx.tool.compiler.compiler.wrongClassName": "Wrong class name or filename - expected to find at least %1 but only found [%2]",

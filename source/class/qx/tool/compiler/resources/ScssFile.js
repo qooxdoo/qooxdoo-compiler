@@ -27,7 +27,7 @@
 /* eslint-disable @qooxdoo/qx/no-illegal-private-usage */
 
 const fs = qx.tool.utils.Promisify.fs;
-const path = require("path");
+const path = require("upath");
 const nodeSass = require("node-sass");
 
 /**

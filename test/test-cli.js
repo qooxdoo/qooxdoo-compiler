@@ -27,7 +27,8 @@ async function runCompiler(dir, ...cmd) {
   return new qx.Promise((resolve, reject) => {
     cmd.push("--machine-readable");
     let proc = child_process.spawn("qx", cmd, {
-      cwd: dir
+      cwd: dir,
+      shell: true
     });
     let result = {
         exitCode: null,
@@ -63,11 +64,6 @@ async function runCompiler(dir, ...cmd) {
     });
     proc.on('error', reject);
   });
-}
-
-function readJson(filename) {
-  return readFile(filename, {encoding: "utf8"})
-      .then(str => JSON.parse(str));
 }
 
 async function deleteRecursive(name) {

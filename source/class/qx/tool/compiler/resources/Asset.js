@@ -20,7 +20,7 @@
  *
  * *********************************************************************** */
 
-const path = require("path");
+const path = require("upath");
 
 qx.Class.define("qx.tool.compiler.resources.Asset", {
   extend: qx.core.Object,

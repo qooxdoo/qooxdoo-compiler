@@ -3,6 +3,8 @@ set -x
 set -e
 NODE_OPTS="--no-warnings"
 
+npm link
+
 echo "Testing qooxdoo-compiler version $(./qx --version)"
 echo
 
@@ -17,6 +19,11 @@ node $NODE_OPTS test-config-schemas.js
 node $NODE_OPTS test-pkg-migrate.js
 node $NODE_OPTS test-commands.js
 node $NODE_OPTS test-cli.js
+
+cd issue440
+./run-tests.sh
+cd ..
+
 popd
 
 # bats CLI tests
