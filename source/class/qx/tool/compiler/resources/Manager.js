@@ -188,7 +188,6 @@ qx.Class.define("qx.tool.compiler.resources.Manager", {
           unconfirmed[relFile] = true;
         }
         
-        let resPath = path.join(library.getRootDir(), library.get("resourcePath"));
         const scanResources = async resourcePath => {
           // If the root folder exists, scan it
           var rootDir = path.join(library.getRootDir(), library.get(resourcePath));
