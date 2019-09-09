@@ -188,13 +188,11 @@ qx.Class.define("qx.tool.compiler.resources.Manager", {
           unconfirmed[relFile] = true;
         }
         
-        let resPath = path.join(library.getRootDir(), library.get("resourcePath"));
         const scanResources = async resourcePath => {
           // If the root folder exists, scan it
           var rootDir = path.join(library.getRootDir(), library.get(resourcePath));
           await qx.tool.utils.files.Utils.findAllFiles(rootDir, async filename => {
-            // store resources relative to resourcePath - otherwise resources in theme will not be found
-            var relFile = path.relative(resPath, path.toUnix(filename));
+            var relFile = filename.substring(rootDir.length + 1).replace(/\\/g, "/");
             var fileInfo = resources[relFile];
             delete unconfirmed[relFile];
             if (!fileInfo) {
