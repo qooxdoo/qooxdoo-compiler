@@ -1,8 +1,7 @@
 var test = require("tape");
 var fs = require("fs");
+var fsPromises = require("fs").promises;
 var async = require("async");
-const {promisify} = require("util");
-const readFile = promisify(fs.readFile);
 const child_process = require("child_process");
 const qx = require("@qooxdoo/framework");
 
@@ -14,8 +13,42 @@ test("Issue553", async assert => {
     assert.ok(messages.length == 1);
     assert.ok(messages[0].args[0] === "issue553one");
     assert.ok(fs.existsSync("issue553/compiled/source/index.html"));
-    let indexHtml = await readFile("issue553/compiled/source/index.html", "utf8");
+    let indexHtml = await fsPromises.readFile("issue553/compiled/source/index.html", "utf8");
     assert.ok(!!indexHtml.match(/issue553one\/boot.js/m));
+  
+    assert.end();
+  }catch(ex) {
+    assert.end(ex);
+  }
+});
+
+test("Issue440", async assert => {
+  try {
+    await deleteRecursive("issue440/compiled");
+    let code = await fsPromises.readFile("issue440/source/class/issue440/Application.js", "utf8");
+    code = code.split("\n");
+    let errorLine = -1;
+    code.forEach((line, index) => {
+      if (line.match(/This is an error/i))
+        errorLine = index;
+    });
+    
+    let result;
+    
+    code[errorLine] = "This is an error";
+    await fsPromises.writeFile("issue440/source/class/issue440/Application.js", code.join("\n"), "utf8");
+    result = await runCompiler("issue440", "compile");
+    assert.ok(result.exitCode === 1);
+    
+    code[errorLine] = "new abc.ClassNoDef();//This is an error";
+    await fsPromises.writeFile("issue440/source/class/issue440/Application.js", code.join("\n"), "utf8");
+    result = await runCompiler("issue440", "compile");
+    assert.ok(result.exitCode === 1);
+    
+    code[errorLine] = "//This is an error";
+    await fsPromises.writeFile("issue440/source/class/issue440/Application.js", code.join("\n"), "utf8");
+    result = await runCompiler("issue440", "compile");
+    assert.ok(result.exitCode === 0);
   
     assert.end();
   }catch(ex) {
