@@ -103,15 +103,15 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
       let apps = [];
       let defaultMaker = null;
       let firstMaker = null;
-      makers.forEach(maker => { 
+      makers.forEach(maker => {
         maker.getApplications().forEach(app => {
           if (app.isBrowserApp()) {
-            apps.push(app); 
+            apps.push(app);
             if (firstMaker === null) {
               firstMaker = maker;
             }
-            if ((defaultMaker === null) && app.getWriteIndexHtmlToRoot()) {                  
-              defaultMaker = maker;  
+            if ((defaultMaker === null) && app.getWriteIndexHtmlToRoot()) {
+              defaultMaker = maker;
             }
           }
         });
@@ -119,7 +119,7 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
       if (!defaultMaker && (apps.length === 1)) {
         defaultMaker = firstMaker;
       }
-      
+
       let showStartpage = this.argv.showStartpage;
       if (showStartpage === null) {
         showStartpage = apps.length > 1;
@@ -133,8 +133,8 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
       } else {
         let s = await this.getAppQxPath();
         if (!await fs.existsAsync(path.join(s, "docs"))) {
-          s = path.dirname(s);        
-        }   
+          s = path.dirname(s);
+        }
         app.use("/docs", express.static(path.join(s, "docs")));
         app.use("/apps", express.static(path.join(s, "apps")));
         app.use("/", express.static(website.getTargetDir()));
@@ -148,7 +148,7 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
               outputDir: "/" + target.getOutputDir()
             },
             apps: maker.getApplications()
-              .filter(app => app.isBrowserApp())
+              .filter(app => app.isBrowserApp() && app.getStandalone())
               .map(app => ({
                 name: app.getName(),
                 type: app.getType(),
