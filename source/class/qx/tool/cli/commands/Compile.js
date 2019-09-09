@@ -349,7 +349,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
           Object.values(this.__libraries).forEach(lib => qx.tool.compiler.Console.log(`   ${lib.getNamespace()} (${lib.getRootDir()})`));
         }
       });
-      
+
       await this._loadConfigAndStartMaking();
       
       if (!this.argv.watch) {
@@ -620,7 +620,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
           qx.tool.compiler.Console.print("qx.tool.cli.compile.unusedTarget", targetConfig.type, targetConfig.index);
           return;
         }
-        let appConfigs = targetConfig.appConfigs.filter(appConfig => 
+        let appConfigs = targetConfig.appConfigs.filter(appConfig =>
           !appConfig.name || !argvAppNames || qx.lang.Array.contains(argvAppNames, appConfig.name));
         if (!appConfigs.length) {
           return;
@@ -736,7 +736,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
           var app = appConfig.app = new qx.tool.compiler.app.Application(appConfig["class"]);
           app.setTemplatePath(t.getTemplateDir());
 
-          [ "type", "theme", "name", "environment", "outputPath", "bootPath", "loaderTemplate"].forEach(name => {
+          [ "type", "theme", "name", "environment", "outputPath", "bootPath", "loaderTemplate", "publish", "standalone"].forEach(name => {
             if (appConfig[name] !== undefined) {
               var fname = "set" + qx.lang.String.firstUp(name);
               app[fname](appConfig[name]);
