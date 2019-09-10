@@ -49,7 +49,27 @@ test("Issue440", async assert => {
     await fsPromises.writeFile("issue440/source/class/issue440/Application.js", code.join("\n"), "utf8");
     result = await runCompiler("issue440", "compile");
     assert.ok(result.exitCode === 0);
+    assert.end();
+  }catch(ex) {
+    assert.end(ex);
+  }
+});
   
+test("testLegalSCSS", async assert => {
+  try {  
+    await deleteRecursive("testLegalSCSS/compiled");
+    let result = await runCompiler("testLegalSCSS", "compile");
+    assert.ok(fs.existsSync("testLegalSCSS/compiled/source/resource/testLegalSCSS/css/test_css.css"));
+    assert.ok(fs.existsSync("testLegalSCSS/compiled/source/resource/testLegalSCSS/css/test_scss.css"));
+    assert.ok(fs.existsSync("testLegalSCSS/compiled/source/resource/testLegalSCSS/css/test_theme_scss.css"));
+    assert.ok(fs.existsSync("testLegalSCSS/compiled/source/testLegalSCSS/boot.js"));
+    let bootJS = await readFile("testLegalSCSS/compiled/source/testLegalSCSS/boot.js", "utf8");
+    let pos1 = bootJS.indexOf("cssBefore");
+    let pos2 = bootJS.indexOf("]", pos1 + 1);
+    let test = bootJS.substring(pos1, pos2 + 1);
+    assert.ok(test.indexOf("testLegalSCSS:testLegalSCSS/css/test_css.css") > 0);
+    assert.ok(test.indexOf("testLegalSCSS:testLegalSCSS/css/test_scss.css") > 0);
+    assert.ok(test.indexOf("testLegalSCSS:testLegalSCSS/css/test_theme_scss.css") > 0);
     assert.end();
   }catch(ex) {
     assert.end(ex);
