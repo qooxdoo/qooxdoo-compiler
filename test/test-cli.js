@@ -1,5 +1,4 @@
 var test = require("tape");
-var fs = require("fs");
 var fsPromises = require("fs").promises;
 var async = require("async");
 const child_process = require("child_process");
@@ -59,11 +58,11 @@ test("testLegalSCSS", async assert => {
   try {  
     await deleteRecursive("testLegalSCSS/compiled");
     let result = await runCompiler("testLegalSCSS", "compile");
-    assert.ok(fs.existsSync("testLegalSCSS/compiled/source/resource/testLegalSCSS/css/test_css.css"));
-    assert.ok(fs.existsSync("testLegalSCSS/compiled/source/resource/testLegalSCSS/css/test_scss.css"));
-    assert.ok(fs.existsSync("testLegalSCSS/compiled/source/resource/testLegalSCSS/css/test_theme_scss.css"));
-    assert.ok(fs.existsSync("testLegalSCSS/compiled/source/testLegalSCSS/boot.js"));
-    let bootJS = await readFile("testLegalSCSS/compiled/source/testLegalSCSS/boot.js", "utf8");
+    assert.ok(fsPromises.exists("testLegalSCSS/compiled/source/resource/testLegalSCSS/css/test_css.css"));
+    assert.ok(fsPromises.exists("testLegalSCSS/compiled/source/resource/testLegalSCSS/css/test_scss.css"));
+    assert.ok(fsPromises.exists("testLegalSCSS/compiled/source/resource/testLegalSCSS/css/test_theme_scss.css"));
+    assert.ok(fsPromises.exists("testLegalSCSS/compiled/source/testLegalSCSS/boot.js"));
+    let bootJS = await fsPromises.readFile("testLegalSCSS/compiled/source/testLegalSCSS/boot.js", "utf8");
     let pos1 = bootJS.indexOf("cssBefore");
     let pos2 = bootJS.indexOf("]", pos1 + 1);
     let test = bootJS.substring(pos1, pos2 + 1);
