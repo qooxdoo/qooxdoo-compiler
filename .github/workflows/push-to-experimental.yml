@@ -11,9 +11,9 @@ jobs:
       uses: wei/curl@v1     
       with: 
         args: >
-          -X POST -u "${{ secrets.WEBHOOK_USER }}:${{ secrets.WEBHOOK_TOKEN }}" 
+          '-X POST -u "${{ secrets.WEBHOOK_USER }}:${{ secrets.WEBHOOK_TOKEN }}" 
           -H "Accept: application/vnd.github.everest-preview+json" 
           -H "Content-Type: application/json" 
-          --data '{"event_type": "build_application"}'
-          https://api.github.com/repos/qooxdoo/experimental/dispatches 
+          --data \'{"event_type": "build_application"}\'
+          https://api.github.com/repos/qooxdoo/experimental/dispatches'
 
