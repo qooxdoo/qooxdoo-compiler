@@ -13,7 +13,7 @@ jobs:
         args: >
           '-X POST -u "${{ secrets.WEBHOOK_USER }}:${{ secrets.WEBHOOK_TOKEN }}" 
           -H "Accept: application/vnd.github.everest-preview+json" 
-          -H "Content-Type: application/json" 
-          --data "{\u0022event_type\u0022: \u0022build_application\u0022}"
+          -H "Content-Type: application/json"
           https://api.github.com/repos/qooxdoo/experimental/dispatches'
+          --data "{\u0022event_type\u0022: \u0022build\u0022}"
 
