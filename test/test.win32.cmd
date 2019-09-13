@@ -4,6 +4,7 @@ call npx qx --version
 @echo on
 @echo [101;93m node API tests [0m
 @cd test
+call node test-compiler.js       || EXIT /B 1
 call node test-deps.js           || EXIT /B 1
 call node test-config-schemas.js || EXIT /B 1
 call node test-pkg-migrate.js    || EXIT /B 1
