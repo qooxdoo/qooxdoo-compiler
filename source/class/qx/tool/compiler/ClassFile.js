@@ -992,7 +992,9 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
           checkValidTopLevel(path);
           
           if (FUNCTION_NAMES[keyName] !== undefined) {
-            handleTopLevelMethods(path, keyName, path.node.value);
+            let val = path.node.value;
+            val.leadingComments = (path.node.leadingComments || []).concat(val.leadingComments || []);
+            handleTopLevelMethods(path, keyName, val);
             return;
           }
           
