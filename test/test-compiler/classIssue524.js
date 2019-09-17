@@ -3,7 +3,12 @@ qx.Class.define("classIssue524",
   extend : qx.application.Standalone,
   members :
   {
-    main : function() {}
+  /**
+   * @ignore(init1)
+   */
+  main : function() {
+    init1();
+  }
   }
 });
 
@@ -13,7 +18,6 @@ qx.Class.define("some.Class",
   /**
    * @ignore(init)
    */
-   // test
   construct : function()
   {
     init();
