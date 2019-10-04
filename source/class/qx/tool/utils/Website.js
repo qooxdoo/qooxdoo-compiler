@@ -46,7 +46,7 @@ qx.Class.define("qx.tool.utils.Website", {
     TARGET_DIR: path.join(qx.tool.$$resourceDir, "website/build")
   },
 
-  construct(options={}) {
+  construct: function(options={}) {
     qx.core.Object.apply(this, arguments);
     const self = qx.tool.utils.Website;
     this.initSourceDir(self.SOURCE_DIR);
