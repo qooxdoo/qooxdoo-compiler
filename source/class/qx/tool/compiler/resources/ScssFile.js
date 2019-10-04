@@ -36,7 +36,7 @@ const nodeSass = require("node-sass");
 qx.Class.define("qx.tool.compiler.resources.ScssFile", {
   extend: qx.core.Object,
   
-  construct(target, library, filename) {
+  construct: function(target, library, filename) {
     this.base(arguments);
     this.__library = library;
     this.__filename = filename;

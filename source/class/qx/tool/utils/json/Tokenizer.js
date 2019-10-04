@@ -51,7 +51,7 @@ const __tokenTypes = {
 qx.Class.define("qx.tool.utils.json.Tokenizer", {
   extend: qx.core.Object,
   
-  construct(input, settings) {
+  construct: function(input, settings) {
     this.base(arguments);
     this.input = input;
     this.settings = settings||{};
