@@ -670,10 +670,7 @@ qx.Class.define("qx.tool.compiler.app.Application", {
                 uri = mappedPrefix + uri.substring(pos);
               }
             }
-            var library = resManager.findLibraryForResource(uri);
-            if (library) {
-              assets.push(library.getNamespace() + ":" + uri);
-            }
+            resManager.findLibrariesForResource(uri).forEach(library => assets.push(library.getNamespace() + ":" + uri)); 
           });
         }
         if (!libraryLookup[classInfo.libraryName]) {

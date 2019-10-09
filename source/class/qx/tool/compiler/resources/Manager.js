@@ -99,67 +99,117 @@ qx.Class.define("qx.tool.compiler.resources.Manager", {
     },
 
     /**
-     * Finds the library needed for a resource; this depends on `findAllResources` having
-     * already been called.  `uri` can include optional explicit namespace (eg "qx:blah/blah.png"),
-     * otherwise the library resource lookups are examined to find the library.
+     * Finds the library needed for a resource, see `findLibrariesForResource`.  This reports
+     * an error if more than one library is found.
      *
      * @param uri {String} URI
-     * @return {Library?} the library, null if not found
+     * @return {Library[]} the libraries, empty list if not found
      */
     findLibraryForResource: function(uri) {
-      // check for absolute path first, in windows c:/ is a valid absolute name
-      if (path.isAbsolute(uri)) {
-        let library = this.__analyser.getLibraries().find(lib => uri.startsWith(path.resolve(lib.getRootDir())));
-        return library || null;
+      let result = this.findLibrariesForResource(uri);
+      if (result.length == 0) {
+        return null;
       }
+      if (result.length > 1) {
+        this.error(`Cannot determine a single library for the URI '${uri}'; ` + 
+            `found ${result.map(l => l.getNamespace()).join(",")} returning first library`);
+      }
+      return result[0];
+    },
 
-      // Explicit library?
-      var pos = uri.indexOf(":");
-      if (pos !== -1) {
-        var ns = uri.substring(0, pos);
-        var library = this.__analyser.findLibrary(ns);
-        return library || null;
-      }
+    /**
+     * Finds the libraries needed for a resource; this depends on `findAllResources` having
+     * already been called.  `uri` can include optional explicit namespace (eg "qx:blah/blah.png"),
+     * otherwise the library resource lookups are examined to find the library.
+     * 
+     * Note that there can be more than one directory because the lookup holds directory names (used
+     * for wildcards) and they are allowed to be duplicated.
+     *
+     * @param uri {String} URI
+     * @return {Library[]} the libraries, empty list if not found
+     */
+    findLibrariesForResource: function(uri) {
+      const findLibrariesForResourceImpl = () => {
+        var ns;
+        var pos;
+        
+        // check for absolute path first, in windows c:/ is a valid absolute name
+        if (path.isAbsolute(uri)) {
+          let library = this.__analyser.getLibraries().find(lib => uri.startsWith(path.resolve(lib.getRootDir())));
+          return library || null;
+        }
+  
+        // Explicit library?
+        pos = uri.indexOf(":");
+        if (pos !== -1) {
+          ns = uri.substring(0, pos);
+          let library = this.__analyser.findLibrary(ns);
+          return library || null;
+        }
+        
+        // Non-wildcards are a direct lookup
+        // check for $ and *. less pos wins
+        // fix for https://github.com/qooxdoo/qooxdoo-compiler/issues/260
+        var pos1 = uri.indexOf("$"); // Variable references are effectively a wildcard lookup
+        var pos2 = uri.indexOf("*");
+        if (pos1 === -1) {
+          pos = pos2;
+        } else if (pos2 === -1) {
+          pos = pos1;
+        } else {
+          pos = Math.min(pos1, pos2);
+        }
+        if (pos === -1) {
+          let library = this.__librariesByResourceUri[uri] || null;
+          return library;
+        }
+  
+        // Strip wildcard
+        var isFolderMatch = uri[pos - 1] === "/";
+        uri = uri.substring(0, pos - 1);
+  
+        // Fast folder match
+        if (isFolderMatch) {
+          let library = this.__librariesByResourceUri[uri] || null;
+          return library;
+        }
+  
+        // Slow scan
+        if (!this.__allResourceUris) {
+          this.__allResourceUris = Object.keys(this.__librariesByResourceUri).sort();
+        }
+        var thisUriPos = qx.tool.utils.Values.binaryStartsWith(this.__allResourceUris, uri);
+        if (thisUriPos > -1) {
+          let libraries = {};
+          for (; thisUriPos < this.__allResourceUris.length; thisUriPos++) {
+            var thisUri = this.__allResourceUris[thisUriPos];
+            if (!thisUri.startsWith(uri)) {
+              break;
+            }
+            
+            pos = uri.indexOf(":");
+            if (pos !== -1) {
+              ns = uri.substring(0, pos);
+              if (!libraries[ns]) {
+                libraries[ns] = this.__analyser.findLibrary(ns);
+              }
+            }
+          }
+          
+          return Object.values(libraries);
+        }
+  
+        return null;
+      };
       
-      // Non-wildcards are a direct lookup
-      // check for $ and *. less pos wins
-      // fix for https://github.com/qooxdoo/qooxdoo-compiler/issues/260
-      var pos1 = uri.indexOf("$"); // Variable references are effectively a wildcard lookup
-      var pos2 = uri.indexOf("*");
-      if (pos1 === -1) {
-        pos = pos2;
-      } else if (pos2 === -1) {
-        pos = pos1;
-      } else {
-        pos = Math.min(pos1, pos2);
+      let result = findLibrariesForResourceImpl();
+      if (!result) {
+        return [];
       }
-      if (pos === -1) {
-        library = this.__librariesByResourceUri[uri] || null;
-        return library;
+      if (!qx.lang.Type.isArray(result)) {
+        return [result];
       }
-
-      // Strip wildcard
-      var isFolderMatch = uri[pos - 1] === "/";
-      uri = uri.substring(0, pos - 1);
-
-      // Fast folder match
-      if (isFolderMatch) {
-        library = this.__librariesByResourceUri[uri] || null;
-        return library;
-      }
-
-      // Slow scan
-      if (!this.__allResourceUris) {
-        this.__allResourceUris = Object.keys(this.__librariesByResourceUri).sort();
-      }
-      pos = qx.tool.utils.Values.binaryStartsWith(this.__allResourceUris, uri);
-      if (pos > -1) {
-        var firstUri = this.__allResourceUris[pos];
-        library = this.__librariesByResourceUri[firstUri] || null;
-        return library;
-      }
-
-      return null;
+      return result;
     },
 
     /**
@@ -276,7 +326,18 @@ qx.Class.define("qx.tool.compiler.resources.Manager", {
           tmp += "/";
         }
         tmp += seg;
-        this.__librariesByResourceUri[tmp] = library;
+        let current = this.__librariesByResourceUri[tmp];
+        if (current) {
+          if (qx.lang.Type.isArray(current)) {
+            if (!qx.lang.Array.contains(current, library)) {
+              current.push(library);
+            }
+          } else if (current !== library) {
+            current = this.__librariesByResourceUri[tmp] = [ current, library ];
+          }
+        } else {
+          this.__librariesByResourceUri[tmp] = library;
+        }
       });
       
       asset.setLoaders(this.__loaders.filter(loader => loader.matches(filename)));
@@ -340,51 +401,54 @@ qx.Class.define("qx.tool.compiler.resources.Manager", {
 
       srcPaths.forEach(srcPath => {
         let pos = srcPath.indexOf(":");
-        let library = null;
+        let libraries = null;
         if (pos > -1) {
           let ns = srcPath.substring(0, pos);
-          library = this.__analyser.findLibrary(ns);
+          let tmp = this.__analyser.findLibrary(ns);
+          libraries = tmp ? [tmp] : [];
           srcPath = srcPath.substring(pos + 1);
         } else {
-          library = this.findLibraryForResource(srcPath);
+          libraries = this.findLibrariesForResource(srcPath);
         }
         
-        if (!library) {
+        if (libraries.length == 0) {
           this.warn("Cannot find library for " + srcPath);
           return;
         }
         
-        let libraryData = db.resources[library.getNamespace()];
-        pos = srcPath.indexOf("*");
-        let resourceNames = [];
-        if (pos > -1) {
-          srcPath = srcPath.substring(0, pos);
-          resourceNames = Object.keys(libraryData).filter(resourceName => resourceName.substring(0, srcPath.length) === srcPath);
-        } else if (libraryData[srcPath]) {
-          resourceNames = [ srcPath ];
-        }
-        
-        resourceNames.forEach(resourceName => {
-          if (assetPaths[resourceName] !== undefined) {
-            return;
-          }
-          let asset = this.__assets[library.getNamespace() + ":" + resourceName];
-          
-          let fileInfo = asset.getFileInfo();
-          if (fileInfo.doNotCopy === true) {
-            return;
+        libraries.forEach(library => {
+          let libraryData = db.resources[library.getNamespace()];
+          pos = srcPath.indexOf("*");
+          let resourceNames = [];
+          if (pos > -1) {
+            srcPath = srcPath.substring(0, pos);
+            resourceNames = Object.keys(libraryData).filter(resourceName => resourceName.substring(0, srcPath.length) === srcPath);
+          } else if (libraryData[srcPath]) {
+            resourceNames = [ srcPath ];
           }
           
-          (asset.getMetaReferees()||[]).forEach(meta => {
-            // Extract the fragment from the meta data for this particular resource
-            var resMetaData = meta.getFileInfo().meta[resourceName];
-            fileInfo.composite = resMetaData[3];
-            fileInfo.x = resMetaData[4];
-            fileInfo.y = resMetaData[5];
-          });
+          resourceNames.forEach(resourceName => {
+            if (assetPaths[resourceName] !== undefined) {
+              return;
+            }
+            let asset = this.__assets[library.getNamespace() + ":" + resourceName];
+            
+            let fileInfo = asset.getFileInfo();
+            if (fileInfo.doNotCopy === true) {
+              return;
+            }
+            
+            (asset.getMetaReferees()||[]).forEach(meta => {
+              // Extract the fragment from the meta data for this particular resource
+              var resMetaData = meta.getFileInfo().meta[resourceName];
+              fileInfo.composite = resMetaData[3];
+              fileInfo.x = resMetaData[4];
+              fileInfo.y = resMetaData[5];
+            });
 
-          assets.push(asset);
-          assetPaths[resourceName] = assets.length - 1;
+            assets.push(asset);
+            assetPaths[resourceName] = assets.length - 1;
+          });
         });
       });
 
