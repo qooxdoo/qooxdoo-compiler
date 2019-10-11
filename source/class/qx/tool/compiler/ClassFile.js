@@ -2397,7 +2397,8 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
       "location",
       "navigator",
       "performance",
-      "window"
+      "getComputedStyle",
+      "localStorage"
     ],
     
     NODE_GLOBALS: [
