@@ -94,7 +94,7 @@ qx.Class.define("qx.tool.compiler.jsdoc.Parser", {
       var result = {};
       cmds.forEach(function(cmd) {
         // If the body is surrounded by parameters, remove them
-        var m = cmd.body.match(/^\s*\(([\s\S]*)\)\s*$/);
+        var m = cmd.body.match(/^\s*\(([\s\S]*)\)\s*$/m);
         if (m) {
           cmd.body = m[1];
         }

@@ -555,9 +555,7 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
         qx.tool.compiler.Console.info(`>>> Downloading libraries listed in ${qx.tool.config.Lockfile.config.fileName}...`);
       }
       let libraries = (await this.getLockfileData()).libraries;
-      for (let i = 0; i < libraries.length; i++) {
-        await this.__download(libraries[i].repo_name, libraries[i].repo_tag);
-      }
+      return qx.Promise.all(libraries.filter(lib => lib.repo_name && lib.repo_tag).map(lib => this.__download(lib.repo_name, lib.repo_tag)));
     },
 
     /**

@@ -26,7 +26,7 @@
 qx.Class.define("qx.tool.utils.json.Writer", {
   extend: qx.core.Object,
   
-  construct() {
+  construct: function() {
     this.base(arguments);
     this.buffer = "";
     this.__indent = 0;

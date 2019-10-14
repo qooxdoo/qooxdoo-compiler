@@ -317,7 +317,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
           callback(err);
           return;
         }
-
+        var result; 
         try {
           let options = t.__analyser.getBabelOptions() || {};
           options.modules = false;
@@ -337,7 +337,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
             parserOpts: { sourceType: "script" },
             passPerPreset: true
           };
-          var result = babelCore.transform(src, config);
+          result = babelCore.transform(src, config);
         } catch (ex) {
           if (ex._babel) {
             qx.tool.compiler.Console.log(ex);
@@ -992,7 +992,9 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
           checkValidTopLevel(path);
           
           if (FUNCTION_NAMES[keyName] !== undefined) {
-            handleTopLevelMethods(path, keyName, path.node.value);
+            let val = path.node.value;
+            val.leadingComments = (path.node.leadingComments || []).concat(val.leadingComments || []);
+            handleTopLevelMethods(path, keyName, val);
             return;
           }
           
@@ -1203,10 +1205,11 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
             AssignmentPattern: 1,
             RestElement: 1,
             ArrayPattern: 1,
-            LabeledStatement: 1,
             SpreadElement: 1,
             ClassDeclaration: 1,
-            ClassMethod: 1
+            ClassMethod: 1,
+            LabeledStatement: 1,
+            BreakStatement: 1
           };
           
           // These are AST node types we expect to find at the root of the identifier, and which will
@@ -1238,8 +1241,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
             TemplateLiteral: 1,
             AwaitExpression: 1,
             DoWhileStatement: 1,
-            ForOfStatement: 1,
-            BreakStatement: 1
+            ForOfStatement: 1
           };
           let root = path;
           while (root) {
@@ -2395,7 +2397,8 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
       "location",
       "navigator",
       "performance",
-      "window"
+      "getComputedStyle",
+      "localStorage"
     ],
     
     NODE_GLOBALS: [

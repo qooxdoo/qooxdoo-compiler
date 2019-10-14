@@ -42,7 +42,7 @@ qx.Class.define("qx.tool.compiler.targets.SourceCodeCopier", {
    * Constructor
    * @param outputFilename {String} the destination file for combined output
    */
-  construct(outputFilename) {
+  construct: function(outputFilename) {
     this.base(arguments);
 
     let pos = outputFilename.lastIndexOf(".");
