@@ -167,6 +167,9 @@ module.exports = qx.Class.define("qx.tool.compiler.targets.BuildTarget", {
 
     _afterWriteApplication: async function(compileInfo) {
       var uglifyOpts = {
+        compress = {
+          sequences: false
+        }
       };
       switch (this.getMinify()) {
         case "off":
@@ -174,18 +177,12 @@ module.exports = qx.Class.define("qx.tool.compiler.targets.BuildTarget", {
 
         case "minify":
           uglifyOpts.mangle = false;
-          uglifyOpts.compress = {
-            sequences: false
-          };
           break;
 
         case "beautify":
           uglifyOpts.mangle = false;
           uglifyOpts.output = {
             beautify: true
-          };
-          uglifyOpts.compress = {
-            sequences: false
           };
           break;
 
