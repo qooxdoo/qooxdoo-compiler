@@ -175,7 +175,7 @@ module.exports = qx.Class.define("qx.tool.compiler.targets.BuildTarget", {
         case "minify":
           uglifyOpts.mangle = false;
           uglifyOpts.compress = {
-              sequences: false
+            sequences: false
           };
           break;
 
@@ -185,7 +185,7 @@ module.exports = qx.Class.define("qx.tool.compiler.targets.BuildTarget", {
             beautify: true
           };
           uglifyOpts.compress = {
-              sequences: false
+            sequences: false
           };
           break;
 
