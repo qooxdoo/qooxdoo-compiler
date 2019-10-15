@@ -49,7 +49,7 @@ call npx qx add class myapp.Window --extend=qx.ui.window.Window --force || EXIT 
 call npx qx add script ..\test\testdata\npm\script\jszip.js --rename=zip.js || EXIT /B 1
 copy ..\test\testdata\npm\application\*.js source\class\myapp /Y
 call npx qx lint --fix --warnAsError || EXIT /B 1
-call npx qx compile -v --clean
+call npx qx compile -v --clean || EXIT /B 1
 call node compiled\source\myapp\myapp.js || EXIT /B 1
 @echo [101;93m cleanup [0m
 cd ..
