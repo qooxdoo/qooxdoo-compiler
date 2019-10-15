@@ -73,6 +73,10 @@ qx.Class.define("qx.tool.compiler.makers.AppMaker", {
       var analyser = this.getAnalyser();
       
       this.fireEvent("making");
+      this.setSuccess(null);
+      this.setHasWarnings(null);
+      let success = true;
+      let hasWarnings = false;
 
       // merge all environment settings for the analyser
       const compileEnv = qx.tool.utils.Values.merge({},
@@ -159,12 +163,27 @@ qx.Class.define("qx.tool.compiler.makers.AppMaker", {
             return loadDeps.some(name => Boolean(compiledClasses[name]));
           });
 
+          let db = analyser.getDatabase();
           var promises = appsThisTime.map(application => {
             var appEnv = qx.tool.utils.Values.merge({}, compileEnv, application.getEnvironment());
             application.calcDependencies();
             if (application.getFatalCompileErrors()) {
               qx.tool.compiler.Console.print("qx.tool.compiler.maker.appFatalError", application.getName());
+              success = false;
               return undefined;
+            }
+            if (!hasWarnings) {
+              application.getDependencies().forEach(classname => {
+                if (!db.classInfo[classname] || !db.classInfo[classname].markers) {
+                  return;
+                }
+                db.classInfo[classname].markers.forEach(marker => {
+                  let type = qx.tool.compiler.Console.getInstance().getMessageType(marker.msgId);
+                  if (type == "warning") {
+                    hasWarnings = true;
+                  }
+                });
+              });
             }
 
             this.fireDataEvent("writingApplication", application);
@@ -184,7 +203,11 @@ qx.Class.define("qx.tool.compiler.makers.AppMaker", {
             });
         })
         .then(() => analyser.saveDatabase())
-        .then(() => this.fireEvent("made"));
+        .then(() => {
+          this.fireEvent("made");
+          this.setSuccess(success);
+          this.setHasWarnings(hasWarnings);
+        });
     }
   }
 });

@@ -342,7 +342,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
           if (ex._babel) {
             qx.tool.compiler.Console.log(ex);
           }
-          t.addMarker("compiler.syntaxError", ex.loc, ex.message, ex.codeFrame);
+          t.addMarker("compiler.syntaxError", ex.loc, ex.message);
           t.__fatalCompileError = true;
           t._compileDbClassInfo();
           callback();

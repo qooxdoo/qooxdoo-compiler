@@ -74,6 +74,20 @@ qx.Class.define("qx.tool.compiler.makers.Maker", {
     noErase: {
       init: false,
       check: "Boolean"
+    },
+    
+    /** Whether the make has succeeded, null during/before make */
+    success: {
+      init: null,
+      nullable: true,
+      check: "Boolean"
+    },
+    
+    /** Whether the make has any warnings, null during/before make */
+    hasWarnings: {
+      init: null,
+      nullable: true,
+      check: "Boolean"
     }
   },
 

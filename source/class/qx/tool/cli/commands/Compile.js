@@ -140,7 +140,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         describe: "Deletes the target dir before compile",
         type: "boolean"
       },
-      "warnAsError": {
+      "warn-as-error": {
         alias: "e",
         default: false,
         describe: "Handle compiler warnings as error"
@@ -351,8 +351,22 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
       });
 
       await this._loadConfigAndStartMaking();
+      
+      if (!this.argv.watch) {
+        let success = this.__makers.every(maker => maker.getSuccess());
+        let hasWarnings = this.__makers.every(maker => maker.getHasWarnings());
+        if (success && hasWarnings && this.argv.warnAsError) {
+          success = false;
+        }
+        process.exitCode = success ? 0 : 1;
+      }
     },
-
+    
+    /**
+     * Loads the configuration and starts the make
+     * 
+     * @return {Boolean} true if all makers succeeded
+     */
     async _loadConfigAndStartMaking() {
       var config = this.__config = await this.parse(this.argv);
       if (!config) {
@@ -795,19 +809,26 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         } else {
           qx.tool.utils.files.Utils.safeUnlink(target.getOutputDir() + target.getScriptPrefix() + "index.html");
         }
+        
+        const showMarkers = (classname, markers) => {
+          if (markers) {
+            markers.forEach(function(marker) {
+              var str = qx.tool.compiler.Console.decodeMarker(marker);
+              Console.warn(classname + ": " + str);
+            });
+          }
+        };
 
         // Note - this will cause output multiple times, once per maker/target; but this is largely unavoidable
         //  because different targets can cause different warnings for the same code due to different compilation
         //  options (eg node vs browser)
-        maker.getAnalyser().addListener("compiledClass", function(evt) {
+        maker.getAnalyser().addListener("compiledClass", evt => {
           var data = evt.getData();
-          var markers = data.dbClassInfo.markers;
-          if (markers) {
-            markers.forEach(function(marker) {
-              var str = qx.tool.compiler.Console.decodeMarker(marker);
-              Console.warn(data.classFile.getClassName() + ": " + str);
-            });
-          }
+          showMarkers(data.classFile.getClassName(), data.dbClassInfo.markers);
+        });
+        maker.getAnalyser().addListener("alreadyCompiledClass", evt => {
+          var data = evt.getData();
+          showMarkers(data.className, data.dbClassInfo.markers);
         });
 
         makers.push(maker);
