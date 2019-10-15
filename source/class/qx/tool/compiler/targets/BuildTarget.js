@@ -167,6 +167,9 @@ module.exports = qx.Class.define("qx.tool.compiler.targets.BuildTarget", {
 
     _afterWriteApplication: async function(compileInfo) {
       var uglifyOpts = {
+        compress: {
+          sequences: false
+        }
       };
       switch (this.getMinify()) {
         case "off":

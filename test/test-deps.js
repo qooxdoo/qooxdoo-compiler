@@ -110,8 +110,8 @@ test("Checks dependencies and environment settings", assert => {
       })
       .then(() => readCompileInfo().then(tmp => compileInfo = tmp))
       .then(() => {
-        // qx.util.format.DateFormat is included manually later on, so this needs to be not included automatically now
-        assert.ok(!hasClassDependency(compileInfo, "qx.util.format.DateFormat"), "qx.util.format.DateFormat is automatically included");
+        // qx.util.format.NumberFormat is included manually later on, so this needs to be not included automatically now
+        assert.ok(!hasClassDependency(compileInfo, "qx.util.format.NumberFormat"), "qx.util.format.NumberFormat is automatically included");
       })
 
       /*
@@ -119,13 +119,13 @@ test("Checks dependencies and environment settings", assert => {
        */
       .then(() => {
         app.setExclude(["qx.ui.layout.*"]);
-        app.setInclude(["qx.util.format.DateFormat"]);
+        app.setInclude(["qx.util.format.NumberFormat"]);
         return maker.make();
       })
       .then(() => readCompileInfo().then(tmp => compileInfo = tmp))
       .then(() => {
         assert.ok(!hasPackageDependency(compileInfo, "qx.ui.layout"), "qx.ui.layout.* was not excluded");
-        assert.ok(hasClassDependency(compileInfo, "qx.util.format.DateFormat"), "qx.util.format.DateFormat is not included");
+        assert.ok(hasClassDependency(compileInfo, "qx.util.format.NumberFormat"), "qx.util.format.NumberFormat is not included");
       })
       // Undo the exclude/include
       .then(() => {
