@@ -40,10 +40,15 @@ test("Issue440", async assert => {
     result = await runCompiler("issue440", "compile");
     assert.ok(result.exitCode === 1);
     
-    code[errorLine] = "new abc.ClassNoDef();//This is an error";
+    code[errorLine] = "new abc.ClassNoDef(); //This is an error";
+    await fsPromises.writeFile("issue440/source/class/issue440/Application.js", code.join("\n"), "utf8");
+    result = await runCompiler("issue440", "compile", "--warnAsError");
+    assert.ok(result.exitCode === 1);
+
+    code[errorLine] = "new abc.ClassNoDef(); //This is an error";
     await fsPromises.writeFile("issue440/source/class/issue440/Application.js", code.join("\n"), "utf8");
     result = await runCompiler("issue440", "compile");
-    assert.ok(result.exitCode === 1);
+    assert.ok(result.exitCode === 0);
     
     code[errorLine] = "//This is an error";
     await fsPromises.writeFile("issue440/source/class/issue440/Application.js", code.join("\n"), "utf8");
