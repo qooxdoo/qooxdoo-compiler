@@ -245,8 +245,18 @@ qx.Class.define("qx.tool.compiler.app.Cldr", {
             cldr.cldr_time_format_short = find(timeFormatLength, "type", "short", getTimeFormatPattern);// "h:mm a";
           }
 
-          cldr.cldr_number_decimal_separator = getValue("ldml.numbers[0].symbols[0].decimal[0]");// ".";
-          cldr.cldr_number_group_separator = getValue("ldml.numbers[0].symbols[0].group[0]");// ",";
+          var numberingSystem = getText(get("ldml.numbers[0].defaultNumberingSystem[0]"));
+          
+          if (numberingSystem) {
+            find(get("ldml.numbers[0].symbols"), "numberSystem", numberingSystem, function(row) {
+              cldr.cldr_number_decimal_separator = row.decimal[0];
+              cldr.cldr_number_group_separator = row.group[0];
+            });
+          } else {
+            cldr.cldr_number_decimal_separator = getValue("ldml.numbers[0].symbols[0].decimal[0]");// ".";
+            cldr.cldr_number_group_separator = getValue("ldml.numbers[0].symbols[0].group[0]");// ",";
+          }
+          
           cldr.cldr_number_percent_format = getValue("ldml.numbers[0].percentFormats[0].percentFormatLength[0].percentFormat[0].pattern[0]");// "#,##0%";
 
           function getDisplayName(row) {
