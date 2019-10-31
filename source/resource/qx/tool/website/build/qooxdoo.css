@@ -10,6 +10,11 @@
 .carousel-indicators li.active {
   background-color: #AAA; }
 
-#applications li p {
-  font-style: italic;
+#applications li {
   margin-bottom: 0.25em; }
+  #applications li p {
+    font-style: italic;
+    margin-bottom: 0; }
+  #applications li p.tools {
+    margin: 0 0 0 40px;
+    font-size: 11px; }

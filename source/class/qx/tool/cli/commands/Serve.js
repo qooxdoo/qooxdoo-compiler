@@ -21,6 +21,7 @@ const process = require("process");
 const express = require("express");
 const http = require("http");
 const fs = qx.tool.utils.Promisify.fs;
+const chokidar = require("chokidar");
 
 require("app-module-path").addPath(process.cwd() + "/node_modules");
 
@@ -73,6 +74,9 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
   },
 
   members: {
+    /** @type {qx.tool.utils.Website} the Website instance */
+    _website: null,
+    
     /*
      * @Override
      */
@@ -81,23 +85,24 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
       this.argv["machine-readable"] = false;
       this.argv["feedback"] = false;
       await this.base(arguments);
+      
       // build website if it hasn't been built yet.
-      const website = new qx.tool.utils.Website();
-      if (!await fs.existsAsync(website.getTargetDir()) || this.argv.rebuildStartpage) {
+      const website = this._website = new qx.tool.utils.Website();
+      if (!await fs.existsAsync(website.getTargetDir())) {
         qx.tool.compiler.Console.info(">>> Building startpage...");
-        await website.generateSite();
-        await website.compileScss();
+        await this._website.rebuildAll();
+      } else if (this.argv.rebuildStartpage) {
+        this._website.startWatcher();
       }
+      
       await this.runWebServer();
     },
-
-
+    
     /**
-     *
-     * @returns
+     * Runs the web server
+     * 
+     * @ignore qx.tool.$$resourceDir
      */
-    /* @ignore qx.tool.$$resourceDir */
-
     runWebServer: async function() {
       let makers = this.getMakers().filter(maker => maker.getApplications().some(app => app.isBrowserApp() && app.getStandalone()));
       let apps = [];
@@ -154,6 +159,7 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
                 name: app.getName(),
                 type: app.getType(),
                 title: app.getTitle() || app.getName(),
+                appClass: app.getClassName(),
                 description: app.getDescription(),
                 outputPath: target.getProjectDir(app) // no trailing slash or link will break
               }))
