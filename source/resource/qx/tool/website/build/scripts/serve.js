@@ -1,23 +1,36 @@
 $(function() {
   
-  function get(uri) {
-    return new Promise(function(resolve, reject) {
-      $.ajax("/serve.api/apps.json", {
-        cache: false,
-        dataType: "json",
-        
-        error: function(jqXHR, textStatus, errorThrown) {
-          reject(textStatus || errorThrown);
-        },
-        
-        success: resolve
-      });
-    });
-  }
+  var query = {};
+  (document.location.search.substring(1)||"").split("&").forEach(function(seg) {
+    var pos = seg.indexOf('=');
+    if (pos > -1) {
+      query[seg.substring(0, pos)] = seg.substring(pos + 1);
+    } else {
+      query[seg] = true;
+    }
+  });
   
-  $.qxcli = {};
+  $.qxcli = {
+    query: query,
+    
+    get: function get(uri) {
+      return new Promise(function(resolve, reject) {
+        $.ajax(uri, {
+          cache: false,
+          dataType: "json",
+          
+          error: function(jqXHR, textStatus, errorThrown) {
+            reject(textStatus || errorThrown);
+          },
+          
+          success: resolve
+        });
+      });
+    }
+  };
+  
   $.qxcli.serve = {
-      apps: get("/serve-api/apps")
+    apps: $.qxcli.get("/serve.api/apps.json")
   };
   
   $.qxcli.pages = {
@@ -38,6 +51,14 @@ $(function() {
               $li.append($a);
               if (appData.description)
                 $li.append($("<p>").text(appData.description))
+              $li.append("<p class='tools'>" +
+                "<a href='diagnostics/dependson.html?targetDir=" + targetData.target.outputDir + 
+                  "&appDir=" + appData.outputPath + 
+                  "&appClass=" + appData.appClass + "'>Depends-On Analysis</a>, " + 
+                "<a href='diagnostics/requiredby.html?targetDir=" + targetData.target.outputDir + 
+                  "&appDir=" + appData.outputPath + 
+                  "&appClass=" + appData.appClass + "'>Required-By Analysis</a>" + 
+                "</p>");
               $ul.append($li);
             });
             $root.append($ul);
