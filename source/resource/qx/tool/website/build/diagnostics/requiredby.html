@@ -85,23 +85,24 @@
 
     <!-- Content -->
     <div class="container py-5">
-        <main class="page-content" aria-label="Content">
-  <div class="wrapper">
-    <div class="home">
-    
-      <h1 class="page-heading">Applications</h1>
-      <div id="applications">
-        Loading ....
-      </div>
-      
-    </div>
-    <script type="text/javascript">
-    $(function() {
-      $.qxcli.pages.homepage();
-    });
-    </script>
-  </div>
-</main>
+        
+<script type="text/javascript" src="requiredby.js"></script>
+
+<select id="show">
+    <option value="both" selected>runtime and loadtime</option>
+    <option value="runtime">runtime</option>
+    <option value="load">load</option>
+</select>
+
+<style>
+    li {
+        cursor: pointer;
+    }
+</style>
+
+<div id="root">
+</div>
+
 
     </div> 
 
