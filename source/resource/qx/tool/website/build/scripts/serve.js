@@ -63,6 +63,13 @@ $(function() {
             });
             $root.append($ul);
           });
+          $root.append("<p style='font-size: 10px'><input type='checkbox' id='cbxShowTools'>Show Tools</p>");
+          $("#cbxShowTools").change(function() {
+            if (this.checked)
+              $(".tools").show();
+            else
+              $(".tools").hide();
+          });
         });
     }
   };

@@ -128,15 +128,16 @@ qx.Class.define("qx.tool.utils.Website", {
      * @return {Boolean} true if its running
      */
     isWatching() {
-      return !!this._watcher;
+      return Boolean(this._watcher);
     },
 
     /**
      * Waits for the rebuild process to complete, if it is running
      */
     async waitForRebuildComplete() {
-      if (this.__rebuildPromise)
+      if (this.__rebuildPromise) {
         await this.__rebuildPromise;
+      }
     },
     
     /**
@@ -193,7 +194,7 @@ qx.Class.define("qx.tool.utils.Website", {
         } finally {
           this.__rebuilding = false;
         }
-      }
+      };
       
       if (this.__rebuildTimer) {
         clearTimeout(this.__rebuildTimer);

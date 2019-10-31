@@ -18,7 +18,7 @@ teardown() {
   run npx qx package list --short --noheaders --installed --all
   [ "$status" -eq 0 ]
   [ $(echo "$output" | wc -l | tr -d ' ') = "3" ]
-  npx qx compile --feedback=false --warnAsError
+  npx qx compile --feedback=false
 }
 
 @test "Install qxl.test2/qxl.test2A, latest version" {
@@ -26,7 +26,7 @@ teardown() {
   run npx qx package list --short --noheaders --installed --all
   [ "$status" -eq 0 ]
   [ $(echo "$output" | wc -l | tr -d ' ') = "4" ]
-  npx qx compile --feedback=false --warnAsError
+  npx qx compile --feedback=false
 }
 
 @test "Install qxl.test1@release then migrate and upgrade" {
@@ -35,9 +35,9 @@ teardown() {
   cd qx_packages/qooxdoo_qxl_test1_v1_0_2/
   npx qx pkg migrate
   cd ../..
-  npx qx compile --feedback=false --warnAsError
+  npx qx compile --feedback=false
   npx qx pkg upgrade
-  npx qx compile --feedback=false --warnAsError
+  npx qx compile --feedback=false
 }
 
 @test "Install qxl.test1@commit" {
@@ -45,5 +45,5 @@ teardown() {
   run npx qx package list --short --noheaders --installed --all
   [ "$status" -eq 0 ]
   [ $(echo "$output" | wc -l | tr -d ' ') = "3" ]
-  npx qx compile --feedback=false --warnAsError
+  npx qx compile --feedback=false
 }

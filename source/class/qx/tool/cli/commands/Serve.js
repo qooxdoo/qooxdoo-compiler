@@ -21,7 +21,6 @@ const process = require("process");
 const express = require("express");
 const http = require("http");
 const fs = qx.tool.utils.Promisify.fs;
-const chokidar = require("chokidar");
 
 require("app-module-path").addPath(process.cwd() + "/node_modules");
 
