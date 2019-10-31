@@ -141,9 +141,10 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         type: "boolean"
       },
       "warn-as-error": {
-        alias: "e",
-        default: false,
-        describe: "Handle compiler warnings as error"
+        alias: "E",
+        describe: "Handle compiler warnings as error",
+        type: "boolean",
+        default: false
       },
       "write-library-info": {
         alias: "I",
@@ -355,7 +356,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
       if (!this.argv.watch) {
         let success = this.__makers.every(maker => maker.getSuccess());
         let hasWarnings = this.__makers.every(maker => maker.getHasWarnings());
-        if (success && hasWarnings && this.argv.warnAsError) {
+        if (success && (hasWarnings && this.argv.warnAsError)) {
           success = false;
         }
         process.exitCode = success ? 0 : 1;

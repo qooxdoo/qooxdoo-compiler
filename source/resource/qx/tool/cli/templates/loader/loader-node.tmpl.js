@@ -11,22 +11,74 @@
     var args = [].slice.apply(arguments);
     console.log.apply(this, args);
   };
+  
+  class PsuedoElement {
+    constructor(tagName) {
+      this.tagName = tagName.toUpperCase();
+      this.childNodes = [];
+      this.children = [];
+      this.firstChild = null;
+      this.className = "";
+      this.style = {};
+    }
+    getAttribute(name) {
+      return this.__attrs && this.__attrs[name] || null;
+    }
+    setAttribute(name, value) {
+      if (!this.__attrs)
+        this.__attrs = {};
+      if (value !== null && value !== undefined)
+        this.__attrs[name] = value;
+      else
+        delete this.__attrs[name];
+    }
+    appendChild(child) {
+      this.childNodes.push(child);
+      if (child instanceof PsuedoElement) {
+        this.children.push(child);
+        if (this.children.length == 1)
+          this.firstChild = child;
+      }
+      return child;
+    }
+    getElementsByTagName(tagName) {
+      if (tagName === "*")
+        return this.children;
+      tagName = tagName.toUpperCase();
+      return this.children.filter(function(child) {
+        return child.tagName === tagName;
+      });
+    }
+    set innerHTML(str) {
+      this.childNodes = [];
+      this.children = [];
+      if (str) {
+      }
+    }
+    compareDocumentPosition() {
+      return 1; // DOCUMENT_POSITION_DISCONNECTED
+    }
+  }
 
   window.document = document = {
       readyState: "ready",
+      nodeType: 9,
+      
       createEvent: function() {
         return {
           initCustomEvent: function() {}
         };
       },
-      createElement: function () {
-		  return {}
-	  },
+      createElement: function (tagName) {
+  		  return new PsuedoElement(tagName);
+  	  },
+  	  createComment: function(comment) {
+  	    return {};
+  	  },
       addListener: function() {},
       removeListener: function() {},
-      documentElement: {
-        style: {}
-      }
+      documentElement: new PsuedoElement("#document"),
+      childNodes: []
   };
 
   if (!this.window) 

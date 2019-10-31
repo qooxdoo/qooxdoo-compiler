@@ -311,6 +311,7 @@ qx.Class.define("qx.tool.compiler.Console", {
      */
     decodeMarker: function(marker, showPosition) {
       var msg = qx.tool.compiler.Console.MESSAGE_IDS[marker.msgId] || marker.msgId;
+      var type = msg.type? msg.type + ": ":"";
       var str = "";
       var pos = marker.pos;
       if (showPosition !== false && pos && pos.start && pos.start.line) {
@@ -329,7 +330,7 @@ qx.Class.define("qx.tool.compiler.Console", {
         str += "] ";
       }
       try {
-        str += qx.lang.String.format(msg.message, marker.args||[]);
+        str += type + qx.lang.String.format(msg.message, marker.args||[]);
       } catch (e) {
         throw new Error(`Unknown message id ${marker.msgId}.`);
       }

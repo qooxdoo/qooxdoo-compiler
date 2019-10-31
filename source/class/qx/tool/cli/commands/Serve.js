@@ -73,6 +73,9 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
   },
 
   members: {
+    /** @type {qx.tool.utils.Website} the Website instance */
+    _website: null,
+    
     /*
      * @Override
      */
@@ -81,31 +84,32 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
       this.argv["machine-readable"] = false;
       this.argv["feedback"] = false;
       await this.base(arguments);
+      
       // build website if it hasn't been built yet.
-      const website = new qx.tool.utils.Website();
-      if (!await fs.existsAsync(website.getTargetDir()) || this.argv.rebuildStartpage) {
+      const website = this._website = new qx.tool.utils.Website();
+      if (!await fs.existsAsync(website.getTargetDir())) {
         qx.tool.compiler.Console.info(">>> Building startpage...");
-        await website.generateSite();
-        await website.compileScss();
+        await this._website.rebuildAll();
+      } else if (this.argv.rebuildStartpage) {
+        this._website.startWatcher();
       }
+      
       await this.runWebServer();
     },
-
-
+    
     /**
-     *
-     * @returns
+     * Runs the web server
+     * 
+     * @ignore qx.tool.$$resourceDir
      */
-    /* @ignore qx.tool.$$resourceDir */
-
     runWebServer: async function() {
-      let makers = this.getMakers().filter(maker => maker.getApplications().some(app => app.isBrowserApp()));
+      let makers = this.getMakers().filter(maker => maker.getApplications().some(app => app.isBrowserApp() && app.getStandalone()));
       let apps = [];
       let defaultMaker = null;
       let firstMaker = null;
       makers.forEach(maker => {
         maker.getApplications().forEach(app => {
-          if (app.isBrowserApp()) {
+          if (app.isBrowserApp() && app.getStandalone()) {
             apps.push(app);
             if (firstMaker === null) {
               firstMaker = maker;
@@ -141,11 +145,12 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
         var appsData = [];
         makers.forEach(maker => {
           let target = maker.getTarget();
-          app.use("/" + target.getOutputDir(), express.static(target.getOutputDir()));
+          let out = path.normalize("/" + target.getOutputDir());
+          app.use(out, express.static(target.getOutputDir()));
           appsData.push({
             target: {
               type: target.getType(),
-              outputDir: "/" + target.getOutputDir()
+              outputDir: out
             },
             apps: maker.getApplications()
               .filter(app => app.isBrowserApp() && app.getStandalone())
@@ -153,6 +158,7 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
                 name: app.getName(),
                 type: app.getType(),
                 title: app.getTitle() || app.getName(),
+                appClass: app.getClassName(),
                 description: app.getDescription(),
                 outputPath: target.getProjectDir(app) // no trailing slash or link will break
               }))
