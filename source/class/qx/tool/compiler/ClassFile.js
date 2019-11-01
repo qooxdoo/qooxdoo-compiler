@@ -415,6 +415,18 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
 
       // Collect the dependencies on other classes
       var deps = this.getRequiredClasses();
+      if (t.__usesJsx) {
+        let JSX = qx.tool.compiler.ClassFile.JSX_OPTIONS;
+        let classname = JSX.pragma;
+        let pos = classname.lastIndexOf(".");
+        classname = classname.substring(0, pos);
+        if (!deps[classname]) {
+          deps[classname] = {};
+        }
+        if (!deps[JSX.pragmaFrag]) {
+          deps[JSX.pragmaFrag] = {};
+        }
+      }
       for (var name in deps) {
         var dep = deps[name];
         if (!dep.ignore) {
@@ -1144,6 +1156,10 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
 
         EmptyStatement: path => { 
           checkNodeJsDocDirectives(path.node); 
+        },
+        
+        JSXElement(path) {
+          t.__usesJsx = true;
         },
 
         Program: {
@@ -2280,7 +2296,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
      */
     JSX_OPTIONS: {
       "pragma": "qx.html.Jsx.createElement",
-      "pragmaFrag": "qx.html.Jsx.Fragment"
+      "pragmaFrag": "qx.html.JsxFragment"
     },
 
     /**
