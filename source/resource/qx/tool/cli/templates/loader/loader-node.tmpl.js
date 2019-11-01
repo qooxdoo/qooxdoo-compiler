@@ -4,33 +4,6 @@
   
   if (typeof window === "undefined") 
     window = this;
-
-  // Node suppresses output to the "real" console when calling console.debug, it's only shown
-  //  in the debugger 
-  console.debug = function() {
-    var args = [].slice.apply(arguments);
-    console.log.apply(this, args);
-  };
-
-  window.document = document = {
-      readyState: "ready",
-      createEvent: function() {
-        return {
-          initCustomEvent: function() {}
-        };
-      },
-      createElement: function () {
-		  return {}
-	  },
-      addListener: function() {},
-      removeListener: function() {},
-      documentElement: {
-        style: {}
-      }
-  };
-
-  if (!this.window) 
-    window = this;
   window.dispatchEvent = function() {};
 
   if (!window.navigator) window.navigator = {};
@@ -39,6 +12,45 @@
   }
   if (!window.navigator.product) window.navigator.product = "";
   if (!window.navigator.cpuClass) window.navigator.cpuClass = "";
+
+  // Node suppresses output to the "real" console when calling console.debug, it's only shown
+  //  in the debugger 
+  console.debug = function() {
+    var args = [].slice.apply(arguments);
+    console.log.apply(this, args);
+  };
+  
+  var JSDOM = null;
+  try {
+    JSDOM = require("jsdom").JSDOM;
+  } catch(ex) {
+    // Nothing
+  }
+  if (JSDOM) {
+    var dom = new JSDOM(`<!DOCTYPE html><html><head></head><body></body></html>`);
+    if (!window)
+      window = dom.window;
+    else {
+      window.document = dom.window.document;
+    }
+  } else {
+    window.document = document = {
+        readyState: "ready",
+        createEvent: function() {
+          return {
+            initCustomEvent: function() {}
+          };
+        },
+        createElement: function () {
+          return {}
+        },
+        addListener: function() {},
+        removeListener: function() {},
+        documentElement: {
+          style: {}
+        }
+    };
+  }
 
   if (!this.qxloadPrefixUrl)
     qxloadPrefixUrl = "";
