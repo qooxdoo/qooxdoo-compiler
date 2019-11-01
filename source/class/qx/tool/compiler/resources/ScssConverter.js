@@ -63,20 +63,31 @@ qx.Class.define("qx.tool.compiler.resources.ScssConverter", {
     async legacyMobileSassConvert(target, asset, srcFilename, destFilename) {
       let qooxdooPath = target.getAnalyser().getQooxdooPath();
       let data = await fs.readFileAsync(srcFilename, "utf8");
-      let sassOptions = {
-        data: data,
-        includePaths: [
-          path.dirname(srcFilename),
-          path.join(qooxdooPath, "source/resource/qx/mobile/scss"),
-          path.join(qooxdooPath, "source/resource/qx/scss")
-        ],
-        outFile: destFilename,
-        sourceMap: destFilename + ".map",
-        outputStyle: "compressed"
-      };
-      let result = await qx.tool.utils.Promisify.call(cb => sass.render(sassOptions, cb));
-      await fs.writeFileAsync(destFilename, result.css);
-      await fs.writeFileAsync(destFilename + ".map", result.map);
+      if (!data || !data.trim()) {
+        await fs.writeFileAsync(destFilename, "");
+        await fs.unlinkAsync(destFilename + ".map");
+      } else {
+        let sassOptions = {
+          data: data,
+          includePaths: [
+            path.dirname(srcFilename),
+            path.join(qooxdooPath, "source/resource/qx/mobile/scss"),
+            path.join(qooxdooPath, "source/resource/qx/scss")
+          ],
+          outFile: destFilename,
+          sourceMap: destFilename + ".map",
+          outputStyle: "compressed"
+        };
+        let result = await qx.tool.utils.Promisify.call(cb => sass.render(sassOptions, (err, result) => {
+          if (err) {
+            cb(new Error(err.message));
+          } else {
+            cb(null, result);
+          }
+        }));
+        await fs.writeFileAsync(destFilename, result.css);
+        await fs.writeFileAsync(destFilename + ".map", result.map);
+      }
     }
   },
   
@@ -86,7 +97,7 @@ qx.Class.define("qx.tool.compiler.resources.ScssConverter", {
     isNewCompiler() {
       if (qx.tool.compiler.resources.ScssConverter.USE_V6_COMPILER === null) {
         console.warn("DEPRECATED: Using the Qooxdoo v5 style of SASS Compilation; this is backwards compatible " +
-            "but the default will change in v7 to use the new style (see https://git.io/fjyqj for details, and how " +
+            "but the default will change in v7 to use the new style (see https://git.io/JegIS for details, and how " +
             "to disable this warning).");
         qx.tool.compiler.resources.ScssConverter.USE_V6_COMPILER = false;
       }
