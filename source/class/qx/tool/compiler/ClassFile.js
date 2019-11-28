@@ -796,9 +796,9 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
             //  use this to remove the unwanted code.
             if (types.isLiteral(node.test)) {
               if (node.test.value) {
-                path.replaceWithMultiple(node.consequent.body);
+                path.replaceWith(node.consequent);
               } else if (node.alternate) {
-                path.replaceWithMultiple(node.alternate.body);
+                path.replaceWith(node.alternate);
               } else {
                 path.remove();
               }
@@ -914,7 +914,8 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         } else if (node.type == "NewExpression" || node.type == "BinaryExpression") {
           result = "[[ " + node.type + " ]]";
         } else {
-          t.warn("Cannot interpret AST " + node.type + " at " + t.__className + " [" + node.loc.start.line + "," + node.loc.start.column + "]");
+          t.warn("Cannot interpret AST " + node.type + " at " + t.__className + 
+              (node.loc ? " [" + node.loc.start.line + "," + node.loc.start.column + "]" : ""));
           result = null;
         }
         return result;
@@ -1182,8 +1183,8 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
               var tmp = types.callExpression(fn, [
                 path.node,
                 types.stringLiteral(t.__className.replace(/\./g, "/") + ".js"),
-                types.numericLiteral(path.node.loc.start.line),
-                types.numericLiteral(path.node.loc.start.column)
+                types.numericLiteral(path.node.loc ? path.node.loc.start.line : 0),
+                types.numericLiteral(path.node.loc ? path.node.loc.start.column : 0)
               ]);
               path.replaceWith(tmp);
               path.skip();
@@ -1343,7 +1344,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
             }
 
             function addTranslation(entry) {
-              let lineNo = path.node.loc.start.line;
+              let lineNo = path.node.loc ? path.node.loc.start.line : 0;
               let cur = t.__translations[entry.msgid];
               if (cur) {
                 if (!qx.lang.Type.isArray(cur.lineNo)) {
@@ -2072,6 +2073,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
      *  where {"ignore"|"require"|"use"|null} where it's mentioned
      *  load {Boolean?} whether it is a load-time dependency or not
      *  defer {Boolean?} whether the dependency is in defer or not
+     *  location {Map?} location of the token that caused the reference
      * @return {Map?} info about the symbol type of the named class, @see {Analyser.getSymbolType}
      */
     _requireClass: function(name, opts) {

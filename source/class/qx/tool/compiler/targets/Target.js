@@ -299,7 +299,7 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
       var library = compileInfo.library = analyser.getLibraryFromClassname(appClassname);
       if (!library) {
         qx.tool.compiler.Console.print("qx.tool.compiler.target.missingAppLibrary", appClassname);
-        return qx.Promise.resolve();
+        return;
       }
       const requiredLibs = application.getRequiredLibraries();
       var namespace = compileInfo.namespace = library.getNamespace();
@@ -454,8 +454,8 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
             if (code) {
               configdata.preBootCode.push(code);
             }
-          }catch(ex) {
-            qx.tool.compiler.Console.print("qx.tool.compiler.webfonts.error", font.toString(), err.toString());
+          } catch (ex) {
+            qx.tool.compiler.Console.print("qx.tool.compiler.webfonts.error", font.toString(), ex.toString());
           }
           promises.push(p);
         };
@@ -695,12 +695,12 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
       var appRootDir = this.getApplicationRoot(application);
       
       var APP_SUMMARY = {
-          appClass: application.getClassName(),
-          libraries: Object.keys(compileInfo.configdata.libraries).filter(ns => ns != "__out__"),
-          parts: [],
-          resources: compileInfo.configdata.resources,
-          locales: compileInfo.configdata.locales,
-          environment: compileInfo.configdata.environment
+        appClass: application.getClassName(),
+        libraries: Object.keys(compileInfo.configdata.libraries).filter(ns => ns != "__out__"),
+        parts: [],
+        resources: compileInfo.configdata.resources,
+        locales: compileInfo.configdata.locales,
+        environment: compileInfo.configdata.environment
       };
       compileInfo.parts.forEach(part => {
         APP_SUMMARY.parts.push({
@@ -782,8 +782,8 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
       }
 
       await fs.writeFileAsync(appRootDir + "/" + t.getScriptPrefix() + "app-summary.json",
-          JSON.stringify(APP_SUMMARY, null, 2) + "\n",
-          { encoding: "utf8" });
+        JSON.stringify(APP_SUMMARY, null, 2) + "\n",
+        { encoding: "utf8" });
       
       await fs.writeFileAsync(appRootDir + "/" + t.getScriptPrefix() + "resources.js",
         "qx.$$packageData['0'] = " + JSON.stringify(compileInfo.pkgdata, null, 2) + ";\n",

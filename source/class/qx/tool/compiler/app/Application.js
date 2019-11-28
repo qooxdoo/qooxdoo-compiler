@@ -802,10 +802,10 @@ qx.Class.define("qx.tool.compiler.app.Application", {
      */
     getCalculatedEnvironment() {
       return qx.tool.utils.Values.merge(
-          {
-            "qx.headless": this.getType() != "browser"
-          },
-          this.getEnvironment());
+        {
+          "qx.headless": this.getType() != "browser"
+        },
+        this.getEnvironment());
     },
     
     /**
