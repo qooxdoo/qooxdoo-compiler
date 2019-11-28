@@ -168,32 +168,6 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
     },
 
     /**
-     * Compiles the environment settings into one
-     *
-     * @param app
-     * @param environment
-     * @returns {{}}
-     * @private
-     */
-    _mergeEnvironment: function(app, environment) {
-      function merge(obj) {
-        if (obj) {
-          for (var name in obj) {
-            result[name] = obj[name];
-          }
-        }
-      }
-      var result = {};
-      if (environment) {
-        merge(environment);
-      }
-      if (app.getEnvironment()) {
-        merge(app.getEnvironment());
-      }
-      return result;
-    },
-
-    /**
      * Syncs all assets into the output directory
      *
      * @param compileInfo
@@ -217,6 +191,7 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
     getProjectDir: function (application) {
       return application.getOutputPath() || application.getName();
     },
+    
     /**
      * Returns the URI for the root of the output, relative to the application
      */
@@ -303,7 +278,7 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
      * @param {Application} app
      * @param {Maker} maker
      */
-    generateApplication: function(application, environment) {
+    async generateApplication(application, environment) {
       var t = this;
       var analyser = application.getAnalyser();
       var db = analyser.getDatabase();
@@ -334,199 +309,188 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
       // Root of the application & URI
       var appRootDir = this.getApplicationRoot(application);
 
-      return util.mkpathAsync(appRootDir)
-        .then(() => {
-          var parts = compileInfo.parts = application.getPartsDependencies();
+      await util.mkpathAsync(appRootDir);
 
-          let matchBundle = qx.tool.compiler.app.Application.createWildcardMatchFunction(application.getBundleInclude(), application.getBundleExclude());
+      var parts = compileInfo.parts = application.getPartsDependencies();
 
-          var configdata = compileInfo.configdata = {
-            "environment": {
-              "qx.application": application.getClassName(),
-              "qx.revision": "",
-              "qx.theme": application.getTheme(),
-              "qx.version": analyser.getQooxdooVersion(),
-              "qx.libraryInfoMap": libraryInfoMap
-            },
-            "loader": {
-              "parts": {
-              },
-              "packages": {
-              }
-            },
-            "libraries": {
-              "__out__": {
-                "sourceUri": ""
-              }
-            },
-            "resources": {},
-            "urisBefore": [],
-            "cssBefore": [],
-            "boot": "boot",
-            "closureParts": {},
-            "bootIsInline": false,
-            "addNoCacheParam": false,
-            "preBootCode": []
-          };
-          
-          function addExternal(arr, type) {
-            if (arr) {
-              arr.forEach(filename => {
-                if (filename.match(/^https?:/)) {
-                  configdata[type].push("__external__:" + filename);
-                } else {
-                  let asset = rm.getAsset(filename);
-                  if (asset) {
-                    let str = asset.getDestFilename(t);
-                    str = path.relative(path.join(t.getOutputDir(), "resource"), str);
-                    configdata[type].push(asset.getLibrary().getNamespace() + ":" + str);
-                  }
-                }
-              });
-            }
+      let matchBundle = qx.tool.compiler.app.Application.createWildcardMatchFunction(application.getBundleInclude(), application.getBundleExclude());
+
+      var configdata = compileInfo.configdata = {
+        "environment": {
+          "qx.application": application.getClassName(),
+          "qx.revision": "",
+          "qx.theme": application.getTheme(),
+          "qx.version": analyser.getQooxdooVersion(),
+          "qx.libraryInfoMap": libraryInfoMap
+        },
+        "loader": {
+          "parts": {
+          },
+          "packages": {
           }
-          requiredLibs.forEach(libnamespace => {
-            var library = analyser.findLibrary(libnamespace);
-            if (this.isWriteLibraryInfo()) {
-              libraryInfoMap[libnamespace] = library.getLibraryInfo();
+        },
+        "libraries": {
+          "__out__": {
+            "sourceUri": ""
+          }
+        },
+        "resources": {},
+        "urisBefore": [],
+        "cssBefore": [],
+        "boot": "boot",
+        "closureParts": {},
+        "bootIsInline": false,
+        "addNoCacheParam": false,
+        "preBootCode": []
+      };
+      
+      function addExternal(arr, type) {
+        if (arr) {
+          arr.forEach(filename => {
+            if (filename.match(/^https?:/)) {
+              configdata[type].push("__external__:" + filename);
+            } else {
+              let asset = rm.getAsset(filename);
+              if (asset) {
+                let str = asset.getDestFilename(t);
+                str = path.relative(path.join(t.getOutputDir(), "resource"), str);
+                configdata[type].push(asset.getLibrary().getNamespace() + ":" + str);
+              }
             }
-            addExternal(library.getAddScript(), "urisBefore");
-            addExternal(library.getAddCss(), "cssBefore");
           });
-          
-          return qx.tool.utils.Promisify.eachSeries(parts, (part, index) => {
-            configdata.loader.parts[part.name] = [ index ];
-            let pkgdata = configdata.loader.packages[index] = { uris: [] };
-            let bundleIndex = 0;
-            let bundleCopier = null;
+        }
+      }
+      
+      requiredLibs.forEach(libnamespace => {
+        var library = analyser.findLibrary(libnamespace);
+        if (this.isWriteLibraryInfo()) {
+          libraryInfoMap[libnamespace] = library.getLibraryInfo();
+        }
+        addExternal(library.getAddScript(), "urisBefore");
+        addExternal(library.getAddCss(), "cssBefore");
+      });
+      
+      await qx.tool.utils.Promisify.eachSeries(parts, async (part, index) => {
+        configdata.loader.parts[part.name] = [ index ];
+        let pkgdata = configdata.loader.packages[index] = { uris: [] };
+        let bundleIndex = 0;
+        let bundleCopier = null;
 
-            return qx.tool.utils.Promisify.eachSeries(part.classes, async classname => {
-              let def = db.classInfo[classname];
-              let classFilename = classname.replace(/\./g, "/") + ".js";
+        await qx.tool.utils.Promisify.eachSeries(part.classes, async classname => {
+          let def = db.classInfo[classname];
+          let classFilename = classname.replace(/\./g, "/") + ".js";
 
-              if (matchBundle(classname)) {
-                if (!bundleCopier) {
-                  let bundleFilename = "part-" + part.name + "-bundle-" + (++bundleIndex) + ".js";
-                  pkgdata.uris.push("__out__:" + bundleFilename);
-                  bundleCopier = new qx.tool.compiler.targets.SourceCodeCopier(path.join(appRootDir, t.getScriptPrefix() + bundleFilename));
-                  await bundleCopier.open();
-                }
-                let transpiledClassFilename = path.join(this.getOutputDir(), "transpiled", classFilename);
-                var sourcePath = this.mapToUri(transpiledClassFilename, path.dirname(bundleCopier.getOutputFilename()));
-                await bundleCopier.addSourceFile(transpiledClassFilename, sourcePath);
-              } else {
-                if (bundleCopier) {
-                  await bundleCopier.close();
-                  bundleCopier = null;
-                }
-                pkgdata.uris.push(def.libraryName + ":" + classFilename);
-              }
-            })
-              .then(() => {
-                if (bundleCopier) {
-                  return bundleCopier.close()
-                    .then(() => bundleCopier = null);
-                }
-                return null;
-              });
-          })
-            .then(() => {
-              configdata.loader.packages[0].uris.unshift("__out__:" + t.getScriptPrefix() + "polyfill.js");
-              configdata.loader.packages[0].uris.unshift("__out__:" + t.getScriptPrefix() + "resources.js");
-
-              requiredLibs.forEach(libnamespace => {
-                var library = analyser.findLibrary(libnamespace);
-                if (this.isWriteLibraryInfo()) {
-                  libraryInfoMap[libnamespace] = library.getLibraryInfo();
-                }
-              });
-
-              for (var name in environment) {
-                configdata.environment[name] = environment[name];
-              }
-
-              t.fireDataEvent("checkEnvironment", { application: application, environment: configdata.environment});
-
-              var pkgdata = compileInfo.pkgdata = {
-                "locales": {},
-                "resources": {},
-                "translations": {
-                  "C": {}
-                }
-              };
-
-              return qx.Promise.all([
-                analyser.getCldr("en").then(cldr => pkgdata.locales["C"] = cldr),
-
-                t._writeTranslations(compileInfo),
-
-                new Promise((resolve, reject) => {
-                  var promises = [];
-                  var fontCntr = 0;
-                  requiredLibs.forEach(libnamespace => {
-                    var library = analyser.findLibrary(libnamespace);
-                    var fonts = library.getWebFonts();
-                    if (!fonts) {
-                      return;
-                    }
-                    fonts.forEach(font => {
-                      var p = font.generateForTarget(t)
-                        .then(() => font.generateForApplication(t, application))
-                        .then(resources => {
-                          for (var key in resources) {
-                            configdata.resources[key] = resources[key];
-                          }
-                          var code = font.getBootstrapCode(t, application, fontCntr++ == 0);
-                          if (code) {
-                            configdata.preBootCode.push(code);
-                          }
-                        })
-                        .catch(err => {
-                          qx.tool.compiler.Console.print("qx.tool.compiler.webfonts.error", font.toString(), err.toString());
-                        });
-                      promises.push(p);
-                    });
-                  });
-                  qx.Promise.all(promises)
-                    .then(resolve)
-                    .catch(reject);
-                }),
-
-                new qx.Promise((resolve, reject) => {
-                  var assetUris = application.getAssetUris(t, rm, configdata.environment);
-                  var assets = rm.getAssetsForPaths(assetUris);
-                  compileInfo.assets = assets;
-
-                  // Save any changes that getAssets collected
-                  return rm.saveDatabase()
-                    .then(() => {
-                      for (var i = 0; i < assets.length; i++) {
-                        var asset = assets[i];
-                        let ext = path.extname(asset.getFilename());
-                        if (ext.length) {
-                          ext = ext.substring(1);
-                        }
-                        let fileInfo = asset.getFileInfo();
-                        var arr = pkgdata.resources[asset.getFilename()] = [
-                          fileInfo.width,
-                          fileInfo.height,
-                          ext,
-                          asset.getLibrary().getNamespace()
-                        ];
-                        if (fileInfo.composite !== undefined) {
-                          arr.push(fileInfo.composite);
-                          arr.push(fileInfo.x);
-                          arr.push(fileInfo.y);
-                        }
-                      }
-                    })
-                    .then(resolve)
-                    .catch(reject);
-                })
-              ]);
-            })
-            .then(() => t._writeApplication(compileInfo));
+          if (matchBundle(classname)) {
+            if (!bundleCopier) {
+              let bundleFilename = "part-" + part.name + "-bundle-" + (++bundleIndex) + ".js";
+              pkgdata.uris.push("__out__:" + bundleFilename);
+              bundleCopier = new qx.tool.compiler.targets.SourceCodeCopier(path.join(appRootDir, t.getScriptPrefix() + bundleFilename));
+              await bundleCopier.open();
+            }
+            let transpiledClassFilename = path.join(this.getOutputDir(), "transpiled", classFilename);
+            var sourcePath = this.mapToUri(transpiledClassFilename, path.dirname(bundleCopier.getOutputFilename()));
+            await bundleCopier.addSourceFile(transpiledClassFilename, sourcePath);
+          } else {
+            if (bundleCopier) {
+              await bundleCopier.close();
+              bundleCopier = null;
+            }
+            pkgdata.uris.push(def.libraryName + ":" + classFilename);
+          }
         });
+        
+        if (bundleCopier) {
+          await bundleCopier.close();
+          bundleCopier = null;
+        }
+        
+        return null;
+      });
+      
+      configdata.loader.packages[0].uris.unshift("__out__:" + t.getScriptPrefix() + "polyfill.js");
+      configdata.loader.packages[0].uris.unshift("__out__:" + t.getScriptPrefix() + "resources.js");
+
+      requiredLibs.forEach(libnamespace => {
+        var library = analyser.findLibrary(libnamespace);
+        if (this.isWriteLibraryInfo()) {
+          libraryInfoMap[libnamespace] = library.getLibraryInfo();
+        }
+      });
+
+      for (var name in environment) {
+        configdata.environment[name] = environment[name];
+      }
+
+      t.fireDataEvent("checkEnvironment", { application: application, environment: configdata.environment});
+
+      var pkgdata = compileInfo.pkgdata = {
+        "locales": {},
+        "resources": {},
+        "translations": {
+          "C": {}
+        }
+      };
+
+      var promises = [
+        analyser.getCldr("en").then(cldr => pkgdata.locales["C"] = cldr),
+        t._writeTranslations(compileInfo)
+      ];
+
+      var fontCntr = 0;
+      requiredLibs.forEach(libnamespace => {
+        var library = analyser.findLibrary(libnamespace);
+        var fonts = library.getWebFonts();
+        if (!fonts) {
+          return;
+        }
+        const loadFont = async font => {
+          try {
+            var p = await font.generateForTarget(t);
+            let resources = await font.generateForApplication(t, application);
+            for (var key in resources) {
+              configdata.resources[key] = resources[key];
+            }
+            var code = font.getBootstrapCode(t, application, fontCntr++ == 0);
+            if (code) {
+              configdata.preBootCode.push(code);
+            }
+          }catch(ex) {
+            qx.tool.compiler.Console.print("qx.tool.compiler.webfonts.error", font.toString(), err.toString());
+          }
+          promises.push(p);
+        };
+        fonts.forEach(font => promises.push(loadFont(font)));
+      });
+
+      await qx.Promise.all(promises);
+      
+      var assetUris = application.getAssetUris(t, rm, configdata.environment);
+      var assets = rm.getAssetsForPaths(assetUris);
+      compileInfo.assets = assets;
+
+      // Save any changes that getAssets collected
+      await rm.saveDatabase();
+      for (var i = 0; i < assets.length; i++) {
+        var asset = assets[i];
+        let ext = path.extname(asset.getFilename());
+        if (ext.length) {
+          ext = ext.substring(1);
+        }
+        let fileInfo = asset.getFileInfo();
+        var arr = pkgdata.resources[asset.getFilename()] = [
+          fileInfo.width,
+          fileInfo.height,
+          ext,
+          asset.getLibrary().getNamespace()
+        ];
+        if (fileInfo.composite !== undefined) {
+          arr.push(fileInfo.composite);
+          arr.push(fileInfo.x);
+          arr.push(fileInfo.y);
+        }
+      }
+      
+      await t._writeApplication(compileInfo);
     },
 
     /**
@@ -729,6 +693,24 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
       var application = compileInfo.application;
       var analyser = this.getAnalyser();
       var appRootDir = this.getApplicationRoot(application);
+      
+      var APP_SUMMARY = {
+          appClass: application.getClassName(),
+          libraries: Object.keys(compileInfo.configdata.libraries).filter(ns => ns != "__out__"),
+          parts: [],
+          resources: compileInfo.configdata.resources,
+          locales: compileInfo.configdata.locales,
+          environment: compileInfo.configdata.environment
+      };
+      compileInfo.parts.forEach(part => {
+        APP_SUMMARY.parts.push({
+          classes: part.classes,
+          include: part.include,
+          exclude: part.exclude,
+          minify: part.minify,
+          name: part.name
+        });
+      });
 
       async function writeBootJs() {
         var MAP = {
@@ -795,10 +777,14 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
         }
         var ws = fs.createWriteStream(path.join(appRootDir, t.getScriptPrefix() + name));
         ws.write(data);
-        await t._writeBootJs(compileInfo, ws)
-          .then(() => ws.end());
+        await t._writeBootJs(compileInfo, ws);
+        ws.end();
       }
 
+      await fs.writeFileAsync(appRootDir + "/" + t.getScriptPrefix() + "app-summary.json",
+          JSON.stringify(APP_SUMMARY, null, 2) + "\n",
+          { encoding: "utf8" });
+      
       await fs.writeFileAsync(appRootDir + "/" + t.getScriptPrefix() + "resources.js",
         "qx.$$packageData['0'] = " + JSON.stringify(compileInfo.pkgdata, null, 2) + ";\n",
         { encoding: "utf8" });
