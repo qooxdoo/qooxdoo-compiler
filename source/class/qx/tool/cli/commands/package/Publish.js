@@ -205,6 +205,7 @@ qx.Class.define("qx.tool.cli.commands.package.Publish", {
         if (!new_version) {
           throw new qx.tool.utils.Utils.UserError(`${argv.useVersion} is not a valid version number.`);
         }
+        new_version = new_version.toString();
       } else {
         // use version number from manifest and increment it
         let old_version = mainManifestModel.getValue("info.version");

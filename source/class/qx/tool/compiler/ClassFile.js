@@ -321,6 +321,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         try {
           let options = t.__analyser.getBabelOptions() || {};
           options.modules = false;
+          let myPlugins = t._babelClassPlugins();
           var config = {
             babelrc: false,
             sourceFileName : t.getSourcePath(),
@@ -329,10 +330,17 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
             "presets": [
               [ require.resolve("@babel/preset-env"), options],
               [ require.resolve("@babel/preset-typescript") ],
-              [ require.resolve("@babel/preset-react"), qx.tool.compiler.ClassFile.JSX_OPTIONS ]
-            ],
-            plugins: [
-              t._babelClassPlugin()
+              [ require.resolve("@babel/preset-react"), qx.tool.compiler.ClassFile.JSX_OPTIONS ],
+              [
+                { 
+                  plugins: [ myPlugins.CodeElimination ]
+                }
+              ],
+              [
+                { 
+                  plugins: [ myPlugins.Compiler ]
+                }
+              ]
             ],
             parserOpts: { sourceType: "script" },
             passPerPreset: true
@@ -422,9 +430,6 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         classname = classname.substring(0, pos);
         if (!deps[classname]) {
           deps[classname] = {};
-        }
-        if (!deps[JSX.pragmaFrag]) {
-          deps[JSX.pragmaFrag] = {};
         }
       }
       for (var name in deps) {
@@ -580,7 +585,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
     /**
      * Babel plugin
      */
-    _babelClassPlugin: function() {
+    _babelClassPlugins: function() {
       var t = this;
 
       function getKeyName(key) {
@@ -780,19 +785,20 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
             needsQxCoreEnvironment = path.node.loc;
           }
         },
-
+        
         IfStatement: {
           exit(path) {
-            var node = path.node;
+            let node = path.node;
+
             // If it's a literal value, we can eliminate code because we can resolve it now.  This
             //  is really important for anything wrapped in `if (qx.core.Environment.get("qx.debug")) ...`
             //  because the `qx.core.Environment.get` is replaced with a literal value and we need to
             //  use this to remove the unwanted code.
             if (types.isLiteral(node.test)) {
               if (node.test.value) {
-                path.replaceWith(node.consequent);
+                path.replaceWithMultiple(node.consequent.body);
               } else if (node.alternate) {
-                path.replaceWith(node.alternate);
+                path.replaceWithMultiple(node.alternate.body);
               } else {
                 path.remove();
               }
@@ -800,27 +806,67 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
           }
         },
 
+        LogicalExpression: {
+          exit(path) {
+            let node = path.node;
+            if (types.isLiteral(node.left) && types.isLiteral(node.right)) {
+              let result = (node.operator == "&&" && node.left.value && node.right.value) ||
+                  (node.operator == "||" && (node.left.value || node.right.value));
+              path.replaceWith(literalValueToExpression(result));
+            }
+          }
+        },
+
         BinaryExpression: {
           exit(path) {
-            var node = path.node;
-            if (isCollapsibleLiteral(node.left) && isCollapsibleLiteral(node.right) && "+-*/".indexOf(node.operator) > -1) {
-              var result;
-              switch (node.operator) {
-                case "+":
-                  result = node.left.value + node.right.value;
-                  break;
-                case "-":
-                  result = node.left.value - node.right.value;
-                  break;
-                case "/":
-                  result = node.left.value / node.right.value;
-                  break;
-                case "*":
-                  result = node.left.value * node.right.value;
-                  break;
+            let node = path.node;
+            if (isCollapsibleLiteral(node.left) && isCollapsibleLiteral(node.right)) {
+              if ("+-*/".indexOf(node.operator) > -1) {
+                let result;
+                switch (node.operator) {
+                  case "+":
+                    result = node.left.value + node.right.value;
+                    break;
+                  case "-":
+                    result = node.left.value - node.right.value;
+                    break;
+                  case "/":
+                    result = node.left.value / node.right.value;
+                    break;
+                  case "*":
+                    result = node.left.value * node.right.value;
+                    break;
+                }
+                path.skip();
+                path.replaceWithSourceString(formatValueAsCode(result));
+              } else {
+                let result;
+                switch (node.operator) {
+                  case "==":
+                    result = node.left.value == node.right.value;
+                    break;
+                  case "===":
+                    result = node.left.value === node.right.value;
+                    break;
+                  case "!=":
+                    result = node.left.value != node.right.value;
+                    break;
+                  case "!==":
+                    result = node.left.value !== node.right.value;
+                    break;
+                }
+                if (result !== undefined) {
+                  path.replaceWith(types.booleanLiteral(Boolean(result)));
+                }
               }
-              path.skip();
-              path.replaceWithSourceString(formatValueAsCode(result));
+            }
+          }
+        },
+
+        UnaryExpression: {
+          exit(path) {
+            if (path.node.operator === "!" && types.isLiteral(path.node.argument)) {
+              path.replaceWith(types.booleanLiteral(!path.node.argument.value));
             }
           }
         }
@@ -1310,8 +1356,6 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
               }
             }
 
-            path.traverse(CODE_ELIMINATION_VISITOR, {classDefPath: path});
-
             if (types.isMemberExpression(path.node.callee)) {
               let name = collapseMemberExpression(path.node.callee);
               let thisAlias = null;
@@ -1350,6 +1394,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
                 }
               }
 
+              // Class definition?  EG `qx.Class.define(...`
               if (TYPE[name]) {
                 t.__definingType = name.match(/\.([a-zA-Z]+)\./)[1];
                 let node = path.node;
@@ -1654,80 +1699,13 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
           exit(path) {
             t.popScope(path.node);
           }
-        },
-
-        IfStatement: {
-          exit(path) {
-            let node = path.node;
-
-            function apply(value) {
-              if (!value) {
-                if (!node.alternate) {
-                  path.remove();
-                } else {
-                  path.replaceWithMultiple(node.alternate.body);
-                }
-              } else if (value) {
-                path.replaceWithMultiple(node.consequent.body);
-              }
-            }
-
-            if (types.isLiteral(node.test)) {
-              apply(node.test.value);
-            } else if (types.isUnaryExpression(node.test, { operator: "!" }) && types.isLiteral(node.test.argument)) {
-              let value = node.test.argument.value;
-              apply(!value);
-            }
-          }
-        },
-
-        LogicalExpression: {
-          exit(path) {
-            let node = path.node;
-            if (types.isLiteral(node.left) && types.isLiteral(node.right)) {
-              let result = (node.operator == "&&" && node.left.value && node.right.value) ||
-                  (node.operator == "||" && (node.left.value || node.right.value));
-              path.replaceWith(literalValueToExpression(result));
-            }
-          }
-        },
-
-        BinaryExpression: {
-          exit(path) {
-            let node = path.node;
-            if (isCollapsibleLiteral(node.left) && isCollapsibleLiteral(node.right)) {
-              let result;
-              switch (node.operator) {
-                case "==":
-                  result = node.left.value == node.right.value;
-                  break;
-                case "===":
-                  result = node.left.value === node.right.value;
-                  break;
-                case "!=":
-                  result = node.left.value != node.right.value;
-                  break;
-                case "!==":
-                  result = node.left.value !== node.right.value;
-                  break;
-              }
-              if (result !== undefined) {
-                path.replaceWith(types.booleanLiteral(Boolean(result)));
-              }
-            }
-          }
-        },
-
-        UnaryExpression: {
-          exit(path) {
-            if (path.node.operator === "!" && types.isLiteral(path.node.argument)) {
-              path.replaceWith(types.booleanLiteral(!path.node.argument.value));
-            }
-          }
         }
       };
 
-      return { visitor: VISITOR };
+      return { 
+        CodeElimination: { visitor: CODE_ELIMINATION_VISITOR }, 
+        Compiler: { visitor: VISITOR }
+      };
     },
 
     /**
@@ -2296,7 +2274,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
      */
     JSX_OPTIONS: {
       "pragma": "qx.html.Jsx.createElement",
-      "pragmaFrag": "qx.html.JsxFragment"
+      "pragmaFrag": "qx.html.Jsx.FRAGMENT"
     },
 
     /**
