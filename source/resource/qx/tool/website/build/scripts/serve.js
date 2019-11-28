@@ -43,12 +43,23 @@ $(function() {
           data.forEach(targetData => {
             $root.append($("<h2>").text((targetData.target.type == "build" ? "Build" : "Source") + " Target in " + targetData.target.outputDir));
             var $ul = $("<ul>");
+            targetData.apps.sort(function(l, r) {
+              l = l.title || l.name;
+              r = r.title || r.name;
+              return l < r ? -1 : l > r ? 1 : 0;
+            });
             targetData.apps.forEach(function(appData) {
               var $li = $("<li>");
-              var $a = $("<a>");
-              $a.text(appData.title || appData.name);
-              $a.attr("href", targetData.target.outputDir + appData.outputPath + "/index.html");
-              $li.append($a);
+              if (appData.isBrowser) {
+                var $a = $("<a>");
+                $a.text(appData.title || appData.name);
+                $a.attr("href", targetData.target.outputDir + appData.outputPath + "/index.html");
+                $li.append($a);
+              } else {
+                var $p = $("<p>");
+                $p.text(appData.title || appData.name);
+                $li.append($p);
+              }
               if (appData.description)
                 $li.append($("<p>").text(appData.description))
               $li.append("<p class='tools'>" +
