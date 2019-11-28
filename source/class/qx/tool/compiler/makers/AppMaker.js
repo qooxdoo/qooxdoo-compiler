@@ -99,8 +99,8 @@ qx.Class.define("qx.tool.compiler.makers.AppMaker", {
         Object.keys(env).forEach(key => {
           if (!allAppEnv[key]) {
             allAppEnv[key] = {
-                value: env[key],
-                same: true
+              value: env[key],
+              same: true
             };
           } else if (allAppEnv[key].value !== env[key]) {
             allAppEnv[key].same = false;
@@ -113,19 +113,21 @@ qx.Class.define("qx.tool.compiler.makers.AppMaker", {
       this.getApplications().forEach(app => {
         let env = appEnvironments[app.toHashCode()];
         Object.keys(allAppEnv).forEach(key => {
-          if (allAppEnv[key].same)
+          if (allAppEnv[key].same) {
             delete env[key];
-          else if (env[key] === undefined)
+          } else if (env[key] === undefined) {
             env[key] = compileEnv[key];
+          }
         });
       });
       
       // Cleanup to remove env that have been moved to the app 
       Object.keys(allAppEnv).forEach(key => {
-        if (allAppEnv[key].same)
+        if (allAppEnv[key].same) {
           compileEnv[key] = allAppEnv[key].value;
-        else
+        } else {
           delete compileEnv[key];
+        }
       });
 
       return this.checkCompileVersion()

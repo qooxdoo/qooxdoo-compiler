@@ -176,10 +176,6 @@ qx.Class.define("qx.tool.compiler.resources.ScssFile", {
     },
     
     async loadSource(filename, library) {
-      function esc(str) {
-        return str.replace(/([\[\]\\])/g, "\\$1");
-      }
-      
       filename = path.relative(process.cwd(), path.resolve(this.isThemeFile() ? library.getThemeFilename(filename) : library.getResourceFilename(filename)));
       let absFilename = filename;
       if (path.extname(absFilename) == "") {
