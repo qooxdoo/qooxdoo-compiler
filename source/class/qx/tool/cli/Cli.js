@@ -45,12 +45,21 @@ qx.Class.define("qx.tool.cli.Cli", {
 
       let yargs = require("yargs").locale("en");
       yargs.option("set", {
-        describe: "sets an environment value",
+        describe: "sets an environment value for the compiler",
         nargs: 1,
         requiresArg: true,
         type: "string",
         array: true
       });
+
+      yargs.option("set-env", {
+        describe: "sets an environment value for the compilation result",
+        nargs: 1,
+        requiresArg: true,
+        type: "string",
+        array: true
+      });
+
       qx.tool.cli.Cli.addYargsCommands(yargs,
         [
           "Add",
