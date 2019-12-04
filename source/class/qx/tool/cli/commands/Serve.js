@@ -103,7 +103,7 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
      * @ignore qx.tool.$$resourceDir
      */
     runWebServer: async function() {
-      let makers = this.getMakers().filter(maker => maker.getApplications().some(app => app.isBrowserApp() && app.getStandalone()));
+      let makers = this.getMakers().filter(maker => maker.getApplications().some(app => app.getStandalone()));
       let apps = [];
       let defaultMaker = null;
       let firstMaker = null;
@@ -153,8 +153,9 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
               outputDir: out
             },
             apps: maker.getApplications()
-              .filter(app => app.isBrowserApp() && app.getStandalone())
+              .filter(app => app.getStandalone())
               .map(app => ({
+                isBrowser: app.isBrowserApp(),
                 name: app.getName(),
                 type: app.getType(),
                 title: app.getTitle() || app.getName(),

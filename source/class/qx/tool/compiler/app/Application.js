@@ -793,7 +793,21 @@ qx.Class.define("qx.tool.compiler.app.Application", {
     getParts: function() {
       return this.__parts || [];
     },
-
+    
+    /**
+     * Returns a dynamically calculated version of the application environment, which
+     * is defaults or dynamic values plus the `environment` property
+     * 
+     * @return {Map} The environment settings
+     */
+    getCalculatedEnvironment() {
+      return qx.tool.utils.Values.merge(
+        {
+          "qx.headless": this.getType() != "browser"
+        },
+        this.getEnvironment());
+    },
+    
     /**
      * Expands a list of class names including wildcards (eg "qx.ui.*") into an
      * exhaustive list without wildcards

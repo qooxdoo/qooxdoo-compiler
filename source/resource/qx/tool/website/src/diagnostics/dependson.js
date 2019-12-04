@@ -1,12 +1,16 @@
 $(function() {
 
   var db;
+  var appDb;
+  var CLASSES = {};
 
   function show(name, $list) {
     var def = db.classInfo[name];
     if (!def || !def.dependsOn)
       return;
     for ( var depName in def.dependsOn) {
+      if (!CLASSES[depName])
+        continue;
       var isLoad = def.dependsOn[depName].load;
       var $li = $("<li>").text(depName).attr("data-classname", depName);
       if (isLoad)
@@ -56,10 +60,18 @@ $(function() {
     }
   }
 
-  $.qxcli.get($.qxcli.query.targetDir + "/db.json").then(function(tmp) {
-    db = tmp;
-    selectClass($.qxcli.query.appClass);
-    $("#show").change(updateDisplay);
-  });
-
+  var query = $.qxcli.query;
+  $.qxcli.get(query.targetDir + "/db.json")
+    .then(function(tmp) {
+      db = tmp;
+      return $.qxcli.get(query.targetDir + "/" + query.appDir + "/app-summary.json");
+    })
+    .then(function(tmp) {
+      appDb = tmp;
+      appDb.parts.forEach(function(part) {
+        part.classes.forEach(classname => CLASSES[classname] = true);
+      });
+      selectClass($.qxcli.query.appClass);
+      $("#show").change(updateDisplay);
+    });
 });

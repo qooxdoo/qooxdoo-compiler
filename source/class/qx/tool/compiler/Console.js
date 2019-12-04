@@ -199,8 +199,10 @@ qx.Class.define("qx.tool.compiler.Console", {
 
       "qx.tool.compiler.target.missingBootJs": "There is no reference to boot.js script in the index.html copied from %1 (see https://git.io/fh7NI)",
       /* eslint-disable no-template-curly-in-string */
-      "qx.tool.compiler.target.missingPreBootJs": "There is no reference to ${preBootJs} in the index.html copied from %1 (see https://git.io/fh7NI)"
+      "qx.tool.compiler.target.missingPreBootJs": "There is no reference to ${preBootJs} in the index.html copied from %1 (see https://git.io/fh7NI)",
       /* eslint-enable no-template-curly-in-string */
+      
+      "qx.tool.compiler.maker.appNotHeadless": "Compiling application '%1' but the target supports non-headless output, you may find unwanted dependencies are loaded during startup"
     }, "warning");
   },
 
