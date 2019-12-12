@@ -29,7 +29,7 @@ var async = require("async");
 require("@qooxdoo/framework");
 var util = require("./util");
 var jsonlint = require("jsonlint");
-var hash = require('object-hash');
+var hash = require("object-hash");
 
 require("./ClassFile");
 require("./app/Library");
