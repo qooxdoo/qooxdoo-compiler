@@ -29,6 +29,7 @@ var async = require("async");
 require("@qooxdoo/framework");
 var util = require("./util");
 var jsonlint = require("jsonlint");
+var hash = require('object-hash');
 
 require("./ClassFile");
 require("./app/Library");
@@ -1048,6 +1049,25 @@ qx.Class.define("qx.tool.compiler.Analyser", {
           })
           .then(() => translation.write());
       }));
+    },
+
+    /**
+     * Generates a hash from the environmentObject and updates the existing hash if it differs from the generated.
+     *
+     * @param environmentObject {Object} The object containing environment variables
+     * @return {Boolean} whether the hash was updated
+     */
+    refreshEnvironmentHash: function(environmentObject) {
+      var db = this.getDatabase();
+      var environmentHash = hash(environmentObject);
+      var updated = false;
+
+      if (db && (db.environmentHash !== environmentHash)) {
+        db.environmentHash = environmentHash;
+        updated = true;
+      }
+
+      return updated;
     },
 
     /**
