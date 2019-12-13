@@ -179,6 +179,7 @@ qx.Class.define("testapp.Application", {
       new testapp.Issue500();
       new testapp.Issue503();
       new testapp.InnerEs6Classes();
+      new testapp.Warnings1();
       
       qx.core.Assert.assertTrue(TEST_EXTERNAL === "loaded");
       qx.core.Assert.assertTrue(SCRIPT_LOADED === true);
@@ -189,6 +190,17 @@ qx.Class.define("testapp.Application", {
       qx.core.Assert.assertTrue(qx.core.Environment.get("testappLibraryApi") === "one");
       qx.core.Assert.assertTrue(qx.core.Environment.get("testlibCompilerApi") === undefined);
       qx.core.Assert.assertTrue(qx.core.Environment.get("testlibLibraryApi") === "one");
+      
+      const obj = {
+          foo: {
+            bar: {
+              baz: 42,
+            },
+          },
+        };
+
+      qx.core.Assert.assertTrue(obj?.foo?.bar?.baz === 42);
+      qx.core.Assert.assertTrue(obj?.qux?.baz === undefined);
       
       var abc = (<div>Hello World</div>);
     },

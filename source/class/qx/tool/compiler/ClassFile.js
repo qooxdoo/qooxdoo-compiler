@@ -319,8 +319,23 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         }
         var result; 
         try {
-          let options = t.__analyser.getBabelOptions() || {};
+          let babelConfig = t.__analyser.getBabelConfig() || {};
+          let options = qx.lang.Object.clone(babelConfig.options || {}, true);
           options.modules = false;
+          let extraPreset = [
+            {
+              plugins: []
+            }
+          ];
+          if (babelConfig.plugins) {
+            for (let key in babelConfig.plugins) {
+              if (babelConfig.plugins[key] === true) {
+                extraPreset[0].plugins.push(key);
+              } else if (babelConfig.plugins[key]) {
+                extraPreset[0].plugins.push([ key, babelConfig.plugins[key] ]);
+              }
+            }
+          }
           let myPlugins = t._babelClassPlugins();
           var config = {
             babelrc: false,
@@ -345,6 +360,9 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
             parserOpts: { sourceType: "script" },
             passPerPreset: true
           };
+          if (extraPreset[0].plugins.length) {
+            config.presets.push(extraPreset);
+          }
           result = babelCore.transform(src, config);
         } catch (ex) {
           if (ex._babel) {
@@ -1021,10 +1039,10 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         if (FUNCTION_NAMES[keyName] !== undefined) {
           makeMeta(keyName, null, functionNode);
         }
-        path.skip();
         enterFunction(path, functionNode);
         path.traverse(VISITOR);
         exitFunction(path, functionNode);
+        path.skip();
         t.__classMeta.functionName = null;
       }
 
@@ -1309,7 +1327,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
           let root = path;
           while (root) {
             let parentType = root.parentPath.node.type;
-            if (parentType == "MemberExpression") {
+            if (parentType == "MemberExpression" || parentType == "OptionalMemberExpression") {
               root = root.parentPath;
               continue;
             }
@@ -1621,16 +1639,25 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         },
         
         ObjectMethod(path) {
-          if (t.__classMeta && 
-              t.__classMeta._topLevel && 
-              t.__classMeta._topLevel.path == path.parentPath.parentPath) {
-            t.__classMeta.functionName = getKeyName(path.node.key);
-            makeMeta(t.__classMeta._topLevel.keyName, t.__classMeta.functionName, path.node);
-            path.skip();
-            enterFunction(path);
-            path.traverse(VISITOR);
-            exitFunction(path);
-            t.__classMeta.functionName = null;
+          if (t.__classMeta) {
+            // Methods within a top level object (ie "members" or "statics"), record the method name and meta data
+            if (t.__classMeta._topLevel && 
+                t.__classMeta._topLevel.path == path.parentPath.parentPath) {
+              t.__classMeta.functionName = getKeyName(path.node.key);
+              makeMeta(t.__classMeta._topLevel.keyName, t.__classMeta.functionName, path.node);
+              path.skip();
+              enterFunction(path);
+              path.traverse(VISITOR);
+              exitFunction(path);
+              t.__classMeta.functionName = null;
+              
+            // Otherwise traverse method as normal
+            } else {
+              path.skip();
+              enterFunction(path);
+              path.traverse(VISITOR);
+              exitFunction(path);
+            }
           }
         },
         
