@@ -77,6 +77,11 @@ async function createMaker() {
   let analyser = maker.getAnalyser();
   analyser.addLibrary(await qx.tool.compiler.app.Library.createLibrary("testapp"));
   analyser.addLibrary(await qx.tool.compiler.app.Library.createLibrary(QOOXDOO_PATH));
+  analyser.setBabelConfig({
+    plugins: {
+      "@babel/plugin-proposal-optional-chaining": true
+    }
+  });
   
   return maker;
 }
@@ -224,6 +229,16 @@ test("Checks dependencies and environment settings", assert => {
         assert.ok(arr.length === 0, "unexpected unresolved " + JSON.stringify(arr) + " in testapp.Issue503");
       })
       
+      /*
+       * Test Warnings
+       */
+      .then(src => {
+        var ci = db.classInfo["testapp.Warnings1"];
+        var arr = ci.unresolved||[];
+        assert.ok(arr.length === 0, "unexpected unresolved " + JSON.stringify(arr) + " in testapp.Warnings");
+      })
+      
+
 
       /*
        * Test JSX

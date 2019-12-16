@@ -467,6 +467,16 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
     createMakersFromConfig: async function(data) {
       const Console = qx.tool.compiler.Console.getInstance();
       var t = this;
+      
+      if (data.babelOptions) {
+        if (!data.babelConfig) {
+          data.babelConfig = { options: data.babelOptions };
+          qx.tool.compiler.Console.print("qx.tool.cli.compile.deprecatedBabelOptions");
+        } else {
+          qx.tool.compiler.Console.print("qx.tool.cli.compile.deprecatedBabelOptionsConflicting");
+        }
+        delete data.babelOptions;
+      }
 
       var argvAppNames = null;
       if (t.argv["app-name"]) {
@@ -718,9 +728,11 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
           });
           return dest;
         }
-        let babelOptions = data.babelOptions || {};
-        qx.lang.Object.mergeWith(babelOptions, targetConfig.babelOptions || {});
-        maker.getAnalyser().setBabelOptions(babelOptions);
+        
+        let babelConfig = qx.lang.Object.clone(data.babel || {}, true);
+        babelConfig.options = babelConfig.options || {};
+        qx.lang.Object.mergeWith(babelConfig.options, targetConfig.babelOptions || {});
+        maker.getAnalyser().setBabelConfig(babelConfig);
 
         var addCreatedAt = targetConfig["addCreatedAt"] || t.argv["addCreatedAt"];
         if (addCreatedAt) {
@@ -1047,7 +1059,9 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
       "qx.tool.cli.compile.deprecatedCompile": "The configuration setting %1 in compile.json is deprecated",
       "qx.tool.cli.compile.deprecatedCompileSeeOther": "The configuration setting %1 in compile.json is deprecated (see %2)",
       "qx.tool.cli.compile.deprecatedUri": "URIs are no longer set in compile.json, the configuration setting %1=%2 in compile.json is ignored (it's auto detected)",
-      "qx.tool.cli.compile.deprecatedProvidesBoot": "Manifest.Json no longer supports provides.boot - only Applications can have boot; specified in %1"
+      "qx.tool.cli.compile.deprecatedProvidesBoot": "Manifest.Json no longer supports provides.boot - only Applications can have boot; specified in %1",
+      "qx.tool.cli.compile.deprecatedBabelOptions": "Deprecated use of `babelOptions` - these should be moved to `babel.options`",
+      "qx.tool.cli.compile.deprecatedBabelOptionsConflicting": "Conflicting use of `babel.options` and the deprecated `babelOptions` (ignored)"
     }, "warning");
   }
 });
