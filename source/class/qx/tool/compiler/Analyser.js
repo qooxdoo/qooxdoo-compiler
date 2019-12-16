@@ -100,7 +100,8 @@ qx.Class.define("qx.tool.compiler.Analyser", {
     /** Environment during compile time */
     environment: {
       init: null,
-      check: "Map"
+      check: "Map",
+      apply: "_applyEnvironment"
     },
     
     /** options sent to babel preset */
@@ -187,6 +188,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
     __environmentChecks: null,
     __inDefer: false,
     __qooxdooVersion: null,
+    __environmentHash: null,
 
     /**
      * Opens the analyser, loads database etc
@@ -194,8 +196,6 @@ qx.Class.define("qx.tool.compiler.Analyser", {
      * @async
      */
     open: function() {
-      var t = this;
-
       var p;
       if (!this.__opened) {
         this.__opened = true;
@@ -213,14 +213,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
         p = Promise.resolve();
       }
 
-      return p.then(() => {
-        log.debug("Scanning source code");
-        return util.promisifyThis(t.initialScan, t);
-      })
-        .then(() => {
-          log.debug("Saving database");
-          return t.saveDatabase();
-        });
+      return p;
     },
 
     /**
@@ -231,9 +224,14 @@ qx.Class.define("qx.tool.compiler.Analyser", {
      */
     initialScan: function(cb) {
       var t = this;
+
       if (!this.__db) {
         this.__db = {};
       }
+
+      this.__db.environmentHash = this.__environmentHash;
+
+      log.debug("Scanning source code");
       async.parallel(
         [
           // Load Resources
@@ -267,6 +265,9 @@ qx.Class.define("qx.tool.compiler.Analyser", {
           log.debug("processed source and resources");
           cb(err);
         });
+
+      log.debug("Saving database");
+      return t.saveDatabase();
     },
 
     /**
@@ -274,6 +275,22 @@ qx.Class.define("qx.tool.compiler.Analyser", {
      */
     async loadDatabase() {
       this.__db = (await qx.tool.utils.Json.loadJsonAsync(this.getDbFilename())||{});
+    },
+
+    /**
+     * Resets the database
+     *
+     */
+    resetDatabase: function() {
+      this.__db = null;
+
+      if (this.__resManager) {
+        this.__resManager.dispose();
+        this.__resManager = null;
+      }
+
+      this.__opened = false;
+      this.open();
     },
 
     /**
@@ -1052,22 +1069,17 @@ qx.Class.define("qx.tool.compiler.Analyser", {
     },
 
     /**
-     * Generates a hash from the environmentObject and updates the existing hash if it differs from the generated.
+     * Compares the new environment with the previous environment
      *
-     * @param environmentObject {Object} The object containing environment variables
-     * @return {Boolean} whether the hash was updated
+     * @return {Boolean} `true` if they are the same, `false` if not
      */
-    refreshEnvironmentHash: function(environmentObject) {
+    environmentChanged: function() {
       var db = this.getDatabase();
-      var environmentHash = hash(environmentObject);
-      var updated = false;
-
-      if (db && (db.environmentHash !== environmentHash)) {
-        db.environmentHash = environmentHash;
-        updated = true;
+      if (!db) {
+        throw new Error("Please open the database before comparing environments.");
       }
-
-      return updated;
+      
+      return this.__environmentHash !== db.environmentHash;
     },
 
     /**
@@ -1272,8 +1284,13 @@ qx.Class.define("qx.tool.compiler.Analyser", {
         resDb = "resource-db.json";
       }
       return resDb;
-    }
+    },
 
+    // property apply
+    _applyEnvironment: function(value) {
+      // Cache the hash because we will need it later
+      this.__environmentHash = hash(value);
+    }
   }
 });
 

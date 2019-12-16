@@ -22,6 +22,7 @@
 
 require("@qooxdoo/framework");
 require("./AbstractAppMaker");
+var util = require("../util");
 
 /**
  * Application maker; supports multiple applications to compile against a single
@@ -112,17 +113,25 @@ qx.Class.define("qx.tool.compiler.makers.AppMaker", {
         delete compileEnv[key];
       }
 
-      return this.checkCompileVersion()
-        .then(() => this.writeCompileVersion())
+      return analyser.open()
         .then(() => {
           analyser.setEnvironment(compileEnv);
 
+          if (analyser.environmentChanged()) {
+            return this.eraseOutputDir()
+              .then(() => analyser.resetDatabase());
+          }
+          return Promise.resolve();
+        })
+        .then(() => this.checkCompileVersion())
+        .then(() => this.writeCompileVersion())
+        .then(() => {
           this.getTarget().setAnalyser(analyser);
           this.__applications.forEach(app => app.setAnalyser(analyser));
-
           return this.getTarget().open();
         })
-        .then(() => analyser.open())
+        .then(() => util.promisifyThis(analyser.initialScan, analyser))
+        .then(() => analyser.saveDatabase())
         .then(() => {
           if (this.isOutputTypescript()) {
             analyser.getLibraries().forEach(library => {
