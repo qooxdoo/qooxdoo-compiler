@@ -1,4 +1,9 @@
 {
+  "babel": {
+    "plugins": {
+      "@babel/plugin-proposal-optional-chaining": true
+    }
+  },
   "targets": [
     {
       "type": "source",
