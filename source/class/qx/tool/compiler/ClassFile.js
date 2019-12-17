@@ -330,9 +330,9 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
           if (babelConfig.plugins) {
             for (let key in babelConfig.plugins) {
               if (babelConfig.plugins[key] === true) {
-                extraPreset[0].plugins.push(key);
+                extraPreset[0].plugins.push(require.resolve(key));
               } else if (babelConfig.plugins[key]) {
-                extraPreset[0].plugins.push([ key, babelConfig.plugins[key] ]);
+                extraPreset[0].plugins.push([ require.resolve(key), babelConfig.plugins[key] ]);
               }
             }
           }
