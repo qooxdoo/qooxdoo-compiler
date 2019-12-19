@@ -57,7 +57,7 @@ qx.Class.define("qx.tool.cli.commands.Package", {
     /**
      * The URL of the cached repository data
      */
-    repository_cache_url: "https://raw.githubusercontent.com/qooxdoo/qx-contrib/master/cache.json",
+    repository_cache_url: "https://raw.githubusercontent.com/qooxdoo/package-cache/master/cache.json",
     /**
      * The yargs command data
      * @return {{}}
