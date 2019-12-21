@@ -103,34 +103,33 @@ qx.Class.define("qx.tool.compiler.Analyser", {
       check: "Map",
       apply: "_applyEnvironment"
     },
-    
+
     /** options sent to babel preset */
     babelOptions: {
       init: null,
       nullable: true,
       check: "Object"
     },
-    
+
     /** list of global ignores */
     ignores: {
       init: [],
       nullable: false,
       check: "Array"
     },
-    
+
     /** list of global symbols */
     globalSymbols: {
       init: [],
       nullable: false,
       check: "Array"
     },
-    
+
     /** Whether to write line numbers to .po files */
     writePoLineNumbers: {
       init: false,
       check: "Boolean"
     }
-
   },
 
   events: {
@@ -150,8 +149,8 @@ qx.Class.define("qx.tool.compiler.Analyser", {
      * classFile - {ClassFile} the qx.tool.compiler.ClassFile instance
      */
     "compiledClass": "qx.event.type.Data",
-    
-    /** 
+
+    /**
      * Fired when a class is already compiled (but needed for compilation); data is a map:
      * className: {String}
      * dbClassInfo: {Object} the newly populated class info
@@ -166,7 +165,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
   },
 
   members: {
-    
+
     __opened: false,
     __resManager: null,
     __dbFilename: null,
@@ -229,8 +228,6 @@ qx.Class.define("qx.tool.compiler.Analyser", {
         this.__db = {};
       }
 
-      this.__db.environmentHash = this.__environmentHash;
-
       log.debug("Scanning source code");
       async.parallel(
         [
@@ -265,9 +262,6 @@ qx.Class.define("qx.tool.compiler.Analyser", {
           log.debug("processed source and resources");
           cb(err);
         });
-
-      log.debug("Saving database");
-      return t.saveDatabase();
     },
 
     /**
@@ -280,6 +274,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
     /**
      * Resets the database
      *
+     * @return {Promise}
      */
     resetDatabase: function() {
       this.__db = null;
@@ -290,7 +285,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
       }
 
       this.__opened = false;
-      this.open();
+      return this.open();
     },
 
     /**
@@ -910,13 +905,13 @@ qx.Class.define("qx.tool.compiler.Analyser", {
         if (!sourceStat) {
           throw new Error("Cannot find " + sourceClassFilename);
         }
-        
+
         var dbClassInfo = db.classInfo[className];
-        
+
         if (!forceScan) {
           let outputStat = await qx.tool.utils.files.Utils.safeStat(outputClassFilename);
           let outputJsonStat = await qx.tool.utils.files.Utils.safeStat(outputClassFilename + "on");
-  
+
           if (dbClassInfo && outputStat && outputJsonStat) {
             var dbMtime = null;
             try {
@@ -943,7 +938,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
         var classFile = new qx.tool.compiler.ClassFile(t, className, library);
         t.fireDataEvent("compilingClass", { dbClassInfo: dbClassInfo, oldDbClassInfo: oldDbClassInfo, classFile: classFile });
         await qx.tool.utils.Promisify.call(cb => classFile.load(cb));
-        
+
         // Save it
         classFile.writeDbInfo(dbClassInfo);
         t.fireDataEvent("compiledClass", { dbClassInfo: dbClassInfo, oldDbClassInfo: oldDbClassInfo, classFile: classFile });
@@ -1004,7 +999,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
           .then(() => {
             let unusedEntries = {};
             for (let msgid in translation.getEntries()) {
-              unusedEntries[msgid] = true; 
+              unusedEntries[msgid] = true;
             }
 
             return Promise.all(this.__classes.map(async classname => {
@@ -1014,7 +1009,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
 
               let dbClassInfo = await Promisify.call(cb => this.getClassInfo(classname, cb));
               if (!dbClassInfo.translations) {
-                return; 
+                return;
               }
 
               dbClassInfo.translations.forEach(function(src) {
@@ -1033,7 +1028,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
                 const fnAddReference = lineNo => {
                   let arr = ref[fileName];
                   if (!arr) {
-                    arr = ref[fileName] = []; 
+                    arr = ref[fileName] = [];
                   }
 
                   if (!arr.includes(src.lineNo)) {
@@ -1066,20 +1061,6 @@ qx.Class.define("qx.tool.compiler.Analyser", {
           })
           .then(() => translation.write());
       }));
-    },
-
-    /**
-     * Compares the new environment with the previous environment
-     *
-     * @return {Boolean} `true` if they are the same, `false` if not
-     */
-    environmentChanged: function() {
-      var db = this.getDatabase();
-      if (!db) {
-        throw new Error("Please open the database before comparing environments.");
-      }
-      
-      return this.__environmentHash !== db.environmentHash;
     },
 
     /**
@@ -1290,6 +1271,53 @@ qx.Class.define("qx.tool.compiler.Analyser", {
     _applyEnvironment: function(value) {
       // Cache the hash because we will need it later
       this.__environmentHash = hash(value);
+    },
+
+    /**
+     * Whether the compilation context has changed since last analysis
+     * e.g. compiler version, environment variables
+     *
+     * @return {Boolean}
+     */
+    isContextChanged: function() {
+      var db = this.getDatabase();
+
+      // Check if environment is the same as the last time
+      // If the environment hash is null, environment variables have
+      // not been loaded yet. In that case don't consider the environment
+      // changed
+      if (this.__environmentHash &&
+        this.__environmentHash !== db.environmentHash) {
+        return true;
+      }
+
+      // then check if compiler version is the same
+      if (db.compilerVersion !== qx.tool.compiler.Version.VERSION) {
+        return true;
+      }
+
+      return false;
+    },
+
+    /**
+     * Sets the environment data in the __db.
+     * The data beeing set are:
+     *  * a hash of the current environmet values
+     *  * the compiler version
+     *  * a list of the libraries used
+     *
+     */
+    updateEnvironmentData: function() {
+      const libraries = this.getLibraries().reduce((acc, library) => {
+        acc[library.getNamespace()] = library.getVersion();
+        return acc;
+      }, {});
+
+      const db = this.getDatabase();
+
+      db.libraries = libraries;
+      db.environmentHash = this.__environmentHash;
+      db.compilerVersion = qx.tool.compiler.Version.VERSION;
     }
   }
 });

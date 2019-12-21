@@ -115,7 +115,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
       },
       "erase": {
         alias: "e",
-        describe: "Enabled automatic deletion of the output directory when compiler version changes",
+        describe: "Enabled automatic deletion of the output directory when compiler version or environment variables change",
         type: "boolean",
         default: true
       },

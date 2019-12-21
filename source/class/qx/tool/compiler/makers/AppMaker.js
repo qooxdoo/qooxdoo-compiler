@@ -23,6 +23,7 @@
 require("@qooxdoo/framework");
 require("./AbstractAppMaker");
 var util = require("../util");
+const mkParentPath = util.promisify(util.mkParentPath);
 
 /**
  * Application maker; supports multiple applications to compile against a single
@@ -117,21 +118,20 @@ qx.Class.define("qx.tool.compiler.makers.AppMaker", {
         .then(() => {
           analyser.setEnvironment(compileEnv);
 
-          if (analyser.environmentChanged()) {
+          if (!this.isNoErase() && analyser.isContextChanged()) {
             return this.eraseOutputDir()
+              .then(() => mkParentPath(this.getOutputDir()))
               .then(() => analyser.resetDatabase());
           }
           return Promise.resolve();
         })
-        .then(() => this.checkCompileVersion())
-        .then(() => this.writeCompileVersion())
+        .then(() => util.promisifyThis(analyser.initialScan, analyser))
+        .then(() => analyser.updateEnvironmentData())
         .then(() => {
           this.getTarget().setAnalyser(analyser);
           this.__applications.forEach(app => app.setAnalyser(analyser));
           return this.getTarget().open();
         })
-        .then(() => util.promisifyThis(analyser.initialScan, analyser))
-        .then(() => analyser.saveDatabase())
         .then(() => {
           if (this.isOutputTypescript()) {
             analyser.getLibraries().forEach(library => {
