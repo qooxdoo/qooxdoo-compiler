@@ -103,9 +103,9 @@ qx.Class.define("qx.tool.compiler.Analyser", {
       check: "Map",
       apply: "_applyEnvironment"
     },
-
-    /** options sent to babel preset */
-    babelOptions: {
+    
+    /** configuration of babel */
+    babelConfig: {
       init: null,
       nullable: true,
       check: "Object"

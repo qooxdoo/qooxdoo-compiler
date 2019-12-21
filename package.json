@@ -34,6 +34,7 @@
     "@babel/core": "^7.5.5",
     "@babel/generator": "^7.5.5",
     "@babel/parser": "^7.5.5",
+    "@babel/plugin-proposal-optional-chaining": "^7.7.5",
     "@babel/plugin-transform-block-scoping": "^7.5.5",
     "@babel/plugin-transform-react-jsx": "^7.3.0",
     "@babel/polyfill": "^7.4.0",
@@ -71,11 +72,11 @@
     "jstransformer-dot": "^0.1.2",
     "metalsmith": "^2.3.0",
     "metalsmith-layouts": "^2.3.1",
-    "metalsmith-markdown": "^1.2.0",
+    "metalsmith-markdown": "^1.3.0",
     "mkdirp": "^0.5.1",
     "node-fetch": "^1.7.3",
-    "node-sass": "^4.12.0",
     "object-hash": "^2.0.1",
+    "node-sass": "^4.13.0",
     "ps-tree": "^1.2.0",
     "replace-in-file": "^4.1.2",
     "rimraf": "^2.6.2",
@@ -88,7 +89,7 @@
     "upath": "^1.1.0",
     "update-notifier": "^2.5.0",
     "xml2js": "^0.4.19",
-    "yargs": "^8.0.2"
+    "yargs": "^15.0.2"
   },
   "devDependencies": {
     "bats": "^1.1.0",
