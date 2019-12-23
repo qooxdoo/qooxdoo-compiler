@@ -256,13 +256,9 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
       if (argv["set-env"]) {
         argv["set-env"].forEach(function(kv) {
           var m = kv.match(/^([^=\s]+)(=(.+))?$/);
-          if (m) {
-            var key = m[1];
-            var value = m[3];
-            result.environment[key] = value;
-          } else {
-            throw new qx.tool.utils.Utils.UserError(`Failed to parse environment setting commandline option '--set-env ${kv}'`);
-          }
+          var key = m[1];
+          var value = m[3];
+          result.environment[key] = value;
         });
       }
 
