@@ -60,17 +60,17 @@ qx.Class.define("qx.tool.cli.Cli", {
         type: "string",
         array: true
       })
-      .check((argv) => {
-        // validate that "set-env" is not set or if it is
-        // set it's items are strings in the form of key=value
-        const regexp = /^[^=\s]+=.+$/;
-        const setEnv = argv["set-env"];
+        .check(argv => {
+          // validate that "set-env" is not set or if it is
+          // set it's items are strings in the form of key=value
+          const regexp = /^[^=\s]+=.+$/;
+          const setEnv = argv["set-env"];
 
-        if (!(setEnv === undefined || !setEnv.some((item) => !regexp.test(item)))) {
-          throw (new Error("Argument check failed: --set-env must be a key=value pair."));
-        }
-        return true;
-      });
+          if (!(setEnv === undefined || !setEnv.some(item => !regexp.test(item)))) {
+            throw (new Error("Argument check failed: --set-env must be a key=value pair."));
+          }
+          return true;
+        });
 
       qx.tool.cli.Cli.addYargsCommands(yargs,
         [
