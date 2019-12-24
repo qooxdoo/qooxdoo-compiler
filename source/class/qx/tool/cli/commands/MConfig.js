@@ -209,6 +209,7 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
         config.environment = {};
       }
 
+      qx.lang.Object.mergeWith(config.environment, parsedArgs.environment, true);
       if (!config.libraries) {
         config.libraries = [ "." ];
       }
@@ -251,6 +252,16 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
       if (argv.locale && argv.locale.length) {
         result.locales = argv.locale;
       }
+
+      if (argv["set-env"]) {
+        argv["set-env"].forEach(function(kv) {
+          var m = kv.match(/^([^=\s]+)(=(.+))?$/);
+          var key = m[1];
+          var value = m[3];
+          result.environment[key] = value;
+        });
+      }
+
       return result;
     },
 

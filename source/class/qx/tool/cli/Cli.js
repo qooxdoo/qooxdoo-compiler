@@ -44,13 +44,34 @@ qx.Class.define("qx.tool.cli.Cli", {
       Type qx <command> --help for options and subcommands.`;
 
       let yargs = require("yargs").locale("en");
+
       yargs.option("set", {
-        describe: "sets an environment value",
+        describe: "sets an environment value for the compiler",
         nargs: 1,
         requiresArg: true,
         type: "string",
         array: true
       });
+
+      yargs.option("set-env", {
+        describe: "sets an environment value for the application",
+        nargs: 1,
+        requiresArg: true,
+        type: "string",
+        array: true
+      })
+        .check(argv => {
+          // validate that "set-env" is not set or if it is
+          // set it's items are strings in the form of key=value
+          const regexp = /^[^=\s]+=.+$/;
+          const setEnv = argv["set-env"];
+
+          if (!(setEnv === undefined || !setEnv.some(item => !regexp.test(item)))) {
+            throw (new Error("Argument check failed: --set-env must be a key=value pair."));
+          }
+          return true;
+        });
+
       qx.tool.cli.Cli.addYargsCommands(yargs,
         [
           "Add",
