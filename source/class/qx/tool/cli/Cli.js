@@ -63,6 +63,7 @@ qx.Class.define("qx.tool.cli.Cli", {
           "Create",
           "Lint",
           "Run",
+          "Test",
           "Serve"
         ],
         "qx.tool.cli.commands");

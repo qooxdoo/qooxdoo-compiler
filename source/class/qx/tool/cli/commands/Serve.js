@@ -71,6 +71,12 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
       };
     }
   },
+  events: {
+    /**
+     * Fired when server is started
+    */
+    "started": "qx.event.type.Event"
+  },
 
   members: {
     /** @type {qx.tool.utils.Website} the Website instance */
@@ -180,8 +186,10 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
             qx.tool.compiler.Console.log("Error when starting web server: " + e);
           }
         });
-        server.listen(config.serve.listenPort, () =>
-          qx.tool.compiler.Console.print("qx.tool.cli.serve.webStarted", "http://localhost:" + config.serve.listenPort));
+        server.listen(config.serve.listenPort, () => {
+          qx.tool.compiler.Console.print("qx.tool.cli.serve.webStarted", "http://localhost:" + config.serve.listenPort);
+          this.fireEvent("started");
+        });
       });
     }
   },
