@@ -64,7 +64,7 @@ qx.Class.define("qx.tool.cli.commands.Test", {
     /**
      * Fired to start tests
     */
-    "runTests": "qx.event.type.Event"
+    "runTests": "qx.event.type.Data"
   },
 
   members: {
@@ -76,8 +76,11 @@ qx.Class.define("qx.tool.cli.commands.Test", {
       this.argv["machine-readable"] = false;
       this.argv["feedback"] = false;
       this.addListener("started", async () =>  {
-         await this.fireEvent("runTests");
-         process.exit(0);
+        let result = {errorCode: 0};
+        let res = this.fireDataEvent("runTests", result);
+        res.then(() => {
+          process.exit(result.errorCode);          
+        });
       });
       await this.base(arguments);
     }
