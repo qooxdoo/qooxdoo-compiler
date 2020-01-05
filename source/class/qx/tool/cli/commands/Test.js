@@ -75,7 +75,11 @@ qx.Class.define("qx.tool.cli.commands.Test", {
       this.argv.watch = false;
       this.argv["machine-readable"] = false;
       this.argv["feedback"] = false;
-      this.addListener("started", async () =>  {
+      this.addListener("started", () =>  {
+        if (!this.hasListener("runTests")) {
+          qx.tool.compiler.Console.error("No test runner registered!");
+          process.exit(-1);
+        }
         let result = {errorCode: 0};
         let res = this.fireDataEvent("runTests", result);
         res.then(() => {
