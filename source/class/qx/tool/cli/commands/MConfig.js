@@ -209,7 +209,14 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
         config.environment = {};
       }
 
-      qx.lang.Object.mergeWith(config.environment, parsedArgs.environment, true);
+      // Set the environment variables coming from command line arguments
+      // in target's environment object. If that object doesn't exist create
+      // one and assign it to the target.
+      const target = config.targets.find(target =>
+        target.type === config.targetType);
+      target.environment = target.environment || {};
+      qx.lang.Object.mergeWith(target.environment, parsedArgs.environment, true);
+
       if (!config.libraries) {
         config.libraries = [ "." ];
       }
