@@ -41,7 +41,7 @@ qx.Class.define("qx.tool.cli.commands.Test", {
         describe: "only run tests of this method",
         type: "string"
       }
-},
+    },
 
     getYargsCommand: function() {
       return {
@@ -78,7 +78,7 @@ qx.Class.define("qx.tool.cli.commands.Test", {
       this.addListener("making", () => {
         if (!this.hasListener("runTests")) {
           qx.tool.compiler.Console.error(
-              `No test runner registered!
+            `No test runner registered!
                Please register a testrunner, e.g. testtapper with:
                qx contrib install @qooxdoo/qxl.testtapper
               `
@@ -86,7 +86,7 @@ qx.Class.define("qx.tool.cli.commands.Test", {
           process.exit(-1);
         }
       });
-      this.addListener("started", () =>  {
+      this.addListener("started", () => {
         let result = {errorCode: 0};
         let res = this.fireDataEvent("runTests", result);
         res.then(() => {

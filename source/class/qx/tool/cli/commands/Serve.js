@@ -109,7 +109,7 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
      * 
      */
     showStartpage: function() {
-       return this.__showStartpage;
+      return this.__showStartpage;
     },
 
     /**
