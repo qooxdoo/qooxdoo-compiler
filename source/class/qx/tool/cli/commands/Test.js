@@ -75,11 +75,18 @@ qx.Class.define("qx.tool.cli.commands.Test", {
       this.argv.watch = false;
       this.argv["machine-readable"] = false;
       this.argv["feedback"] = false;
-      this.addListener("started", () =>  {
+      this.addListener("making", () => {
         if (!this.hasListener("runTests")) {
-          qx.tool.compiler.Console.error("No test runner registered!");
+          qx.tool.compiler.Console.error(
+              `No test runner registered!
+               Please register a testrunner, e.g. testtapper with:
+               qx contrib install @qooxdoo/qxl.testtapper
+              `
+          );
           process.exit(-1);
         }
+      });
+      this.addListener("started", () =>  {
         let result = {errorCode: 0};
         let res = this.fireDataEvent("runTests", result);
         res.then(() => {
