@@ -47,7 +47,40 @@ qx.Class.define("qx.tool.cli.api.LibraryApi", {
      */
     async afterLibrariesLoaded() {
       // Nothing
-    }
+    },
+  
+    /**
+     * 
+     * helper to load an npm module. Check if it can be loaded before
+     * If not install the module with 'npm install --no-save --no-package-lock' to the current library
+     * 
+     * @param module {String} module to check
+     */
+    require: function(module) {
+        try {
+          require.resolve(module);
+        } catch (e) {
+          if ( e.code === 'MODULE_NOT_FOUND' ) {
+            this.loadNpmModule(module);
+          }
+        }
+        return require(module);
+     },
+     /**
+      * 
+      * install an npm module with 'npm install --no-save --no-package-lock' to the current library
+      * 
+      * @param module {String} module to load
+      */
+     loadNpmModule: function(module) {
+       const {execSync} = require("child_process");
+       let s = `npm install --no-save --no-package-lock ${module}`;
+       qx.tool.compiler.Console.info(s);
+       execSync(s, {
+         stdio: "inherit"
+       });
+     },
+	
     
   }
 });
