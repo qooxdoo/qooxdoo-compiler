@@ -19,6 +19,8 @@
  *      * John Spackman (john.spackman@zenesis.com, @johnspackman)
  *
  * *********************************************************************** */
+const path = require("path");
+const fs = require("fs");      
 
 /**
  * Provides an API for an individual library
@@ -56,15 +58,12 @@ qx.Class.define("qx.tool.cli.api.LibraryApi", {
      * 
      * @param module {String} module to check
      */
-    require: function(module) {
-      try {
-        require.resolve(module);
-      } catch (e) {
-        if (e.code === "MODULE_NOT_FOUND") {
-          this.loadNpmModule(module);
-        }
-      }
-      return require(module);
+    require: function(pkg) {
+      let exists = fs.existsSync(path.join(process.cwd(), "node_modules", pkg));
+      if (!exists) {
+          this.loadNpmModule(pkg);
+      }      
+      return require(pkg);
     },
     /**
       * 
@@ -72,9 +71,9 @@ qx.Class.define("qx.tool.cli.api.LibraryApi", {
       * 
       * @param module {String} module to load
       */
-    loadNpmModule: function(module) {
+    loadNpmModule: function(pkg) {
       const {execSync} = require("child_process");
-      let s = `npm install --no-save --no-package-lock ${module}`;
+      let s = `npm install --no-save --no-package-lock ${pkg}`;
       qx.tool.compiler.Console.info(s);
       execSync(s, {
         stdio: "inherit"
