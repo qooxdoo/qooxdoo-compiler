@@ -19,6 +19,8 @@
  *      * John Spackman (john.spackman@zenesis.com, @johnspackman)
  *
  * *********************************************************************** */
+const path = require("path");
+const fs = require("fs");      
 
 /**
  * Provides an API for an individual library
@@ -57,13 +59,10 @@ qx.Class.define("qx.tool.cli.api.LibraryApi", {
      * @param module {String} module to check
      */
     require: function(module) {
-      try {
-        require.resolve(module);
-      } catch (e) {
-        if (e.code === "MODULE_NOT_FOUND") {
-          this.loadNpmModule(module);
-        }
-      }
+      let exists = fs.existsSync(path.join(process.cwd(), "node_modules", module));
+      if (!exists) {
+        this.loadNpmModule(module);
+      }      
       return require(module);
     },
     /**
