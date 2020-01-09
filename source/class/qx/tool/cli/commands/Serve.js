@@ -71,6 +71,12 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
       };
     }
   },
+  events: {
+    /**
+     * Fired when server is started
+    */
+    "started": "qx.event.type.Event"
+  },
 
   members: {
     /** @type {qx.tool.utils.Website} the Website instance */
@@ -98,6 +104,15 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
     },
     
     /**
+     * 
+     * returns the showStartpage flag
+     * 
+     */
+    showStartpage: function() {
+      return this.__showStartpage;
+    },
+
+    /**
      * Runs the web server
      * 
      * @ignore qx.tool.$$resourceDir
@@ -123,16 +138,15 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
       if (!defaultMaker && (apps.length === 1)) {
         defaultMaker = firstMaker;
       }
-
-      let showStartpage = this.argv.showStartpage;
-      if (showStartpage === null) {
-        showStartpage = apps.length > 1;
+      
+      this.__showStartpage = this.argv.showStartpage;
+      if (this.__showStartpage === null) {
+        this.__showStartpage = apps.length > 1;
       }
       var config = this._getConfig();
-
       const app = express();
       const website = new qx.tool.utils.Website();
-      if (!showStartpage) {
+      if (!this.__showStartpage) {
         app.use("/", express.static(defaultMaker.getTarget().getOutputDir()));
       } else {
         let s = await this.getAppQxPath();
@@ -180,10 +194,16 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
             qx.tool.compiler.Console.log("Error when starting web server: " + e);
           }
         });
-        server.listen(config.serve.listenPort, () =>
-          qx.tool.compiler.Console.print("qx.tool.cli.serve.webStarted", "http://localhost:" + config.serve.listenPort));
+        server.listen(config.serve.listenPort, () => {
+          qx.tool.compiler.Console.print("qx.tool.cli.serve.webStarted", "http://localhost:" + config.serve.listenPort);
+          this.fireEvent("started");
+        });
       });
-    }
+    },
+    
+    __showStartpage: null
+
+
   },
 
   defer: function(statics) {

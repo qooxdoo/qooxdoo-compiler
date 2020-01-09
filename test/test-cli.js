@@ -8,10 +8,7 @@ const qx = require("@qooxdoo/framework");
 test("Issue553", async assert => {
   try {
     await deleteRecursive("issue553/compiled");
-    let result = await runCompiler("issue553", "compile");
-    let messages = result.messages.filter(msg => msg.id == "qx.tool.cli.compile.selectingDefaultApp");
-    assert.ok(messages.length == 1);
-    assert.ok(messages[0].args[0] === "issue553one");
+    await runCompiler("issue553", "compile");
     assert.ok(fs.existsSync("issue553/compiled/source/index.html"));
     let indexHtml = await fsPromises.readFile("issue553/compiled/source/index.html", "utf8");
     assert.ok(!!indexHtml.match(/issue553one\/boot.js/m));
