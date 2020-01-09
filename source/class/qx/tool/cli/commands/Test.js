@@ -33,6 +33,10 @@ qx.Class.define("qx.tool.cli.commands.Test", {
         describe: "show diagnostic output",
         type: "boolean"
       },
+      terse: {
+        describe: "show only summary and errors",
+        type: "boolean"
+      },
       class: {
         describe: "only run tests of this class",
         type: "string"
