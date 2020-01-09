@@ -58,12 +58,12 @@ qx.Class.define("qx.tool.cli.api.LibraryApi", {
      * 
      * @param module {String} module to check
      */
-    require: function(pkg) {
-      let exists = fs.existsSync(path.join(process.cwd(), "node_modules", pkg));
+    require: function(module) {
+      let exists = fs.existsSync(path.join(process.cwd(), "node_modules", module));
       if (!exists) {
-          this.loadNpmModule(pkg);
+        this.loadNpmModule(module);
       }      
-      return require(pkg);
+      return require(module);
     },
     /**
       * 
@@ -71,9 +71,9 @@ qx.Class.define("qx.tool.cli.api.LibraryApi", {
       * 
       * @param module {String} module to load
       */
-    loadNpmModule: function(pkg) {
+    loadNpmModule: function(module) {
       const {execSync} = require("child_process");
-      let s = `npm install --no-save --no-package-lock ${pkg}`;
+      let s = `npm install --no-save --no-package-lock ${module}`;
       qx.tool.compiler.Console.info(s);
       execSync(s, {
         stdio: "inherit"
