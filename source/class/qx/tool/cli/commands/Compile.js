@@ -115,7 +115,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
       },
       "erase": {
         alias: "e",
-        describe: "Enabled automatic deletion of the output directory when compiler version changes",
+        describe: "Enabled automatic deletion of the output directory when compiler version or environment variables change",
         type: "boolean",
         default: true
       },
@@ -616,7 +616,6 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
           });
           if (!hasExplicitDefaultApp && (targetConfig.appConfigs.length > 1)) {
             targetConfig.defaultAppConfig = targetConfig.appConfigs[0];
-            qx.tool.compiler.Console.print("qx.tool.cli.compile.selectingDefaultApp", targetConfig.defaultAppConfig.name);
           }
         }
       });

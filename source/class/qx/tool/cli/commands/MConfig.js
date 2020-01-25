@@ -209,6 +209,14 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
         config.environment = {};
       }
 
+      // Set the environment variables coming from command line arguments
+      // in target's environment object. If that object doesn't exist create
+      // one and assign it to the target.
+      const target = config.targets.find(target =>
+        target.type === config.targetType);
+      target.environment = target.environment || {};
+      qx.lang.Object.mergeWith(target.environment, parsedArgs.environment, true);
+
       if (!config.libraries) {
         config.libraries = [ "." ];
       }
@@ -251,6 +259,16 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
       if (argv.locale && argv.locale.length) {
         result.locales = argv.locale;
       }
+
+      if (argv["set-env"]) {
+        argv["set-env"].forEach(function(kv) {
+          var m = kv.match(/^([^=\s]+)(=(.+))?$/);
+          var key = m[1];
+          var value = m[3];
+          result.environment[key] = value;
+        });
+      }
+
       return result;
     },
 

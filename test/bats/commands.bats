@@ -23,12 +23,11 @@ setup() {
   npx qx package list --uris-only
 }
 
-@test "Add package" {
+@test "Install packages" {
   npx qx package install oetiker/UploadWidget -v --release v1.0.1
-  npx qx package install cboulanger/qx-contrib-Dialog -v
+  npx qx package install qooxdoo/qxl.dialog@v3.0.0 -v
   npx qx package install johnspackman/UploadMgr -v
-  npx qx package install ergobyte/qookery/qookeryace -v
-  npx qx package install ergobyte/qookery/qookerymaps -v
+  npx qx package install ergobyte/qookery/qookeryace@0.7.0-pre -v
   npx qx compile --clean
   node compiled/source/myapp/myapp.js
   npx qx package list --installed --short --noheaders
