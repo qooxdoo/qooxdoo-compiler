@@ -90,7 +90,7 @@ qx.Class.define("qx.tool.cli.commands.Test", {
           process.exit(-1);
         }
       });
-      this.addListener("started", () => {
+      this.addListener("afterStart", () => {
         let result = {errorCode: 0};
         let res = this.fireDataEvent("runTests", result);
         res.then(() => {
