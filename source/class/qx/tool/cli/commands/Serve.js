@@ -150,7 +150,7 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
       
       this.__showStartpage = this.argv.showStartpage;
       if (this.__showStartpage === null) {
-        this.__showStartpage = apps.length > 1;
+        this.__showStartpage = defaultMaker === null;
       }
       var config = this._getConfig();
       const app = express();
