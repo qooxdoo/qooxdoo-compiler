@@ -24,6 +24,7 @@ require("@qooxdoo/framework");
 require("./AbstractAppMaker");
 var util = require("../util");
 const mkParentPath = util.promisify(util.mkParentPath);
+var log = util.createLog("analyser");
 
 /**
  * Application maker; supports multiple applications to compile against a single
@@ -135,8 +136,8 @@ qx.Class.define("qx.tool.compiler.makers.AppMaker", {
       return analyser.open()
         .then(() => {
           analyser.setEnvironment(compileEnv);
-
           if (!this.isNoErase() && analyser.isContextChanged()) {
+            log.log("enviroment changed - delete output dir")
             return this.eraseOutputDir()
               .then(() => mkParentPath(this.getOutputDir()))
               .then(() => analyser.resetDatabase());
