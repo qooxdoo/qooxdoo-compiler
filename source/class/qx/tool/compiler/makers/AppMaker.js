@@ -137,7 +137,7 @@ qx.Class.define("qx.tool.compiler.makers.AppMaker", {
         .then(() => {
           analyser.setEnvironment(compileEnv);
           if (!this.isNoErase() && analyser.isContextChanged()) {
-            log.log("enviroment changed - delete output dir")
+            log.log("enviroment changed - delete output dir");
             return this.eraseOutputDir()
               .then(() => mkParentPath(this.getOutputDir()))
               .then(() => analyser.resetDatabase());
