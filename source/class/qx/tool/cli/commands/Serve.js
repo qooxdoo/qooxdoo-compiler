@@ -73,9 +73,18 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
   },
   events: {
     /**
+     * Fired before server start
+     * 
+     *  data: {
+     *    server: the http server
+     *    application: the used express server instance
+     *  }
+     */
+    "beforeStart": "qx.event.type.Data",
+    /**
      * Fired when server is started
     */
-    "started": "qx.event.type.Event"
+    "afterStart": "qx.event.type.Event"
   },
 
   members: {
@@ -141,7 +150,7 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
       
       this.__showStartpage = this.argv.showStartpage;
       if (this.__showStartpage === null) {
-        this.__showStartpage = apps.length > 1;
+        this.__showStartpage = defaultMaker === null;
       }
       var config = this._getConfig();
       const app = express();
@@ -186,6 +195,10 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
       }
       this.addListenerOnce("made", e => {
         let server = http.createServer(app);
+        this.fireDataEvent("beforeStart", {
+          server: server,
+          application: app
+        });
         server.on("error", e => {
           if (e.code === "EADDRINUSE") {
             qx.tool.compiler.Console.print("qx.tool.cli.serve.webAddrInUse", config.serve.listenPort);
@@ -196,7 +209,7 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
         });
         server.listen(config.serve.listenPort, () => {
           qx.tool.compiler.Console.print("qx.tool.cli.serve.webStarted", "http://localhost:" + config.serve.listenPort);
-          this.fireEvent("started");
+          this.fireEvent("afterStart");
         });
       });
     },
