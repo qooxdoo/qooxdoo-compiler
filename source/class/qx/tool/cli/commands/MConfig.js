@@ -278,14 +278,22 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
         return module;
       } catch (e) {
         let lines = e.stack.split("\n");
+        let lineNumber = undefined;
+        if (lines.length > 1) {
+          let m = lines[1].match(/<anonymous>\s+\(([^\):]+):([0-9:]+)\)/);
+          if (m) {
+            lineNumber = m[2];
+          }
+        }
         for (let i = 0; i < lines.length; i++) {
           if (lines[i].match(/^\s+at/)) {
             lines.splice(i); 
           }
         }
-        let lineNumber = lines[0].split("evalmachine.<anonymous>:")[1];
+        if (lineNumber === undefined) {
+          lineNumber = lines[0].split("evalmachine.<anonymous>:")[1];
+        }
         if (lineNumber !== undefined) {
-          lines.shift();
           throw new Error("Error while reading " + aPath + " at line " + lineNumber + "\n" + lines.join("\n"));
         } else {
           throw new Error("Error while reading " + aPath + "\n" + lines.join("\n"));
