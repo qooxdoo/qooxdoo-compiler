@@ -1,0 +1,4 @@
+while true; do
+  time qx compile --target=build
+  ls -la compiled/build/db.json
+done
