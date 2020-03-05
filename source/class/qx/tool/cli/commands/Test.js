@@ -15,6 +15,10 @@
 ************************************************************************ */
 require("./Serve");
 
+const fs = require("fs");
+const path = require("path");
+const process = require("process");
+
 /**
  * Compiles the project and serves it up as a web page
  */
@@ -22,6 +26,12 @@ qx.Class.define("qx.tool.cli.commands.Test", {
   extend: qx.tool.cli.commands.Serve,
 
   statics: {
+
+    /**
+     * The name of the file containing the compile config for the testrunner
+     * defaults to "compile-test.json"
+     */
+    CONFIG_FILENAME : "compile-test.json",
 
     YARGS_BUILDER: {
       verbose: {
@@ -53,6 +63,10 @@ qx.Class.define("qx.tool.cli.commands.Test", {
         describe  : "run test for current project",
         builder   : Object.assign(qx.tool.cli.commands.Compile.YARGS_BUILDER, qx.tool.cli.commands.Serve.YARGS_BUILDER, qx.tool.cli.commands.Test.YARGS_BUILDER),
         handler: function(argv) {
+          // check for special test compiler config
+          if (!argv.configFile && fs.existsSync(path.join(process.cwd(), qx.tool.cli.commands.Test.CONFIG_FILENAME))) {
+            argv.configFile = qx.tool.cli.commands.Test.CONFIG_FILENAME;
+          }
           return new qx.tool.cli.commands.Test(argv)
             .process()
             .catch(e => {
@@ -94,7 +108,7 @@ qx.Class.define("qx.tool.cli.commands.Test", {
         let result = {errorCode: 0};
         let res = this.fireDataEvent("runTests", result);
         res.then(() => {
-          process.exit(result.errorCode);          
+          process.exit(result.errorCode);
         });
       });
       await this.base(arguments);
