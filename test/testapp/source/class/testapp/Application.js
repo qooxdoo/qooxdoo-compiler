@@ -143,7 +143,9 @@ qx.Class.define("testapp.Application", {
         console.log("Promises are enabled");
       }
       
-      console.log(this.tr("translatedString"));
+      qx.core.Assert.assertTrue(this.tr("translatedString") == "en: translatedString");
+      qx.core.Assert.assertTrue(this.tr("Call \"me\"") == "en: Call \"me\"");
+      qx.core.Assert.assertTrue(this.tr("This has\nsome\nnewlines") == "en: This has\nsome\nnewlines");
 
       console.log(JSON.stringify({
         appValue, envVar1, envVar2, envVar3, envVar4,

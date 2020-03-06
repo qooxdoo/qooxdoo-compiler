@@ -18,6 +18,7 @@ async function createMaker() {
     // Targets know how to output an application
     target: new qx.tool.compiler.targets.SourceTarget("unit-tests-output").set({
       writeCompileInfo: true,
+      updatePoFiles: true,
       environment: {
         envVar1: "ONE",
         envVar2: "TWO",
@@ -156,6 +157,18 @@ test("Checks dependencies and environment settings", assert => {
       .then(() => readCompileInfo().then(tmp => compileInfo = tmp))
       .then(() => readDbJson().then(tmp => db = tmp))
       .then(() => readJson("unit-tests-output/transpiled/testapp/Application.json").then(tmp => meta = tmp))
+      
+      /**
+       * Text translation
+       */
+      .then(() => {
+        var ci = db.classInfo["testapp.Application"];
+        let map = {};
+        ci.translations.forEach(t => map[t.msgid] = t);
+        assert.ok(!!map["translatedString"]);
+        assert.ok(!!map["Call \"me\""]);
+        assert.ok(!!map["This has\nsome\nnewlines"]);
+      })
 
       /*
        * Test class references in the property definition, eg annotation
