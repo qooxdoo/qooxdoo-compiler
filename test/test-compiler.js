@@ -35,3 +35,17 @@ test("test issue 524", assert => {
     assert.end(ex);
   }
 });
+
+test("test issue 517", assert => {
+  try {  
+    var classFile = new qx.tool.compiler.ClassFile(analyser, "classIssue517", lib);
+    classFile.load(() => {
+      var dbClassInfo = {};
+      classFile.writeDbInfo(dbClassInfo);
+      assert.ok(!dbClassInfo.unresolved)
+      assert.end();
+    });
+  }catch(ex) {
+    assert.end(ex);
+  }
+});
