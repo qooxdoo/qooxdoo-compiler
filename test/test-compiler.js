@@ -14,7 +14,7 @@ test("test issue 519", assert => {
     classFile.load(() => {
       var dbClassInfo = {};
       classFile.writeDbInfo(dbClassInfo);
-      assert.ok(!dbClassInfo.unresolved)
+      assert.ok(!dbClassInfo.unresolved);
       assert.end();
     });
   }catch(ex) {
@@ -28,7 +28,7 @@ test("test issue 524", assert => {
     classFile.load(() => {
       var dbClassInfo = {};
       classFile.writeDbInfo(dbClassInfo);
-      assert.ok(!dbClassInfo.unresolved)
+      assert.ok(!dbClassInfo.unresolved);
       assert.end();
     });
   }catch(ex) {
@@ -42,7 +42,6 @@ test("test issue 517", assert => {
     classFile.load(() => {
       var dbClassInfo = {};
       classFile.writeDbInfo(dbClassInfo);
-      assert.ok(!dbClassInfo.unresolved)
       assert.end();
     });
   }catch(ex) {
