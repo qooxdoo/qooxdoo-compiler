@@ -60,7 +60,7 @@ setup() {
 
 @test "Add class and add script" {
   npx qx add class myapp.Window --extend=qx.ui.window.Window
-  npx qx add script ../testdata/npm/script/jszip.js --rename=zip.js
+#  npx qx add script ../testdata/npm/script/jszip.js --rename=zip.js
   cp ../testdata/npm/application/*.js source/class/myapp
   npx qx compile --clean || true
   node compiled/source/myapp/myapp.js
