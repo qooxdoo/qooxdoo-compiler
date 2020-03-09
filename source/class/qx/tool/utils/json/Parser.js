@@ -420,9 +420,13 @@ qx.Class.define("qx.tool.utils.json.Parser", {
       const isLiteral = qx.tool.utils.json.Parser.literals.indexOf(token.type) !== -1;
 
       if (isLiteral) {
+        let value = token.value;
+        if (token.type == qx.tool.utils.json.Tokenizer.tokenTypes.STRING) {
+          value = value.replace(/\\(.)/g, "$1");
+        }
         const literal = {
           type: "literal",
-          value: token.value,
+          value: value,
           rawValue: input.substring(token.loc.start.offset, token.loc.end.offset)
         };
         if (settings.verbose) {
