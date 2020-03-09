@@ -551,10 +551,6 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
       if (!app) {
         compileConfigModel.transform("applications", apps => apps.concat([manifestApp]));
         app = manifestApp;
-      } else {
-        for (let key of Object.getOwnPropertyNames(manifestApp)) {
-          app[key] = manifestApp[key];
-        }
       }
       if (compileConfigModel.isDirty()) {
         await compileConfigModel.save();
