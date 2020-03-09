@@ -228,6 +228,16 @@ qx.Class.define("qx.tool.cli.commands.package.Migrate", {
         }
         manifestModel.setValidate(true);
       }
+      if (!announceOnly) {
+        let compileJsonFilename = path.join(process.cwd(), "compile.json");
+        let replaceInFiles = [{
+          files: compileJsonFilename,
+          from: "qx/browser",
+          to: "@qooxdoo/qx/browser"
+        }];
+        await this.migrate([compileJsonFilename], replaceInFiles);
+      }
+
       let compileJsFilename = path.join(process.cwd(), "compile.js");
       if (await fs.existsAsync(compileJsFilename)) {
         let data = await fs.readFileAsync(compileJsFilename, "utf8");
