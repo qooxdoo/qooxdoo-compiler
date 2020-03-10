@@ -54,8 +54,8 @@ qx.Class.define("myapp.Application",
       }
 
       // Test zip
-      var zip = new JSZip();
-      zip.file("Hello.txt", "Hello World\n");
+//      var zip = new JSZip();
+//      zip.file("Hello.txt", "Hello World\n");
 
       if (!com.zenesis.qx.upload.UploadButton) {
         process.exit(1);
