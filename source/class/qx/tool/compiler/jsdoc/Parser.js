@@ -58,8 +58,8 @@ qx.Class.define("qx.tool.compiler.jsdoc.Parser", {
       comment.forEach(function(line) {
         line = line.trimRight();
         // Look for command at the begining of the line
-        m = line.match(/^\s*(\@[a-zA-Z0-9_]+)(.*)$/);
-        if (!m) {          // Clean starting * as markdown lists
+        let m = line.match(/^\s*(\@[a-zA-Z0-9_]+)(.*)$/);
+        if (!m) { // Clean starting * as markdown lists
           if (current.body.length) {
             current.body += "\n";
           }
