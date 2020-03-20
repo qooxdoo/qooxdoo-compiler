@@ -26,6 +26,7 @@ require("./ParamParser");
 require("./ReturnParser");
 require("./ThrowsParser");
 
+const showdown = require("showdown");
 
 /**
  * JSDoc Parser
@@ -42,30 +43,23 @@ qx.Class.define("qx.tool.compiler.jsdoc.Parser", {
     parseComment: function(comment) {
       var current = { name: "@description", body: "" };
       var cmds = [ current ];
-      if (typeof comment == "string") {
-        comment = comment.split("\n");
-      }
-      comment.forEach(function(line) {
-        // Strip optional leading *
-        line = line.trim();
-        var m = line.match(/^\*\s?(.*)$/);
-        if (m) {
-          line = m[1];
-        }
-        line = line.trimRight();
-        
-        let docComment = null;
-        
-        // Strip trailing single line comment
-        m = line.match(/(^.*)(\/\/.*)$/);
-        if (m) {
-          line = m[1].trimRight();
-          docComment = m[2];
-        }
 
+      // special handling for code section
+      comment = comment.replace(/@([^@}\n\r]*)@/g, "<code>$1</code>");
+      // Strip optional leading * 
+      comment = comment.replace(/^\s*\*/mg, "");
+      // special handling for as markdown lists - * in qooxdoo
+      comment = comment.replace(/^\s*\*/mg, "*");
+      comment = comment.replace(/^\s*\*\*\*\*/mg, "\t\t\t*");
+      comment = comment.replace(/^\s*\*\*\*/mg, "\t\t*");
+      comment = comment.replace(/^\s*\*\*/mg, "\t*");
+      
+      comment = comment.split("\n");
+      comment.forEach(function(line) {
+        line = line.trimRight();
         // Look for command at the begining of the line
-        m = line.match(/^\s*(\@[a-zA-Z0-9_]+)(.*)$/);
-        if (!m) {
+        let m = line.match(/^\s*(\@[a-zA-Z0-9_]+)(.*)$/);
+        if (!m) { // Clean starting * as markdown lists
           if (current.body.length) {
             current.body += "\n";
           }
@@ -75,6 +69,13 @@ qx.Class.define("qx.tool.compiler.jsdoc.Parser", {
 
         var name = m[1];
         var body = m[2];
+        let docComment = null;
+        // Strip trailing single line comment
+        m = body.match(/(^.*)(\/\/.*)$/);
+        if (m) {
+          body = m[1].trimRight();
+          docComment = m[2];
+        }
 
         // Patch common command names
         if (name == "@returns") {
@@ -92,13 +93,18 @@ qx.Class.define("qx.tool.compiler.jsdoc.Parser", {
         cmds.push(current);
       });
       var result = {};
+      let converter = new showdown.Converter();
       cmds.forEach(function(cmd) {
-        // If the body is surrounded by parameters, remove them
-        var m = cmd.body.match(/^\s*\(([\s\S]*)\)\s*$/m);
-        if (m) {
-          cmd.body = m[1];
+        if (cmd.name === "@description") {
+          cmd.body = converter.makeHtml(cmd.body);
+        } else {
+          // If the body is surrounded by parameters, remove them
+          var m = cmd.body.match(/^\s*\(([\s\S]*)\)\s*$/m);
+          if (m) {
+            cmd.body = m[1];
+          }
+          cmd.body = cmd.body.trim();
         }
-        cmd.body = cmd.body.trim();
         if (result[cmd.name]) {
           result[cmd.name].push(cmd);
         } else {
