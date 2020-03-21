@@ -97,7 +97,7 @@ qx.Class.define("qx.tool.compiler.jsdoc.Parser", {
       cmds.forEach(function(cmd) {
         if (cmd.name === "@description") {
           try {
-             cmd.body = converter.makeHtml(cmd.body);
+            cmd.body = converter.makeHtml(cmd.body);
           } catch (e) {
             qx.tool.compiler.Console.error(`Markdown conversion error: "${e.message}" found in \n${cmd.body.trim()}`);
           }
