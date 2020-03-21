@@ -69,13 +69,6 @@ qx.Class.define("qx.tool.compiler.jsdoc.Parser", {
 
         var name = m[1];
         var body = m[2];
-        let docComment = null;
-        // Strip trailing single line comment
-        m = body.match(/(^.*)(\/\/.*)$/);
-        if (m) {
-          body = m[1].trimRight();
-          docComment = m[2];
-        }
 
         // Patch common command names
         if (name == "@returns") {
@@ -87,9 +80,6 @@ qx.Class.define("qx.tool.compiler.jsdoc.Parser", {
 
         // store it
         current = { name: name, body: body };
-        if (docComment) {
-          current.docComment = docComment;
-        }
         cmds.push(current);
       });
       var result = {};
