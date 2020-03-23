@@ -86,10 +86,20 @@ qx.Class.define("qx.tool.compiler.jsdoc.Parser", {
       let converter = new showdown.Converter();
       cmds.forEach(function(cmd) {
         if (cmd.name === "@description") {
-          cmd.body = converter.makeHtml(cmd.body);
+          try {
+            cmd.body = converter.makeHtml(cmd.body);
+          } catch (e) {
+            qx.tool.compiler.Console.error(`Markdown conversion error: "${e.message}" found in \n${cmd.body.trim()}`);
+          }
         } else {
+          // Strip trailing single line comment
+          var m = cmd.body.match(/(^.*)(\/\/.*)$/m);
+          if (m) {
+            cmd.body = m[1].trimRight();
+            cmd.docComment = m[2];
+          }
           // If the body is surrounded by parameters, remove them
-          var m = cmd.body.match(/^\s*\(([\s\S]*)\)\s*$/m);
+          m = cmd.body.match(/^\s*\(([\s\S]*)\)\s*$/m);
           if (m) {
             cmd.body = m[1];
           }
