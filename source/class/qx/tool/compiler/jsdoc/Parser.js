@@ -93,7 +93,7 @@ qx.Class.define("qx.tool.compiler.jsdoc.Parser", {
           }
         } else {
           // Strip trailing single line comment
-          var m = cmd.body.match(/(^.*)(\/\/.*)$/);
+          var m = cmd.body.match(/(^.*)(\/\/.*)$/m);
           if (m) {
             cmd.body = m[1].trimRight();
             cmd.docComment = m[2];
