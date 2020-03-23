@@ -92,8 +92,9 @@ qx.Class.define("qx.tool.compiler.jsdoc.Parser", {
             qx.tool.compiler.Console.error(`Markdown conversion error: "${e.message}" found in \n${cmd.body.trim()}`);
           }
         } else {
+          cmd.body = cmd.body.trim();
           // Strip trailing single line comment
-          var m = cmd.body.match(/(^.*)(\/\/.*)$/m);
+          var m = cmd.body.match(/(^.*)(\/\/.*)$/);
           if (m) {
             cmd.body = m[1].trimRight();
             cmd.docComment = m[2];
