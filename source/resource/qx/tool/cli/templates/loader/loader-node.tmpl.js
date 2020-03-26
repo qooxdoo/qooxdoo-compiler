@@ -113,7 +113,6 @@
   qx.$$loader = {
       parts : %{Parts},
       packages : %{Packages},
-      urisBefore : %{UrisBefore},
       boot : %{Boot},
       closureParts : %{ClosureParts},
       delayDefer: false,
@@ -145,7 +144,6 @@
 
       init : function() {
         var l = qx.$$loader;
-        this.loadScriptList(l.decodeUris(l.urisBefore, "../resource"));
 
         var bootPackageHash=l.parts[l.boot][0];
         this.loadScriptList(l.decodeUris(l.packages[l.parts[l.boot][0]].uris));

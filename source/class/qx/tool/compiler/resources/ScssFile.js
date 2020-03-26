@@ -98,7 +98,7 @@ qx.Class.define("qx.tool.compiler.resources.ScssFile", {
             if (!contents) {
               let tmp = this.__importAs[url];
               if (tmp) {
-                contents = this.__sourceFiles[url];
+                contents = this.__sourceFiles[tmp];
               }
             }
             return contents ? { contents } : null;
