@@ -57,8 +57,18 @@ qx.Class.define("qx.tool.compiler.jsdoc.Parser", {
       comment = comment.split("\n");
       comment.forEach(function(line) {
         line = line.trimRight();
-        // Look for command at the begining of the line
-        let m = line.match(/^\s*(\@[a-zA-Z0-9_]+)(.*)$/);
+        if (!line) {
+          return;
+        }
+        
+        // Strip trailing single line comment
+        let m = line.match(/(^.*)([^:]\/\/.*)$/);
+        if (m) {
+          line = m[1].trimRight();
+        }
+        
+        // Look for command at the beginning of the line
+        m = line.match(/^\s*(\@[a-zA-Z0-9_]+)(.*)$/);
         if (!m) { // Clean starting * as markdown lists
           if (current.body.length) {
             current.body += "\n";
@@ -92,14 +102,8 @@ qx.Class.define("qx.tool.compiler.jsdoc.Parser", {
             qx.tool.compiler.Console.error(`Markdown conversion error: "${e.message}" found in \n${cmd.body.trim()}`);
           }
         } else {
-          // Strip trailing single line comment
-          var m = cmd.body.match(/(^.*)(\/\/.*)$/m);
-          if (m) {
-            cmd.body = m[1].trimRight();
-            cmd.docComment = m[2];
-          }
           // If the body is surrounded by parameters, remove them
-          m = cmd.body.match(/^\s*\(([\s\S]*)\)\s*$/m);
+          let m = cmd.body.match(/^\s*\(([\s\S]*)\)\s*$/m);
           if (m) {
             cmd.body = m[1];
           }
