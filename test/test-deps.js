@@ -316,7 +316,7 @@ test("Checks dependencies and environment settings", assert => {
        */
       .then(async () => {
         src = await readFile("unit-tests-output/resource/testapp/scss/root.css", "utf8");
-        assert.ok(src.match(/url\(\.\.\/sub5\/image.png\)/), "Resource SCSS");
+        assert.ok(src.match(/url\(\"sub5\/image.png\"\)/), "Resource SCSS");
       })
 
       .then(() => assert.end())
