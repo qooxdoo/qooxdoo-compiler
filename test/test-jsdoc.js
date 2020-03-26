@@ -213,3 +213,71 @@ test("Checks jsdoc @param parser", assert => {
   assert.end();
 });
 
+test("Checks jsdoc inline comments and urls", assert => {
+  let result;
+  
+  result = qx.tool.compiler.jsdoc.Parser.parseComment(
+      `
+     * @ignore(abc,
+     *    def,
+     *    ghi)
+    `);
+  assert.deepEqual(result, {
+    "@description": [
+      {
+        "name": "@description",
+        "body": ""
+      }
+    ],
+    "@ignore": [
+      {
+        "name": "@ignore",
+        "body": "abc,\n    def,\n    ghi"
+      }
+    ]
+  });
+      
+  result = qx.tool.compiler.jsdoc.Parser.parseComment(
+      `
+     * @ignore(abc, // abc comment
+     *    def, // def comment
+     *    ghi)
+    `);
+  assert.deepEqual(result, {
+    "@description": [
+      {
+        "name": "@description",
+        "body": ""
+      }
+    ],
+    "@ignore": [
+      {
+        "name": "@ignore",
+        "body": "abc,\n    def,\n    ghi"
+      }
+    ]
+  });
+  
+  result = qx.tool.compiler.jsdoc.Parser.parseComment(
+    ` * @ignore(stuff) // comment about ignore stuff
+     * http://abc.com // comment about url
+     * http://dev.com 
+     * 
+     `);
+  assert.deepEqual(result, {
+    "@description": [
+      {
+        "name": "@description",
+        "body": ""
+      }
+    ],
+    "@ignore": [
+      {
+        "name": "@ignore",
+        "body": "stuff"
+      }
+    ]
+  });
+  assert.end();
+});
+
