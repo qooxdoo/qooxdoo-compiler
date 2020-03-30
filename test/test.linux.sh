@@ -1,26 +1,28 @@
-set -x 
-rm -rf myapp
-qx create myapp -I --type server -v || exit $?
-cd myapp
-qx compile -v --clean || exit $?
-node source-output/myapp/myapp.js || exit $?
-qx contrib update  -v|| exit $?
-qx contrib list    -v|| exit $?
-qx contrib install oetiker/UploadWidget --release v1.0.0 -v || exit $?
-qx contrib install cboulanger/qx-contrib-Dialog --release v1.3.0-beta.3 -v || exit $?
-qx contrib install johnspackman/UploadMgr --release v1.0.0 -v || exit $?
-qx compile -v --clean || exit $?
-node source-output/myapp/myapp.js || exit $?
-rm -rf contrib  || exit $?
-qx contrib install -v || exit $?
-qx compile -v --clean || exit $?
-node source-output/myapp/myapp.js
-qx contrib remove cboulanger/qx-contrib-Dialog -v || exit $?
-qx compile -v --clean || exit $?
-node source-output/myapp/myapp.js || exit $?
-qx add class myapp.Window --extend=qx.ui.window.Window || exit $?
-qx add script ../testdata/npm/script/jszip.js --rename=zip.js || exit $?
-cp ../testdata/npm/application/*.js source/class/myapp
-qx lint --fix --warnAsError ||  exit $?
-qx compile -v --clean || exit $?
-node source-output/myapp/myapp.js || exit $?
+#!/usr/bin/env bash
+set -x
+set -e
+NODE_OPTS="--no-warnings"
+
+npm link
+
+echo "Testing qooxdoo-compiler version $(./qx --version)"
+echo
+
+./qx package update
+./qx package install
+./qx lint
+
+# node API tests
+pushd test
+node $NODE_OPTS test-compiler.js
+node $NODE_OPTS test-deps.js
+node $NODE_OPTS test-config-schemas.js
+node $NODE_OPTS test-pkg-migrate.js
+node $NODE_OPTS test-commands.js
+node $NODE_OPTS test-cli.js
+popd
+
+# bats CLI tests
+npx bats test/bats/
+
+echo "CLI Tests finished successfully"
