@@ -26,14 +26,12 @@ const consoleControl = require("console-control-strings");
 require("app-module-path").addPath(process.cwd() + "/node_modules");
 
 require("./Command");
-require("./MConfig");
 
 /**
  * Handles compilation of the project
  */
 qx.Class.define("qx.tool.cli.commands.Compile", {
   extend: qx.tool.cli.commands.Command,
-  include: [qx.tool.cli.commands.MConfig],
 
   statics: {
 
@@ -369,7 +367,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
      * @return {Boolean} true if all makers succeeded
      */
     async _loadConfigAndStartMaking() {
-      var config = this.__config = await this.parse(this.argv);
+      var config = this.__config = await qx.tool.cli.CompileJs.getInstance().parse(this.argv);
       if (!config) {
         throw new qx.tool.utils.Utils.UserError("Error: Cannot find any configuration");
       }

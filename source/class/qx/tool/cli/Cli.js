@@ -88,7 +88,7 @@ qx.Class.define("qx.tool.cli.Cli", {
           "Serve"
         ],
         "qx.tool.cli.commands");
-      return yargs
+      let argv = yargs
         .usage(title)
         .demandCommand()
         .strict()
@@ -96,6 +96,10 @@ qx.Class.define("qx.tool.cli.Cli", {
         .showHelpOnFail()
         .help()
         .argv;
+      let compileJs = new qx.tool.cli.CompileJs(argv);
+      qx.tool.cli.CompileJs.setInstance(compileJs);
+      await compileJs.parse();
+      return argv;
     }
   },
 

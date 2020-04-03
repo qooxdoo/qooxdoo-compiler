@@ -19,7 +19,7 @@
 
 
 require("@qooxdoo/framework");
-require("../../config");
+require("../config");
 const path = require("upath");
 const fs = qx.tool.utils.Promisify.fs;
 const semver = require("semver");
@@ -34,23 +34,59 @@ const semver = require("semver");
  * need to use the API directly.
  *
  */
-qx.Mixin.define("qx.tool.cli.commands.MConfig", {
+qx.Class.define("qx.tool.cli.CompileJs", {
+  extend: qx.core.Object,
+  
+  construct(argv) {
+    this.base(arguments);
+    this.argv = argv;
+  },
   
   statics: {
-    compileJsFilename: "compile.js"
+    compileJsFilename: "compile.js",
+    
+    /** {CompileJs} singleton instance */
+    __instance: null,
+    
+    /**
+     * Returns the singleton instance, throws an error if it has not been created
+     * 
+     * @return {CompileJs}
+     */
+    getInstance() {
+      const CompileJs = qx.tool.cli.CompileJs;
+      if (!CompileJs.__instance) {
+        throw new Error("CompileJs has not been initialized yet!");
+      }
+      return CompileJs.__instance;
+    },
+    
+    /**
+     * Sets the singleton, can only be done once
+     * 
+     * @param instance {CompileJs}
+     */
+    setInstance(instance) {
+      const CompileJs = qx.tool.cli.CompileJs;
+      if (CompileJs.__instance) {
+        throw new Error("CompileJs has already been initialized!");
+      }
+      CompileJs.__instance = instance;
+    }
   },
 
   members: {
-    
     _compilerApi: null,
     _compileJsFilename: null,
     _compileJsonFilename: null,
-
+    _parsedArgs: null,
+    
     /**
-     * Parses the command line and produces configuration data.
+     * Parses the command line and produces configuration data; this is safe to
+     * call multiple times, provided that you await each time you call it.
      * 
      * Loads a configuration file from a .js or .json file; if you provide a .js
-     * file the file must be a module which returns an object whcih has any of
+     * file the file must be a module which returns an object which has any of
      * these properties:
      * 
      *  CompilerConfig - the class (derived from qx.tool.cli.api.CompilerApi)
@@ -64,12 +100,38 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
      *
      */
     parse: async function() {
-      var parsedArgs = await this.__parseImpl();
+      if (this._parsedArgs) {
+        return this._parsedArgs;
+      }
+      
+      let parsedArgs = {
+        target: this.argv.target,
+        outputPath: null,
+        locales: null,
+        writeAllTranslations: this.argv.writeAllTranslations,
+        environment: {},
+        config: this.argv.configFile||qx.tool.config.Compile.config.fileName,
+        verbose: this.argv.verbose
+      };
+
+      if (this.argv.locale && this.argv.locale.length) {
+        parsedArgs.locales = this.argv.locale;
+      }
+
+      if (this.argv["set-env"]) {
+        this.argv["set-env"].forEach(function(kv) {
+          var m = kv.match(/^([^=\s]+)(=(.+))?$/);
+          var key = m[1];
+          var value = m[3];
+          parsedArgs.environment[key] = value;
+        });
+      }
+      
       var lockfile_content = {
         version: qx.tool.config.Lockfile.getInstance().getVersion()
       };
 
-      let compileJsFilename = qx.tool.cli.commands.MConfig.compileJsFilename;
+      let compileJsFilename = qx.tool.cli.CompileJs.compileJsFilename;
       let compileJsonFilename = qx.tool.config.Compile.config.fileName;
       if (parsedArgs.config) {
         if (parsedArgs.config.match(/\.js$/)) {
@@ -162,7 +224,7 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
         }
 
         for (const aPath of config.libraries) {
-          let libCompileJsFilename = path.join(aPath, qx.tool.cli.commands.MConfig.compileJsFilename);
+          let libCompileJsFilename = path.join(aPath, qx.tool.cli.CompileJs.compileJsFilename);
           let LibraryApi = qx.tool.cli.api.LibraryApi;
           if (await fs.existsAsync(libCompileJsFilename)) {
             let compileJs = await this.__loadJs(libCompileJsFilename);
@@ -188,7 +250,8 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
       
       await compilerApi.afterLibrariesLoaded();
       
-      return compilerApi.getConfiguration();
+      this._parsedArgs = await compilerApi.getConfiguration();
+      return this._parsedArgs;
     },
 
     /*
@@ -212,13 +275,17 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
       // Set the environment variables coming from command line arguments
       // in target's environment object. If that object doesn't exist create
       // one and assign it to the target.
-      const target = config.targets.find(target =>
-        target.type === config.targetType);
-      target.environment = target.environment || {};
-      qx.lang.Object.mergeWith(target.environment, parsedArgs.environment, true);
+      if (config.targets) {
+        const target = config.targets.find(target =>
+          target.type === config.targetType);
+        target.environment = target.environment || {};
+        qx.lang.Object.mergeWith(target.environment, parsedArgs.environment, true);
+      }
 
       if (!config.libraries) {
-        config.libraries = [ "." ];
+        if (fs.existsSync("Manifest.json")) {
+          config.libraries = [ "." ];
+        }
       }
 
       if (lockfileContent.libraries) {
@@ -272,6 +339,12 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
       return result;
     },
 
+    /**
+     * Loads a .js file using `require`, handling exceptions as best as possible
+     * 
+     * @param aPath {String} the file to load
+     * @return {Object} the module
+     */
     __loadJs: async function(aPath) {
       try {
         let module = require(path.resolve(aPath));
@@ -291,7 +364,49 @@ qx.Mixin.define("qx.tool.cli.commands.MConfig", {
           throw new Error("Error while reading " + aPath + "\n" + lines.join("\n"));
         }
       }
-    }
-  }
+    },
+    
+    /**
+     * Returns the CompilerApi instance
+     * 
+     * @return {CompilerApi}
+     */
+    getCompilerApi() {
+      return this._compilerApi;
+    },
+    
+    /**
+     * Returns the filename of compile.js, if there is one
+     * 
+     * @return {String?} filename
+     */
+    getCompileJsFilename() {
+      return this._compileJsFilename;
+    },
 
+    /**
+     * Returns the filename of compile.json, if there is one
+     * 
+     * @return {String?} filename
+     */
+    getCompileJsonFilename() {
+      return this._compileJsonFilename;
+    },
+    
+    /**
+     * Detects whether the command line explicit set an option (as opposed to yargs
+     * providing a default value).  Note that this does not handle aliases, use the
+     * actual, full option name.
+     *
+     * @param option {String} the name of the option, eg "listen-port"
+     * @return {Boolean}
+     */
+    isExplicitArg(option) {
+      function searchForOption(option) {
+        return process.argv.indexOf(option) > -1;
+      }
+      return searchForOption(`-${option}`) || searchForOption(`--${option}`);
+    }
+
+  }
 });

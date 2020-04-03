@@ -28,7 +28,6 @@ require("./commands/Compile.js");
 require("./commands/Config.js");
 require("./commands/Create.js");
 require("./commands/Lint.js");
-require("./commands/MConfig.js");
 require("./commands/Package.js");
 require("./commands/Run.js");
 require("./commands/Serve.js");
@@ -44,4 +43,6 @@ require("./commands/package/Migrate.js");
 require("./api/AbstractApi.js");
 require("./api/CompilerApi.js");
 require("./api/LibraryApi.js");
+
+require("./CompileJs.js");
 
