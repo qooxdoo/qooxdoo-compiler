@@ -95,7 +95,7 @@ qx.Class.define("qx.tool.cli.commands.Lint", {
     process: async function() {
       await this.__applyFixes();
       let config;
-      config = await qx.tool.cli.CompileJs.getInstance().parse();
+      config = await qx.tool.cli.Cli.getInstance().getParsedArgs();
       let lintOptions = config.eslintConfig || {};
       lintOptions.extends = lintOptions.extends || ["@qooxdoo/qx/browser"];
       lintOptions.globals = Object.assign(lintOptions.globals || {}, await this.__addGlobals(config));

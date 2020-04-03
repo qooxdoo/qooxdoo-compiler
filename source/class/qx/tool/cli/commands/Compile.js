@@ -94,11 +94,6 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         describe: "output compiler messages in machine-readable format",
         type: "boolean"
       },
-      "verbose": {
-        alias: "v",
-        describe: "enables additional progress output to console",
-        type: "boolean"
-      },
       "minify": {
         alias: "m",
         describe: "disables minification (for build targets only)",
@@ -155,12 +150,6 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         describe: "Whether bundling is enabled",
         type: "boolean",
         default: true
-      },
-      "force": {
-        describe: "Override warnings",
-        type: "boolean",
-        default: false,
-        alias: "F"
       }
     },
 
@@ -367,7 +356,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
      * @return {Boolean} true if all makers succeeded
      */
     async _loadConfigAndStartMaking() {
-      var config = this.__config = await qx.tool.cli.CompileJs.getInstance().parse(this.argv);
+      var config = this.__config = await qx.tool.cli.Cli.getInstance().getParsedArgs();
       if (!config) {
         throw new qx.tool.utils.Utils.UserError("Error: Cannot find any configuration");
       }
