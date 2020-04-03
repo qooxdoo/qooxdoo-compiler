@@ -22,6 +22,24 @@ qx.Class.define("qxl.compilertests.testlib.LibraryApi", {
     async load() {
       let command = this.getCompilerApi().getCommand();
       command.addListener("checkEnvironment", e => this._appCompiling(e.getData().application, e.getData().environment));
+      
+      let cli = qx.tool.cli.Cli.getInstance();
+      cli.yargs.command({
+        command: "testlib <message> [options]",
+        describe: "repeats a message to the console",
+        builder: {
+          "type": {
+            alias : "t",
+            describe : "A parameter",
+            nargs: 1,
+            requiresArg: true,
+            type: "string"
+          }
+        },
+        handler: function(argv) {
+          console.log(`The commmand testlib; message=${argv.message}, type=${argv.type}`);
+        }
+      });
     },
     
     _appCompiling(application, environment) {

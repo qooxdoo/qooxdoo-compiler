@@ -22,11 +22,9 @@ const CLIEngine = require("eslint").CLIEngine;
 const fs = qx.tool.utils.Promisify.fs;
 
 require("./Command");
-require("./MConfig");
 
 qx.Class.define("qx.tool.cli.commands.Lint", {
   extend: qx.tool.cli.commands.Command,
-  include: [qx.tool.cli.commands.MConfig],
 
   statics: {
     getYargsCommand: function() {
@@ -97,7 +95,7 @@ qx.Class.define("qx.tool.cli.commands.Lint", {
     process: async function() {
       await this.__applyFixes();
       let config;
-      config = await this.parse();
+      config = await qx.tool.cli.Cli.getInstance().getParsedArgs();
       let lintOptions = config.eslintConfig || {};
       lintOptions.extends = lintOptions.extends || ["@qooxdoo/qx/browser"];
       lintOptions.globals = Object.assign(lintOptions.globals || {}, await this.__addGlobals(config));
