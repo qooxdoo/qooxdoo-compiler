@@ -8,10 +8,22 @@ const qx = require("@qooxdoo/framework");
 test("Issue553", async assert => {
   try {
     await deleteRecursive("issue553/compiled");
-    await runCompiler("issue553", "compile");
+    await runCompiler("issue553");
     assert.ok(fs.existsSync("issue553/compiled/source/index.html"));
     let indexHtml = await fsPromises.readFile("issue553/compiled/source/index.html", "utf8");
     assert.ok(!!indexHtml.match(/issue553one\/boot.js/m));
+  
+    assert.end();
+  }catch(ex) {
+    assert.end(ex);
+  }
+});
+
+test("Dynamic commands", async assert => {
+  try {
+    await deleteRecursive("testapp/compiled");
+    let result = await runCommand("testapp", "qx", "testlib", "hello", "-t=4");
+    assert.ok(result.output.match(/The commmand testlib; message=hello, type=4/));
   
     assert.end();
   }catch(ex) {
@@ -34,22 +46,22 @@ test("Issue440", async assert => {
     
     code[errorLine] = "This is an error";
     await fsPromises.writeFile("issue440/source/class/issue440/Application.js", code.join("\n"), "utf8");
-    result = await runCompiler("issue440", "compile");
+    result = await runCompiler("issue440");
     assert.ok(result.exitCode === 1);
     
     code[errorLine] = "new abc.ClassNoDef(); //This is an error";
     await fsPromises.writeFile("issue440/source/class/issue440/Application.js", code.join("\n"), "utf8");
-    result = await runCompiler("issue440", "compile", "--warnAsError");
+    result = await runCompiler("issue440", "--warnAsError");
     assert.ok(result.exitCode === 1);
 
     code[errorLine] = "new abc.ClassNoDef(); //This is an error";
     await fsPromises.writeFile("issue440/source/class/issue440/Application.js", code.join("\n"), "utf8");
-    result = await runCompiler("issue440", "compile");
+    result = await runCompiler("issue440");
     assert.ok(result.exitCode === 0);
     
     code[errorLine] = "//This is an error";
     await fsPromises.writeFile("issue440/source/class/issue440/Application.js", code.join("\n"), "utf8");
-    result = await runCompiler("issue440", "compile");
+    result = await runCompiler("issue440");
     assert.ok(result.exitCode === 0);
     assert.end();
   }catch(ex) {
@@ -60,7 +72,7 @@ test("Issue440", async assert => {
 test("testLegalSCSS", async assert => {
   try {  
     await deleteRecursive("testLegalSCSS/compiled");
-    let result = await runCompiler("testLegalSCSS", "compile");
+    let result = await runCompiler("testLegalSCSS");
     assert.ok(fs.existsSync("testLegalSCSS/compiled/source/resource/testLegalSCSS/css/test_css.css"));
     assert.ok(fs.existsSync("testLegalSCSS/compiled/source/resource/testLegalSCSS/css/test_scss.css"));
     assert.ok(fs.existsSync("testLegalSCSS/compiled/source/resource/testLegalSCSS/css/test_theme_scss.css"));
@@ -79,9 +91,34 @@ test("testLegalSCSS", async assert => {
 });
 
 async function runCompiler(dir, ...cmd) {
+  let result = await runCommand(dir, "qx", "compile", "--machine-readable", ...cmd);
+  result.messages = [];
+  result.output.split("\n").forEach(line => {
+    let m = line.match(/^\#\#([^:]+):\[(.*)\]$/);
+    if (m) {
+      let args = m[2].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
+      if (args) {
+        args = args.map(arg => {
+          if (arg.length && arg[0] == "\"" && arg[arg.length - 1] == "\"")
+            return arg.substring(1, arg.length - 1);
+          return arg;
+        });
+      } else {
+        args = [];
+      }
+      result.messages.push({
+        id: m[1],
+        args: args
+      });
+    }
+  });
+  return result;
+}
+
+async function runCommand(dir, ...args) {
   return new qx.Promise((resolve, reject) => {
-    cmd.push("--machine-readable");
-    let proc = child_process.spawn("qx", cmd, {
+    let cmd = args.shift();
+    let proc = child_process.spawn(cmd, args, {
       cwd: dir,
       shell: true
     });
@@ -95,26 +132,6 @@ async function runCompiler(dir, ...cmd) {
 
     proc.on('close', code => {
       result.exitCode = code;
-      result.messages = [];
-      result.output.split("\n").forEach(line => {
-        let m = line.match(/^\#\#([^:]+):\[(.*)\]$/);
-        if (m) {
-          let args = m[2].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
-          if (args) {
-            args = args.map(arg => {
-              if (arg.length && arg[0] == "\"" && arg[arg.length - 1] == "\"")
-                return arg.substring(1, arg.length - 1);
-              return arg;
-            });
-          } else {
-            args = [];
-          }
-          result.messages.push({
-            id: m[1],
-            args: args
-          });
-        }
-      });
       resolve(result);
     });
     proc.on('error', reject);
