@@ -72,14 +72,6 @@ qx.Class.define("qx.tool.cli.commands.add.Class", {
           //   alias : "v",
           //   describe: 'Verbose logging'
           // }
-        },
-        handler: function(argv) {
-          return new qx.tool.cli.commands.add.Class(argv)
-            .process()
-            .catch(e => {
-              qx.tool.compiler.Console.error(e.stack || e.message);
-              process.exit(1);
-            });
         }
       };
     }

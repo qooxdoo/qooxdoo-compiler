@@ -157,15 +157,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
       return {
         command   : "compile [configFile]",
         describe  : "compiles the current application, using compile.json",
-        builder   : qx.tool.cli.commands.Compile.YARGS_BUILDER,
-        handler: function(argv) {
-          return new qx.tool.cli.commands.Compile(argv)
-            .process()
-            .catch(e => {
-              qx.tool.compiler.Console.error("Error: " + (e.stack || e.message));
-              process.exit(1);
-            });
-        }
+        builder   : qx.tool.cli.commands.Compile.YARGS_BUILDER
       };
     }
 

@@ -77,14 +77,6 @@ qx.Class.define("qx.tool.cli.commands.Lint", {
             alias: "q",
             describe: "No output"
           }
-        },
-        handler: function(argv) {
-          return new qx.tool.cli.commands.Lint(argv)
-            .process()
-            .catch(e => {
-              qx.tool.compiler.Console.log(e.stack || e.message);
-              process.exit(1);
-            });
         }
       };
     }
@@ -150,12 +142,14 @@ qx.Class.define("qx.tool.cli.commands.Lint", {
      */
     async __addGlobals(data) {
       let result = {};
-      await qx.Promise.all(data.libraries.map(async dir => {
-        let lib = await qx.tool.compiler.app.Library.createLibrary(dir);
-        let s = lib.getNamespace();
-        let libs = s.split(".");
-        result[libs[0]] = false;
-      }));
+      if (data.libraries) {
+        await qx.Promise.all(data.libraries.map(async dir => {
+          let lib = await qx.tool.compiler.app.Library.createLibrary(dir);
+          let s = lib.getNamespace();
+          let libs = s.split(".");
+          result[libs[0]] = false;
+        }));
+      }
       return result;
     },
 

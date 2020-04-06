@@ -50,7 +50,7 @@ qx.Class.define("qx.tool.cli.api.LibraryApi", {
     async afterLibrariesLoaded() {
       // Nothing
     },
-  
+    
     /**
      * 
      * helper to load an npm module. Check if it can be loaded before
