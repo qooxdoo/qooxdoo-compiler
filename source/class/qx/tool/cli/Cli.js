@@ -58,6 +58,9 @@ qx.Class.define("qx.tool.cli.Cli", {
     /** @type {Promise} Promise that resolves to the _parsedArgs, but only when completely finished parsing them */
     __promiseParseArgs: null,
     
+    /** @type {Boolean} Whether libraries have had their `.load()` method called yet */
+    __librariesNotified: false,
+    
     /**
      * Creates an instance of yargs, with minimal options
      * 
@@ -114,7 +117,7 @@ qx.Class.define("qx.tool.cli.Cli", {
     /**
      * Reloads this.argv with the full set of arguments
      */
-    __fullArgv() {
+    async __fullArgv() {
       let yargs = this.__createYargs()
         .option("set", {
           describe: "sets an environment value for the compiler",
@@ -159,12 +162,49 @@ qx.Class.define("qx.tool.cli.Cli", {
         ],
         "qx.tool.cli.commands");
       
-      this.argv = yargs
+      this.argv = await yargs
         .demandCommand()
         .strict()
         .argv;
+      await this.__notifyLibraries();
     },
     
+    /**
+     * Calls the `.load()` method of each library, safe to call multiple times.  This is
+     * to delay the calling of `load()` until after we know that the command has been selected
+     * by Yargs
+     */
+    async __notifyLibraries() {
+      if (this.__librariesNotified) {
+        return;
+      }
+      this.__librariesNotified = true;
+      for (let i = 0, arr = this._compilerApi.getLibraryApis(); i < arr.length; i++) {
+        let libraryApi = arr[i];
+        await libraryApi.load();
+      }
+      await this._compilerApi.afterLibrariesLoaded();
+    },
+    
+    /**
+     * Processes a command.  All commands should use this method when invoked by Yargs, because it 
+     * provides a standard error control and makes sure that the libraries know what command has
+     * been selected.
+     * 
+     * @param command {qx.tool.cli.Command} the command being run
+     */
+    async processCommand(command) {
+      this._compilerApi.setCommand(command);
+      await this.__notifyLibraries();
+      try {
+        return await command.process();
+      } catch (e) {
+        qx.tool.compiler.Console.error("Error: " + (e.stack || e.message));
+        process.exit(1);
+        return null;
+      }
+    },
+
     /**
      * Returns the parsed command line and configuration data
      * 
@@ -197,6 +237,9 @@ qx.Class.define("qx.tool.cli.Cli", {
       await this.__promiseParseArgs;
     },
     
+    /**
+     * Does the work of parsing command line arguments and loading `compile.js[on]`
+     */
     async __parseArgsImpl() {
       this.__bootstrapArgv();
       
@@ -341,7 +384,7 @@ qx.Class.define("qx.tool.cli.Cli", {
             compilerApi: compilerApi
           });
           compilerApi.addLibraryApi(libraryApi);
-          await libraryApi.load();
+          await libraryApi.initialize();
         }
       }
       
@@ -349,7 +392,7 @@ qx.Class.define("qx.tool.cli.Cli", {
       /*
        * Now everything is loaded, we can process the command line properly
        */
-      this.__fullArgv();
+      await this.__fullArgv();
 
       let parsedArgs = {
         target: this.argv.target,
@@ -400,9 +443,7 @@ qx.Class.define("qx.tool.cli.Cli", {
       } else {
         qx.tool.compiler.resources.ScssConverter.USE_V6_COMPILER = null;
       }
-      
-      await compilerApi.afterLibrariesLoaded();
-      
+
       if (!config.serve) {
         config.serve = {};
       }
@@ -416,7 +457,7 @@ qx.Class.define("qx.tool.cli.Cli", {
       this._parsedArgs = await compilerApi.getConfiguration();
       return this._parsedArgs;
     },
-
+    
     /**
      * Loads a .js file using `require`, handling exceptions as best as possible
      * 
@@ -524,8 +565,13 @@ qx.Class.define("qx.tool.cli.Cli", {
       });
       classNames.forEach(cmd => {
         require(path.join(qx.tool.$$classPath, packageName.replace(/\./g, "/"), cmd));
-        let data = pkg[cmd].getYargsCommand();
+        let Clazz = pkg[cmd];
+        let data = Clazz.getYargsCommand();
         if (data) {
+          if (data.handler === undefined) {
+            data.handler = argv => qx.tool.cli.Cli.getInstance().processCommand(new Clazz(argv));
+          }
+
           yargs.command(data);
         }
       });

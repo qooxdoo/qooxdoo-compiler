@@ -65,14 +65,6 @@ qx.Class.define("qx.tool.cli.commands.package.Update", {
             alias: "q",
             describe: "No output"
           }
-        },
-        handler: function(argv) {
-          return new qx.tool.cli.commands.package.Update(argv)
-            .process()
-            .catch(e => {
-              qx.tool.compiler.Console.error(e.stack || e.message);
-              process.exit(1);
-            });
         }
       };
     }

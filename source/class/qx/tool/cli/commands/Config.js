@@ -68,6 +68,7 @@ qx.Class.define("qx.tool.cli.commands.Config", {
             }, argv => run(argv, "cmdList"));
         },
         handler   : function(argv) {
+          // Nothing
         }
       };
     },

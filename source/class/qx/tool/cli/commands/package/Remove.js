@@ -19,7 +19,6 @@ require("../Package");
 
 require("@qooxdoo/framework");
 const fs = require("fs");
-const process = require("process");
 const path = require("upath");
 const rimraf = require("rimraf");
 
@@ -43,14 +42,6 @@ qx.Class.define("qx.tool.cli.commands.package.Remove", {
             alias: "q",
             describe: "No output"
           }
-        },
-        handler: function(argv) {
-          return new qx.tool.cli.commands.package.Remove(argv)
-            .process()
-            .catch(e => {
-              qx.tool.compiler.Console.error(e.stack || e.message);
-              process.exit(1);
-            });
         }
       };
     }
