@@ -20,7 +20,6 @@ require("./Package");
 
 require("@qooxdoo/framework");
 const fs = require("fs");
-const process = require("process");
 const path = require("upath");
 const inquirer = require("inquirer");
 
@@ -80,14 +79,6 @@ qx.Class.define("qx.tool.cli.commands.Create", {
             alias : "v",
             describe: "Verbose logging"
           }
-        },
-        handler: function(argv) {
-          return new qx.tool.cli.commands.Create(argv)
-            .process()
-            .catch(e => {
-              qx.tool.compiler.Console.error(e.stack || e.message);
-              process.exit(1);
-            });
         }
       };
     },

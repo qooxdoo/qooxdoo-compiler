@@ -25,8 +25,10 @@ qx.Class.define("qxl.compilertests.testapp.LibraryApi", {
     
     async load() {
       let command = this.getCompilerApi().getCommand();
-      command.addListener("making", () => this._onMaking());
-      command.addListener("checkEnvironment", e => this._appCompiling(e.getData().application, e.getData().environment));
+      if (command instanceof qx.tool.cli.commands.Compile) {
+        command.addListener("making", () => this._onMaking());
+        command.addListener("checkEnvironment", e => this._appCompiling(e.getData().application, e.getData().environment));
+      }
     },
     
     _onMaking() {

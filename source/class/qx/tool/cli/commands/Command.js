@@ -56,7 +56,7 @@ qx.Class.define("qx.tool.cli.commands.Command", {
       qx.tool.cli.LogAppender.setMinLevel("debug");
     }
   },
-
+  
   members: {
     argv: null,
     compileJs: null,

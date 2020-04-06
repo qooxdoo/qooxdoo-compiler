@@ -54,14 +54,6 @@ qx.Class.define("qx.tool.cli.commands.add.Script", {
             alias: "I",
             describe: "Do not prompt user"
           }
-        },
-        handler: function(argv) {
-          return new qx.tool.cli.commands.add.Script(argv)
-            .process()
-            .catch(e => {
-              qx.tool.compiler.Console.error(e.stack || e.message);
-              process.exit(1);
-            });
         }
       };
     }

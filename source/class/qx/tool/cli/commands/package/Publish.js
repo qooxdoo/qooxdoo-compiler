@@ -83,14 +83,6 @@ qx.Class.define("qx.tool.cli.commands.package.Publish", {
             alias: "i",
             describe: "Create an index file (qooxdoo.json) with paths to Manifest.json files"
           }
-        },
-        handler: function(argv) {
-          return new qx.tool.cli.commands.package.Publish(argv)
-            .process()
-            .catch(e => {
-              qx.tool.compiler.Console.error(e.stack || e.message);
-              process.exit(1);
-            });
         }
       };
     }

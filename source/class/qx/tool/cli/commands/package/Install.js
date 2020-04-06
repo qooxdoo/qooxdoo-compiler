@@ -75,14 +75,6 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
             nargs: 1,
             describe: "Install a library/the given library from a local path"
           }
-        },
-        handler: function(argv) {
-          return new qx.tool.cli.commands.package.Install(argv)
-            .process()
-            .catch(e => {
-              qx.tool.compiler.Console.error(e.stack || e.message);
-              process.exit(1);
-            });
         }
       };
     }
