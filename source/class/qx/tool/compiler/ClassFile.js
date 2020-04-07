@@ -317,31 +317,58 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
           callback(err);
           return;
         }
-
+        var result; 
         try {
-          let options = t.__analyser.getBabelOptions() || {};
+          let babelConfig = t.__analyser.getBabelConfig() || {};
+          let options = qx.lang.Object.clone(babelConfig.options || {}, true);
           options.modules = false;
+          let extraPreset = [
+            {
+              plugins: []
+            }
+          ];
+          if (babelConfig.plugins) {
+            for (let key in babelConfig.plugins) {
+              if (babelConfig.plugins[key] === true) {
+                extraPreset[0].plugins.push(require.resolve(key));
+              } else if (babelConfig.plugins[key]) {
+                extraPreset[0].plugins.push([ require.resolve(key), babelConfig.plugins[key] ]);
+              }
+            }
+          }
+          let myPlugins = t._babelClassPlugins();
           var config = {
             babelrc: false,
             sourceFileName : t.getSourcePath(),
             filename: t.getSourcePath(),
             sourceMaps: true,
             "presets": [
+              [
+                { 
+                  plugins: [ myPlugins.CodeElimination ]
+                }
+              ],
+              [
+                { 
+                  plugins: [ myPlugins.Compiler ]
+                }
+              ],
               [ require.resolve("@babel/preset-env"), options],
-              [ require.resolve("@babel/preset-typescript")]
-            ],
-            plugins: [
-              t._babelClassPlugin()
+              [ require.resolve("@babel/preset-typescript") ],
+              [ require.resolve("@babel/preset-react"), qx.tool.compiler.ClassFile.JSX_OPTIONS ]
             ],
             parserOpts: { sourceType: "script" },
             passPerPreset: true
           };
-          var result = babelCore.transform(src, config);
+          if (extraPreset[0].plugins.length) {
+            config.presets.push(extraPreset);
+          }
+          result = babelCore.transform(src, config);
         } catch (ex) {
           if (ex._babel) {
             qx.tool.compiler.Console.log(ex);
           }
-          t.addMarker("compiler.syntaxError", ex.loc, ex.message, ex.codeFrame);
+          t.addMarker("compiler.syntaxError", ex.loc, ex.message);
           t.__fatalCompileError = true;
           t._compileDbClassInfo();
           callback();
@@ -414,6 +441,15 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
 
       // Collect the dependencies on other classes
       var deps = this.getRequiredClasses();
+      if (t.__usesJsx) {
+        let JSX = qx.tool.compiler.ClassFile.JSX_OPTIONS;
+        let classname = JSX.pragma;
+        let pos = classname.lastIndexOf(".");
+        classname = classname.substring(0, pos);
+        if (!deps[classname]) {
+          deps[classname] = {};
+        }
+      }
       for (var name in deps) {
         var dep = deps[name];
         if (!dep.ignore) {
@@ -567,7 +603,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
     /**
      * Babel plugin
      */
-    _babelClassPlugin: function() {
+    _babelClassPlugins: function() {
       var t = this;
 
       function getKeyName(key) {
@@ -767,10 +803,11 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
             needsQxCoreEnvironment = path.node.loc;
           }
         },
-
+        
         IfStatement: {
           exit(path) {
-            var node = path.node;
+            let node = path.node;
+
             // If it's a literal value, we can eliminate code because we can resolve it now.  This
             //  is really important for anything wrapped in `if (qx.core.Environment.get("qx.debug")) ...`
             //  because the `qx.core.Environment.get` is replaced with a literal value and we need to
@@ -787,27 +824,67 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
           }
         },
 
+        LogicalExpression: {
+          exit(path) {
+            let node = path.node;
+            if (types.isLiteral(node.left) && types.isLiteral(node.right)) {
+              let result = (node.operator == "&&" && node.left.value && node.right.value) ||
+                  (node.operator == "||" && (node.left.value || node.right.value));
+              path.replaceWith(literalValueToExpression(result));
+            }
+          }
+        },
+
         BinaryExpression: {
           exit(path) {
-            var node = path.node;
-            if (isCollapsibleLiteral(node.left) && isCollapsibleLiteral(node.right) && "+-*/".indexOf(node.operator) > -1) {
-              var result;
-              switch (node.operator) {
-                case "+":
-                  result = node.left.value + node.right.value;
-                  break;
-                case "-":
-                  result = node.left.value - node.right.value;
-                  break;
-                case "/":
-                  result = node.left.value / node.right.value;
-                  break;
-                case "*":
-                  result = node.left.value * node.right.value;
-                  break;
+            let node = path.node;
+            if (isCollapsibleLiteral(node.left) && isCollapsibleLiteral(node.right)) {
+              if ("+-*/".indexOf(node.operator) > -1) {
+                let result;
+                switch (node.operator) {
+                  case "+":
+                    result = node.left.value + node.right.value;
+                    break;
+                  case "-":
+                    result = node.left.value - node.right.value;
+                    break;
+                  case "/":
+                    result = node.left.value / node.right.value;
+                    break;
+                  case "*":
+                    result = node.left.value * node.right.value;
+                    break;
+                }
+                path.skip();
+                path.replaceWithSourceString(formatValueAsCode(result));
+              } else {
+                let result;
+                switch (node.operator) {
+                  case "==":
+                    result = node.left.value == node.right.value;
+                    break;
+                  case "===":
+                    result = node.left.value === node.right.value;
+                    break;
+                  case "!=":
+                    result = node.left.value != node.right.value;
+                    break;
+                  case "!==":
+                    result = node.left.value !== node.right.value;
+                    break;
+                }
+                if (result !== undefined) {
+                  path.replaceWith(types.booleanLiteral(Boolean(result)));
+                }
               }
-              path.skip();
-              path.replaceWithSourceString(formatValueAsCode(result));
+            }
+          }
+        },
+
+        UnaryExpression: {
+          exit(path) {
+            if (path.node.operator === "!" && types.isLiteral(path.node.argument)) {
+              path.replaceWith(types.booleanLiteral(!path.node.argument.value));
             }
           }
         }
@@ -855,7 +932,8 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         } else if (node.type == "NewExpression" || node.type == "BinaryExpression") {
           result = "[[ " + node.type + " ]]";
         } else {
-          t.warn("Cannot interpret AST " + node.type + " at " + t.__className + " [" + node.loc.start.line + "," + node.loc.start.column + "]");
+          t.warn("Cannot interpret AST " + node.type + " at " + t.__className + 
+              (node.loc ? " [" + node.loc.start.line + "," + node.loc.start.column + "]" : ""));
           result = null;
         }
         return result;
@@ -961,10 +1039,10 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         if (FUNCTION_NAMES[keyName] !== undefined) {
           makeMeta(keyName, null, functionNode);
         }
-        path.skip();
         enterFunction(path, functionNode);
         path.traverse(VISITOR);
         exitFunction(path, functionNode);
+        path.skip();
         t.__classMeta.functionName = null;
       }
 
@@ -991,7 +1069,9 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
           checkValidTopLevel(path);
           
           if (FUNCTION_NAMES[keyName] !== undefined) {
-            handleTopLevelMethods(path, keyName, path.node.value);
+            let val = path.node.value;
+            val.leadingComments = (path.node.leadingComments || []).concat(val.leadingComments || []);
+            handleTopLevelMethods(path, keyName, val);
             return;
           }
           
@@ -1018,7 +1098,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
             path.skip();
             path.traverse(COLLECT_CLASS_NAMES_VISITOR, { collectedClasses: t.__classMeta.mixins });
             
-          } else if (keyName == "members" || keyName == "statics") {
+          } else if (keyName == "members" || keyName == "statics" || keyName == "@") {
             t.__classMeta._topLevel = {
               path,
               keyName
@@ -1108,7 +1188,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         "qx.Interface.define": "interface",
         "qx.Bootstrap.define": "class"
       };
-
+      
       var VISITOR = {
         NewExpression: {
           enter(path) {
@@ -1121,8 +1201,8 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
               var tmp = types.callExpression(fn, [
                 path.node,
                 types.stringLiteral(t.__className.replace(/\./g, "/") + ".js"),
-                types.numericLiteral(path.node.loc.start.line),
-                types.numericLiteral(path.node.loc.start.column)
+                types.numericLiteral(path.node.loc ? path.node.loc.start.line : 0),
+                types.numericLiteral(path.node.loc ? path.node.loc.start.column : 0)
               ]);
               path.replaceWith(tmp);
               path.skip();
@@ -1141,6 +1221,10 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
 
         EmptyStatement: path => { 
           checkNodeJsDocDirectives(path.node); 
+        },
+        
+        JSXElement(path) {
+          t.__usesJsx = true;
         },
 
         Program: {
@@ -1202,10 +1286,11 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
             AssignmentPattern: 1,
             RestElement: 1,
             ArrayPattern: 1,
-            LabeledStatement: 1,
             SpreadElement: 1,
             ClassDeclaration: 1,
-            ClassMethod: 1
+            ClassMethod: 1,
+            LabeledStatement: 1,
+            BreakStatement: 1
           };
           
           // These are AST node types we expect to find at the root of the identifier, and which will
@@ -1237,13 +1322,12 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
             TemplateLiteral: 1,
             AwaitExpression: 1,
             DoWhileStatement: 1,
-            ForOfStatement: 1,
-            BreakStatement: 1
+            ForOfStatement: 1
           };
           let root = path;
           while (root) {
             let parentType = root.parentPath.node.type;
-            if (parentType == "MemberExpression") {
+            if (parentType == "MemberExpression" || parentType == "OptionalMemberExpression") {
               root = root.parentPath;
               continue;
             }
@@ -1278,7 +1362,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
             }
 
             function addTranslation(entry) {
-              let lineNo = path.node.loc.start.line;
+              let lineNo = path.node.loc ? path.node.loc.start.line : 0;
               let cur = t.__translations[entry.msgid];
               if (cur) {
                 if (!qx.lang.Type.isArray(cur.lineNo)) {
@@ -1290,8 +1374,6 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
                 t.__translations.push(entry);
               }
             }
-
-            path.traverse(CODE_ELIMINATION_VISITOR, {classDefPath: path});
 
             if (types.isMemberExpression(path.node.callee)) {
               let name = collapseMemberExpression(path.node.callee);
@@ -1331,6 +1413,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
                 }
               }
 
+              // Class definition?  EG `qx.Class.define(...`
               if (TYPE[name]) {
                 t.__definingType = name.match(/\.([a-zA-Z]+)\./)[1];
                 let node = path.node;
@@ -1556,16 +1639,25 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         },
         
         ObjectMethod(path) {
-          if (t.__classMeta && 
-              t.__classMeta._topLevel && 
-              t.__classMeta._topLevel.path == path.parentPath.parentPath) {
-            t.__classMeta.functionName = getKeyName(path.node.key);
-            makeMeta(t.__classMeta._topLevel.keyName, t.__classMeta.functionName, path.node);
-            path.skip();
-            enterFunction(path);
-            path.traverse(VISITOR);
-            exitFunction(path);
-            t.__classMeta.functionName = null;
+          if (t.__classMeta) {
+            // Methods within a top level object (ie "members" or "statics"), record the method name and meta data
+            if (t.__classMeta._topLevel && 
+                t.__classMeta._topLevel.path == path.parentPath.parentPath) {
+              t.__classMeta.functionName = getKeyName(path.node.key);
+              makeMeta(t.__classMeta._topLevel.keyName, t.__classMeta.functionName, path.node);
+              path.skip();
+              enterFunction(path);
+              path.traverse(VISITOR);
+              exitFunction(path);
+              t.__classMeta.functionName = null;
+              
+            // Otherwise traverse method as normal
+            } else {
+              path.skip();
+              enterFunction(path);
+              path.traverse(VISITOR);
+              exitFunction(path);
+            }
           }
         },
         
@@ -1635,80 +1727,13 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
           exit(path) {
             t.popScope(path.node);
           }
-        },
-
-        IfStatement: {
-          exit(path) {
-            let node = path.node;
-
-            function apply(value) {
-              if (!value) {
-                if (!node.alternate) {
-                  path.remove();
-                } else {
-                  path.replaceWithMultiple(node.alternate.body);
-                }
-              } else if (value) {
-                path.replaceWithMultiple(node.consequent.body);
-              }
-            }
-
-            if (types.isLiteral(node.test)) {
-              apply(node.test.value);
-            } else if (types.isUnaryExpression(node.test, { operator: "!" }) && types.isLiteral(node.test.argument)) {
-              let value = node.test.argument.value;
-              apply(!value);
-            }
-          }
-        },
-
-        LogicalExpression: {
-          exit(path) {
-            let node = path.node;
-            if (types.isLiteral(node.left) && types.isLiteral(node.right)) {
-              let result = (node.operator == "&&" && node.left.value && node.right.value) ||
-                  (node.operator == "||" && (node.left.value || node.right.value));
-              path.replaceWith(literalValueToExpression(result));
-            }
-          }
-        },
-
-        BinaryExpression: {
-          exit(path) {
-            let node = path.node;
-            if (isCollapsibleLiteral(node.left) && isCollapsibleLiteral(node.right)) {
-              let result;
-              switch (node.operator) {
-                case "==":
-                  result = node.left.value == node.right.value;
-                  break;
-                case "===":
-                  result = node.left.value === node.right.value;
-                  break;
-                case "!=":
-                  result = node.left.value != node.right.value;
-                  break;
-                case "!==":
-                  result = node.left.value !== node.right.value;
-                  break;
-              }
-              if (result !== undefined) {
-                path.replaceWith(types.booleanLiteral(Boolean(result)));
-              }
-            }
-          }
-        },
-
-        UnaryExpression: {
-          exit(path) {
-            if (path.node.operator === "!" && types.isLiteral(path.node.argument)) {
-              path.replaceWith(types.booleanLiteral(!path.node.argument.value));
-            }
-          }
         }
       };
 
-      return { visitor: VISITOR };
+      return { 
+        CodeElimination: { visitor: CODE_ELIMINATION_VISITOR }, 
+        Compiler: { visitor: VISITOR }
+      };
     },
 
     /**
@@ -2075,6 +2100,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
      *  where {"ignore"|"require"|"use"|null} where it's mentioned
      *  load {Boolean?} whether it is a load-time dependency or not
      *  defer {Boolean?} whether the dependency is in defer or not
+     *  location {Map?} location of the token that caused the reference
      * @return {Map?} info about the symbol type of the named class, @see {Analyser.getSymbolType}
      */
     _requireClass: function(name, opts) {
@@ -2265,6 +2291,20 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
       var m = className.match(/^([^.]+)\./);
       return (m && m[1])||null;
     },
+    
+    /**
+     * These options are passed to Babel for JSX compilation; they can be changed by the CLI etc
+     * as needed.
+     * 
+     * Note that at the moment they use a class that does not exist!  `qx.html.Jsx` is coming soon
+     * to a PR near you, but in the mean time you could use the compile.json `jsx` setting to
+     * change these to something else, eg `{ pragma: "jsx.dom", pragmaFrag: "jsx.Fragment }` and
+     * use https://github.com/alecsgone/jsx-render in your application's code. 
+     */
+    JSX_OPTIONS: {
+      "pragma": "qx.html.Jsx.createElement",
+      "pragmaFrag": "qx.html.Jsx.FRAGMENT"
+    },
 
     /**
      * Classes which are safe to access from defer methods (in addition to the class being defined)
@@ -2380,7 +2420,8 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
       "location",
       "navigator",
       "performance",
-      "window"
+      "getComputedStyle",
+      "localStorage"
     ],
     
     NODE_GLOBALS: [

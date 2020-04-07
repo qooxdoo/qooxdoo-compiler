@@ -83,6 +83,11 @@
             "type": "boolean",
             "default": true
           },
+          "standalone": {
+            "description": "Whether this application can be opened in a browser on its own (true) or is part of a different application (false)",
+            "type": "boolean",
+            "default": true
+          },
           "environment": {
             "$ref": "#/properties/environment"
            },
@@ -151,6 +156,10 @@
             "description": "Either `source`, `build`, or a class name in qooxdoo-compiler; using a class name is advanced usage, but ultimately the standard names just shortcuts to class names anyway (`source` is `qx.tool.compiler.targets.SourceTarget`, etc)",
             "type": "string"
           },
+          "description": {
+            "description": "A description of the target's function.",
+            "type": "string"
+          },
           "application-types": {
             "description": "The application types which this target supports",
             "type": "array",
@@ -202,7 +211,8 @@
             "type": "boolean"
           },
           "babelOptions": {
-            "$ref": "#/properties/babelOptions"
+            "type": "object",
+            "description": "Options given to @babel/preset-env. With this options the output type of babel can be defined. For details see here: <https://babeljs.io/docs/en/babel-preset-env#options>. They can be overridden per target."
           },
           "parts": {
             "$ref": "#/properties/parts"
@@ -326,9 +336,30 @@
         "type": "string"
       }
     },
+    "babel": {
+      "type": "object",
+      "properties": {
+        "options": {
+          "type": "object",
+          "description": "Options given to @babel/preset-env. With this options the output type of babel can be defined. For details see here: <https://babeljs.io/docs/en/babel-preset-env#options>. They can be overridden per target."
+        },
+        "plugins": {
+          "type": "object",
+          "description": "List of additional babel plugins to enable, eg TC39 proposals; note that some proposals will work out of the box and some will require upgrades to QxCompiler before they work properly - your mileage may vary.  Each key in this object is the NPM name of the plugin, and the value is either true (enabled), false (ignore), or an object which is options to pass to the preset",
+          "additionalProperties": {
+            "type": [ "boolean", "object" ]
+          }
+        }
+      }
+    },
     "babelOptions": {
       "type": "object",
-      "description": "Options given to @babel/preset-env. With this options the output type of babel can be defined. For details see here: <https://babeljs.io/docs/en/babel-preset-env#options>. They can be overridden per target."
+      "description": "** DEPRECATED - See babel.options instead",
+      "deprecated": true
+    },
+    "jsx": {
+      "type": "object",
+      "description": "Options given to @babel/preset-react to change how JSX HTML is transpiled"
     },
     "eslintConfig": {
       "type": "object",

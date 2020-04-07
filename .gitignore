@@ -16,3 +16,4 @@ myapp
 qooxdoo/
 compiled/
 qx_packages/
+/test/transpiled

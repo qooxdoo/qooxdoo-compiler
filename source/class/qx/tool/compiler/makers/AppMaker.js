@@ -22,6 +22,9 @@
 
 require("@qooxdoo/framework");
 require("./AbstractAppMaker");
+var util = require("../util");
+const mkParentPath = util.promisify(util.mkParentPath);
+var log = util.createLog("analyser");
 
 /**
  * Application maker; supports multiple applications to compile against a single
@@ -73,6 +76,10 @@ qx.Class.define("qx.tool.compiler.makers.AppMaker", {
       var analyser = this.getAnalyser();
       
       this.fireEvent("making");
+      this.setSuccess(null);
+      this.setHasWarnings(null);
+      let success = true;
+      let hasWarnings = false;
 
       // merge all environment settings for the analyser
       const compileEnv = qx.tool.utils.Values.merge({},
@@ -83,42 +90,67 @@ qx.Class.define("qx.tool.compiler.makers.AppMaker", {
         this.getEnvironment(),
         this.getTarget().getEnvironment());
 
-      // Application env settings must be removed from the global and bumped into the application's
-      //  environment settings (to avoid code elimination)
-      const allAppEnv = {};
+      let appEnvironments = {};
       this.getApplications().forEach(app => {
-        let appEnv = app.getEnvironment();
-        if (appEnv) {
-          for (let key in appEnv) {
-            allAppEnv[key] = true;
+        appEnvironments[app.toHashCode()] = qx.tool.utils.Values.merge({}, compileEnv, app.getCalculatedEnvironment());
+      });
+      
+      // Analyze the list of environment variables, detect which are shared between all apps
+      let allAppEnv = {};
+      this.getApplications().forEach(app => {
+        let env = appEnvironments[app.toHashCode()];
+        Object.keys(env).forEach(key => {
+          if (!allAppEnv[key]) {
+            allAppEnv[key] = {
+              value: env[key],
+              same: true
+            };
+          } else if (allAppEnv[key].value !== env[key]) {
+            allAppEnv[key].same = false;
           }
+        });
+      });
+      
+      // If an env setting is the same for all apps, move it to the target for code elimination; similarly,
+      //  if it varies between apps, then remove it from the target and make each app specify it individually
+      this.getApplications().forEach(app => {
+        let env = appEnvironments[app.toHashCode()];
+        Object.keys(allAppEnv).forEach(key => {
+          if (allAppEnv[key].same) {
+            delete env[key];
+          } else if (env[key] === undefined) {
+            env[key] = compileEnv[key];
+          }
+        });
+      });
+      
+      // Cleanup to remove env that have been moved to the app 
+      Object.keys(allAppEnv).forEach(key => {
+        if (allAppEnv[key].same) {
+          compileEnv[key] = allAppEnv[key].value;
+        } else {
+          delete compileEnv[key];
         }
       });
-      this.getApplications().forEach(app => {
-        let appEnv = app.getEnvironment();
-        if (appEnv) {
-          for (let key in allAppEnv) {
-            if (compileEnv[key] !== undefined && appEnv[key] === undefined) {
-              appEnv[key] = compileEnv[key];
-            }
-          }
-        }
-      });
-      for (let key in allAppEnv) {
-        delete compileEnv[key];
-      }
 
-      return this.checkCompileVersion()
-        .then(() => this.writeCompileVersion())
+      return analyser.open()
         .then(() => {
           analyser.setEnvironment(compileEnv);
-
+          if (!this.isNoErase() && analyser.isContextChanged()) {
+            log.log("enviroment changed - delete output dir");
+            return this.eraseOutputDir()
+              .then(() => mkParentPath(this.getOutputDir()))
+              .then(() => analyser.resetDatabase());
+          }
+          return Promise.resolve();
+        })
+        .then(() => util.promisifyThis(analyser.initialScan, analyser))
+        .then(() => analyser.updateEnvironmentData())
+        .then(() => {
           this.getTarget().setAnalyser(analyser);
           this.__applications.forEach(app => app.setAnalyser(analyser));
-
           return this.getTarget().open();
         })
-        .then(() => analyser.open())
         .then(() => {
           if (this.isOutputTypescript()) {
             analyser.getLibraries().forEach(library => {
@@ -159,12 +191,30 @@ qx.Class.define("qx.tool.compiler.makers.AppMaker", {
             return loadDeps.some(name => Boolean(compiledClasses[name]));
           });
 
+          let db = analyser.getDatabase();
           var promises = appsThisTime.map(application => {
-            var appEnv = qx.tool.utils.Values.merge({}, compileEnv, application.getEnvironment());
+            if (application.getType() != "browser" && !compileEnv["qx.headless"]) {
+              qx.tool.compiler.Console.print("qx.tool.compiler.maker.appNotHeadless", application.getName());
+            }
+            var appEnv = qx.tool.utils.Values.merge({}, compileEnv, appEnvironments[application.toHashCode()]);
             application.calcDependencies();
             if (application.getFatalCompileErrors()) {
               qx.tool.compiler.Console.print("qx.tool.compiler.maker.appFatalError", application.getName());
+              success = false;
               return undefined;
+            }
+            if (!hasWarnings) {
+              application.getDependencies().forEach(classname => {
+                if (!db.classInfo[classname] || !db.classInfo[classname].markers) {
+                  return;
+                }
+                db.classInfo[classname].markers.forEach(marker => {
+                  let type = qx.tool.compiler.Console.getInstance().getMessageType(marker.msgId);
+                  if (type == "warning") {
+                    hasWarnings = true;
+                  }
+                });
+              });
             }
 
             this.fireDataEvent("writingApplication", application);
@@ -184,7 +234,11 @@ qx.Class.define("qx.tool.compiler.makers.AppMaker", {
             });
         })
         .then(() => analyser.saveDatabase())
-        .then(() => this.fireEvent("made"));
+        .then(() => {
+          this.fireEvent("made");
+          this.setSuccess(success);
+          this.setHasWarnings(hasWarnings);
+        });
     }
   }
 });

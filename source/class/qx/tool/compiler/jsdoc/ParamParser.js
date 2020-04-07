@@ -29,13 +29,23 @@ require("./CommandParser");
 qx.Class.define("qx.tool.compiler.jsdoc.ParamParser", {
   extend: qx.tool.compiler.jsdoc.CommandParser,
 
-  members: {
+  members: {  
     parseCommand: function(pdoc, classname, analyser) {
       var m = pdoc.body.match(/^([\S]+)(\s+\{([^}]+)\}([\s\S]+))??$/);
+      var type;
       if (m) {
         pdoc.paramName = m[1].trim();
-        var type = this.resolveType((m[3]||"").trim(), classname, analyser);
+        type = this.resolveType((m[3]||"").trim(), classname, analyser);
         pdoc.description = m[4];
+      } else {
+        m = pdoc.body.match(/^(\{([^}]+)\}([\s]+))(\S+)(\s+[\s\S]*)$/);      
+        if (m) {
+          pdoc.paramName = m[4].trim();
+          type = this.resolveType((m[2]||"").trim(), classname, analyser);
+          pdoc.description = m[5].trim();
+        }  
+      }
+      if (m) {
         var pos = type.indexOf("?");
         if (pos > -1) {
           pdoc.optional = true;

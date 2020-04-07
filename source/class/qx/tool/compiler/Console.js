@@ -92,9 +92,24 @@ qx.Class.define("qx.tool.compiler.Console", {
      * @return {String} complete message
      */
     decode: function(msgId, ...args) {
-      var msg = qx.tool.compiler.Console.MESSAGE_IDS[msgId]||msgId;
-      var str = qx.lang.String.format(msg.message, args||[]);
+      var msg = qx.tool.compiler.Console.MESSAGE_IDS[msgId];
+      if (msg) {
+        let str = qx.lang.String.format(msg.message, args||[]);
+        return str;
+      }
+      let str = msgId + JSON.stringify(args);
       return str;
+    },
+    
+    /**
+     * Returns the type of the message, eg error, warning, etc
+     * 
+     * @param msgId {String} the message ID to lookup
+     * @return {String} the type of message, can be one of "message" (default) or "error", "warning"
+     */
+    getMessageType(msgId) {
+      let msg = qx.tool.compiler.Console.MESSAGE_IDS[msgId];
+      return msg ? msg.type : null;
     },
     
     /**
@@ -138,7 +153,7 @@ qx.Class.define("qx.tool.compiler.Console", {
       // Compiler errors & warnings (@see {ClassFile})
       "qx.tool.compiler.class.invalidProperties": "Invalid 'properties' key in class definition",
       "qx.tool.compiler.compiler.missingClassDef": "FATAL Missing class definition - no call to qx.Class.define (or qx.Mixin.define etc)",
-      "qx.tool.compiler.compiler.syntaxError": "FATAL Syntax error: %1\n%2",
+      "qx.tool.compiler.compiler.syntaxError": "FATAL Syntax error: %1",
       "qx.tool.compiler.compiler.invalidExtendClause": "FATAL Invalid `extend` clause - expected to find a class name (without quotes or `new`)",
       "qx.tool.compiler.compiler.invalidClassDefinitionEntry": "Unexpected property %2 in %1 definition",
       "qx.tool.compiler.compiler.wrongClassName": "Wrong class name or filename - expected to find at least %1 but only found [%2]",
@@ -184,8 +199,10 @@ qx.Class.define("qx.tool.compiler.Console", {
 
       "qx.tool.compiler.target.missingBootJs": "There is no reference to boot.js script in the index.html copied from %1 (see https://git.io/fh7NI)",
       /* eslint-disable no-template-curly-in-string */
-      "qx.tool.compiler.target.missingPreBootJs": "There is no reference to ${preBootJs} in the index.html copied from %1 (see https://git.io/fh7NI)"
+      "qx.tool.compiler.target.missingPreBootJs": "There is no reference to ${preBootJs} in the index.html copied from %1 (see https://git.io/fh7NI)",
       /* eslint-enable no-template-curly-in-string */
+      
+      "qx.tool.compiler.maker.appNotHeadless": "Compiling application '%1' but the target supports non-headless output, you may find unwanted dependencies are loaded during startup"
     }, "warning");
   },
 
@@ -295,6 +312,7 @@ qx.Class.define("qx.tool.compiler.Console", {
      */
     decodeMarker: function(marker, showPosition) {
       var msg = qx.tool.compiler.Console.MESSAGE_IDS[marker.msgId] || marker.msgId;
+      var type = msg.type? msg.type + ": ":"";
       var str = "";
       var pos = marker.pos;
       if (showPosition !== false && pos && pos.start && pos.start.line) {
@@ -313,7 +331,7 @@ qx.Class.define("qx.tool.compiler.Console", {
         str += "] ";
       }
       try {
-        str += qx.lang.String.format(msg.message, marker.args||[]);
+        str += type + qx.lang.String.format(msg.message, marker.args||[]);
       } catch (e) {
         throw new Error(`Unknown message id ${marker.msgId}.`);
       }

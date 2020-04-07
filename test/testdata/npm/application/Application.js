@@ -16,8 +16,7 @@ const process = require("process");
  *
  * If you have added resources to your app, remove the first '@' in the
  * following line to make use of them.
- * @@asset(myapp/*)
- *
+ * @asset(myapp/*)
  * @ignore(process)
  */
 qx.Class.define("myapp.Application",
@@ -55,8 +54,8 @@ qx.Class.define("myapp.Application",
       }
 
       // Test zip
-      var zip = new JSZip();
-      zip.file("Hello.txt", "Hello World\n");
+//      var zip = new JSZip();
+//      zip.file("Hello.txt", "Hello World\n");
 
       if (!com.zenesis.qx.upload.UploadButton) {
         process.exit(1);
@@ -70,7 +69,7 @@ qx.Class.define("myapp.Application",
     /**
      * Converts the value of the "settings" command line option to qx settings.
      *
-     * @param args {String[]} Rhino arguments object
+     * @param {string[]} args Rhino arguments object
      */
     _argumentsToSettings : function(args) {
       var opts;

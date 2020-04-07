@@ -51,14 +51,6 @@ qx.Class.define("qx.tool.cli.commands.package.Migrate", {
             alias: "q",
             describe: "No output"
           }
-        },
-        handler: function(argv) {
-          return new qx.tool.cli.commands.package.Migrate(argv)
-            .process()
-            .catch(e => {
-              qx.tool.compiler.Console.error(e.stack || e.message);
-              process.exit(1);
-            });
         }
       };
     }
@@ -228,6 +220,16 @@ qx.Class.define("qx.tool.cli.commands.package.Migrate", {
         }
         manifestModel.setValidate(true);
       }
+      if (!announceOnly) {
+        let compileJsonFilename = path.join(process.cwd(), "compile.json");
+        let replaceInFiles = [{
+          files: compileJsonFilename,
+          from: "qx/browser",
+          to: "@qooxdoo/qx/browser"
+        }];
+        await this.migrate([compileJsonFilename], replaceInFiles);
+      }
+
       let compileJsFilename = path.join(process.cwd(), "compile.js");
       if (await fs.existsAsync(compileJsFilename)) {
         let data = await fs.readFileAsync(compileJsFilename, "utf8");

@@ -34,6 +34,14 @@ qx.Class.define("qx.tool.cli.api.AbstractApi", {
   },
   
   members: {
+    /**
+     * Called by the compiler API during initialisation - this is an ideal
+     * place to install additional commands, because a command has not yet
+     * been selected 
+     */
+    async initialize() {
+      // Nothing
+    }
   }
 });
 

@@ -49,6 +49,7 @@ qx.Class.define("qx.tool.cli.commands.Pkg", {
             .help();
         },
         handler : function(argv) {
+          // Nothing
         }
       };
     }

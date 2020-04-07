@@ -143,7 +143,9 @@ qx.Class.define("testapp.Application", {
         console.log("Promises are enabled");
       }
       
-      console.log(this.tr("translatedString"));
+      qx.core.Assert.assertTrue(this.tr("translatedString") == "en: translatedString");
+      qx.core.Assert.assertTrue(this.tr("Call \"me\"") == "en: Call \"me\"");
+      qx.core.Assert.assertTrue(this.tr("This has\nsome\nnewlines") == "en: This has\nsome\nnewlines");
 
       console.log(JSON.stringify({
         appValue, envVar1, envVar2, envVar3, envVar4,
@@ -179,6 +181,7 @@ qx.Class.define("testapp.Application", {
       new testapp.Issue500();
       new testapp.Issue503();
       new testapp.InnerEs6Classes();
+      new testapp.Warnings1();
       
       qx.core.Assert.assertTrue(TEST_EXTERNAL === "loaded");
       qx.core.Assert.assertTrue(SCRIPT_LOADED === true);
@@ -189,6 +192,19 @@ qx.Class.define("testapp.Application", {
       qx.core.Assert.assertTrue(qx.core.Environment.get("testappLibraryApi") === "one");
       qx.core.Assert.assertTrue(qx.core.Environment.get("testlibCompilerApi") === undefined);
       qx.core.Assert.assertTrue(qx.core.Environment.get("testlibLibraryApi") === "one");
+      
+      const obj = {
+          foo: {
+            bar: {
+              baz: 42,
+            },
+          },
+        };
+
+      qx.core.Assert.assertTrue(obj?.foo?.bar?.baz === 42);
+      qx.core.Assert.assertTrue(obj?.qux?.baz === undefined);
+      
+      var abc = (<div>Hello World</div>);
     },
 
     undocumentedMethod: function () {

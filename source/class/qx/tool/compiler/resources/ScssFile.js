@@ -27,7 +27,7 @@
 /* eslint-disable @qooxdoo/qx/no-illegal-private-usage */
 
 const fs = qx.tool.utils.Promisify.fs;
-const path = require("path");
+const path = require("upath");
 const nodeSass = require("node-sass");
 
 /**
@@ -36,7 +36,7 @@ const nodeSass = require("node-sass");
 qx.Class.define("qx.tool.compiler.resources.ScssFile", {
   extend: qx.core.Object,
   
-  construct(target, library, filename) {
+  construct: function(target, library, filename) {
     this.base(arguments);
     this.__library = library;
     this.__filename = filename;
@@ -50,6 +50,11 @@ qx.Class.define("qx.tool.compiler.resources.ScssFile", {
       nullable: false,
       check: "String",
       event: "changeFile"
+    },
+    
+    themeFile: {
+      init: false,
+      check: "Boolean"
     }
   },
   
@@ -72,12 +77,6 @@ qx.Class.define("qx.tool.compiler.resources.ScssFile", {
       this.__absLocations = {};
       
       let inputFileData = await this.loadSource(this.__filename, this.__library);
-      inputFileData = 
-        `
-        @function qooxdooUrl($url) { 
-          @return __qooxdooUrlImpl($__library, $__filename, $url); 
-        }
-        ` + inputFileData;
       
       await new qx.Promise((resolve, reject) => {
         nodeSass.render({
@@ -99,15 +98,15 @@ qx.Class.define("qx.tool.compiler.resources.ScssFile", {
             if (!contents) {
               let tmp = this.__importAs[url];
               if (tmp) {
-                contents = this.__sourceFiles[url];
+                contents = this.__sourceFiles[tmp];
               }
             }
             return contents ? { contents } : null;
           },
           
           functions: {
-            "__qooxdooUrlImpl($library, $filename, $url)": ($library, $filename, $url, done) =>
-              this.__qooxdooUrlImpl($library, $filename, $url, done)
+            "qooxdooUrl($filename, $url)": ($filename, $url, done) =>
+              this.__qooxdooUrlImpl($filename, $url, done)
           }
         }, 
         (error, result) => {
@@ -128,7 +127,7 @@ qx.Class.define("qx.tool.compiler.resources.ScssFile", {
     },
     
     _analyseFilename(url, currentFilename) {
-      var m = url.match(/^([a-z0-9_]+):(\/?[^\/].*)/);
+      var m = url.match(/^([a-z0-9_.]+):(\/?[^\/].*)/);
       if (m) {
         return {
           namespace: m[1],
@@ -162,7 +161,7 @@ qx.Class.define("qx.tool.compiler.resources.ScssFile", {
         return null;
       }
       
-      let libResourceDir = path.join(library.getRootDir(), library.getResourcePath());
+      let libResourceDir = path.join(library.getRootDir(), this.isThemeFile() ? library.getThemePath() : library.getResourcePath());
       return {
         namespace: library.getNamespace(),
         filename: path.relative(libResourceDir, filename),
@@ -177,11 +176,7 @@ qx.Class.define("qx.tool.compiler.resources.ScssFile", {
     },
     
     async loadSource(filename, library) {
-      function esc(str) {
-        return str.replace(/([\[\]\\])/g, "\\$1");
-      }
-      
-      filename = path.relative(process.cwd(), path.resolve(library.getResourceFilename(filename)));
+      filename = path.relative(process.cwd(), path.resolve(this.isThemeFile() ? library.getThemeFilename(filename) : library.getResourceFilename(filename)));
       let absFilename = filename;
       if (path.extname(absFilename) == "") {
         absFilename += ".scss";
@@ -223,27 +218,33 @@ qx.Class.define("qx.tool.compiler.resources.ScssFile", {
         return "@import \"" + path.relative(process.cwd(), newLibrary.getResourceFilename(pathInfo.filename)) + "\"";
       });
       
-      contents = contents.replace(/\burl\s*\(\s*([^\)]+)*\)/ig, (match, p1) => {
-        let c = p1[0];
+      contents = contents.replace(/\burl\s*\(\s*([^\)]+)*\)/ig, (match, url) => {
+        let c = url[0];
         if (c === "\'" || c === "\"") {
-          p1 = p1.substring(1);
+          url = url.substring(1);
         }
-        c = p1[p1.length - 1];
+        c = url[url.length - 1];
         if (c === "\'" || c === "\"") {
-          p1 = p1.substring(0, p1.length - 1);
+          url = url.substring(0, url.length - 1);
         }
-        return "qooxdooUrl(\"" + p1 + "\")";
+        //return `qooxdooUrl("${filename}", "${url}")`;
+        let pathInfo = this._analyseFilename(url, filename);
+        
+        if (pathInfo) {
+          if (pathInfo.externalUrl) {
+            return `url("${pathInfo.externalUrl}")`;
+          }
+          
+          if (pathInfo.namespace) {
+            let targetFile = path.relative(process.cwd(), path.join(this.__target.getOutputDir(), "resource", pathInfo.filename));
+            let relative = path.relative(this.__outputDir, targetFile);
+            return `url("${relative}")`;
+          }
+        }
+        
+        return `url("${url}")`;
       });
 
-      contents = [
-        "$__dirname:  \"" + esc(path.dirname(filename)) + "\";",
-        "$__library:  \"" + esc(library.getNamespace()) + "\";",
-        "$__filename: \"" + esc(filename)+"\";",
-        contents,
-        "$__dirname:  \"__null__\";",
-        "$__library:  \"__null__\";",
-        "$__filename: \"__null__\";"
-      ].join("\n");
       this.__sourceFiles[absFilename] = contents;
       this.__importAs[filename] = absFilename;
       
@@ -255,21 +256,24 @@ qx.Class.define("qx.tool.compiler.resources.ScssFile", {
       return Object.keys(this.__sourceFiles);
     },
     
-    __qooxdooUrlImpl($libraryNamespace, $filename, $url, done) {
+    __qooxdooUrlImpl($filename, $url, done) {
       let currentFilename = $filename.getValue();
       let url = $url.getValue();
       
       let pathInfo = this._analyseFilename(url, currentFilename);
       
-      if (pathInfo.externalUrl) {
-        return nodeSass.types.String("url(" + pathInfo.externalUrl + ")");
+      if (pathInfo) {
+        if (pathInfo.externalUrl) {
+          return nodeSass.types.String("url(" + pathInfo.externalUrl + ")");
+        }
+        
+        if (pathInfo.namespace) {
+          let targetFile = path.relative(process.cwd(), path.join(this.__target.getOutputDir(), "resource", pathInfo.filename));
+          let relative = path.relative(this.__outputDir, targetFile);
+          return nodeSass.types.String("url(" + relative + ")");
+        }
       }
       
-      if (pathInfo.namespace) {
-        let targetFile = path.relative(process.cwd(), path.join(this.__target.getOutputDir(), "resource", pathInfo.filename));
-        let relative = path.relative(this.__outputDir, targetFile);
-        return nodeSass.types.String("url(" + relative + ")");
-      }
       return nodeSass.types.String("url(" + url + ")");
     }    
   }

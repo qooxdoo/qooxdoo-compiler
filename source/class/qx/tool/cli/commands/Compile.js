@@ -26,14 +26,12 @@ const consoleControl = require("console-control-strings");
 require("app-module-path").addPath(process.cwd() + "/node_modules");
 
 require("./Command");
-require("./MConfig");
 
 /**
  * Handles compilation of the project
  */
 qx.Class.define("qx.tool.cli.commands.Compile", {
   extend: qx.tool.cli.commands.Command,
-  include: [qx.tool.cli.commands.MConfig],
 
   statics: {
 
@@ -96,11 +94,6 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         describe: "output compiler messages in machine-readable format",
         type: "boolean"
       },
-      "verbose": {
-        alias: "v",
-        describe: "enables additional progress output to console",
-        type: "boolean"
-      },
       "minify": {
         alias: "m",
         describe: "disables minification (for build targets only)",
@@ -115,7 +108,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
       },
       "erase": {
         alias: "e",
-        describe: "Enabled automatic deletion of the output directory when compiler version changes",
+        describe: "Enabled automatic deletion of the output directory when compiler version or environment variables change",
         type: "boolean",
         default: true
       },
@@ -140,10 +133,11 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         describe: "Deletes the target dir before compile",
         type: "boolean"
       },
-      "warnAsError": {
-        alias: "e",
-        default: false,
-        describe: "Handle compiler warnings as error"
+      "warn-as-error": {
+        alias: "E",
+        describe: "Handle compiler warnings as error",
+        type: "boolean",
+        default: false
       },
       "write-library-info": {
         alias: "I",
@@ -156,12 +150,6 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         describe: "Whether bundling is enabled",
         type: "boolean",
         default: true
-      },
-      "force": {
-        describe: "Override warnings",
-        type: "boolean",
-        default: false,
-        alias: "F"
       }
     },
 
@@ -169,15 +157,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
       return {
         command   : "compile [configFile]",
         describe  : "compiles the current application, using compile.json",
-        builder   : qx.tool.cli.commands.Compile.YARGS_BUILDER,
-        handler: function(argv) {
-          return new qx.tool.cli.commands.Compile(argv)
-            .process()
-            .catch(e => {
-              qx.tool.compiler.Console.error("Error: " + (e.stack || e.message));
-              process.exit(1);
-            });
-        }
+        builder   : qx.tool.cli.commands.Compile.YARGS_BUILDER
       };
     }
 
@@ -257,7 +237,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
       if (this.argv["feedback"] === null) {
         this.argv["feedback"] = configDb.db("qx.default.feedback", true);
       }
-            
+
       if (this.argv["machine-readable"]) {
         qx.tool.compiler.Console.getInstance().setMachineReadable(true);
       } else {
@@ -271,7 +251,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
           let Console = qx.tool.compiler.Console.getInstance();
           Console.setColorOn(colorOn);
         }
-        
+
         if (this.argv["feedback"]) {
           var themes = require("gauge/themes");
           var ourTheme = themes.newTheme(themes({hasUnicode: true, hasColor: true}));
@@ -280,7 +260,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
           ourTheme.preSubsection = colorOn + ourTheme.preSubsection;
           ourTheme.progressbarTheme.postComplete += colorOn;
           ourTheme.progressbarTheme.postRemaining += colorOn;
-       
+
           this.__gauge = new Gauge();
           this.__gauge.setTheme(ourTheme);
           this.__gauge.show("Compiling", 0);
@@ -326,8 +306,49 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
           });
         }
       }
+
+      this.addListener("making", evt => {
+        if (this.__gauge) {
+          this.__gauge.show("Compiling", 1);
+        } else {
+          qx.tool.compiler.Console.print("qx.tool.cli.compile.makeBegins");
+        }
+      });
+
+      this.addListener("made", evt => {
+        if (this.__gauge) {
+          this.__gauge.show("Compiling", 1);
+        } else {
+          qx.tool.compiler.Console.print("qx.tool.cli.compile.makeEnds");
+        }
+      });
+
+      this.addListener("writtenApplications", e => {
+        if (this.argv.verbose) {
+          qx.tool.compiler.Console.log("\nCompleted all applications, libraries used are:");
+          Object.values(this.__libraries).forEach(lib => qx.tool.compiler.Console.log(`   ${lib.getNamespace()} (${lib.getRootDir()})`));
+        }
+      });
+
+      await this._loadConfigAndStartMaking();
       
-      var config = this.__config = await this.parse(this.argv);
+      if (!this.argv.watch) {
+        let success = this.__makers.every(maker => maker.getSuccess());
+        let hasWarnings = this.__makers.every(maker => maker.getHasWarnings());
+        if (success && (hasWarnings && this.argv.warnAsError)) {
+          success = false;
+        }
+        process.exitCode = success ? 0 : 1;
+      }
+    },
+    
+    /**
+     * Loads the configuration and starts the make
+     * 
+     * @return {Boolean} true if all makers succeeded
+     */
+    async _loadConfigAndStartMaking() {
+      var config = this.__config = await qx.tool.cli.Cli.getInstance().getParsedArgs();
       if (!config) {
         throw new qx.tool.utils.Utils.UserError("Error: Cannot find any configuration");
       }
@@ -335,21 +356,14 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
       if (!makers || !makers.length) {
         throw new qx.tool.utils.Utils.UserError("Error: Cannot find anything to make");
       }
-      
-      this.addListener("writtenApplications", e => {
-        if (this.argv.verbose) {
-          qx.tool.compiler.Console.log("\nCompleted all applications, libraries used are:");
-          Object.values(this.__libraries).forEach(lib => qx.tool.compiler.Console.log(`   ${lib.getNamespace()} (${lib.getRootDir()})`));
-        }
-      });
-      
+
       let countMaking = 0;
       const collateDispatchEvent = evt => {
         if (countMaking == 1) {
           this.dispatchEvent(evt.clone());
         }
       };
-      
+
       await qx.Promise.all(makers.map(async maker => {
         var analyser = maker.getAnalyser();
         let cfg = await qx.tool.cli.ConfigDb.getInstance();
@@ -363,7 +377,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         if (config.ignores) {
           analyser.setIgnores(config.ignores);
         }
-        
+
         var target = maker.getTarget();
         maker.addListener("writingApplications", collateDispatchEvent);
         maker.addListener("writtenApplications", collateDispatchEvent);
@@ -392,13 +406,13 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
               this.fireEvent("made");
             }
           });
-          
+
           return p.then(() => maker.make());
         }
-        
+
         // Continuous make
         let watch = new qx.tool.cli.Watch(maker);
-        
+
         watch.addListener("making", () => {
           countMaking++;
           if (countMaking == 1) {
@@ -411,25 +425,15 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
             this.fireEvent("made");
           }
         });
-        
+        watch.addListener("configChanged", async () => {
+          await watch.stop();
+          setImmediate(() => this._loadConfigAndStartMaking());
+        });
+        let arr = [ this._compileJsFilename, this._compileJsonFilename ].filter(str => Boolean(str));
+        watch.setConfigFilenames(arr);
+
         return p.then(() => watch.start());
       }));
-      
-      this.addListener("making", evt => {
-        if (this.__gauge) {
-          this.__gauge.show("Compiling", 1);
-        } else {
-          qx.tool.compiler.Console.print("qx.tool.cli.compile.makeBegins");
-        }
-      });
-      
-      this.addListener("made", evt => {
-        if (this.__gauge) {
-          this.__gauge.show("Compiling", 1);
-        } else {
-          qx.tool.compiler.Console.print("qx.tool.cli.compile.makeEnds");
-        }
-      });
     },
 
 
@@ -443,16 +447,26 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
       const Console = qx.tool.compiler.Console.getInstance();
       var t = this;
       
+      if (data.babelOptions) {
+        if (!data.babelConfig) {
+          data.babelConfig = { options: data.babelOptions };
+          qx.tool.compiler.Console.print("qx.tool.cli.compile.deprecatedBabelOptions");
+        } else {
+          qx.tool.compiler.Console.print("qx.tool.cli.compile.deprecatedBabelOptionsConflicting");
+        }
+        delete data.babelOptions;
+      }
+
       var argvAppNames = null;
       if (t.argv["app-name"]) {
         argvAppNames = t.argv["app-name"].split(",");
       }
-      
-      
+
+
       /*
-       * Calculate the the list of targets and applications; this is a many to many list, where an 
+       * Calculate the the list of targets and applications; this is a many to many list, where an
        * application can be compiled for many targets, and each target has many applications.
-       * 
+       *
        * Each target configuration is updated to have `appConfigs[]` and each application configuration
        * is updated to have `targetConfigs[]`.
        */
@@ -472,8 +486,15 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
           }
         }
       });
-      
+
+      let allAppNames = {};
       data.applications.forEach((appConfig, index) => {
+        if (appConfig.name) {
+          if (allAppNames[appConfig.name]) {
+            throw new qx.tool.utils.Utils.UserError(`Multiple applications with the same name '${appConfig.name}'`);
+          }
+          allAppNames[appConfig.name] = appConfig;
+        }
         appConfig.index = index;
         let appType = appConfig.type||"browser";
         let appTargetConfigs = targetConfigs.filter(targetConfig => {
@@ -481,17 +502,14 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
           if (appTypes && !qx.lang.Array.contains(appTypes, appType)) {
             return false;
           }
-          
+
           let appNames = targetConfig["application-names"];
           if (appConfig.name && appNames && !qx.lang.Array.contains(appNames, appConfig.name)) {
             return false;
           }
-          if (appConfig.name && argvAppNames && !qx.lang.Array.contains(argvAppNames, appConfig.name)) {
-            return false;
-          }
           return true;
         });
-        
+
         if (appTargetConfigs.length == 0) {
           if (defaultTargetConfig) {
             appTargetConfigs = [defaultTargetConfig];
@@ -499,7 +517,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
             throw new qx.tool.utils.Utils.UserError(`Cannot find any suitable targets for application #${index} (named ${appConfig.name||"unnamed"})`);
           }
         }
-        
+
         appTargetConfigs.forEach(targetConfig => {
           if (!targetConfig.appConfigs) {
             targetConfig.appConfigs = [];
@@ -514,14 +532,14 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
       if (defaultTargetConfig && defaultTargetConfig.appConfigs) {
         targetConfigs.push(defaultTargetConfig);
       }
-      
-      
+
+
       let libraries = this.__libraries = {};
       await qx.Promise.all(data.libraries.map(async libPath => {
         var library = await qx.tool.compiler.app.Library.createLibrary(libPath);
         libraries[library.getNamespace()] = library;
       }));
-      
+
       // Search for Qooxdoo library if not already provided
       var qxLib = libraries["qx"];
       if (!qxLib) {
@@ -540,8 +558,8 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
           qx.tool.compiler.Console.log(errors.join("\n"));
         }
       }
-      
-      
+
+
       /*
        * Figure out which will be the default application; this will need some work for situations
        * where there are multiple browser based targets
@@ -554,7 +572,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
             if (appConfig.type && appConfig.type != "browser") {
               return;
             }
-            
+
             let setDefault;
             if (appConfig.writeIndexHtmlToRoot !== undefined) {
               qx.tool.compiler.Console.print("qx.tool.cli.compile.deprecatedCompileSeeOther", "application.writeIndexHtmlToRoot", "application.default");
@@ -576,22 +594,27 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
             }
           });
           if (!hasExplicitDefaultApp && (targetConfig.appConfigs.length > 1)) {
-            targetConfig.defaultAppConfig = null;
+            targetConfig.defaultAppConfig = targetConfig.appConfigs[0];
           }
         }
       });
-      
-      
+
+
       /*
-       * There is still only one target per maker, so convert our list of targetConfigs into an array of makers 
+       * There is still only one target per maker, so convert our list of targetConfigs into an array of makers
        */
       let makers = [];
       targetConfigs.forEach(targetConfig => {
         if (!targetConfig.appConfigs) {
-          qx.tool.compiler.Console.print("qx.tool.cli.compile.unusedTarget", target.type, target.index);
+          qx.tool.compiler.Console.print("qx.tool.cli.compile.unusedTarget", targetConfig.type, targetConfig.index);
           return;
         }
-        
+        let appConfigs = targetConfig.appConfigs.filter(appConfig =>
+          !appConfig.name || !argvAppNames || qx.lang.Array.contains(argvAppNames, appConfig.name));
+        if (!appConfigs.length) {
+          return;
+        }
+
         var outputPath = targetConfig.outputPath;
         if (!outputPath) {
           throw new qx.tool.utils.Utils.UserError("Missing output-path for target " + targetConfig.type);
@@ -620,7 +643,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         }
         target.setWriteLibraryInfo(this.argv.writeLibraryInfo);
         target.setUpdatePoFiles(this.argv.updatePoFiles);
-        
+
         // Take the command line for `minify` as most precedent only if provided
         var minify;
         if ((process.argv.indexOf("--minify") > -1)) {
@@ -640,7 +663,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         if (typeof saveUnminified == "boolean" && typeof target.setSaveUnminified == "function") {
           target.setSaveUnminified(saveUnminified);
         }
-        
+
         maker.setTarget(target);
 
         maker.setLocales(data.locales||[ "en" ]);
@@ -683,9 +706,11 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
           });
           return dest;
         }
-        let babelOptions = data.babelOptions || {};
-        qx.lang.Object.mergeWith(babelOptions, targetConfig.babelOptions || {});
-        maker.getAnalyser().setBabelOptions(babelOptions);
+        
+        let babelConfig = qx.lang.Object.clone(data.babel || {}, true);
+        babelConfig.options = babelConfig.options || {};
+        qx.lang.Object.mergeWith(babelConfig.options, targetConfig.babelOptions || {});
+        maker.getAnalyser().setBabelConfig(babelConfig);
 
         var addCreatedAt = targetConfig["addCreatedAt"] || t.argv["addCreatedAt"];
         if (addCreatedAt) {
@@ -695,14 +720,14 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         for (let ns in libraries) {
           maker.getAnalyser().addLibrary(libraries[ns]);
         }
-        
-        
+
+
         let allApplicationTypes = {};
-        targetConfig.appConfigs.forEach(appConfig => {
+        appConfigs.forEach(appConfig => {
           var app = appConfig.app = new qx.tool.compiler.app.Application(appConfig["class"]);
           app.setTemplatePath(t.getTemplateDir());
 
-          [ "type", "theme", "name", "environment", "outputPath", "bootPath", "loaderTemplate"].forEach(name => {
+          [ "type", "theme", "name", "environment", "outputPath", "bootPath", "loaderTemplate", "publish", "standalone"].forEach(name => {
             if (appConfig[name] !== undefined) {
               var fname = "set" + qx.lang.String.firstUp(name);
               app[fname](appConfig[name]);
@@ -715,7 +740,10 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
           if (appConfig.title) {
             app.setTitle(appConfig.title);
           }
-          
+          if (appConfig.description) {
+            app.setDescription(appConfig.description);
+          }
+
           var parts = appConfig.parts || targetConfig.parts || data.parts;
           if (parts) {
             if (!parts.boot) {
@@ -751,7 +779,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
           });
           maker.addApplication(app);
         });
-        
+
         const CF = qx.tool.compiler.ClassFile;
         let globalSymbols = [];
         qx.lang.Array.append(globalSymbols, CF.QX_GLOBALS);
@@ -772,24 +800,31 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         } else {
           qx.tool.utils.files.Utils.safeUnlink(target.getOutputDir() + target.getScriptPrefix() + "index.html");
         }
+        
+        const showMarkers = (classname, markers) => {
+          if (markers) {
+            markers.forEach(function(marker) {
+              var str = qx.tool.compiler.Console.decodeMarker(marker);
+              Console.warn(classname + ": " + str);
+            });
+          }
+        };
 
         // Note - this will cause output multiple times, once per maker/target; but this is largely unavoidable
         //  because different targets can cause different warnings for the same code due to different compilation
         //  options (eg node vs browser)
-        maker.getAnalyser().addListener("compiledClass", function(evt) {
+        maker.getAnalyser().addListener("compiledClass", evt => {
           var data = evt.getData();
-          var markers = data.dbClassInfo.markers;
-          if (markers) {
-            markers.forEach(function(marker) {
-              var str = qx.tool.compiler.Console.decodeMarker(marker);
-              Console.warn(data.classFile.getClassName() + ": " + str);
-            });
-          }
+          showMarkers(data.classFile.getClassName(), data.dbClassInfo.markers);
         });
-        
+        maker.getAnalyser().addListener("alreadyCompiledClass", evt => {
+          var data = evt.getData();
+          showMarkers(data.className, data.dbClassInfo.markers);
+        });
+
         makers.push(maker);
       });
-      
+
       return makers;
     },
 
@@ -847,6 +882,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
 
         for (let reqUri of Object.getOwnPropertyNames(requires)) {
           let requiredRange = requires[reqUri];
+          const rangeIsCommitHash = /^[0-9a-f]{40}$/.test(requiredRange);
           switch (reqUri) {
             // npm release only
             case "qooxdoo-compiler":
@@ -878,7 +914,13 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
               // github release of a package
               let libVersion = l.getLibraryInfo().version;
               if (!semver.valid(libVersion, {loose: true})) {
-                Console.warn(`${reqUri}: Version is not valid: ${libVersion}`);
+                if (!this.argv.quiet) {
+                  Console.warn(`${reqUri}: Version is not valid: ${libVersion}`);
+                }
+              } else if (rangeIsCommitHash) {
+                if (!this.argv.quiet) {
+                  Console.warn(`${reqUri}: Cannot check whether commit hash ${requiredRange} corresponds to version ${libVersion}`);
+                }
               } else if (!semver.satisfies(libVersion, requiredRange, {loose: true})) {
                 errors.push(`${lib.getNamespace()}: Needs ${reqUri} version ${requiredRange}, found ${libVersion}`);
               }
@@ -926,19 +968,19 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
 
     /**
      * Returns the list of makers to make
-     * 
+     *
      * @return  {Maker[]}
      */
     getMakers() {
       return this.__makers;
     },
-    
+
     /**
      * Returns the one maker; this is for backwards compatibility with the compiler API, because it is
      * possible to define multiple targets and therefore have multiple makers.  This method will return
      * the one maker, when there is only one maker defined (ie one target), which is fine for any existing
      * configurations.
-     * 
+     *
      * @deprected
      * @return {Maker}
      */
@@ -946,17 +988,20 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
       if (this.__makers.length == 1) {
         return this.__makers[0];
       }
-      throw new Error("Cannot get a single maker - there are " + this.__makers.length + " available"); 
+      throw new Error("Cannot get a single maker - there are " + this.__makers.length + " available");
     },
-    
+
     /**
      * Returns the makers for a given application name
-     * 
+     *
      * @param appName {String} the name of the application
      * @return {Maker}
      */
     getMakersForApp(appName) {
-      return this.__makers.filter(maker => maker.getApplication().getName() == appName);
+      return this.__makers.filter(maker => {
+        let res = maker.getApplications().find(app => app.getName() == appName);
+        return res;
+      });
     },
 
     /**
@@ -965,14 +1010,14 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
     _getConfig() {
       return this.__config;
     },
-    
+
     /**
      * Returns a list of libraries which are used
-     * 
+     *
      * @return {Library[]}
      */
     getLibraries() {
-      return this.__libraries; 
+      return this.__libraries;
     }
   },
 
@@ -986,11 +1031,15 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
       "qx.tool.cli.compile.makeEnds": "Applications are made"
     });
     qx.tool.compiler.Console.addMessageIds({
+      "qx.tool.cli.compile.unusedTarget": "Target type %1, index %2 is unused",
+      "qx.tool.cli.compile.selectingDefaultApp": "You have multiple applications, none of which are marked as 'default'; the first application named %1 has been chosen as the default application",
       "qx.tool.cli.compile.legacyFiles": "File %1 exists but is no longer used",
       "qx.tool.cli.compile.deprecatedCompile": "The configuration setting %1 in compile.json is deprecated",
       "qx.tool.cli.compile.deprecatedCompileSeeOther": "The configuration setting %1 in compile.json is deprecated (see %2)",
       "qx.tool.cli.compile.deprecatedUri": "URIs are no longer set in compile.json, the configuration setting %1=%2 in compile.json is ignored (it's auto detected)",
-      "qx.tool.cli.compile.deprecatedProvidesBoot": "Manifest.Json no longer supports provides.boot - only Applications can have boot; specified in %1"
+      "qx.tool.cli.compile.deprecatedProvidesBoot": "Manifest.Json no longer supports provides.boot - only Applications can have boot; specified in %1",
+      "qx.tool.cli.compile.deprecatedBabelOptions": "Deprecated use of `babelOptions` - these should be moved to `babel.options`",
+      "qx.tool.cli.compile.deprecatedBabelOptionsConflicting": "Conflicting use of `babel.options` and the deprecated `babelOptions` (ignored)"
     }, "warning");
   }
 });

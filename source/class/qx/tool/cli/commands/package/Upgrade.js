@@ -40,7 +40,8 @@ qx.Class.define("qx.tool.cli.commands.package.Upgrade", {
           },
           "releases-only": {
             alias: "r",
-            describe: "Upgrade regular releases only"
+            describe: "Upgrade regular releases only (this leaves versions based on branches, commits etc. untouched)",
+            default: true
           },
           "reinstall": {
             alias: "R",
@@ -54,14 +55,6 @@ qx.Class.define("qx.tool.cli.commands.package.Upgrade", {
             alias: "p",
             describe: "Use prereleases if available"
           }
-        },
-        handler: function (argv) {
-          return new qx.tool.cli.commands.package.Upgrade(argv)
-            .process()
-            .catch(e => {
-              qx.tool.compiler.Console.error(e.stack || e.message);
-              process.exit(1);
-            });
         }
       };
     }

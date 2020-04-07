@@ -1,0 +1,3 @@
+#: issue585/Application.js
+msgid "Call me \"%1\""
+msgstr ""

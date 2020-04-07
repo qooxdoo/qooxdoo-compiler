@@ -55,6 +55,10 @@ qx.Class.define("qx.tool.cli.commands.package.Publish", {
             alias: "V",
             describe: "Use given version number"
           },
+          "prerelease": {
+            alias: "p",
+            describe: "Publish as a prerelease (as opposed to a stable release)"
+          },
           "quiet": {
             alias: "q",
             describe: "No output"
@@ -79,14 +83,6 @@ qx.Class.define("qx.tool.cli.commands.package.Publish", {
             alias: "i",
             describe: "Create an index file (qooxdoo.json) with paths to Manifest.json files"
           }
-        },
-        handler: function(argv) {
-          return new qx.tool.cli.commands.package.Publish(argv)
-            .process()
-            .catch(e => {
-              qx.tool.compiler.Console.error(e.stack || e.message);
-              process.exit(1);
-            });
         }
       };
     }
@@ -201,6 +197,7 @@ qx.Class.define("qx.tool.cli.commands.package.Publish", {
         if (!new_version) {
           throw new qx.tool.utils.Utils.UserError(`${argv.useVersion} is not a valid version number.`);
         }
+        new_version = new_version.toString();
       } else {
         // use version number from manifest and increment it
         let old_version = mainManifestModel.getValue("info.version");
@@ -337,7 +334,7 @@ qx.Class.define("qx.tool.cli.commands.package.Publish", {
           name: tag,
           body: message,
           draft: false,
-          prerelease: (argv.type.indexOf("pre")>=0)
+          prerelease: Boolean(argv.prerelease)
         };
         await octokit.repos.createRelease(release_data);
         if (!argv.quiet) {

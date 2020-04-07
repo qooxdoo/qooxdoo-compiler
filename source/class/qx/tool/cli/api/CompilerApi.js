@@ -30,9 +30,8 @@ const fs = qx.tool.utils.Promisify.fs;
 qx.Class.define("qx.tool.cli.api.CompilerApi", {
   extend: qx.tool.cli.api.AbstractApi,
   
-  construct: function(command) {
+  construct: function() {
     this.base(arguments);
-    this.__command = command;
     this.__libraryApis = {};
   },
   
@@ -45,12 +44,19 @@ qx.Class.define("qx.tool.cli.api.CompilerApi", {
     
     /** Configuration data for the compiler */
     configuration: {
+    },
+    
+    /** The current command */
+    command: {
+      init: null,
+      nullable: true,
+      check: "qx.tool.cli.commands.Command",
+      event: "changeCommand"
     }
   },
-  
+
   members: {
     __libraryApis: null,
-    __command: null,
     
     /**
      * Loads the configuration data
@@ -63,15 +69,6 @@ qx.Class.define("qx.tool.cli.api.CompilerApi", {
       }
       this.setConfiguration(config);
       return config;
-    },
-    
-    /**
-     * Returns the command
-     * 
-     * @return {qx.tool.cli.commands.Command} the CLI command
-     */
-    getCommand() {
-      return this.__command;
     },
     
     /**

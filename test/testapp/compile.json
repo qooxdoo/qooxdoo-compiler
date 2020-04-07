@@ -1,4 +1,9 @@
 {
+  "babel": {
+    "plugins": {
+      "@babel/plugin-proposal-optional-chaining": true
+    }
+  },
   "targets": [
     {
       "type": "source",
@@ -128,6 +133,10 @@
   },
   "sass": {
     "compiler": "latest"
+  },
+  "jsx": {
+    "pragma": "jsx.dom",
+    "pragmaFrag": "jsx.Fragment"
   },
   "$schema": "https://raw.githubusercontent.com/qooxdoo/qooxdoo-compiler/master/resource/schema/v1/compile.json"
 }

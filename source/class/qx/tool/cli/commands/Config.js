@@ -23,7 +23,6 @@ const columnify = require("columnify");
 const fs = qx.tool.utils.Promisify.fs;
 
 require("./Command");
-require("./MConfig");
 
 /**
  * Handles persistent configuration
@@ -31,7 +30,6 @@ require("./MConfig");
 
 qx.Class.define("qx.tool.cli.commands.Config", {
   extend: qx.tool.cli.commands.Command,
-  include: [qx.tool.cli.commands.MConfig],
 
   statics: {
 
@@ -70,6 +68,7 @@ qx.Class.define("qx.tool.cli.commands.Config", {
             }, argv => run(argv, "cmdList"));
         },
         handler   : function(argv) {
+          // Nothing
         }
       };
     },

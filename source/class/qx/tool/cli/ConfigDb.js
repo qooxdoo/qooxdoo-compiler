@@ -25,7 +25,7 @@ const path = require("path");
 qx.Class.define("qx.tool.cli.ConfigDb", {
   extend: qx.core.Object,
   
-  construct() {
+  construct: function() {
     this.base(arguments);
     this.__overrides = {};
   },

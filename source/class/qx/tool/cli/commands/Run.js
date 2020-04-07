@@ -47,15 +47,7 @@ qx.Class.define("qx.tool.cli.commands.Run", {
       return {
         command   : "run [configFile]",
         describe  : "runs a server application (written in node) with continuous compilation, using compile.json",
-        builder   : Object.assign(qx.tool.cli.commands.Compile.YARGS_BUILDER, qx.tool.cli.commands.Run.YARGS_BUILDER),
-        handler: function(argv) {
-          return new qx.tool.cli.commands.Run(argv)
-            .process()
-            .catch(e => {
-              qx.tool.compiler.Console.error(e.stack || e.message);
-              process.exit(1);
-            });
-        }
+        builder   : Object.assign(qx.tool.cli.commands.Compile.YARGS_BUILDER, qx.tool.cli.commands.Run.YARGS_BUILDER)
       };
     }
   },
@@ -141,9 +133,25 @@ qx.Class.define("qx.tool.cli.commands.Run", {
         debug = " --inspect";
       }
       let cmd = `node${debug} ${scriptname} ${args}`;
+      
+      let restartNeeded = true;
+      this.addListener("making", evt => {
+        restartNeeded = false;
+      });
+      
+      this.addListener("writtenApplication", evt => {
+        if (app === evt.getData()) {
+          restartNeeded = true;
+        }
+      });
+      
       /* eslint-disable @qooxdoo/qx/no-illegal-private-usage */
       this.addListener("made", async e => {
         if (this.__process) {
+          if (!restartNeeded) {
+            return;
+          }
+          
           try {
             await kill(this.__process.pid);
           } catch (ex) {
@@ -165,6 +173,7 @@ qx.Class.define("qx.tool.cli.commands.Run", {
 
         child.on("close", function(code) {
           console.log("Application has terminated");
+          this.__process = null;
         });        
         child.on("error", function(err) {
           console.error("Application has failed: " + err);

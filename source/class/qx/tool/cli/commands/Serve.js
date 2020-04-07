@@ -45,7 +45,7 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
         alias: "S",
         describe: "Show the startpage with the list of applications and additional information",
         type: "boolean",
-        default: false
+        default: null
       },
       "rebuild-startpage": {
         alias: "R",
@@ -59,20 +59,30 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
       return {
         command   : "serve [configFile]",
         describe  : "runs a webserver to run the current application with continuous compilation, using compile.json",
-        builder   : Object.assign(qx.tool.cli.commands.Compile.YARGS_BUILDER, qx.tool.cli.commands.Serve.YARGS_BUILDER),
-        handler: function(argv) {
-          return new qx.tool.cli.commands.Serve(argv)
-            .process()
-            .catch(e => {
-              qx.tool.compiler.Console.error(e.stack || e.message);
-              process.exit(1);
-            });
-        }
+        builder   : Object.assign(qx.tool.cli.commands.Compile.YARGS_BUILDER, qx.tool.cli.commands.Serve.YARGS_BUILDER)
       };
     }
   },
+  events: {
+    /**
+     * Fired before server start
+     * 
+     *  data: {
+     *    server: the http server
+     *    application: the used express server instance
+     *  }
+     */
+    "beforeStart": "qx.event.type.Data",
+    /**
+     * Fired when server is started
+    */
+    "afterStart": "qx.event.type.Event"
+  },
 
   members: {
+    /** @type {qx.tool.utils.Website} the Website instance */
+    _website: null,
+    
     /*
      * @Override
      */
@@ -81,37 +91,47 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
       this.argv["machine-readable"] = false;
       this.argv["feedback"] = false;
       await this.base(arguments);
+      
       // build website if it hasn't been built yet.
-      const website = new qx.tool.utils.Website();
-      if (!await fs.existsAsync(website.getTargetDir()) || this.argv.rebuildStartpage) {
+      const website = this._website = new qx.tool.utils.Website();
+      if (!await fs.existsAsync(website.getTargetDir())) {
         qx.tool.compiler.Console.info(">>> Building startpage...");
-        await website.generateSite();
-        await website.compileScss();
+        await this._website.rebuildAll();
+      } else if (this.argv.rebuildStartpage) {
+        this._website.startWatcher();
       }
+      
       await this.runWebServer();
     },
-
+    
+    /**
+     * 
+     * returns the showStartpage flag
+     * 
+     */
+    showStartpage: function() {
+      return this.__showStartpage;
+    },
 
     /**
-     *
-     * @returns
+     * Runs the web server
+     * 
+     * @ignore qx.tool.$$resourceDir
      */
-    /* @ignore qx.tool.$$resourceDir */
-
     runWebServer: async function() {
-      let makers = this.getMakers().filter(maker => maker.getApplications().some(app => app.isBrowserApp()));
+      let makers = this.getMakers().filter(maker => maker.getApplications().some(app => app.getStandalone()));
       let apps = [];
       let defaultMaker = null;
       let firstMaker = null;
-      makers.forEach(maker => { 
+      makers.forEach(maker => {
         maker.getApplications().forEach(app => {
-          if (app.isBrowserApp()) {
-            apps.push(app); 
+          if (app.isBrowserApp() && app.getStandalone()) {
+            apps.push(app);
             if (firstMaker === null) {
               firstMaker = maker;
             }
-            if ((defaultMaker === null) && app.getWriteIndexHtmlToRoot()) {                  
-              defaultMaker = maker;  
+            if ((defaultMaker === null) && app.getWriteIndexHtmlToRoot()) {
+              defaultMaker = maker;
             }
           }
         });
@@ -119,35 +139,43 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
       if (!defaultMaker && (apps.length === 1)) {
         defaultMaker = firstMaker;
       }
+      
+      this.__showStartpage = this.argv.showStartpage;
+      if (this.__showStartpage === null) {
+        this.__showStartpage = defaultMaker === null;
+      }
       var config = this._getConfig();
-
       const app = express();
       const website = new qx.tool.utils.Website();
-      if (defaultMaker && (this.argv.showStartpage === false)) {
+      if (!this.__showStartpage) {
         app.use("/", express.static(defaultMaker.getTarget().getOutputDir()));
       } else {
         let s = await this.getAppQxPath();
         if (!await fs.existsAsync(path.join(s, "docs"))) {
-          s = path.dirname(s);        
-        }   
+          s = path.dirname(s);
+        }
         app.use("/docs", express.static(path.join(s, "docs")));
         app.use("/apps", express.static(path.join(s, "apps")));
         app.use("/", express.static(website.getTargetDir()));
         var appsData = [];
         makers.forEach(maker => {
           let target = maker.getTarget();
-          app.use("/" + target.getOutputDir(), express.static(target.getOutputDir()));
+          let out = path.normalize("/" + target.getOutputDir());
+          app.use(out, express.static(target.getOutputDir()));
           appsData.push({
             target: {
               type: target.getType(),
-              outputDir: "/" + target.getOutputDir()
+              outputDir: out
             },
             apps: maker.getApplications()
-              .filter(app => app.isBrowserApp())
+              .filter(app => app.getStandalone())
               .map(app => ({
+                isBrowser: app.isBrowserApp(),
                 name: app.getName(),
                 type: app.getType(),
                 title: app.getTitle() || app.getName(),
+                appClass: app.getClassName(),
+                description: app.getDescription(),
                 outputPath: target.getProjectDir(app) // no trailing slash or link will break
               }))
           });
@@ -159,6 +187,10 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
       }
       this.addListenerOnce("made", e => {
         let server = http.createServer(app);
+        this.fireDataEvent("beforeStart", {
+          server: server,
+          application: app
+        });
         server.on("error", e => {
           if (e.code === "EADDRINUSE") {
             qx.tool.compiler.Console.print("qx.tool.cli.serve.webAddrInUse", config.serve.listenPort);
@@ -167,10 +199,16 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
             qx.tool.compiler.Console.log("Error when starting web server: " + e);
           }
         });
-        server.listen(config.serve.listenPort, () =>
-          qx.tool.compiler.Console.print("qx.tool.cli.serve.webStarted", "http://localhost:" + config.serve.listenPort));
+        server.listen(config.serve.listenPort, () => {
+          qx.tool.compiler.Console.print("qx.tool.cli.serve.webStarted", "http://localhost:" + config.serve.listenPort);
+          this.fireEvent("afterStart");
+        });
       });
-    }
+    },
+    
+    __showStartpage: null
+
+
   },
 
   defer: function(statics) {

@@ -39,14 +39,6 @@ qx.Class.define("qx.tool.cli.commands.Clean", {
             alias : "v",
             describe: "Verbose logging"
           }
-        },
-        handler: function(argv) {
-          return new qx.tool.cli.commands.Clean(argv)
-            .process()
-            .catch(e => {
-              qx.tool.compiler.Console.error(e.stack || e.message);
-              process.exit(1);
-            });
         }
       };
     }

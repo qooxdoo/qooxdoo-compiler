@@ -7,12 +7,18 @@ require("../index");
 
 async function createMaker() {
   var QOOXDOO_PATH = "../node_modules/@qooxdoo/framework";
+  
+  qx.tool.compiler.ClassFile.JSX_OPTIONS = {
+    "pragma": "jsx.dom",
+    "pragmaFrag": "jsx.Fragment"
+  };
 
   // Makers use an Analyser to figure out what the Target should write
   var maker = new qx.tool.compiler.makers.AppMaker().set({
     // Targets know how to output an application
     target: new qx.tool.compiler.targets.SourceTarget("unit-tests-output").set({
       writeCompileInfo: true,
+      updatePoFiles: true,
       environment: {
         envVar1: "ONE",
         envVar2: "TWO",
@@ -45,7 +51,7 @@ async function createMaker() {
       envVar2: "222",
       envVar3: "333",
       "test.appValue": true,
-      "qx.promise": true,
+      "qx.promise": false,
       "test.overridden1": true,
       "test.overridden2": false,
       "test.overridden5": "application"
@@ -54,9 +60,29 @@ async function createMaker() {
     writeIndexHtmlToRoot: true
   }));
   
+  maker.addApplication(new qx.tool.compiler.app.Application("testapp.Application").set({
+    theme: "qx.theme.Indigo",
+    name: "apptwo",
+    environment: {
+      envVar2: "222",
+      envVar3: "apptwo-envVar3",
+      "test.appValue": true,
+      "qx.promise": true,
+      "test.overridden1": true,
+      "test.overridden2": false,
+      "test.overridden5": "application"
+    },
+    templatePath: "../source/resource/qx/tool/cli/templates"
+  }));
+  
   let analyser = maker.getAnalyser();
   analyser.addLibrary(await qx.tool.compiler.app.Library.createLibrary("testapp"));
   analyser.addLibrary(await qx.tool.compiler.app.Library.createLibrary(QOOXDOO_PATH));
+  analyser.setBabelConfig({
+    plugins: {
+      "@babel/plugin-proposal-optional-chaining": true
+    }
+  });
   
   return maker;
 }
@@ -105,8 +131,8 @@ test("Checks dependencies and environment settings", assert => {
       })
       .then(() => readCompileInfo().then(tmp => compileInfo = tmp))
       .then(() => {
-        // qx.util.format.DateFormat is included manually later on, so this needs to be not included automatically now
-        assert.ok(!hasClassDependency(compileInfo, "qx.util.format.DateFormat"), "qx.util.format.DateFormat is automatically included");
+        // qx.util.format.NumberFormat is included manually later on, so this needs to be not included automatically now
+        assert.ok(!hasClassDependency(compileInfo, "qx.util.format.NumberFormat"), "qx.util.format.NumberFormat is automatically included");
       })
 
       /*
@@ -114,13 +140,13 @@ test("Checks dependencies and environment settings", assert => {
        */
       .then(() => {
         app.setExclude(["qx.ui.layout.*"]);
-        app.setInclude(["qx.util.format.DateFormat"]);
+        app.setInclude(["qx.util.format.NumberFormat"]);
         return maker.make();
       })
       .then(() => readCompileInfo().then(tmp => compileInfo = tmp))
       .then(() => {
         assert.ok(!hasPackageDependency(compileInfo, "qx.ui.layout"), "qx.ui.layout.* was not excluded");
-        assert.ok(hasClassDependency(compileInfo, "qx.util.format.DateFormat"), "qx.util.format.DateFormat is not included");
+        assert.ok(hasClassDependency(compileInfo, "qx.util.format.NumberFormat"), "qx.util.format.NumberFormat is not included");
       })
       // Undo the exclude/include
       .then(() => {
@@ -131,6 +157,18 @@ test("Checks dependencies and environment settings", assert => {
       .then(() => readCompileInfo().then(tmp => compileInfo = tmp))
       .then(() => readDbJson().then(tmp => db = tmp))
       .then(() => readJson("unit-tests-output/transpiled/testapp/Application.json").then(tmp => meta = tmp))
+      
+      /**
+       * Text translation
+       */
+      .then(() => {
+        var ci = db.classInfo["testapp.Application"];
+        let map = {};
+        ci.translations.forEach(t => map[t.msgid] = t);
+        assert.ok(!!map["translatedString"]);
+        assert.ok(!!map["Call \"me\""]);
+        assert.ok(!!map["This has\nsome\nnewlines"]);
+      })
 
       /*
        * Test class references in the property definition, eg annotation
@@ -204,6 +242,25 @@ test("Checks dependencies and environment settings", assert => {
         assert.ok(arr.length === 0, "unexpected unresolved " + JSON.stringify(arr) + " in testapp.Issue503");
       })
       
+      /*
+       * Test Warnings
+       */
+      .then(src => {
+        var ci = db.classInfo["testapp.Warnings1"];
+        var arr = ci.unresolved||[];
+        assert.ok(arr.length === 0, "unexpected unresolved " + JSON.stringify(arr) + " in testapp.Warnings");
+      })
+      
+
+
+      /*
+       * Test JSX
+       */
+      .then(() => readFile("unit-tests-output/transpiled/testapp/Application.js", "utf8"))
+      .then(src => {
+        assert.ok(!!src.match(/jsx.dom\("div", null, "Hello World"\)/), "JSX");
+      })
+      
 
       /*
        * Test environment settings
@@ -212,14 +269,14 @@ test("Checks dependencies and environment settings", assert => {
       .then(src => {
         assert.ok(!src.match(/ELIMINATION_FAILED/), "Code elimination");
         assert.ok(src.match(/TEST_OVERRIDDEN_1/), "Overridden environment vars #1");
-        assert.ok(src.match(/TEST_OVERRIDDEN_2/), "Overridden environment vars #2");
+        assert.ok(!src.match(/TEST_OVERRIDDEN_2/), "Overridden environment vars #2");
         assert.ok(src.match(/var envVar1 = "ONE"/), "environment setting for envVar1");
-        assert.ok(src.match(/var envVar2 = qx.core.Environment.get\("envVar2"\)/), "environment setting for envVar2");
+        assert.ok(src.match(/var envVar2 = "222"/), "environment setting for envVar2");
         assert.ok(src.match(/var envVar3 = qx.core.Environment.get\("envVar3"\)/), "environment setting for envVar3");
         assert.ok(src.match(/var envVar4 = "four"/), "environment setting for envVar4");
         assert.ok(src.match(/var envTestOverriden3 = "global"/), "environment setting for envTestOverriden3");
         assert.ok(src.match(/var envTestOverriden4 = "target"/), "environment setting for envTestOverriden4");
-        assert.ok(src.match(/var envTestOverriden5 = qx.core.Environment.get\("test.overridden5"\)/), "environment setting for envTestOverriden5");
+        assert.ok(src.match(/var envTestOverriden5 = "application"/), "environment setting for envTestOverriden5");
         assert.ok(src.match(/var envVarSelect3 = 0/), "environment setting for envVarSelect3");
         assert.ok(src.match(/var envVarDefault1 = "some"/), "environment setting for envVarDefault1");
         assert.ok(src.match(/var envVarDefault2 = qx.core.Environment.get("test.noValue") || "default2"/), "environment setting for envVarDefault2");
@@ -259,7 +316,7 @@ test("Checks dependencies and environment settings", assert => {
        */
       .then(async () => {
         src = await readFile("unit-tests-output/resource/testapp/scss/root.css", "utf8");
-        assert.ok(src.match(/url\(\.\.\/sub5\/image.png\)/), "Resource SCSS");
+        assert.ok(src.match(/url\(\"sub5\/image.png\"\)/), "Resource SCSS");
       })
 
       .then(() => assert.end())

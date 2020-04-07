@@ -1,12 +1,9 @@
 (function(){ 
 
-  var platformIsRhino = typeof Packages !== "undefined";
-  var platformIsNode = !platformIsRhino;
-
   if (typeof window === "undefined") 
     window = this;
 
-  if (platformIsRhino && typeof console === "undefined") {
+  if (typeof console === "undefined") {
     console = {
         log: function() {
           var out = java.lang.System.out;
@@ -18,14 +15,6 @@
     };
     console.debug = console.log;
     console.warn = console.log;
-  }
-  if (platformIsNode) {
-    // Node suppresses output to the "real" console when calling console.debug, it's only shown
-    //  in the debugger 
-    console.debug = function() {
-      var args = [].slice.apply(arguments);
-      console.log.apply(this, args);
-    };
   }
 
   window.document = document = {
@@ -63,6 +52,7 @@
     window.qx = {};
   if (!qx.$$appRoot)
     qx.$$appRoot = "";
+  qx.$$resourceRoot = qx.$$appRoot;
 
   if (!window.qxvariants) 
     qxvariants = {};
@@ -87,8 +77,7 @@
 
   var isDebug = qx.$$environment["qx.debugLoader"];
   var log = isDebug ? console.log : function() { };
-  var loaderMethod = qx.$$environment["qx.ooLoader"] ? this[qx.$$environment["qx.ooLoader"]] : 
-    platformIsRhino && typeof this.load == "function" ? this.load : require;
+  var loaderMethod = qx.$$environment["qx.ooLoader"] ? this[qx.$$environment["qx.ooLoader"]] : this.load;
   if (typeof loaderMethod !== "function")
     throw new Error("Cannot initialise Qooxdoo application - no URI loader method detected");
 

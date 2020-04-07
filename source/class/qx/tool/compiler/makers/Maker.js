@@ -20,14 +20,8 @@
  *
  * *********************************************************************** */
 
-var fs = require("fs");
 var path = require("upath");
 require("@qooxdoo/framework");
-var util = require("../util");
-
-var readFile = util.promisify(fs.readFile);
-var writeFile = util.promisify(fs.writeFile);
-const mkParentPath = util.promisify(util.mkParentPath);
 
 /**
  * Base class for makers; does not include anything about targets, locales, etc (see AbstractAppMaker)
@@ -73,6 +67,20 @@ qx.Class.define("qx.tool.compiler.makers.Maker", {
     /** Blocks automatic deleting of the output directory */
     noErase: {
       init: false,
+      check: "Boolean"
+    },
+    
+    /** Whether the make has succeeded, null during/before make */
+    success: {
+      init: null,
+      nullable: true,
+      check: "Boolean"
+    },
+    
+    /** Whether the make has any warnings, null during/before make */
+    hasWarnings: {
+      init: null,
+      nullable: true,
       check: "Boolean"
     }
   },
@@ -124,46 +132,6 @@ qx.Class.define("qx.tool.compiler.makers.Maker", {
         throw new Error("Output directory (" + dir + ") is a parent directory of PWD");
       }
       await qx.tool.utils.files.Utils.deleteRecursive(this.getOutputDir());
-    },
-
-    /**
-     * Checks the version used to compile the output directory, and deletes it if it was compiled
-     * by an out of date compiler
-     */
-    checkCompileVersion: async function() {
-      if (this.isNoErase()) {
-        return;
-      }
-      try {
-        var version = await readFile(path.join(this.getOutputDir(), "version.txt"), { encoding: "utf8" });
-        if (version && version.trim() === qx.tool.compiler.Version.VERSION) {
-          return;
-        }
-      } catch (err) {
-        if (err.code !== "ENOENT") {
-          throw err;
-        }
-      }
-      await this.eraseOutputDir();
-    },
-
-    /**
-     * Writes the compiler version into the output directory
-     * @async
-     */
-    writeCompileVersion: function() {
-      return mkParentPath(this.getOutputDir())
-        .then(() => {
-          writeFile(path.join(this.getOutputDir(), "version.txt"), qx.tool.compiler.Version.VERSION, { encoding: "utf8" });
-          let s = {};
-          s["compiler"] = qx.tool.compiler.Version.VERSION;
-          s.libraries = {};
-          let libs = this.getAnalyser().getLibraries();
-          libs.forEach(lib => {
-            s.libraries[lib.getNamespace()] = lib.getVersion();
-          });
-          writeFile(path.join(this.getOutputDir(), "versions.json"), JSON.stringify(s, null, 2), { encoding: "utf8" });
-        });
     },
 
     /**

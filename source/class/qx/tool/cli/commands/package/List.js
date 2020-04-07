@@ -91,14 +91,6 @@ qx.Class.define("qx.tool.cli.commands.package.List", {
             alias: "u",
             describe: "Output only the GitHub URIs of the packages which are used to install the packages. Implies --noheaders and --libraries."
           }
-        },
-        handler: function(argv) {
-          return new qx.tool.cli.commands.package.List(argv)
-            .process()
-            .catch(e => {
-              qx.tool.compiler.Console.error(e.stack || e.message);
-              process.exit(1);
-            });
         }
       };
     }
@@ -118,10 +110,10 @@ qx.Class.define("qx.tool.cli.commands.package.List", {
 
       let repos_cache = this.getCache().repos;
 
-      // implicit qx package update
-      if (repos_cache.list.length === 0 || this.getCache().version !== qx.tool.config.Lockfile.getInstance().getVersion()) {
-        //await (new qx.tool.cli.commands.package.Update({quiet:true})).process();
-      }
+      // implicit qx package update, disabled
+      // if (repos_cache.list.length === 0 || this.getCache().version !== qx.tool.config.Lockfile.getInstance().getVersion()) {
+      //   await (new qx.tool.cli.commands.package.Update({quiet:true})).process();
+      // }
 
       let qooxdoo_version = await this.getUserQxVersion();
       let num_compat_repos = await this.__createIndexes(qooxdoo_version);
@@ -157,11 +149,49 @@ qx.Class.define("qx.tool.cli.commands.package.List", {
                     default: return "";
                   }
                 }
+              },
+              installedVersion : {
+                dataTransform: function(data) {
+                  switch (data) {
+                    case "false": return "-";
+                    default: return data;
+                  }
+                }
               }
             }
           };
           if (!this.argv.quiet) {
-            qx.tool.compiler.Console.info(columnify(this.__libraries[repo], columnify_options));
+            let data = this.__libraries[repo]
+              // shallow copy
+              .map(row => Object.assign({}, row))
+              // sort
+              .sort((a, b) => a.name.localeCompare(b.name));
+            let pretty = data
+              // another shallow copy
+              .map(row => Object.assign({}, row))
+              // clean up and omit redundant cell values
+              .map((row, index) => {
+                delete row.manifest;
+                if (index) {
+                  let previousRow = data[index-1];
+                  for (let key of Object.getOwnPropertyNames(row).reverse()) {
+                    if (["compatibility", "required_qx_version"].indexOf(key) > -1) {
+                      continue;
+                    }
+                    if (row[key] === previousRow[key] && row.name === previousRow.name) {
+                      row[key] = "";
+                    }
+                  }
+                }
+                return row;
+              });
+            // output list
+            if (this.argv.json) {
+              // as JSON
+              qx.tool.compiler.Console.info(JSON.stringify(data, null, 2));
+            } else {
+              qx.tool.compiler.Console.info(columnify(pretty, columnify_options));
+            }
           }
         } else if (this.argv.verbose) {
           qx.tool.compiler.Console.info(`Repository ${repo} does not contain suitable qooxdoo libraries.`);
@@ -225,7 +255,9 @@ qx.Class.define("qx.tool.cli.commands.package.List", {
         }
         for (let library of this.__libraries[repo.name]) {
           if (!semver.valid(library.version)) {
-            qx.tool.compiler.Console.warn(`>>> Ignoring '${repo.name}' ${library.name}': invalid version format '${library.version}'.`);
+            if (this.argv.verbose) {
+              qx.tool.compiler.Console.warn(`>>> Ignoring '${repo.name}' ${library.name}': invalid version format '${library.version}'.`);
+            }
             continue;
           }
           if (repo.name === localPathRepoName || semver.eq(library.version, repo.latestVersion)) {
@@ -355,6 +387,9 @@ qx.Class.define("qx.tool.cli.commands.package.List", {
         // filter out repositories that are deprecated or should not be listed unless --all
         let d = repo_data.description;
         if (!this.argv.all && d && (d.includes("(deprecated)") || d.includes("(unlisted)"))) {
+          if (this.argv.verbose) {
+            qx.tool.compiler.Console.warn(`>>> Ignoring ${repo_name}: Deprecated or unlisted. `);
+          }
           continue;
         }
 
@@ -379,11 +414,11 @@ qx.Class.define("qx.tool.cli.commands.package.List", {
               continue;
             }
 
-            // library version MUST match tag name
+            // library version MUST match tag name (which can be longer, for example with pre-release info (alpha, beta, pre, rc etc)
             let library_name = info.name;
             let version = info.version;
             let tag_version = tag_name.replace(/v/, "");
-            if (version !== tag_version) {
+            if (version !== tag_version.substr(0, version.length)) {
               if (this.argv.verbose) {
                 qx.tool.compiler.Console.warn(`>>> Ignoring ${repo_name} ${tag_name}, library '${library_name}': mismatch between tag version '${tag_version}' and library version '${version}'.`);
               }

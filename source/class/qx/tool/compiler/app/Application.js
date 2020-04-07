@@ -20,7 +20,7 @@
  *
  * *********************************************************************** */
 
-const path = require("path");
+const path = require("upath");
 require("@qooxdoo/framework");
 
 qx.Class.define("qx.tool.compiler.app.Application", {
@@ -101,6 +101,16 @@ qx.Class.define("qx.tool.compiler.app.Application", {
     },
 
     /**
+     * The human readable, customer facing description of the application - it's used to list applications
+     * in `qx serve`
+     */
+    description: {
+      init: null,
+      nullable: true,
+      check: "String"
+    },
+
+    /**
      * Output path, relative to the target's output path
      */
     outputPath: {
@@ -119,7 +129,7 @@ qx.Class.define("qx.tool.compiler.app.Application", {
     },
 
     /**
-     * template path 
+     * template path
      */
     templatePath: {
       init: "",
@@ -127,6 +137,24 @@ qx.Class.define("qx.tool.compiler.app.Application", {
       check: "String",
       apply: "_applyType"
 
+    },
+
+    /**
+     * Whether this app is to be published (e.g. in the PackageBrowser).
+     * Default is true.
+     */
+    publish: {
+      type: "Boolean",
+      init: true
+    },
+
+    /**
+     * Whether this app can run on its own (true, default) or is part of another
+     * application (false)
+     */
+    standalone: {
+      type: "Boolean",
+      init: true
     },
 
 
@@ -193,7 +221,7 @@ qx.Class.define("qx.tool.compiler.app.Application", {
     __fatalCompileErrors: null,
     __classes: null,
     __partsDeps: null,
-    
+
     /**
      * Checks if the application is for browser
      *
@@ -516,7 +544,7 @@ qx.Class.define("qx.tool.compiler.app.Application", {
             if (pos > -1) {
               var ns = asset.substring(0, pos);
               if (analyser.findLibrary(ns)) {
-                requiredLibs[ns] = true; 
+                requiredLibs[ns] = true;
               }
             }
           });
@@ -642,10 +670,7 @@ qx.Class.define("qx.tool.compiler.app.Application", {
                 uri = mappedPrefix + uri.substring(pos);
               }
             }
-            var library = resManager.findLibraryForResource(uri);
-            if (library) {
-              assets.push(library.getNamespace() + ":" + uri);
-            }
+            resManager.findLibrariesForResource(uri).forEach(library => assets.push(library.getNamespace() + ":" + uri)); 
           });
         }
         if (!libraryLookup[classInfo.libraryName]) {
@@ -768,7 +793,21 @@ qx.Class.define("qx.tool.compiler.app.Application", {
     getParts: function() {
       return this.__parts || [];
     },
-
+    
+    /**
+     * Returns a dynamically calculated version of the application environment, which
+     * is defaults or dynamic values plus the `environment` property
+     * 
+     * @return {Map} The environment settings
+     */
+    getCalculatedEnvironment() {
+      return qx.tool.utils.Values.merge(
+        {
+          "qx.headless": this.getType() != "browser"
+        },
+        this.getEnvironment());
+    },
+    
     /**
      * Expands a list of class names including wildcards (eg "qx.ui.*") into an
      * exhaustive list without wildcards
@@ -794,7 +833,7 @@ qx.Class.define("qx.tool.compiler.app.Application", {
                   }
                 }
               });
-          } 
+          }
           var postfix = name.substring(pos + 1);
           if (postfix) {
             t.getAnalyser().getLibraries()
@@ -816,7 +855,7 @@ qx.Class.define("qx.tool.compiler.app.Application", {
      * Apply for `type` property
      */
     _applyType: function(value, oldValue) {
-      var loader = path.join(this.getTemplatePath(), "loader", "loader-" + (this.isBrowserApp() ? "browser" : "server") + ".tmpl.js");
+      var loader = path.join(this.getTemplatePath(), "loader", "loader-" + this.getType() + ".tmpl.js");
       this.setLoaderTemplate(loader);
       this.setTheme(null);
     },
