@@ -26,14 +26,12 @@ const consoleControl = require("console-control-strings");
 require("app-module-path").addPath(process.cwd() + "/node_modules");
 
 require("./Command");
-require("./MConfig");
 
 /**
  * Handles compilation of the project
  */
 qx.Class.define("qx.tool.cli.commands.Compile", {
   extend: qx.tool.cli.commands.Command,
-  include: [qx.tool.cli.commands.MConfig],
 
   statics: {
 
@@ -96,11 +94,6 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         describe: "output compiler messages in machine-readable format",
         type: "boolean"
       },
-      "verbose": {
-        alias: "v",
-        describe: "enables additional progress output to console",
-        type: "boolean"
-      },
       "minify": {
         alias: "m",
         describe: "disables minification (for build targets only)",
@@ -157,12 +150,6 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         describe: "Whether bundling is enabled",
         type: "boolean",
         default: true
-      },
-      "force": {
-        describe: "Override warnings",
-        type: "boolean",
-        default: false,
-        alias: "F"
       }
     },
 
@@ -170,15 +157,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
       return {
         command   : "compile [configFile]",
         describe  : "compiles the current application, using compile.json",
-        builder   : qx.tool.cli.commands.Compile.YARGS_BUILDER,
-        handler: function(argv) {
-          return new qx.tool.cli.commands.Compile(argv)
-            .process()
-            .catch(e => {
-              qx.tool.compiler.Console.error("Error: " + (e.stack || e.message));
-              process.exit(1);
-            });
-        }
+        builder   : qx.tool.cli.commands.Compile.YARGS_BUILDER
       };
     }
 
@@ -369,7 +348,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
      * @return {Boolean} true if all makers succeeded
      */
     async _loadConfigAndStartMaking() {
-      var config = this.__config = await this.parse(this.argv);
+      var config = this.__config = await qx.tool.cli.Cli.getInstance().getParsedArgs();
       if (!config) {
         throw new qx.tool.utils.Utils.UserError("Error: Cannot find any configuration");
       }

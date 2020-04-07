@@ -59,15 +59,7 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
       return {
         command   : "serve [configFile]",
         describe  : "runs a webserver to run the current application with continuous compilation, using compile.json",
-        builder   : Object.assign(qx.tool.cli.commands.Compile.YARGS_BUILDER, qx.tool.cli.commands.Serve.YARGS_BUILDER),
-        handler: function(argv) {
-          return new qx.tool.cli.commands.Serve(argv)
-            .process()
-            .catch(e => {
-              qx.tool.compiler.Console.error(e.stack || e.message);
-              process.exit(1);
-            });
-        }
+        builder   : Object.assign(qx.tool.cli.commands.Compile.YARGS_BUILDER, qx.tool.cli.commands.Serve.YARGS_BUILDER)
       };
     }
   },

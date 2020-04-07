@@ -91,14 +91,6 @@ qx.Class.define("qx.tool.cli.commands.package.List", {
             alias: "u",
             describe: "Output only the GitHub URIs of the packages which are used to install the packages. Implies --noheaders and --libraries."
           }
-        },
-        handler: function(argv) {
-          return new qx.tool.cli.commands.package.List(argv)
-            .process()
-            .catch(e => {
-              qx.tool.compiler.Console.error(e.stack || e.message);
-              process.exit(1);
-            });
         }
       };
     }

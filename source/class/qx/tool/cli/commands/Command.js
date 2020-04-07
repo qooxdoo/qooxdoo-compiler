@@ -36,11 +36,13 @@ const replace_in_file = require("replace-in-file");
   */
 qx.Class.define("qx.tool.cli.commands.Command", {
   extend: qx.core.Object,
+  
   statics:{
     /**
      * The path to the directory containing the templates
      */
     TEMPLATE_DIR: path.join(qx.tool.$$resourceDir, "cli/templates"),
+    
     /**
      * The path to the node_modules dir
      */
@@ -54,9 +56,10 @@ qx.Class.define("qx.tool.cli.commands.Command", {
       qx.tool.cli.LogAppender.setMinLevel("debug");
     }
   },
-
+  
   members: {
     argv: null,
+    compileJs: null,
     
     async process() {
       let argv = this.argv;

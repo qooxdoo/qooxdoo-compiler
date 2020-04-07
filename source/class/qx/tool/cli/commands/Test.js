@@ -67,12 +67,7 @@ qx.Class.define("qx.tool.cli.commands.Test", {
           if (!argv.configFile && fs.existsSync(path.join(process.cwd(), qx.tool.cli.commands.Test.CONFIG_FILENAME))) {
             argv.configFile = qx.tool.cli.commands.Test.CONFIG_FILENAME;
           }
-          return new qx.tool.cli.commands.Test(argv)
-            .process()
-            .catch(e => {
-              qx.tool.compiler.Console.error(e.stack || e.message);
-              process.exit(1);
-            });
+          return qx.tool.cli.Cli.getInstance().processCommand(new qx.tool.cli.commands.Test(argv));
         }
       };
     }

@@ -53,10 +53,6 @@ qx.Class.define("qx.tool.cli.commands.package.Update", {
             alias: "a",
             describe: "Retrieve all releases (as opposed to the latest minor/patch release of each major release)"
           },
-          "prereleases": {
-            alias: "p",
-            describe: "Include prereleases"
-          },
           "verbose": {
             alias: "v",
             describe: "Verbose logging"
@@ -65,14 +61,6 @@ qx.Class.define("qx.tool.cli.commands.package.Update", {
             alias: "q",
             describe: "No output"
           }
-        },
-        handler: function(argv) {
-          return new qx.tool.cli.commands.package.Update(argv)
-            .process()
-            .catch(e => {
-              qx.tool.compiler.Console.error(e.stack || e.message);
-              process.exit(1);
-            });
         }
       };
     }
@@ -214,10 +202,8 @@ qx.Class.define("qx.tool.cli.commands.package.Update", {
 
           // filter releases to speed up updates
           let releases = releases_data.data
-          // filter out invalid release names and prereleases unless "--all-versions"
-            .filter(r => argv["all-versions"] ? true :
-              (semver.valid(r.tag_name, true) && (!semver.prerelease(r.tag_name, true) || argv["prereleases"]))
-            )
+          // filter out invalid release names unless "--all-versions"
+            .filter(r => argv["all-versions"] ? true : semver.valid(r.tag_name, true))
             // attach a clean version number
             .map(r => {
               r.version = semver.valid(r.tag_name, true) || "0.0.0";

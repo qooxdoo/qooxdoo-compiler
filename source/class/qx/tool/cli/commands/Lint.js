@@ -22,11 +22,9 @@ const CLIEngine = require("eslint").CLIEngine;
 const fs = qx.tool.utils.Promisify.fs;
 
 require("./Command");
-require("./MConfig");
 
 qx.Class.define("qx.tool.cli.commands.Lint", {
   extend: qx.tool.cli.commands.Command,
-  include: [qx.tool.cli.commands.MConfig],
 
   statics: {
     getYargsCommand: function() {
@@ -79,14 +77,6 @@ qx.Class.define("qx.tool.cli.commands.Lint", {
             alias: "q",
             describe: "No output"
           }
-        },
-        handler: function(argv) {
-          return new qx.tool.cli.commands.Lint(argv)
-            .process()
-            .catch(e => {
-              qx.tool.compiler.Console.log(e.stack || e.message);
-              process.exit(1);
-            });
         }
       };
     }
@@ -97,7 +87,7 @@ qx.Class.define("qx.tool.cli.commands.Lint", {
     process: async function() {
       await this.__applyFixes();
       let config;
-      config = await this.parse();
+      config = await qx.tool.cli.Cli.getInstance().getParsedArgs();
       let lintOptions = config.eslintConfig || {};
       lintOptions.extends = lintOptions.extends || ["@qooxdoo/qx/browser"];
       lintOptions.globals = Object.assign(lintOptions.globals || {}, await this.__addGlobals(config));
@@ -152,12 +142,14 @@ qx.Class.define("qx.tool.cli.commands.Lint", {
      */
     async __addGlobals(data) {
       let result = {};
-      await qx.Promise.all(data.libraries.map(async dir => {
-        let lib = await qx.tool.compiler.app.Library.createLibrary(dir);
-        let s = lib.getNamespace();
-        let libs = s.split(".");
-        result[libs[0]] = false;
-      }));
+      if (data.libraries) {
+        await qx.Promise.all(data.libraries.map(async dir => {
+          let lib = await qx.tool.compiler.app.Library.createLibrary(dir);
+          let s = lib.getNamespace();
+          let libs = s.split(".");
+          result[libs[0]] = false;
+        }));
+      }
       return result;
     },
 
