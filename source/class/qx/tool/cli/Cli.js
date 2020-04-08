@@ -58,12 +58,9 @@ qx.Class.define("qx.tool.cli.Cli", {
     /** @type {Promise} Promise that resolves to the _parsedArgs, but only when completely finished parsing them */
     __promiseParseArgs: null,
     
-<<<<<<< HEAD
-=======
     /** @type {Boolean} Whether libraries have had their `.load()` method called yet */
     __librariesNotified: false,
     
->>>>>>> fix-api-bc-issue
     /**
      * Creates an instance of yargs, with minimal options
      * 
@@ -120,11 +117,7 @@ qx.Class.define("qx.tool.cli.Cli", {
     /**
      * Reloads this.argv with the full set of arguments
      */
-<<<<<<< HEAD
-    __fullArgv() {
-=======
     async __fullArgv() {
->>>>>>> fix-api-bc-issue
       let yargs = this.__createYargs()
         .option("set", {
           describe: "sets an environment value for the compiler",
@@ -169,15 +162,6 @@ qx.Class.define("qx.tool.cli.Cli", {
         ],
         "qx.tool.cli.commands");
       
-<<<<<<< HEAD
-      this.argv = yargs
-        .demandCommand()
-        .strict()
-        .argv;
-    },
-    
-    /**
-=======
       this.argv = await yargs
         .demandCommand()
         .strict()
@@ -222,7 +206,6 @@ qx.Class.define("qx.tool.cli.Cli", {
     },
 
     /**
->>>>>>> fix-api-bc-issue
      * Returns the parsed command line and configuration data
      * 
      * @return {Object}
@@ -254,12 +237,9 @@ qx.Class.define("qx.tool.cli.Cli", {
       await this.__promiseParseArgs;
     },
     
-<<<<<<< HEAD
-=======
     /**
      * Does the work of parsing command line arguments and loading `compile.js[on]`
      */
->>>>>>> fix-api-bc-issue
     async __parseArgsImpl() {
       this.__bootstrapArgv();
       
@@ -404,11 +384,7 @@ qx.Class.define("qx.tool.cli.Cli", {
             compilerApi: compilerApi
           });
           compilerApi.addLibraryApi(libraryApi);
-<<<<<<< HEAD
-          await libraryApi.load();
-=======
           await libraryApi.initialize();
->>>>>>> fix-api-bc-issue
         }
       }
       
@@ -416,11 +392,7 @@ qx.Class.define("qx.tool.cli.Cli", {
       /*
        * Now everything is loaded, we can process the command line properly
        */
-<<<<<<< HEAD
-      this.__fullArgv();
-=======
       await this.__fullArgv();
->>>>>>> fix-api-bc-issue
 
       let parsedArgs = {
         target: this.argv.target,
@@ -471,13 +443,7 @@ qx.Class.define("qx.tool.cli.Cli", {
       } else {
         qx.tool.compiler.resources.ScssConverter.USE_V6_COMPILER = null;
       }
-<<<<<<< HEAD
-      
-      await compilerApi.afterLibrariesLoaded();
-      
-=======
 
->>>>>>> fix-api-bc-issue
       if (!config.serve) {
         config.serve = {};
       }
@@ -491,11 +457,7 @@ qx.Class.define("qx.tool.cli.Cli", {
       this._parsedArgs = await compilerApi.getConfiguration();
       return this._parsedArgs;
     },
-<<<<<<< HEAD
 
-=======
-    
->>>>>>> fix-api-bc-issue
     /**
      * Loads a .js file using `require`, handling exceptions as best as possible
      * 
