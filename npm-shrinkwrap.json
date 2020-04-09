@@ -1075,9 +1075,9 @@
       "integrity": "sha512-s+mHk2WWGBVhspJ5Xqj9XPrDJOhNZhfHVmrZNOLS9d1BcXSwo89NRWz4mJrOIYpDXxE7B7sekPSB4klCC6Qd1w=="
     },
     "@qooxdoo/framework": {
-      "version": "6.0.0-beta-20190618-2102",
-      "resolved": "https://registry.npmjs.org/@qooxdoo/framework/-/framework-6.0.0-beta-20190618-2102.tgz",
-      "integrity": "sha512-ALi1YNkPrgEVyj3bfAuRkc+L7Ka+dlXqAhEDUZwgMFHpe1W8HKVrRpvOYdMfpMdCj98VXDcA596wKxXZNeLZZw=="
+      "version": "6.0.0-beta-20200401-1413",
+      "resolved": "https://registry.npmjs.org/@qooxdoo/framework/-/framework-6.0.0-beta-20200401-1413.tgz",
+      "integrity": "sha512-B3Aje+1bER2zGcF9/LW1Yd9//2hx2o3DIz0z6EPUb8AQCYTdX2me33d4J545A9QXJWgF0nbaZ2a7pcwpRmhrNA=="
     },
     "@types/color-name": {
       "version": "1.1.1",
