@@ -457,7 +457,7 @@ qx.Class.define("qx.tool.cli.Cli", {
       this._parsedArgs = await compilerApi.getConfiguration();
       return this._parsedArgs;
     },
-
+    
     /**
      * Loads a .js file using `require`, handling exceptions as best as possible
      * 

@@ -124,12 +124,11 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         type: "boolean"
       },
       "add-created-at": {
-        alias: "C",
         describe: "Adds code to populate object's $$createdAt",
         type: "boolean"
       },
       "clean": {
-        alias: "c",
+        alias: "D",
         describe: "Deletes the target dir before compile",
         type: "boolean"
       },
@@ -155,7 +154,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
 
     getYargsCommand: function() {
       return {
-        command   : "compile [configFile]",
+        command   : "compile",
         describe  : "compiles the current application, using compile.json",
         builder   : qx.tool.cli.commands.Compile.YARGS_BUILDER
       };
@@ -860,9 +859,16 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
             requires["@qooxdoo/framework"] = range;
           }
         }
-        let requires_uris = Object.getOwnPropertyNames(requires).filter(name => !name.startsWith("qooxdoo-") && name !== "@qooxdoo/framework" && name !== "@qooxdoo/compiler");
+        
+        // Find the libraries that we need, not including the libraries which we have been given explicitly 
+        //  in the compile.json's `libraries` property
+        let requires_uris = Object.getOwnPropertyNames(requires)
+          .filter(uri => !libs.find(lib => lib.getLibraryInfo().name == uri));
+        
+        let urisToInstall = requires_uris.filter(name => !name.startsWith("qooxdoo-") && name !== "@qooxdoo/framework" && name !== "@qooxdoo/compiler");
+        
         let pkg_libs = Object.getOwnPropertyNames(packages);
-        if (requires_uris.length > 0 && pkg_libs.length === 0) {
+        if (urisToInstall.length > 0 && pkg_libs.length === 0) {
           // if we don't have package data
           if (this.argv.download) {
             // but we're instructed to download the libraries
@@ -880,7 +886,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
           }
         }
 
-        for (let reqUri of Object.getOwnPropertyNames(requires)) {
+        for (let reqUri of requires_uris) {
           let requiredRange = requires[reqUri];
           const rangeIsCommitHash = /^[0-9a-f]{40}$/.test(requiredRange);
           switch (reqUri) {
