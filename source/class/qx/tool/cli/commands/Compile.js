@@ -124,12 +124,11 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         type: "boolean"
       },
       "add-created-at": {
-        alias: "C",
         describe: "Adds code to populate object's $$createdAt",
         type: "boolean"
       },
       "clean": {
-        alias: "c",
+        alias: "D",
         describe: "Deletes the target dir before compile",
         type: "boolean"
       },
@@ -155,7 +154,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
 
     getYargsCommand: function() {
       return {
-        command   : "compile [configFile]",
+        command   : "compile",
         describe  : "compiles the current application, using compile.json",
         builder   : qx.tool.cli.commands.Compile.YARGS_BUILDER
       };
