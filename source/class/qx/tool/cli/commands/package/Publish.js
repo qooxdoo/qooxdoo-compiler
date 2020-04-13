@@ -22,7 +22,6 @@ const fs = require("fs");
 const path = require("upath");
 const process = require("process");
 const { Octokit } = require("@octokit/rest");
-const octokit = new Octokit();
 const semver = require("semver");
 const inquirer = require("inquirer");
 const glob = require("glob");
@@ -147,9 +146,8 @@ qx.Class.define("qx.tool.cli.commands.package.Publish", {
       if (!token) {
         throw new qx.tool.utils.Utils.UserError(`GitHub access token required.`);
       }
-      octokit.authenticate({
-        type: "token",
-        token
+      const octokit = new Octokit({
+        auth: token
       });
 
       // create index file first?
@@ -234,7 +232,7 @@ qx.Class.define("qx.tool.cli.commands.package.Publish", {
       let result;
       let topics;
       try {
-        result = await octokit.repos.listTopics({owner,
+        result = await octokit.repos.getAllTopics({owner,
           repo});
         topics = result.data.names;
       } catch (e) {
