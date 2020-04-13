@@ -36,13 +36,13 @@ const replace_in_file = require("replace-in-file");
   */
 qx.Class.define("qx.tool.cli.commands.Command", {
   extend: qx.core.Object,
-  
+
   statics:{
     /**
      * The path to the directory containing the templates
      */
     TEMPLATE_DIR: path.join(qx.tool.$$resourceDir, "cli/templates"),
-    
+
     /**
      * The path to the node_modules dir
      */
@@ -56,11 +56,11 @@ qx.Class.define("qx.tool.cli.commands.Command", {
       qx.tool.cli.LogAppender.setMinLevel("debug");
     }
   },
-  
+
   members: {
     argv: null,
     compileJs: null,
-    
+
     async process() {
       let argv = this.argv;
       if (argv.set) {
@@ -76,7 +76,7 @@ qx.Class.define("qx.tool.cli.commands.Command", {
           }
         });
       }
-      
+
       // check if we have to migrate files
       await (new qx.tool.cli.commands.package.Migrate(this.argv)).process(true);
     },
@@ -95,15 +95,27 @@ qx.Class.define("qx.tool.cli.commands.Command", {
      */
     getProjectData : async function() {
       let qooxdooJsonPath = path.join(process.cwd(), qx.tool.config.Registry.config.fileName);
-      let data = {};
+      let data = {
+        libraries: [],
+        applications: []
+      };
       if (await fs.existsAsync(qooxdooJsonPath)) {
-        data = await qx.tool.utils.Json.loadJsonAsync(qooxdooJsonPath);
-      } else {
-        if (await fs.existsAsync(path.join(process.cwd(), qx.tool.config.Manifest.config.fileName))) {
-          data.libraries = [{path : "."}];
+        let qooxdooJson = await qx.tool.utils.Json.loadJsonAsync(qooxdooJsonPath);
+        if (qx.lang.Type.isArray(qooxdooJson.libraries)) {
+          data.libraries = qooxdooJson.libraries;
         }
-        if (await fs.existsAsync(path.join(process.cwd(), qx.tool.config.Compile.config.fileName))) {
-          data.applications = [{path : "."}];
+        if (qx.lang.Type.isArray(qooxdooJson.applications)) {
+          data.applications = qooxdooJson.applications;
+        }
+      }
+      if (await fs.existsAsync(path.join(process.cwd(), qx.tool.config.Manifest.config.fileName))) {
+        if (!data.libraries.find(lib => lib.path === ".")) {
+          data.libraries.push({path : "."});
+        }
+      }
+      if (await fs.existsAsync(path.join(process.cwd(), qx.tool.config.Compile.config.fileName))) {
+        if (!data.applications.find(app => app.path === ".")) {
+          data.applications.push({path : "."});
         }
       }
       return data;

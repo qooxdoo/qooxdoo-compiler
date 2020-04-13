@@ -52,8 +52,8 @@ qx.Class.define("qx.tool.cli.commands.Lint", {
             alias: "w",
             describe: "handle warnings as error"
           },
-          "config": {
-            alias : "c",
+          "print-config": {
+            alias : "p",
             describe: "print the eslint configuration"
           },
           "format": {
