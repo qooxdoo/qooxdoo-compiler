@@ -18,7 +18,7 @@
 
 require("@qooxdoo/framework");
 const fs = require("fs");
-const path = require("path");
+const path = require("upath");
 const chokidar = require("chokidar");
 
 require("../utils/Utils");
@@ -228,6 +228,7 @@ qx.Class.define("qx.tool.cli.Watch", {
       if (!this.__watcherReady) {
         return null;
       }
+      filename = path.normalize(filename);
 
       const handleFileChange = async () => {
         var outOfDate = false;
@@ -252,14 +253,17 @@ qx.Class.define("qx.tool.cli.Watch", {
         });
         
         let analyser = this.__maker.getAnalyser();
+        let fName = "";
         let isResource = analyser.getLibraries()
           .some(lib => {
             var dir = path.resolve(path.join(lib.getRootDir(), lib.getResourcePath()));
             if (filename.startsWith(dir)) {
+              fName = path.relative(dir, filename);
               return true;
             }
             dir = path.resolve(path.join(lib.getRootDir(), lib.getThemePath()));
             if (filename.startsWith(dir)) {
+              fName = path.relative(dir, filename);
               return true;
             }
             return false;
@@ -268,13 +272,14 @@ qx.Class.define("qx.tool.cli.Watch", {
         if (isResource) {
           let rm = analyser.getResourceManager();
           let target = this.__maker.getTarget();
-          let asset = rm.getAsset(filename, type != "unlink");
+          let asset = rm.getAsset(fName, type != "unlink");
           if (asset && type != "unlink") {
             await asset.sync(target);
             let dota = asset.getDependsOnThisAsset();
             if (dota) {
               await qx.Promise.all(dota.map(asset => asset.sync(target)));
             }
+            delete this.__debounceChanges[filename];
           }
         }
   
