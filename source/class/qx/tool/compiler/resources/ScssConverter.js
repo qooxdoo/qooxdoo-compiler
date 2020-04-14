@@ -20,7 +20,7 @@
  *
  * *********************************************************************** */
 
-var path = require("path");
+var path = require("upath");
 var sass = require("node-sass");
 const fs = qx.tool.utils.Promisify.fs;
 
@@ -46,7 +46,7 @@ qx.Class.define("qx.tool.compiler.resources.ScssConverter", {
       return filename;
     },
     
-    async convert(target, asset, srcFilename, destFilename, isThemeFile) {
+    convert(target, asset, srcFilename, destFilename, isThemeFile) {
       if (!qx.tool.compiler.resources.ScssConverter.isNewCompiler()) {
         return this.legacyMobileSassConvert(target, asset, srcFilename, destFilename);
       }
