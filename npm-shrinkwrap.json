@@ -7229,7 +7229,7 @@
       "dependencies": {
         "source-map": {
           "version": "0.4.4",
-          "resolved": "http://registry.npmjs.org/source-map/-/source-map-0.4.4.tgz",
+          "resolved": "https://registry.npmjs.org/source-map/-/source-map-0.4.4.tgz",
           "integrity": "sha1-66T12pwNyZneaAMti092FzZSA2s=",
           "requires": {
             "amdefine": ">=0.0.4"
@@ -7863,7 +7863,7 @@
     },
     "string_decoder": {
       "version": "1.1.1",
-      "resolved": "http://registry.npmjs.org/string_decoder/-/string_decoder-1.1.1.tgz",
+      "resolved": "https://registry.npmjs.org/string_decoder/-/string_decoder-1.1.1.tgz",
       "integrity": "sha512-n/ShnvDi6FHbbVfviro+WojiFzv+s8MPMHBczVePfUpDJLwoLT0ht1l4YwBCbi8pJAveEEdnkHyPyTP/mzRfwg==",
       "requires": {
         "safe-buffer": "~5.1.0"
@@ -7871,7 +7871,7 @@
     },
     "strip-ansi": {
       "version": "3.0.1",
-      "resolved": "http://registry.npmjs.org/strip-ansi/-/strip-ansi-3.0.1.tgz",
+      "resolved": "https://registry.npmjs.org/strip-ansi/-/strip-ansi-3.0.1.tgz",
       "integrity": "sha1-ajhfuIU9lS1f8F0Oiq+UJ43GPc8=",
       "requires": {
         "ansi-regex": "^2.0.0"
@@ -7895,7 +7895,7 @@
     },
     "strip-eof": {
       "version": "1.0.0",
-      "resolved": "http://registry.npmjs.org/strip-eof/-/strip-eof-1.0.0.tgz",
+      "resolved": "https://registry.npmjs.org/strip-eof/-/strip-eof-1.0.0.tgz",
       "integrity": "sha1-u0P/VZim6wXYm1n80SnJgzE2Br8="
     },
     "strip-indent": {
@@ -8108,7 +8108,7 @@
     },
     "through": {
       "version": "2.3.8",
-      "resolved": "http://registry.npmjs.org/through/-/through-2.3.8.tgz",
+      "resolved": "https://registry.npmjs.org/through/-/through-2.3.8.tgz",
       "integrity": "sha1-DdTJ/6q8NXlgsbckEV1+Doai4fU="
     },
     "through2": {
@@ -8538,7 +8538,7 @@
     },
     "utf8": {
       "version": "2.1.2",
-      "resolved": "http://registry.npmjs.org/utf8/-/utf8-2.1.2.tgz",
+      "resolved": "https://registry.npmjs.org/utf8/-/utf8-2.1.2.tgz",
       "integrity": "sha1-H6DZJw6b6FDZsFAn9jUZv0ZFfZY="
     },
     "util-deprecate": {
@@ -8655,7 +8655,7 @@
     },
     "wrap-ansi": {
       "version": "2.1.0",
-      "resolved": "http://registry.npmjs.org/wrap-ansi/-/wrap-ansi-2.1.0.tgz",
+      "resolved": "https://registry.npmjs.org/wrap-ansi/-/wrap-ansi-2.1.0.tgz",
       "integrity": "sha1-2Pw9KE3QV5T+hJc8rs3Rz4JP3YU=",
       "requires": {
         "string-width": "^1.0.1",
