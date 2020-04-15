@@ -48,18 +48,23 @@ nvm use 8 # or 10
 For more detailed information about installation and use of the compiler, refer
 to the [documentation](https://www.qooxdoo.org/docs/#/cli/commands). 
 
-Here's how you can do a quick test drive using `npx` which doesn't install anything
-permanent
+Here's how you can do a quick test drive:
 
 ```bash
-npx qx create myapp --noninteractive
+npm install -g @qooxdoo/compiler
+qx create myapp --noninteractive
 cd myapp
-npx qx package install qooxdoo/qxl.apiviewer
-npx qx package install qooxdoo/qxl.widgetbrowser
-npx qx serve
+qx package install qooxdoo/qxl.apiviewer
+qx package install qooxdoo/qxl.widgetbrowser
+qx serve -S
 ```
 Wait for the message `Web server started, please browse to http://localhost:8080`,
 then open that address in the browser. 
+
+The above test drive uses a global installation of qooxdoo and its compiler. For 
+development of more than one project, you may want an installation of qooxdoo local to the
+project. Local installation is described in the
+[Getting Started documentation](http://www.qooxdoo.org/6.0.0-beta/docs/#/?id=local-installation).
 
 ## Frequently Asked Questions
 
