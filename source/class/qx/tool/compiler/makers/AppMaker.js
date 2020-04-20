@@ -174,6 +174,7 @@ qx.Class.define("qx.tool.compiler.makers.AppMaker", {
           });
           return qx.tool.utils.Promisify.call(cb => analyser.analyseClasses(cb));
         })
+        .then(() => analyser.saveDatabase())
         .then(() => {
           var target = this.getTarget();
           this.fireEvent("writingApplications");

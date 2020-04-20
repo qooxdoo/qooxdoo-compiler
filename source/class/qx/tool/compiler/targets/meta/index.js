@@ -6,7 +6,7 @@
  *    https://github.com/qooxdoo/qooxdoo-compiler
  *
  *    Copyright:
- *      2011-2017 Zenesis Limited; http://www.zenesis.com
+ *      2011-2020 Zenesis Limited; http://www.zenesis.com
  *
  *    License:
  *      MIT: http://opensource.org/licenses/MIT.
@@ -16,9 +16,12 @@
  *
  * *********************************************************************** */
 
-require("./Target");
-require("./BuildTarget");
-require("./SourceCodeCopier");
-require("./SourceTarget");
-require("./TypeScriptWriter");
-require("./meta/index");
+require("./AbstractJavascriptMeta");
+require("./ApplicationMeta");
+require("./BootJs");
+require("./Javascript");
+require("./Package");
+require("./PackageJavascript");
+require("./Part");
+require("./PolyfillJs");
+require("./Uglify");

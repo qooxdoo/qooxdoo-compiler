@@ -70,10 +70,10 @@
   if (!qx.$$libraries) {
     qx.$$libraries = {};
   }
-  var libinfo = %{Libinfo};
-  for (var k in libinfo) { 
-    qx.$$libraries[k] = libinfo[k]; 
-  }
+  %{Libraries}.forEach(ns => qx.$$libraries[ns] = {
+      sourceUri: qx.$$appRoot + %{SourceUri},
+      resourceUri: qx.$$appRoot + %{ResourceUri}
+   });
 
   var isDebug = qx.$$environment["qx.debugLoader"];
   var log = isDebug ? console.log : function() { };

@@ -797,7 +797,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         if (targetConfig.defaultAppConfig) {
           targetConfig.defaultAppConfig.app.setWriteIndexHtmlToRoot(true);
         } else {
-          qx.tool.utils.files.Utils.safeUnlink(target.getOutputDir() + target.getScriptPrefix() + "index.html");
+          qx.tool.utils.files.Utils.safeUnlink(target.getOutputDir() + "index.html");
         }
         
         const showMarkers = (classname, markers) => {
