@@ -22,6 +22,7 @@ const Gauge = require("gauge");
 const semver = require("semver");
 const path = require("upath");
 const consoleControl = require("console-control-strings");
+const fs = qx.tool.utils.Promisify.fs;
 
 require("app-module-path").addPath(process.cwd() + "/node_modules");
 
@@ -225,6 +226,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
     __makers: null,
     __config: null,
     __libraries: null,
+    __outputDirWasCreated: false,
 
     /*
      * @Override
@@ -337,6 +339,18 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         if (success && (hasWarnings && this.argv.warnAsError)) {
           success = false;
         }
+        if (!this.argv.__deploying && !this.argv["machine-readable"] && this.argv["feedback"] && this.__outputDirWasCreated) {
+          qx.tool.compiler.Console.warn(
+              "   *******************************************************************************************\n" +
+              "   **                                                                                       **\n" +
+              "   **  Your compilation will include temporary files that are only necessary during         **\n" +
+              "   **  development; these files speed up the compilation, but take up space that you would  **\n" +
+              "   **  probably not want to put on a production server.                                     **\n" +
+              "   **                                                                                       **\n" +
+              "   **  When you are ready to deploy, try running `qx deploy` to get a minimised version     **\n" +
+              "   **                                                                                       **\n" +
+              "   *******************************************************************************************");
+        }
         process.exitCode = success ? 0 : 1;
       }
     },
@@ -368,6 +382,9 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         let cfg = await qx.tool.cli.ConfigDb.getInstance();
         analyser.setWritePoLineNumbers(cfg.db("qx.translation.strictPoCompatibility", false));
 
+        if (!(await fs.existsAsync(maker.getOutputDir()))) {
+          this.__outputDirWasCreated = true;
+        }
         if (this.argv["clean"]) {
           await maker.eraseOutputDir();
           await qx.tool.utils.files.Utils.safeUnlink(analyser.getDbFilename());

@@ -151,6 +151,7 @@ qx.Class.define("qx.tool.cli.Cli", {
           "Clean",
           "Compile",
           "Config",
+          "Deploy",
           "Package",
           "Pkg", // alias for Package
           "Contrib", // deprecated
