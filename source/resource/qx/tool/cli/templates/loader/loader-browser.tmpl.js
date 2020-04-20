@@ -115,16 +115,11 @@ qx.$$loader = {
     for (var i = 0; i < compressedUris.length; i++) {
       var uri = compressedUris[i].split(":");
       var euri;
-      if (uri.length == 2 && uri[0] in libs) {
-        var prefix = libs[uri[0]][pathName];
-        if (prefix.length && prefix[prefix.length - 1] != '/')
-          prefix += "/";
-        euri = prefix + uri[1];
-      } else if (uri.length > 2) {
+      if (uri.length > 2) {
         uri.shift();
         euri = uri.join(":");
       } else {
-        euri = compressedUris[i];
+        euri = qx.$$appRoot + compressedUris[i];
       }
       if (qx.$$loader.addNoCacheParam) {
         euri += "?nocache=" + Math.random();

@@ -583,7 +583,12 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
             let localePkg = this.isI18nAsParts() ? appMeta.getLocalePackage(localeId) : pkg;
             let id = dbClassInfo.libraryName + ":" + localeId;
             let translation = translations[id];
-            dbClassInfo.translations.forEach(transInfo => localePkg.addTranslationEntry(localeId, translation.getEntry(transInfo.msgid)));
+            dbClassInfo.translations.forEach(transInfo => {
+              let entry = translation.getEntry(transInfo.msgid);
+              if (entry) {
+                localePkg.addTranslationEntry(localeId, entry);
+              }
+            });
           });
         });
       });
