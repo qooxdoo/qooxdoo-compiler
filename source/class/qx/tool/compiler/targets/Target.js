@@ -90,6 +90,7 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
     
     /** Whether to break locale & translation data out into separate parts */
     i18nAsParts: {
+      init: false,
       nullable: false,
       check: "Boolean"
     },
