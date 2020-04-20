@@ -105,8 +105,9 @@ qx.Class.define("qx.tool.cli.commands.Deploy", {
         let target = maker.getTarget();
         
         await qx.tool.utils.Promisify.eachOfSeries(maker.getApplications(), async app => {
-          if (argv.appName && app.getName() != argv.appName)
+          if (argv.appName && app.getName() != argv.appName) {
             return;
+          }
           
           let deployDir = path.join(argv.out, app.getName());
           if (argv.clean) {
@@ -118,11 +119,13 @@ qx.Class.define("qx.tool.cli.commands.Deploy", {
           
           let files = await fs.readdirAsync(appRoot, { withFileTypes: true });
           await qx.tool.utils.Promisify.eachOf(files, async file => {
-            if (!file.isFile())
+            if (!file.isFile()) {
               return;
+            }
             let ext = path.extname(file.name);
-            if (ext == ".map" && !argv.sourceMaps)
+            if (ext == ".map" && !argv.sourceMaps) {
               return;
+            }
             let from = path.join(appRoot, file.name);
             let to = path.join(deployDir, file.name);
             if (ext == ".js" && !argv.sourceMaps) {
@@ -139,7 +142,7 @@ qx.Class.define("qx.tool.cli.commands.Deploy", {
         if (makerIndex == 0 && argv.clean) {
           await qx.tool.utils.files.Utils.deleteRecursive(to);
         }
-        await qx.tool.utils.files.Utils.sync(from, to)
+        await qx.tool.utils.files.Utils.sync(from, to);
       });
     }
   },

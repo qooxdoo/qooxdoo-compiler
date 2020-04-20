@@ -341,15 +341,15 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         }
         if (!this.argv.__deploying && !this.argv["machine-readable"] && this.argv["feedback"] && this.__outputDirWasCreated) {
           qx.tool.compiler.Console.warn(
-              "   *******************************************************************************************\n" +
-              "   **                                                                                       **\n" +
-              "   **  Your compilation will include temporary files that are only necessary during         **\n" +
-              "   **  development; these files speed up the compilation, but take up space that you would  **\n" +
-              "   **  probably not want to put on a production server.                                     **\n" +
-              "   **                                                                                       **\n" +
-              "   **  When you are ready to deploy, try running `qx deploy` to get a minimised version     **\n" +
-              "   **                                                                                       **\n" +
-              "   *******************************************************************************************");
+            "   *******************************************************************************************\n" +
+            "   **                                                                                       **\n" +
+            "   **  Your compilation will include temporary files that are only necessary during         **\n" +
+            "   **  development; these files speed up the compilation, but take up space that you would  **\n" +
+            "   **  probably not want to put on a production server.                                     **\n" +
+            "   **                                                                                       **\n" +
+            "   **  When you are ready to deploy, try running `qx deploy` to get a minimised version     **\n" +
+            "   **                                                                                       **\n" +
+            "   *******************************************************************************************");
         }
         process.exitCode = success ? 0 : 1;
       }
