@@ -585,8 +585,9 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
             let translation = translations[id];
             dbClassInfo.translations.forEach(transInfo => {
               let entry = translation.getEntry(transInfo.msgid);
-              if (entry)
+              if (entry) {
                 localePkg.addTranslationEntry(localeId, entry);
+              }
             });
           });
         });
