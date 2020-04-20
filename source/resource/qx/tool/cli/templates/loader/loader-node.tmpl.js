@@ -78,10 +78,10 @@
   if (!qx.$$libraries) {
     qx.$$libraries = {};
   }
-  var libinfo = %{Libinfo};
-  for (var k in libinfo) { 
-    qx.$$libraries[k] = libinfo[k]; 
-  }
+  %{Libraries}.forEach(ns => qx.$$libraries[ns] = {
+      sourceUri: qx.$$appRoot + %{SourceUri},
+      resourceUri: qx.$$appRoot + %{ResourceUri}
+   });
 
   var isDebug = qx.$$environment["qx.debugLoader"];
   var log = isDebug ? console.log : function() { };
@@ -126,15 +126,10 @@
         for (var i = 0; i < compressedUris.length; i++) {
           var uri = compressedUris[i].split(":");
           var euri;
-          if (uri.length == 2 && uri[0] in libs) {
-            if (uri[0] == "__out__")
-              euri = "./" + uri[1];
-            else
-              euri = pathName + "/" + uri[1];
-          } else if (uri[0] == "__external__") {
+          if (uri[0] == "__external__") {
             continue;
           } else {
-            euri = compressedUris[i];
+            euri = qx.$$appRoot + compressedUris[i];
           }
           %{DecodeUrisPlug}
           uris.push(qxloadPrefixUrl + euri);
@@ -144,10 +139,16 @@
 
       init : function() {
         var l = qx.$$loader;
+        var t = this;
 
         var bootPackageHash=l.parts[l.boot][0];
-        this.loadScriptList(l.decodeUris(l.packages[l.parts[l.boot][0]].uris));
-        l.importPackageData(qx.$$packageData[bootPackageHash] || {});
+        l.parts[l.boot].forEach(function(pkg) {
+          t.loadScriptList(l.decodeUris(l.packages[pkg].uris));
+        });
+
+        l.parts[l.boot].forEach(function(pkg) {
+          l.importPackageData(qx.$$packageData[pkg] || {});
+        });
         qx.$$domReady = true;
         l.signalStartup();
       },
