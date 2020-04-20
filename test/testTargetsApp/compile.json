@@ -15,8 +15,9 @@
 	],
 	"defaultTarget": "source",
 	"locales": [
-		"en"
+		"en", "nl"
 	],
+	"i18nAsParts": true,
 	"environment": {
 		"qx.icontheme": "Tango"
 	},

@@ -303,6 +303,10 @@
         "//pattern": "^\\S+$"
       }
     },
+    "i18nAsParts": {
+      "description": "Whether to store locales and translations as individual parts, which are manually loaded on demand by the application",
+      "type": "boolean"
+    },
     "writeAllTranslations": {
       "description": "By default, only translation strings which are used by the classes are included into the application.",
       "type": "boolean"

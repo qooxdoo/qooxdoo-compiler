@@ -62,7 +62,6 @@ qx.Class.define("qx.tool.compiler.Analyser", {
     this.__libraries = [];
     this.__librariesByNamespace = {};
     this.__initialClassesToScan = new qx.tool.utils.IndexedArray();
-    this.__locales = ["en"];
     this.__cldrs = {};
     this.__translations = {};
     this.__classFiles = {};
@@ -179,7 +178,6 @@ qx.Class.define("qx.tool.compiler.Analyser", {
 
     __classes: null,
     __initialClassesToScan: null,
-    __locales: null,
     __cldrs: null,
     __translations: null,
 
@@ -1117,24 +1115,6 @@ qx.Class.define("qx.tool.compiler.Analyser", {
      */
     removeClass: function(classname) {
       this.__initialClassesToScan.remove(classname);
-    },
-
-    /**
-     * Adds a required Locale
-     *
-     * @param locale
-     */
-    addLocale: function(locale) {
-      if (this.__locales.indexOf(locale) < 0) {
-        this.__locales.push(locale);
-      }
-    },
-
-    /**
-     * Returns the list of locale IDs
-     */
-    getLocales: function() {
-      return this.__locales;
     },
 
     /**

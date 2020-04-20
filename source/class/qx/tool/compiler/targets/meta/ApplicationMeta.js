@@ -24,6 +24,7 @@ qx.Class.define("qx.tool.compiler.targets.meta.ApplicationMeta", {
     this.__resources = {};
     this.__packages = [];
     this.__parts = [];
+    this.__partsLookup = {};
   },
   
   properties: {
@@ -139,26 +140,80 @@ qx.Class.define("qx.tool.compiler.targets.meta.ApplicationMeta", {
       return this.__preBootCode.join("\n");
     },
     
-    addPart(part) {
+    /**
+     * Creates a new Part and adds it
+     * 
+     * @param name {String} identifier
+     * @return {Part}
+     */
+    createPart(name) {
+      let part = new qx.tool.compiler.targets.meta.Part(this.getTarget(), name, this.__parts.length);
       this.__parts.push(part);
+      this.__partsLookup[name] = part;
+      return part;
     },
     
+    /**
+     * Returns a list of all parts
+     * 
+     * @return {Part[]}
+     */
     getParts() {
       return this.__parts;
     },
     
-    setParts(parts) {
-      this.__parts = parts;
+    /**
+     * Returns a part with a given name
+     * 
+     * @param name {String} the name to look for
+     */
+    getPart(name) {
+      return this.__partsLookup[name]||null;
     },
     
-    addPackage(pkg) {
-      this.__packages.push(pkg);
-    },
-    
+    /**
+     * Returns a list of all packages
+     * 
+     * @return {Package[]}
+     */
     getPackages() {
       return Object.values(this.__packages);
     },
     
+    /**
+     * Creates a package and adds it
+     * 
+     * @return {Package}
+     */
+    createPackage() {
+      let pkg = new qx.tool.compiler.targets.meta.Package(this, this.__packages.length);
+      this.__packages.push(pkg);
+      return pkg;
+    },
+    
+    /**
+     * Gets a package for specific locale, creating a part with the name set to the localeId
+     * if there isn't one already.  Used for when i18nAsParts == true
+     * 
+     * @param localeId {String} the locale to look for
+     * @return {Package}
+     */
+    getLocalePackage(localeId) {
+      let part = this.getPart(localeId);
+      if (!part) {
+        part = this.createPart(localeId);
+        part.addPackage(this.createPackage());
+      }
+      let pkg = part.getDefaultPackage();
+      return pkg;
+    },
+    
+    /**
+     * Adds a resource
+     * 
+     * @param key {String} the resource identifier
+     * @param path {String} the path to the resource
+     */
     addResource(key, path) {
       this.__resources[key] = path;
     }

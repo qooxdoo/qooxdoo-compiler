@@ -45,7 +45,6 @@ qx.Class.define("qx.tool.compiler.targets.meta.BootJs", {
       let appMeta = this._appMeta;
       let application = appMeta.getApplication();
       let target = appMeta.getTarget();
-      var analyser = target.getAnalyser();
       var appRootDir = appMeta.getApplicationRoot();
       
       var MAP = {
@@ -76,7 +75,7 @@ qx.Class.define("qx.tool.compiler.targets.meta.BootJs", {
         MAP.TranspiledPath = path.relative(appRootDir, path.join(target.getOutputDir(), "transpiled"));
       }
 
-      analyser.getLocales().forEach(localeId => {
+      appMeta.getTarget().getLocales().forEach(localeId => {
         MAP.Translations[localeId] = null;
         MAP.Locales[localeId] = null;
       });

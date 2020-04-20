@@ -657,6 +657,9 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         if (targetConfig.writeCompileInfo) {
           target.setWriteCompileInfo(true);
         }
+        if (data.i18nAsParts) {
+          target.setI18nAsParts(true);
+        }
         target.setWriteLibraryInfo(this.argv.writeLibraryInfo);
         target.setUpdatePoFiles(this.argv.updatePoFiles);
 

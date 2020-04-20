@@ -87,6 +87,12 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
       init: [ "en" ],
       transform: "_transformLocales"
     },
+    
+    /** Whether to break locale & translation data out into separate parts */
+    i18nAsParts: {
+      nullable: false,
+      check: "Boolean"
+    },
 
     /** Whether to write all translation strings (as opposed to just those used by the classes) */
     writeAllTranslations: {
@@ -331,8 +337,7 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
        * Boot files
        */
       let bootJs = new qx.tool.compiler.targets.meta.BootJs(appMeta);
-      let bootPackage = new qx.tool.compiler.targets.meta.Package(appMeta, 0);
-      appMeta.addPackage(bootPackage);
+      let bootPackage = appMeta.createPackage();
       appMeta.setBootMetaJs(bootJs);
       bootPackage.addJavascriptMeta(new qx.tool.compiler.targets.meta.PolyfillJs(appMeta));
       
@@ -343,14 +348,12 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
       var partsData = application.getPartsDependencies();
       let matchBundle = qx.tool.compiler.app.Application.createWildcardMatchFunction(application.getBundleInclude(), application.getBundleExclude());
 
-      let packageIndex = 1;
       let lastPackage = bootPackage;
       let packages = {
         boot: bootPackage
       };
       partsData.forEach((partData, index) => {
-        let partMeta = new qx.tool.compiler.targets.meta.Part(this, partData.name, index);
-        appMeta.addPart(partMeta);
+        let partMeta = appMeta.createPart(partData.name);
         if (index == 0) {
           partMeta.addPackage(bootPackage);
         }
@@ -369,11 +372,10 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
           let pkg = packages[packageName];
           
           if (!pkg || pkg !== lastPackage) {
-            pkg = packages[packageName] = new qx.tool.compiler.targets.meta.Package(appMeta, packageIndex++);
+            pkg = packages[packageName] = appMeta.createPackage();
             if (packageName == "__bundle") {
               pkg.setEmbedAllJavascript(true);
             }
-            appMeta.addPackage(pkg);
             partMeta.addPackage(pkg);
           }
           
@@ -384,7 +386,8 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
       });
       
       var promises = [
-        analyser.getCldr("en").then(cldr => bootPackage.addLocale("C", cldr)),
+        analyser.getCldr("en")
+          .then(cldr => bootPackage.addLocale("C", cldr)),
         t._writeTranslations(appMeta)
       ];
 
@@ -509,7 +512,8 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
 
       var promises = t.getLocales().map(async localeId => { 
         let cldr = await loadLocaleData(localeId);
-        bootPackage.addLocale(localeId, cldr); 
+        let pkg = this.isI18nAsParts() ? appMeta.getLocalePackage(localeId) : bootPackage;
+        pkg.addLocale(localeId, cldr); 
       });
 
       await qx.Promise.all(promises);
@@ -527,9 +531,10 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
 
       var promises = t.getLocales().map(async localeId => {
         let translation = await analyser.getTranslation(appMeta.getAppLibrary(), localeId);
+        let pkg = this.isI18nAsParts() ? appMeta.getLocalePackage(localeId) : bootPackage;
         var entries = translation.getEntries();
         for (var msgid in entries) {
-          bootPackage.addTranslationEntry(localeId, entries[msgid]);
+          pkg.addTranslationEntry(localeId, entries[msgid]);
         }
       });
       await qx.Promise.all(promises);
@@ -548,7 +553,8 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
 
       var translations = {};
       var promises = [];
-      t.getLocales().forEach(function(localeId) {
+      t.getLocales().forEach(localeId => {
+        let pkg = this.isI18nAsParts() ? appMeta.getLocalePackage(localeId) : bootPackage;
         appMeta.getLibraries().forEach(function(library) {
           promises.push(
             analyser.getTranslation(library, localeId)
@@ -557,7 +563,7 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
                 translations[id] = translation;
                 let entry = translation.getEntry("");
                 if (entry) {
-                  bootPackage.addTranslationEntry(localeId, entry);
+                  pkg.addTranslationEntry(localeId, entry);
                 }
               })
           );
@@ -573,9 +579,10 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
           }
 
           t.getLocales().forEach(localeId => {
-            var id = dbClassInfo.libraryName + ":" + localeId;
-            var translation = translations[id];
-            dbClassInfo.translations.forEach(transInfo => pkg.addTranslationEntry(localeId, translation.getEntry(transInfo.msgid)));
+            let localePkg = this.isI18nAsParts() ? appMeta.getLocalePackage(localeId) : pkg;
+            let id = dbClassInfo.libraryName + ":" + localeId;
+            let translation = translations[id];
+            dbClassInfo.translations.forEach(transInfo => localePkg.addTranslationEntry(localeId, translation.getEntry(transInfo.msgid)));
           });
         });
       });
@@ -618,7 +625,7 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
         libraries: appMeta.getLibraries().map(lib => lib.getNamespace()),
         parts: [],
         resources: bootPackage.getAssets().map(asset => asset.getFilename()),
-        locales: appMeta.getAnalyser().getLocales(),
+        locales: this.getLocales(),
         environment: appMeta.getEnvironment(),
         urisBefore: appMeta.getPreloads().urisBefore,
         cssBefore: appMeta.getPreloads().cssBefore

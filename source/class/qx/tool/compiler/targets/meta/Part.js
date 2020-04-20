@@ -39,6 +39,10 @@ qx.Class.define("qx.tool.compiler.targets.meta.Part", {
     hasPackage(pkg) {
       return Boolean(this.__packageLookup[pkg.toHashCode()]);
     },
+    
+    getDefaultPackage() {
+      return this.__packages[0]||null;
+    },
 
     serializeInto(parts) {
       let arr = parts[this.__name] = [];

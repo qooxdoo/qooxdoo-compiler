@@ -35,6 +35,15 @@ qx.Class.define("testTargetsApp.Application", {
         }, this);
       }, this);
 
+      // Nothing until the locale has been loaded as a part
+      qx.core.Assert.assertTrue(this.tr("translatedString") == "translatedString");
+      qx.io.PartLoader.require("en", () => {
+        qx.core.Assert.assertTrue(this.tr("translatedString") == "en: translatedString");
+        qx.core.Assert.assertTrue(this.tr("Call \"me\"") == "en: Call \"me\"");
+        qx.core.Assert.assertTrue(this.tr("This has\nsome\nnewlines") == "en: This has\nsome\nnewlines");
+      });
+      
+
       button1.addListener("execute", function() {
         /* eslint no-alert: "off" */
         alert("Hello World!");

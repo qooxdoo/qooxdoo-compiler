@@ -38,22 +38,25 @@ qx.Class.define("qx.tool.cli.commands.Deploy", {
         builder: {
           "out": {
             describe: "Output directory for the deployment",
-            demandOption: true
+            demandOption: true,
+            alias: "o"
           },
           "app-name": {
-            describe: "The name of the application to deploy (default is all apps)",
+            describe: "The name of the application to deploy (default is all apps), can be comma separated list",
             nargs: 1,
             type: "string"
           },
           "source-maps": {
             describe: "Enable source maps",
             type: "boolean",
-            default: null
+            default: null,
+            alias: "m"
           },
           "clean": {
             describe: "Deletes the application output directory before deploying",
             type: "boolean",
-            default: false
+            default: false,
+            alias: "D"
           }
         }
       };
@@ -92,8 +95,11 @@ qx.Class.define("qx.tool.cli.commands.Deploy", {
         minify: "mangle",
         __deploying: true
       };
+      let appNames = null;
       if (argv.appName) {
         compileArgv.appName = argv.appName;
+        appNames = {};
+        argv.appName.split(",").forEach(appName => appNames[appName] = true);
       }
       if (argv.clean) {
         compileArgv.clean = true;
@@ -105,7 +111,7 @@ qx.Class.define("qx.tool.cli.commands.Deploy", {
         let target = maker.getTarget();
         
         await qx.tool.utils.Promisify.eachOfSeries(maker.getApplications(), async app => {
-          if (argv.appName && app.getName() != argv.appName) {
+          if (appNames && !appNames[app.getName()]) {
             return;
           }
           
