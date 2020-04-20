@@ -110,7 +110,23 @@ qx.Class.define("qx.tool.utils.Utils", {
       const mkpath = promisify(util.mkpath);
       await mkpath(filename);
     },
-
+    
+    /**
+     * Writable stream that keeps track of what the current line number is
+     */
+    LineCountingTransform: null,
+    
+    /**
+     * Writable stream that strips out sourceMappingURL comments
+     */
+    StripSourceMapTransform: null,
+    
+    /**
+     * Writable stream that keeps track of what's been written and can return
+     * a copy as a string
+     */
+    ToStringWriteStream: null,
+    
     /*  Function to test if an object is a plain object, i.e. is constructed
     **  by the built-in Object constructor and inherits directly from Object.prototype
     **  or null. Some built-in objects pass the test, e.g. Math which is a plain object
@@ -138,6 +154,84 @@ qx.Class.define("qx.tool.utils.Utils", {
       // Not an object
       return false;
     }
-
+  },
+  
+  defer(statics) {
+    const { Writable, Transform } = require("stream");
+    
+    class LineCountingTransform extends Transform {
+      constructor(options) {
+        super(options);
+        this.__lineNumber = 1;
+      }
+      
+      _write(chunk, encoding, callback) {
+        let str = chunk.toString();
+        for (let i = 0; i < str.length; i++) {
+          if (str[i] == "\n") {
+            this.__lineNumber++;
+          }
+        }
+        this.push(str);
+        callback();
+      }
+      
+      getLineNumber() {
+        return this.__lineNumber;
+      }
+    }
+    statics.LineCountingTransform = LineCountingTransform;
+    
+    class StripSourceMapTransform extends Transform {
+      constructor(options) {
+        super(options);
+        this.__lastLine = "";
+      }
+      
+      _transform(chunk, encoding, callback) {
+        let str = this.__lastLine + chunk.toString();
+        let pos = str.lastIndexOf("\n");
+        if (pos > -1) {
+          this.__lastLine = str.substring(pos);
+          str = str.substring(0, pos);
+        } else {
+          this.__lastLine = str;
+          str = "";
+        }
+        str = str.replace(/\n\/\/\#\s*sourceMappingURL=.*$/m, "");
+        this.push(str);
+        callback();
+      }
+      
+      _flush() {
+        let str = this.__lastLine;
+        this.__lastLine = null;
+        str = str.replace(/\n\/\/\#\s*sourceMappingURL=.*$/m, "");
+        this.push(str);
+      }
+    }
+    statics.StripSourceMapTransform = StripSourceMapTransform;
+    
+    class ToStringWriteStream extends Writable {
+      constructor(dest, options) {
+        super(options);
+        this.__dest = dest;
+        this.__value = "";
+      }
+      
+      _write(chunk, encoding, callback) {
+        this.__value += chunk.toString();
+        if (this.__dest) {
+          this.__dest.write(chunk, encoding, callback);
+        } else if (callback) {
+          callback();
+        }
+      }
+      
+      toString() {
+        return this.__value;
+      }
+    }
+    statics.ToStringWriteStream = ToStringWriteStream;
   }
 });

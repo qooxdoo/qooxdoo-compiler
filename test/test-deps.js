@@ -102,11 +102,11 @@ test("Checks dependencies and environment settings", assert => {
   }
 
   function hasClassDependency(compileInfo, classname) {
-    return compileInfo.Parts.some(part => part.classes.indexOf(classname) > -1);
+    return compileInfo.parts.some(part => part.classes.indexOf(classname) > -1);
   }
 
   function hasPackageDependency(compileInfo, packageName) {
-    return compileInfo.Parts.some(part => part.classes.some(classname => classname.indexOf(packageName) == 0));
+    return compileInfo.parts.some(part => part.classes.some(classname => classname.indexOf(packageName) == 0));
   }
 
   var maker;
