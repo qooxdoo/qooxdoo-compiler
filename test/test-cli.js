@@ -81,9 +81,9 @@ test("testLegalSCSS", async assert => {
     let pos1 = bootJS.indexOf("cssBefore");
     let pos2 = bootJS.indexOf("]", pos1 + 1);
     let test = bootJS.substring(pos1, pos2 + 1);
-    assert.ok(test.indexOf("testLegalSCSS:testLegalSCSS/css/test_css.css") > 0);
-    assert.ok(test.indexOf("testLegalSCSS:testLegalSCSS/css/test_scss.css") > 0);
-    assert.ok(test.indexOf("testLegalSCSS:testLegalSCSS/css/test_theme_scss.css") > 0);
+    assert.ok(test.indexOf("testLegalSCSS/css/test_css.css") > 0);
+    assert.ok(test.indexOf("testLegalSCSS/css/test_scss.css") > 0);
+    assert.ok(test.indexOf("testLegalSCSS/css/test_theme_scss.css") > 0);
     assert.end();
   }catch(ex) {
     assert.end(ex);
