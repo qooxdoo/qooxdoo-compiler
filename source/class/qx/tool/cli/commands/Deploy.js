@@ -20,9 +20,6 @@ require("./Compile");
 require("@qooxdoo/framework");
 const fs = require("fs");
 const path = require("upath");
-const stream = require("stream");
-const util = require("util");
-const pipeline = util.promisify(stream.pipeline);
 
 /**
  * Build and deploy a project
@@ -123,21 +120,29 @@ qx.Class.define("qx.tool.cli.commands.Deploy", {
           await qx.tool.utils.Utils.makeDirs(deployDir);
           let appRoot = target.getApplicationRoot(app);
           
-          let files = await fs.readdirAsync(appRoot, { withFileTypes: true });
+          let files = await fs.readdirAsync(appRoot);
           await qx.tool.utils.Promisify.eachOf(files, async file => {
-            if (!file.isFile()) {
+            let stat = await fs.statAsync(path.join(appRoot, file));
+            if (!stat.isFile()) {
               return;
             }
-            let ext = path.extname(file.name);
+            let ext = path.extname(file);
             if (ext == ".map" && !argv.sourceMaps) {
               return;
             }
-            let from = path.join(appRoot, file.name);
-            let to = path.join(deployDir, file.name);
+            let from = path.join(appRoot, file);
+            let to = path.join(deployDir, file);
             if (ext == ".js" && !argv.sourceMaps) {
-              let rs = fs.createReadStream(from, "utf8");
-              let ws = fs.createWriteStream(to, "utf8");
-              await pipeline(rs, new qx.tool.utils.Utils.StripSourceMapTransform(), ws);
+              let rs = fs.createReadStream(from, { encoding: "utf8", emitClose: true });
+              let ws = fs.createWriteStream(to, { encoding: "utf8", emitClose: true });
+              let ss = new qx.tool.utils.Utils.StripSourceMapTransform();
+              await new qx.Promise((resolve, reject) => {
+                rs.on("error", reject);
+                ws.on("error", reject);
+                ws.on("finish", resolve);
+                rs.pipe(ss);
+                ss.pipe(ws);
+              });
             } else {
               await qx.tool.utils.files.Utils.copyFile(from, to);
             }

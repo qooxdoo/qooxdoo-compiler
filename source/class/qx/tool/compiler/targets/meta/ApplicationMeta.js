@@ -124,8 +124,8 @@ qx.Class.define("qx.tool.compiler.targets.meta.ApplicationMeta", {
       this.__preload[type].push("__external__:" + uri);
     },
     
-    addPreload(type, library, filename) {
-      this.__preload[type].push(library.getNamespace() + ":" + filename);
+    addPreload(type, filename) {
+      this.__preload[type].push(filename);
     },
     
     getPreloads() {

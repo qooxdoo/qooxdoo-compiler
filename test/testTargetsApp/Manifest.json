@@ -16,6 +16,12 @@
     "resource": "source/resource",
     "translation": "source/translation"
   },
+  "externalResources": {
+    "script": [ 
+      "https://localhost:2000/IDSCloudApp/IDSCloudApp:ext-js/socketcluster/socketcluster-client.min.js",
+      "testTargetsApp/myExternal.js" 
+    ]
+  },
   "requires": {
     "@qooxdoo/framework": "^6.0.0-beta",
     "@qooxdoo/compiler": "^1.0.0-beta",

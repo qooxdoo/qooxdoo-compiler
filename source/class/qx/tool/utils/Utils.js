@@ -203,11 +203,12 @@ qx.Class.define("qx.tool.utils.Utils", {
         callback();
       }
       
-      _flush() {
+      _flush(callback) {
         let str = this.__lastLine;
         this.__lastLine = null;
         str = str.replace(/\n\/\/\#\s*sourceMappingURL=.*$/m, "");
         this.push(str);
+        callback();
       }
     }
     statics.StripSourceMapTransform = StripSourceMapTransform;
