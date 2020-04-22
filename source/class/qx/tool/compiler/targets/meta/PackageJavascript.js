@@ -61,14 +61,13 @@ qx.Class.define("qx.tool.compiler.targets.meta.PackageJavascript", {
         let strip = new qx.tool.utils.Utils.StripSourceMapTransform();
         strip.pipe(ws);
         await new Promise(async resolve => {
-          strip.on("finish", resolve);
           for (let i = 0; i < pkg.getJavascriptMetas().length; i++) {
             let js = pkg.getJavascriptMetas()[i];
             this.__sourceMapOffsets.push(ws.getLineNumber());
             await js.unwrap().writeSourceCodeToStream(strip);
             strip.write("\n");
           }
-          strip.end();
+          resolve();
         });
         ws.write(`//# sourceMappingURL=${path.basename(this.getFilename())}.map?dt=${new Date().getTime()}\n`);
       }
