@@ -306,8 +306,8 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
               let asset = rm.getAsset(filename);
               if (asset) {
                 let str = asset.getDestFilename(t);
-                str = path.relative(path.join(t.getOutputDir(), "resource"), str);
-                appMeta.addPreload(type, asset.getLibrary(), str);
+                str = path.relative(appRootDir, str);
+                appMeta.addPreload(type, str);
               }
             }
           });
