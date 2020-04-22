@@ -10,7 +10,8 @@
 		},
 		{
 			"type": "build",
-			"outputPath": "compiled/build"
+			"outputPath": "compiled/build",
+            "minify": "off"
 		}
 	],
 	"defaultTarget": "source",
