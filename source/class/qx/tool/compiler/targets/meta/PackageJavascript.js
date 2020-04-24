@@ -1,4 +1,4 @@
-const path = require("path");
+const path = require("upath");
 
 /**
  * A PackageJavascript is the serialisation of the javascript required to produce a package;
