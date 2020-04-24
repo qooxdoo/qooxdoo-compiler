@@ -148,12 +148,21 @@ qx.Class.define("qx.tool.cli.commands.Deploy", {
             }
           });
         });
-        let from = path.join(target.getOutputDir(), "resource");
-        let to = path.join(argv.out, "resource");
-        if (makerIndex == 0 && argv.clean) {
-          await qx.tool.utils.files.Utils.deleteRecursive(to);
+        {
+          let from = path.join(target.getOutputDir(), "resource");
+          let to = path.join(argv.out, "resource");
+          if (makerIndex == 0 && argv.clean) {
+            await qx.tool.utils.files.Utils.deleteRecursive(to);
+          }
+          await qx.tool.utils.files.Utils.sync(from, to);
         }
-        await qx.tool.utils.files.Utils.sync(from, to);
+        {
+          let from = path.join(target.getOutputDir(), "index.html");
+          let to = path.join(argv.out, "index.html");
+          if (fs.existsSync(from)) {
+            fs.copyFileSync(from, to);
+          }
+        }
       });
     }
   },

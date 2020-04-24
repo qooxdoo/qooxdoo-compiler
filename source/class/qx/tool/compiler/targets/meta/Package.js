@@ -1,4 +1,4 @@
-const path = require("path");
+const path = require("upath");
 
 /**
  * A Package is a collection of files and resources, used by either the boot process
