@@ -47,7 +47,7 @@ qx.Class.define("qx.tool.compiler.jsdoc.Parser", {
       // special handling for code section
       comment = comment.replace(/@([^@}\n\r]*)@/g, "<code>$1</code>");
       // Strip optional leading * 
-      comment = comment.replace(/^\s*\*/mg, "");
+      comment = comment.replace(/^[ \t]*\*/mg, "");
       // special handling for as markdown lists - * in qooxdoo
       comment = comment.replace(/^\s*\*/mg, "*");
       comment = comment.replace(/^\s*\*\*\*\*/mg, "\t\t\t*");
