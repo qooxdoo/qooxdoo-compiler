@@ -6,7 +6,6 @@
   "type": "object",
   "required": [
     "provides",
-    "requires",
     "$schema"
   ],
   "additionalProperties": false,
