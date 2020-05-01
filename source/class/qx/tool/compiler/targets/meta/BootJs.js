@@ -9,7 +9,7 @@ qx.Class.define("qx.tool.compiler.targets.meta.BootJs", {
   extend: qx.tool.compiler.targets.meta.AbstractJavascriptMeta,
   
   construct(appMeta) {
-    this.base(arguments, appMeta, `${appMeta.getApplicationRoot()}/boot.js`);
+    this.base(arguments, appMeta, `${appMeta.getApplicationRoot()}boot.js`);
     this.__embeddedJs = [];
     this.__embeddedJsLookup = {};
   },
