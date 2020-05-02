@@ -339,7 +339,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
           let myPlugins = t._babelClassPlugins();
           var config = {
             babelrc: false,
-            sourceFileName : pathModule.relative("",t.getSourcePath()),
+            sourceFileName : t.getSourcePath(),
             filename: t.getSourcePath(),
             sourceMaps: true,
             "presets": [
