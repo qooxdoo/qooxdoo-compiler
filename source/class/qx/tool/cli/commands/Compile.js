@@ -97,9 +97,14 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
       },
       "minify": {
         alias: "m",
-        describe: "disables minification (for build targets only)",
+        describe: "disables minification (build targets only)",
         choices: [ "off", "minify", "mangle", "beautify" ],
         default: "mangle"
+      },
+      "save-source-in-map": {
+        describe: "Saves the source code in the map file (build target only)",
+        type: "boolean",
+        default: false
       },
       "save-unminified": {
         alias: "u",
@@ -678,6 +683,13 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         if (typeof target.setMinify == "function") {
           target.setMinify(minify);
         }
+
+        // Take the command line for `saveSourceInMap` as most precedent only if provided
+        var saveSourceInMap = targetConfig["saveSourceInMap"] || t.argv["saveSourceInMap"];
+        if ((typeof saveSourceInMap == "boolean" && (typeof target.setSaveSourceInMap == "function")) {
+          target.setSaveSourceInMap(saveSourceInMap);
+        }
+
         var saveUnminified = targetConfig["save-unminified"] || t.argv["save-unminified"];
         if (typeof saveUnminified == "boolean" && typeof target.setSaveUnminified == "function") {
           target.setSaveUnminified(saveUnminified);

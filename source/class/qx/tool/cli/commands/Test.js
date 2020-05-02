@@ -61,7 +61,11 @@ qx.Class.define("qx.tool.cli.commands.Test", {
       return {
         command   : "test [configFile]",
         describe  : "run test for current project",
-        builder   : Object.assign(qx.tool.cli.commands.Compile.YARGS_BUILDER, qx.tool.cli.commands.Serve.YARGS_BUILDER, qx.tool.cli.commands.Test.YARGS_BUILDER),
+        builder   : Object.assign(
+          qx.tool.cli.commands.Compile.YARGS_BUILDER, 
+          qx.tool.cli.commands.Serve.YARGS_BUILDER, 
+          qx.tool.cli.commands.Test.YARGS_BUILDER
+        ),
         handler: function(argv) {
           // check for special test compiler config
           if (!argv.configFile && fs.existsSync(path.join(process.cwd(), qx.tool.cli.commands.Test.CONFIG_FILENAME))) {
