@@ -12,7 +12,7 @@ qx.Class.define("qx.tool.compiler.targets.meta.PackageJavascript", {
    * Constructor
    */
   construct(appMeta, pkg) {
-    this.base(arguments, appMeta, `${appMeta.getApplicationRoot()}/package-${pkg.getPackageIndex()}.js`);
+    this.base(arguments, appMeta, `${appMeta.getApplicationRoot()}package-${pkg.getPackageIndex()}.js`);
     this.__pkg = pkg;
   },
   
