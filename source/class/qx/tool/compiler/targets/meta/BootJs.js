@@ -9,7 +9,7 @@ qx.Class.define("qx.tool.compiler.targets.meta.BootJs", {
   extend: qx.tool.compiler.targets.meta.AbstractJavascriptMeta,
   
   construct(appMeta) {
-    this.base(arguments, appMeta, `${appMeta.getApplicationRoot()}/boot.js`);
+    this.base(arguments, appMeta, `${appMeta.getApplicationRoot()}boot.js`);
     this.__embeddedJs = [];
     this.__embeddedJsLookup = {};
   },
@@ -121,7 +121,14 @@ qx.Class.define("qx.tool.compiler.targets.meta.BootJs", {
       if (this.__sourceMapOffsets === null) {
         throw new Error(`Cannot get the source map for ${this} until the stream has been written`); 
       }
-      return this._copySourceMap(this.__embeddedJs, this.__sourceMapOffsets);
+      let res = await this._copySourceMap(this.__embeddedJs, this.__sourceMapOffsets);
+      let target = this._appMeta.getTarget();
+      for (let i = 0; i < res.sources.length; i++) {
+        res.sources[i] = path.relative("", res.sources[i]);
+        let mapTo = target.getPathMapping(res.sources[i]);
+        res.sources[i] = mapTo ? mapTo : res.sources[i];
+      }
+      return res;
     }
   }
 });

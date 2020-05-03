@@ -29,7 +29,7 @@ var util = require("./util");
 var types = require("@babel/types");
 var babylon = require("@babel/parser");
 var async = require("async");
-var pathModule = require("path");
+var pathModule = require("upath");
 require("./jsdoc/Parser");
 
 var log = util.createLog("analyser");
