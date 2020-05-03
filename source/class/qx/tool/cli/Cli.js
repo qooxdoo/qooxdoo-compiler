@@ -67,21 +67,12 @@ qx.Class.define("qx.tool.cli.Cli", {
      * @return {yargs}
      */
     __createYargs() {
-      var title = "qooxdoo command line interface";
-      title = "\n" + title + "\n" + "=".repeat(title.length) + "\n";
-      title += `Versions: @qooxdoo/compiler v${qx.tool.compiler.Version.VERSION}\n\n`;
-      title +=
-      `Typical usage:
-        qx <commands> [options]
-        
-      Type qx <command> --help for options and subcommands.`;
-      
       return this.yargs = require("yargs")
         .locale("en")
-        .usage(title)
         .version()
+        .strict(false)
         .showHelpOnFail()
-        .help()
+        .help(false)
         .option("force", {
           describe: "Override warnings",
           type: "boolean",
@@ -110,7 +101,16 @@ qx.Class.define("qx.tool.cli.Cli", {
      * processing
      */
     __bootstrapArgv() {
-      let yargs = this.__createYargs();
+      var title = "qooxdoo command line interface";
+      title = "\n" + title + "\n" + "=".repeat(title.length) + "\n";
+      title += `Versions: @qooxdoo/compiler v${qx.tool.compiler.Version.VERSION}\n\n`;
+      title +=
+      `Typical usage:
+        qx <commands> [options]
+        
+      Type qx <command> --help for options and subcommands.`;
+      let yargs = this.__createYargs()
+        .usage(title);
       this.argv = yargs.argv;
     },
     
@@ -119,6 +119,7 @@ qx.Class.define("qx.tool.cli.Cli", {
      */
     async __fullArgv() {
       let yargs = this.__createYargs()
+        .help(true)
         .option("set", {
           describe: "sets an environment value for the compiler",
           nargs: 1,
