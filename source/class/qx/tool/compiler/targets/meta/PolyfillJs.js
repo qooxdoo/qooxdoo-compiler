@@ -8,7 +8,7 @@ qx.Class.define("qx.tool.compiler.targets.meta.PolyfillJs", {
   extend: qx.tool.compiler.targets.meta.AbstractJavascriptMeta,
   
   construct(appMeta) {
-    this.base(arguments, appMeta, `${appMeta.getApplicationRoot()}/polyfill.js`);
+    this.base(arguments, appMeta, `${appMeta.getApplicationRoot()}polyfill.js`);
   },
   
   properties: {
