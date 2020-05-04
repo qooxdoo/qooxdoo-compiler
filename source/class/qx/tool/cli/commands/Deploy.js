@@ -20,6 +20,7 @@ require("./Compile");
 require("@qooxdoo/framework");
 const fs = require("fs");
 const path = require("upath");
+const util = require("../../compiler/util");
 
 /**
  * Build and deploy a project
@@ -35,7 +36,6 @@ qx.Class.define("qx.tool.cli.commands.Deploy", {
         builder: {
           "out": {
             describe: "Output directory for the deployment",
-            demandOption: true,
             alias: "o"
           },
           "app-name": {
@@ -124,8 +124,14 @@ qx.Class.define("qx.tool.cli.commands.Deploy", {
           if (appNames && !appNames[app.getName()]) {
             return;
           }
-          
-          let deployDir = path.join(argv.out, app.getName());
+          let deployDir = argv.out || target.getDeployDir();
+          if (!deployDir) {
+            qx.tool.compiler.Console.print("qx.tool.cli.deploy.deployDirNotSpecified");
+            return;
+          }
+
+          let sourceMaps = argv.sourceMaps || target.getDeployMap() || target.getSaveSourceInMap();
+
           if (argv.clean) {
             await qx.tool.utils.files.Utils.deleteRecursive(deployDir);
           }
@@ -140,12 +146,13 @@ qx.Class.define("qx.tool.cli.commands.Deploy", {
               return;
             }
             let ext = path.extname(file);
-            if (ext == ".map" && !argv.sourceMaps) {
+            if (ext == ".map" && !sourceMaps) {
               return;
             }
             let from = path.join(appRoot, file);
-            let to = path.join(deployDir, file);
-            if (ext == ".js" && !argv.sourceMaps) {
+            let to = path.join(deployDir, app.getName(), file);
+            if (ext == ".js" && !sourceMaps) {
+              await util.mkParentPathAsync(to);
               let rs = fs.createReadStream(from, { encoding: "utf8", emitClose: true });
               let ws = fs.createWriteStream(to, { encoding: "utf8", emitClose: true });
               let ss = new qx.tool.utils.Utils.StripSourceMapTransform();
@@ -160,30 +167,31 @@ qx.Class.define("qx.tool.cli.commands.Deploy", {
               await qx.tool.utils.files.Utils.copyFile(from, to);
             }
           });
-        });
-        {
-          let from = path.join(target.getOutputDir(), "resource");
-          if (fs.existsSync(from)) {
-            let to = path.join(argv.out, "resource");
-            if (makerIndex == 0 && argv.clean) {
-              await qx.tool.utils.files.Utils.deleteRecursive(to);
+          {
+            let from = path.join(target.getOutputDir(), "resource");
+            if (fs.existsSync(from)) {
+              let to = path.join(deployDir, "resource");
+              if (makerIndex == 0 && argv.clean) {
+                await qx.tool.utils.files.Utils.deleteRecursive(to);
+              }
+              await qx.tool.utils.files.Utils.sync(from, to);
             }
-            await qx.tool.utils.files.Utils.sync(from, to);
           }
-        }
-        {
-          let from = path.join(target.getOutputDir(), "index.html");
-          let to = path.join(argv.out, "index.html");
-          if (fs.existsSync(from)) {
-            fs.copyFileSync(from, to);
+          {
+            let from = path.join(target.getOutputDir(), "index.html");
+            let to = path.join(deployDir, "index.html");
+            if (fs.existsSync(from)) {
+              fs.copyFileSync(from, to);
+            }
           }
-        }
+        });
       });
     }
   },
 
   defer: function(statics) {
     qx.tool.compiler.Console.addMessageIds({
+      "qx.tool.cli.deploy.deployDirNotSpecified": "No deploy dir configured! Use --out parameter or deployDir in compile.json."      
     }, "error");
     qx.tool.compiler.Console.addMessageIds({
       "qx.tool.cli.deploy.sourceMapsNotSpecified": "Source maps are not being deployed, see --source-maps command line option",
