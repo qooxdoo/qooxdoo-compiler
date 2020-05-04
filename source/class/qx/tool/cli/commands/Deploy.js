@@ -66,7 +66,7 @@ qx.Class.define("qx.tool.cli.commands.Deploy", {
             describe: "Set the target type. Default is build",
             type: "string",
             default: "build"
-          },
+          }
     
         }
       };
@@ -81,7 +81,7 @@ qx.Class.define("qx.tool.cli.commands.Deploy", {
     process: async function() {
       let argv = this.argv;
       
-      let config  = await qx.tool.cli.Cli.getInstance().getParsedArgs();
+      let config = await qx.tool.cli.Cli.getInstance().getParsedArgs();
       if (!config) {
         throw new qx.tool.utils.Utils.UserError("Error: Cannot find any configuration");
       }

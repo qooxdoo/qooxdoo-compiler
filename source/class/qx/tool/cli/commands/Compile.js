@@ -278,7 +278,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
             msgId = qx.tool.compiler.Console.MESSAGE_IDS[msgId];
             if (!msgId || (msgId.type !== "message")) {
               this.__gauge.hide();
-              qx.tool.compiler.Console.log(colorOn + TYPES[(msgId || {}).type || "error"]  + ": " + str);
+              qx.tool.compiler.Console.log(colorOn + TYPES[(msgId || {}).type || "error"] + ": " + str);
               this.__gauge.show();
             } else {
               this.__gauge.show(colorOn + str);

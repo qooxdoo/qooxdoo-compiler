@@ -66,7 +66,7 @@ module.exports = qx.Class.define("qx.tool.compiler.targets.BuildTarget", {
       init: false,
       check: "Boolean",
       nullable: false
-    },
+    }
 
   },
 
