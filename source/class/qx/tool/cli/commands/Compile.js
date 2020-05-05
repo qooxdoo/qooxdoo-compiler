@@ -685,7 +685,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         }
 
         // Take the command line for `saveSourceInMap` as most precedent only if provided
-        var saveSourceInMap = targetConfig["save-source-in-map"] || t.argv["save-source-in-map"];
+        var saveSourceInMap = targetConfig["save-source-in-map"] || t.argv["saveSourceInMap"];
         if ((typeof saveSourceInMap == "boolean") && (typeof target.setSaveSourceInMap == "function")) {
           target.setSaveSourceInMap(saveSourceInMap);
         }
