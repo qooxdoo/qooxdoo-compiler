@@ -87,6 +87,7 @@ qx.Class.define("qx.tool.cli.Cli", {
         .option("verbose", {
           alias: "v",
           describe: "enables additional progress output to console",
+          default: false,
           type: "boolean"
         })
         .option("quiet", {
