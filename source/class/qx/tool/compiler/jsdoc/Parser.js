@@ -99,7 +99,7 @@ qx.Class.define("qx.tool.compiler.jsdoc.Parser", {
           try {
             cmd.body = converter.makeHtml(cmd.body);
           } catch (e) {
-            qx.tool.compiler.Console.error(`Markdown conversion error: "${e.message}" found in \n${cmd.body.trim()}`);
+            qx.tool.compiler.Console.warn(`Markdown conversion: "${e.message}" found in \n${cmd.body.trim()}`);
           }
         } else {
           // If the body is surrounded by parameters, remove them
