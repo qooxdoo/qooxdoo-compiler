@@ -97,9 +97,14 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
       },
       "minify": {
         alias: "m",
-        describe: "disables minification (for build targets only)",
+        describe: "disables minification (build targets only)",
         choices: [ "off", "minify", "mangle", "beautify" ],
         default: "mangle"
+      },
+      "save-source-in-map": {
+        describe: "Saves the source code in the map file (build target only)",
+        type: "boolean",
+        default: false
       },
       "save-unminified": {
         alias: "u",
@@ -271,9 +276,9 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
           };
           qx.tool.compiler.Console.getInstance().setWriter((str, msgId) => {
             msgId = qx.tool.compiler.Console.MESSAGE_IDS[msgId];
-            if (msgId.type !== "message") {
+            if (!msgId || (msgId.type !== "message")) {
               this.__gauge.hide();
-              qx.tool.compiler.Console.log(colorOn + TYPES[msgId.type] + ": " + str);
+              qx.tool.compiler.Console.log(colorOn + TYPES[(msgId || {}).type || "error"] + ": " + str);
               this.__gauge.show();
             } else {
               this.__gauge.show(colorOn + str);
@@ -678,10 +683,28 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         if (typeof target.setMinify == "function") {
           target.setMinify(minify);
         }
+
+        // Take the command line for `saveSourceInMap` as most precedent only if provided
+        var saveSourceInMap = targetConfig["save-source-in-map"] || t.argv["saveSourceInMap"];
+        if ((typeof saveSourceInMap == "boolean") && (typeof target.setSaveSourceInMap == "function")) {
+          target.setSaveSourceInMap(saveSourceInMap);
+        }
+
         var saveUnminified = targetConfig["save-unminified"] || t.argv["save-unminified"];
         if (typeof saveUnminified == "boolean" && typeof target.setSaveUnminified == "function") {
           target.setSaveUnminified(saveUnminified);
         }
+
+        var deployDir = targetConfig["deployPath"];
+        if (typeof target.setDeployDir == "function") {
+          target.setDeployDir(deployDir);
+        }
+
+        var deployMap = targetConfig["deploy-source-maps"];
+        if ((typeof deployMap == "boolean") && (typeof target.setDeployDir == "function")) {
+          target.setDeployMap(deployMap);
+        }
+
 
         maker.setTarget(target);
 
@@ -1057,6 +1080,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
       "qx.tool.cli.compile.makeEnds": "Applications are made"
     });
     qx.tool.compiler.Console.addMessageIds({
+      "qx.tool.cli.compile.multipleDefaultTargets": "Multiple default targets found!",
       "qx.tool.cli.compile.unusedTarget": "Target type %1, index %2 is unused",
       "qx.tool.cli.compile.selectingDefaultApp": "You have multiple applications, none of which are marked as 'default'; the first application named %1 has been chosen as the default application",
       "qx.tool.cli.compile.legacyFiles": "File %1 exists but is no longer used",

@@ -138,7 +138,9 @@ qx.Class.define("qx.tool.compiler.targets.meta.AbstractJavascriptMeta", {
             };
             generator.addMapping(mapping);
           });
-          //map.sources.forEach(source => generator.setSourceContent(source, map.sourceContentFor(source)));
+          if (this._appMeta.getTarget().getSaveSourceInMap && this._appMeta.getTarget().getSaveSourceInMap()) {
+            map.sources.forEach(source => generator.setSourceContent(source, map.sourceContentFor(source)));
+          }
         }
       }
       return JSON.parse(generator.toString());

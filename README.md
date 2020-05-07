@@ -111,7 +111,7 @@ on Gitter at https://gitter.im/qooxdoo/qooxdoo
 
 [npm-image]: https://badge.fury.io/js/%40qooxdoo%2Fcompiler.svg
 [npm-url]: https://npmjs.org/package/@qooxdoo/compiler
-[travis-image]: https://travis-ci.org/qooxdoo/qooxdoo.svg?branch=master
+[travis-image]: https://travis-ci.org/qooxdoo/qooxdoo-compiler.svg?branch=master
 [travis-url]: https://travis-ci.org/qooxdoo/qooxdoo-compiler
 [gitter-image]: https://badges.gitter.im/qooxdoo/qooxdoo.svg
 [gitter-url]: https://gitter.im/qooxdoo/qooxdoo?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge

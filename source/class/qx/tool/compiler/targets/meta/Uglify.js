@@ -1,5 +1,5 @@
 const fs = qx.tool.utils.Promisify.fs;
-const path = require("path");
+const path = require("upath");
 const UglifyJS = require("uglify-es");
 
 qx.Class.define("qx.tool.compiler.targets.meta.Uglify", {

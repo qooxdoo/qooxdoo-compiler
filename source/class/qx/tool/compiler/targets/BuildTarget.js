@@ -44,7 +44,30 @@ module.exports = qx.Class.define("qx.tool.compiler.targets.BuildTarget", {
       init: false,
       check: "Boolean",
       nullable: false
+    },
+
+    /** Whether to save the source in the map file */
+    saveSourceInMap: {
+      init: false,
+      check: "Boolean",
+      nullable: false
+    },
+
+    /** Deploy directory (guaranteed to have a trailing slash) */
+    deployDir: {
+      init: null,
+      nullable: true,
+      check: "String",
+      transform: "_transformOutputDir"
+    },
+
+    /** Whether to deploy the source maps */
+    deployMap: {
+      init: false,
+      check: "Boolean",
+      nullable: false
     }
+
   },
 
   events: {

@@ -1,4 +1,4 @@
-const path = require("path");
+const path = require("upath");
 
 /**
  * A PackageJavascript is the serialisation of the javascript required to produce a package;
@@ -12,7 +12,7 @@ qx.Class.define("qx.tool.compiler.targets.meta.PackageJavascript", {
    * Constructor
    */
   construct(appMeta, pkg) {
-    this.base(arguments, appMeta, `${appMeta.getApplicationRoot()}/package-${pkg.getPackageIndex()}.js`);
+    this.base(arguments, appMeta, `${appMeta.getApplicationRoot()}package-${pkg.getPackageIndex()}.js`);
     this.__pkg = pkg;
   },
   
