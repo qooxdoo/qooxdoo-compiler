@@ -21,6 +21,12 @@ qx.Class.define("testTargetsApp.Application", {
         left: 100,
         top: 50
       });
+      
+      var atom = new qx.ui.basic.Atom("Look, I'm a font icon", "@FontAwesome/heart");
+      doc.add(atom, {
+        left: 100,
+        top: 250
+      });
 
       qx.io.PartLoader.require("pluginFramework", function() {
         qx.io.PartLoader.require("pluginOne", function() {
