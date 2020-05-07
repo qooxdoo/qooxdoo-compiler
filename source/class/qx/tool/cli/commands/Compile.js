@@ -696,7 +696,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         }
 
         var deployDir = targetConfig["deployPath"];
-        if (typeof target.setDeployDir == "function") {
+        if (deployDir && typeof target.setDeployDir == "function") {
           target.setDeployDir(deployDir);
         }
 
