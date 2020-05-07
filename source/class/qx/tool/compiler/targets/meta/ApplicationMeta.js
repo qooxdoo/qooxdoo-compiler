@@ -216,6 +216,15 @@ qx.Class.define("qx.tool.compiler.targets.meta.ApplicationMeta", {
      */
     addResource(key, path) {
       this.__resources[key] = path;
+    },
+    
+    /**
+     * Returns all of the resources
+     * 
+     * @return {Map}
+     */
+    getResources() {
+      return this.__resources;
     }
   }
 });

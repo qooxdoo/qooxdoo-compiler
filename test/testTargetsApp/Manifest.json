@@ -14,12 +14,19 @@
     "encoding": "utf-8",
     "class": "source/class",
     "resource": "source/resource",
-    "translation": "source/translation"
-  },
-  "externalResources": {
-    "script": [ 
-      "https://localhost:2000/IDSCloudApp/IDSCloudApp:ext-js/socketcluster/socketcluster-client.min.js",
-      "testTargetsApp/myExternal.js" 
+    "translation": "source/translation",
+    "webfonts": [
+      {
+        "name": "FontAwesome",
+        "defaultSize": 40,
+        "comparisonString": "\uf26e\uf368",
+        "resources": [
+          "testTargetsApp/fa-regular-400.ttf",
+          "testTargetsApp/fa-regular-400.eot",
+          "testTargetsApp/fa-regular-400.woff2",
+          "testTargetsApp/fa-regular-400.woff"
+        ]
+      }
     ]
   },
   "requires": {
