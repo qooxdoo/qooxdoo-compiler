@@ -52,7 +52,7 @@ qx.Class.define("qx.tool.compiler.targets.meta.BootJs", {
         Libraries: appMeta.getLibraries().map(library => library.getNamespace()),
         SourceUri: appMeta.getSourceUri(),
         ResourceUri: appMeta.getResourceUri(),
-        Resources: {},
+        Resources: appMeta.getResources(),
         Translations: {"C": null},
         Locales: {"C": null},
         Parts: {},
