@@ -191,7 +191,7 @@ qx.Class.define("qx.tool.cli.commands.Deploy", {
 
   defer: function(statics) {
     qx.tool.compiler.Console.addMessageIds({
-      "qx.tool.cli.deploy.deployDirNotSpecified": "No deploy dir configured! Use --out parameter or deployDir in compile.json."      
+      "qx.tool.cli.deploy.deployDirNotSpecified": "No deploy dir configured! Use --out parameter or deployPath target property in compile.json."
     }, "error");
     qx.tool.compiler.Console.addMessageIds({
       "qx.tool.cli.deploy.sourceMapsNotSpecified": "Source maps are not being deployed, see --source-maps command line option",
