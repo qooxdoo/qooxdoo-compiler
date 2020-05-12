@@ -62,9 +62,11 @@ for (var k in envinfo)
 
 if (!qx.$$libraries)
   qx.$$libraries = {};
-%{Libraries}.forEach(ns => qx.$$libraries[ns] = {
-   sourceUri: qx.$$appRoot + %{SourceUri},
-   resourceUri: qx.$$appRoot + %{ResourceUri}
+%{Libraries}.forEach(function(ns) {
+   qx.$$libraries[ns] = {
+     sourceUri: qx.$$appRoot + %{SourceUri},
+     resourceUri: qx.$$appRoot + %{ResourceUri}
+   }
 });
 
 qx.$$resources = %{Resources};
