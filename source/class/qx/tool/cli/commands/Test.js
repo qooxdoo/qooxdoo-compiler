@@ -59,11 +59,11 @@ qx.Class.define("qx.tool.cli.commands.Test", {
 
     getYargsCommand: function() {
       return {
-        command   : "test [configFile]",
+        command   : "test",
         describe  : "run test for current project",
         builder   : Object.assign(
-          qx.tool.cli.commands.Compile.YARGS_BUILDER, 
-          qx.tool.cli.commands.Serve.YARGS_BUILDER, 
+          qx.tool.cli.commands.Compile.YARGS_BUILDER,
+          qx.tool.cli.commands.Serve.YARGS_BUILDER,
           qx.tool.cli.commands.Test.YARGS_BUILDER
         ),
         handler: function(argv) {
