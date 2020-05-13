@@ -23,7 +23,7 @@ const fs = qx.tool.utils.Promisify.fs;
 const path = require("upath");
 const process = require("process");
 const jsonlint = require("jsonlint");
-const stringify = require('json-stable-stringify');
+const stringify = require("json-stable-stringify");
 
 /**
  * Handles library packages

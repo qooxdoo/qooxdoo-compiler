@@ -87,11 +87,12 @@ qx.Class.define("qx.tool.cli.commands.package.Update", {
           qx.tool.compiler.Console.error("Path required via --file argument.");
           process.exit(1);
         }
-        return this.exportCache(argv.file);
+        this.exportCache(argv.file);
+        return;
       }
 
 
-        if (!update_repo_only) {
+      if (!update_repo_only) {
         this.clearCache();
       }
 
@@ -263,7 +264,7 @@ qx.Class.define("qx.tool.cli.commands.package.Update", {
                 }
               }
               // we have a list of Manifest.json paths!
-              manifests = data.libraries || data.contribs; // todo remove data.contribs. eventually, only there for BC
+              manifests = data.libraries || data.contribs; // to do remove data.contribs. eventually, only there for BC
             } catch (e) {
               // no qooxdoo.json
               if (e.message.match(/404/)) {
