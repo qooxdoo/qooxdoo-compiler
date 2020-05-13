@@ -357,6 +357,9 @@ qx.Class.define("qx.tool.cli.commands.package.Update", {
             let zip_url = `https://github.com/${name}/archive/${tag_name}.zip`;
             releases.list.push(tag_name);
             releases.data[tag_name] = {
+              id: release.id,
+              published_at: release.published_at,
+              comment: release.body,
               title: release.name,
               prerelease: release.prerelease,
               manifests,
