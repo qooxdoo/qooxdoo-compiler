@@ -143,7 +143,7 @@ qx.Class.define("qx.tool.cli.commands.package.Migrate", {
           for (let key in obj) {
             if (obj[key]) {
               s += "      " + key + "\n";
-            }  
+            }
           }
         }
         if (needFix) {
@@ -193,14 +193,14 @@ qx.Class.define("qx.tool.cli.commands.package.Migrate", {
             }
           }
         }
-        // update dependencies
+        // check framework and compiler dependencies
+        // if none are given in the Manifest, use the present framework and compiler
         const compiler_version = qx.tool.compiler.Version.VERSION;
-        const compiler_range = manifestModel.getValue("requires.@qooxdoo/compiler");
+        const compiler_range = manifestModel.getValue("requires.@qooxdoo/compiler") || compiler_version;
         const framework_version = await this.getLibraryVersion(await this.getGlobalQxPath());
-        const framework_range = manifestModel.getValue("requires.@qooxdoo/framework");
+        const framework_range = manifestModel.getValue("requires.@qooxdoo/framework") || framework_version;
 
         if (
-          !(compiler_range && framework_range) ||
           !semver.satisfies(compiler_version, compiler_range) ||
           !semver.satisfies(framework_version, framework_range)) {
           needFix = true;
