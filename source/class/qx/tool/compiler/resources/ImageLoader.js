@@ -28,7 +28,7 @@ qx.Class.define("qx.tool.compiler.resources.ImageLoader", {
   extend: qx.tool.compiler.resources.ResourceLoader,
 
   construct: function() {
-    this.base(arguments, [ ".png", ".gif", ".jpg", ".jpeg" ]);
+    this.base(arguments, [ ".png", ".gif", ".jpg", ".jpeg", ".svg" ]);
   },
 
   members: {
