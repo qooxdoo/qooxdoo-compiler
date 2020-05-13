@@ -60,6 +60,10 @@ qx.Class.define("qx.tool.cli.commands.package.Update", {
           "quiet": {
             alias: "q",
             describe: "No output"
+          },
+          "export-only": {
+            alias: "E",
+            describe: "Export the current cache without updating it first (requires --file)"
           }
         }
       };
@@ -76,7 +80,18 @@ qx.Class.define("qx.tool.cli.commands.package.Update", {
       let names = [];
       const argv = this.argv;
       const update_repo_only = argv.repository;
-      if (!update_repo_only) {
+
+      // export only
+      if (argv.exportOnly) {
+        if (!argv.file) {
+          qx.tool.compiler.Console.error("Path required via --file argument.");
+          process.exit(1);
+        }
+        return this.exportCache(argv.file);
+      }
+
+
+        if (!update_repo_only) {
         this.clearCache();
       }
 
@@ -117,11 +132,10 @@ qx.Class.define("qx.tool.cli.commands.package.Update", {
         qx.tool.compiler.Console.info(`Run 'qx package list' in the root dir of your project to see which versions of these libraries are compatible.`);
       }
 
-      // save cache
+      // save cache and export it if requested
+      await this.saveCache();
       if (argv.file) {
         await this.exportCache(argv.file);
-      } else {
-        await this.saveCache();
       }
 
       async function updateFromRepository() {
