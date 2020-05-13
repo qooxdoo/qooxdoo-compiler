@@ -282,7 +282,7 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
       if (!release_data) {
         throw new qx.tool.utils.Utils.UserError(`'${repo_name}' has no release '${tag_name}'.`);
       }
-      // TODO: the path in the cache data should be the path to the library containing Manifest.json, not to the Manifest.json itself
+      // TO DO: the path in the cache data should be the path to the library containing Manifest.json, not to the Manifest.json itself
       for (let {path:manifest_path} of release_data.manifests) {
         if (package_path && (path.dirname(manifest_path) !== package_path)) {
           // if a path component exists, only install the library in this path
