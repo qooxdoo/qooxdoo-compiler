@@ -1,7 +1,7 @@
 {
   "title": "compile.json Schema",
   "$schema": "http://json-schema.org/draft-07/schema",
-  "$id": "https://raw.githubusercontent.com/qooxdoo/qooxdoo-compiler/master/source/resource/qx/tool/schema/compile-1-0-0.json",
+  "$id": "https://qooxdoo.org/schema/compile-1-0-0.json",
   "description": "compile.json controls the qx compile command, and while you can use command line parameters to compile an application, most applications will require one.",
   "type": "object",
   "required": [
@@ -15,9 +15,8 @@
       "type": "string",
       "description": "the json schema of the version of compile.json",
       "enum": [
-        "https://www.qooxdoo.org/schema/compile-1-0-0.json",
-        "https://raw.githubusercontent.com/qooxdoo/qooxdoo-compiler/master/source/resource/qx/tool/schema/compile-1-0-0.json",
-        "https://raw.githubusercontent.com/qooxdoo/qooxdoo-compiler/master/resource/schema/v1/compile.json"
+        "https://qooxdoo.org/schema/compile-1-0-0.json",
+        "https://raw.githubusercontent.com/qooxdoo/qooxdoo-compiler/master/source/resource/qx/tool/schema/compile-1-0-0.json"
       ]
     },
     "run": {
