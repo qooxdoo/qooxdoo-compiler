@@ -34,7 +34,7 @@ qx.Class.define("qx.tool.config.Abstract", {
     /**
      * The base URL of all json schema definitions
      */
-    schemaBaseUrl: "https://raw.githubusercontent.com/qooxdoo/qooxdoo-compiler/master/source/resource/qx/tool/schema"
+    schemaBaseUrl: "https://qooxdoo.org/schema"
   },
 
   construct: function(config) {
@@ -185,7 +185,7 @@ qx.Class.define("qx.tool.config.Abstract", {
     getDataPath() {
       return path.join(this.getBaseDir(), this.getFileName());
     },
-    
+
     /**
      * The path to the configuration file, relative to CWD
      */

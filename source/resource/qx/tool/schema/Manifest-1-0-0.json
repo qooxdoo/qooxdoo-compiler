@@ -1,7 +1,7 @@
 {
   "title": "Manifest.json Schema",
   "$schema": "http://json-schema.org/draft-07/schema",
-  "$id": "https://raw.githubusercontent.com/qooxdoo/qooxdoo-compiler/master/source/resource/qx/tool/schema/Manifest-1-0-0.json",
+  "$id": "https://qooxdoo.org/schema/Manifest-1-0-0.json",
   "description": "qooxdoo's Manifest files serve to provide meta information for a library in a structured way. Their syntax is in JSON. They have a more informational part (keyed info), which is more interesting for human readers, a technical part (named provides) that is used in the processing of generator configurations, and a part named externalResources to include CSS and Javascript files.",
   "type": "object",
   "required": [
@@ -14,9 +14,8 @@
       "type": "string",
       "description": "the json schema of the version of Manifest.json",
       "enum": [
-        "https://www.qooxdoo.org/schema/Manifest-1-0-0.json",
-        "https://raw.githubusercontent.com/qooxdoo/qooxdoo-compiler/master/source/resource/qx/tool/schema/Manifest-1-0-0.json",
-        "https://raw.githubusercontent.com/qooxdoo/qooxdoo-compiler/master/resource/schema/v1/Manifest.json"
+        "https://qooxdoo.org/schema/Manifest-1-0-0.json",
+        "https://raw.githubusercontent.com/qooxdoo/qooxdoo-compiler/master/source/resource/qx/tool/schema/Manifest-1-0-0.json"
       ]
     },
     "info": {
