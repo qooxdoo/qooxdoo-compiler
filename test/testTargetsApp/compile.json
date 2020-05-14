@@ -9,14 +9,34 @@
 			}
 		},
 		{
+			"type": "source",
+			"outputPath": "compiled/source-node",
+			"application-types": [
+				"node"
+			],
+			"babelOptions": {
+				"targets": "node >= 11"
+			}
+		},
+		{
 			"type": "build",
 			"outputPath": "compiled/build",
-                      "minify": "off"
+			"minify": "off"
+		},
+		{
+			"type": "build",
+			"outputPath": "compiled/build-node",
+			"application-types": [
+				"node"
+			],
+			"babelOptions": {"targets":"node >= 11"},
+			"minify":"off"
 		}
 	],
 	"defaultTarget": "source",
 	"locales": [
-		"en", "nl"
+		"en",
+		"nl"
 	],
 	"i18nAsParts": true,
 	"environment": {
