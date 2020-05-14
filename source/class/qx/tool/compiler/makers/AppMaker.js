@@ -88,6 +88,7 @@ qx.Class.define("qx.tool.compiler.makers.AppMaker", {
           "qx.compilerVersion": qx.tool.compiler.Version.VERSION
         },
         this.getEnvironment(),
+        this.getTarget().getDefaultEnvironment(),
         this.getTarget().getEnvironment());
 
       let appEnvironments = {};

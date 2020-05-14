@@ -75,6 +75,15 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
     },
 
     /**
+     * Target type default environment property map
+     */
+    defaultEnvironment: {
+      init: null,
+      inheritable: true,
+      nullable: true
+    },
+
+    /**
      * The analyser being generated
      */
     analyser: {

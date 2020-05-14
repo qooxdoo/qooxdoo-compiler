@@ -60,6 +60,10 @@ qx.Class.define("qx.tool.cli.commands.package.Update", {
           "quiet": {
             alias: "q",
             describe: "No output"
+          },
+          "export-only": {
+            alias: "E",
+            describe: "Export the current cache without updating it first (requires --file)"
           }
         }
       };
@@ -76,6 +80,18 @@ qx.Class.define("qx.tool.cli.commands.package.Update", {
       let names = [];
       const argv = this.argv;
       const update_repo_only = argv.repository;
+
+      // export only
+      if (argv.exportOnly) {
+        if (!argv.file) {
+          qx.tool.compiler.Console.error("Path required via --file argument.");
+          process.exit(1);
+        }
+        this.exportCache(argv.file);
+        return;
+      }
+
+
       if (!update_repo_only) {
         this.clearCache();
       }
@@ -117,11 +133,10 @@ qx.Class.define("qx.tool.cli.commands.package.Update", {
         qx.tool.compiler.Console.info(`Run 'qx package list' in the root dir of your project to see which versions of these libraries are compatible.`);
       }
 
-      // save cache
+      // save cache and export it if requested
+      await this.saveCache();
       if (argv.file) {
         await this.exportCache(argv.file);
-      } else {
-        await this.saveCache();
       }
 
       async function updateFromRepository() {
@@ -249,7 +264,7 @@ qx.Class.define("qx.tool.cli.commands.package.Update", {
                 }
               }
               // we have a list of Manifest.json paths!
-              manifests = data.libraries || data.contribs; // todo remove data.contribs. eventually, only there for BC
+              manifests = data.libraries || data.contribs; // to do remove data.contribs. eventually, only there for BC
             } catch (e) {
               // no qooxdoo.json
               if (e.message.match(/404/)) {
@@ -357,6 +372,9 @@ qx.Class.define("qx.tool.cli.commands.package.Update", {
             let zip_url = `https://github.com/${name}/archive/${tag_name}.zip`;
             releases.list.push(tag_name);
             releases.data[tag_name] = {
+              id: release.id,
+              published_at: release.published_at,
+              comment: release.body,
               title: release.name,
               prerelease: release.prerelease,
               manifests,

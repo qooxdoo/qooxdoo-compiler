@@ -23,6 +23,7 @@ const fs = qx.tool.utils.Promisify.fs;
 const path = require("upath");
 const process = require("process");
 const jsonlint = require("jsonlint");
+const stringify = require("json-stable-stringify");
 
 /**
  * Handles library packages
@@ -256,7 +257,9 @@ qx.Class.define("qx.tool.cli.commands.Package", {
      */
     exportCache : async function(path) {
       try {
-        await fs.writeFileAsync(path, JSON.stringify(this.__cache, null, 2), "UTF-8");
+        let cache = this.__cache || this.getCache(true);
+        let data = stringify(cache, {space: 2});
+        await fs.writeFileAsync(path, data, "UTF-8");
       } catch (e) {
         qx.tool.compiler.Console.error(`Error exporting cache to ${path}:` + e.message);
         process.exit(1);

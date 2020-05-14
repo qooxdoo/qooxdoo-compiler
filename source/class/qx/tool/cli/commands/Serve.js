@@ -57,7 +57,7 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
 
     getYargsCommand: function() {
       return {
-        command   : "serve [configFile]",
+        command   : "serve",
         describe  : "runs a webserver to run the current application with continuous compilation, using compile.json",
         builder   : Object.assign(qx.tool.cli.commands.Compile.YARGS_BUILDER, qx.tool.cli.commands.Serve.YARGS_BUILDER)
       };
@@ -66,7 +66,7 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
   events: {
     /**
      * Fired before server start
-     * 
+     *
      *  data: {
      *    server: the http server
      *    application: the used express server instance
@@ -82,7 +82,7 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
   members: {
     /** @type {qx.tool.utils.Website} the Website instance */
     _website: null,
-    
+
     /*
      * @Override
      */
@@ -91,7 +91,7 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
       this.argv["machine-readable"] = false;
       this.argv["feedback"] = false;
       await this.base(arguments);
-      
+
       // build website if it hasn't been built yet.
       const website = this._website = new qx.tool.utils.Website();
       if (!await fs.existsAsync(website.getTargetDir())) {
@@ -100,14 +100,14 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
       } else if (this.argv.rebuildStartpage) {
         this._website.startWatcher();
       }
-      
+
       await this.runWebServer();
     },
-    
+
     /**
-     * 
+     *
      * returns the showStartpage flag
-     * 
+     *
      */
     showStartpage: function() {
       return this.__showStartpage;
@@ -115,7 +115,7 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
 
     /**
      * Runs the web server
-     * 
+     *
      * @ignore qx.tool.$$resourceDir
      */
     runWebServer: async function() {
@@ -139,7 +139,7 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
       if (!defaultMaker && (apps.length === 1)) {
         defaultMaker = firstMaker;
       }
-      
+
       this.__showStartpage = this.argv.showStartpage;
       if (this.__showStartpage === null) {
         this.__showStartpage = defaultMaker === null;
@@ -205,7 +205,7 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
         });
       });
     },
-    
+
     __showStartpage: null
 
 
