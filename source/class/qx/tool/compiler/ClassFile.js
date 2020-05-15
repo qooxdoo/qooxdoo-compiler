@@ -1283,13 +1283,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         },
         
         Identifier(path) {
-          
-          if (typeof path.node.name != "string")
-            throw new Error("What is this name: " + typeof path.node.name + ": " + path.node.name);
-          let newName = t.encodePrivate(path.node.name);
-          if (typeof newName != "string")
-            throw new Error("What is this newName: " + typeof newName + ": " + newName);
-          path.node.name = newName;
+          path.node.name = t.encodePrivate(path.node.name);
            
           // These are AST node types which do not cause undefined references for the identifier,
           // eg ObjectProperty could be `{ abc: 1 }`, and `abc` is not undefined, it is an identifier
@@ -1649,10 +1643,11 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         ObjectProperty: {
           exit(path) {
             if (path.node.value.type == "FunctionExpression" && 
-                path.node.value.id == null) {
+                path.node.value.id === null) {
               let functionName = typeof path.node.key.value == "string" ? path.node.key.value : path.node.key.name;
-              if (!qx.tool.compiler.ClassFile.RESERVED_WORDS[functionName])
+              if (!qx.tool.compiler.ClassFile.RESERVED_WORDS[functionName]) {
                 path.node.value.id = types.identifier(functionName);
+              }
             }
           }
         },
@@ -1665,11 +1660,11 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
             makeMeta(t.__classMeta._topLevel.keyName, t.__classMeta.functionName, path.node);
             path.skip();
             let functionId = null;
-            if (path.node.value.type == "FunctionExpression" && 
-                path.node.value.id == null) {
+            if (path.node.value.type == "FunctionExpression" && path.node.value.id === null) {
               let functionName = typeof path.node.key.value == "string" ? path.node.key.value : path.node.key.name;
-              if (!qx.tool.compiler.ClassFile.RESERVED_WORDS[functionName])
+              if (!qx.tool.compiler.ClassFile.RESERVED_WORDS[functionName]) {
                 functionId = types.identifier(functionName);
+              }
             }
             path.traverse(VISITOR);
             if (functionId) {
@@ -1884,8 +1879,6 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
      * @param valueName {String} the value to assign to the variable
      */
     addDeclaration: function(name, valueName) {
-      if (name.match(/TRACE/))
-        debugger;
       if (this.__scope.vars[name] === undefined) {
         this.__scope.vars[name] = valueName || true;
         var unresolved = this.__scope.unresolved;
@@ -1928,8 +1921,6 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
       if (!qx.lang.Type.isArray(name)) {
         name = name.split(".");
       }
-      if (name.indexOf('TRACE') > -1)
-        debugger;
       var scope = this.__scope;
       if (scope.vars[name[0]] !== undefined) {
         return;
@@ -1975,18 +1966,19 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
      */
     encodePrivate: function(name) {
       const DO_NOT_ENCODE = {
-          "__proto__": 1,
-          "__iterator__": 1
+        "__proto__": 1,
+        "__iterator__": 1
       };
-      if (DO_NOT_ENCODE[name] || this.__privateMangling == "off" || !name.startsWith("__") || !name.match(/^[0-9a-z_$]+$/i))
+      if (DO_NOT_ENCODE[name] || this.__privateMangling == "off" || !name.startsWith("__") || !name.match(/^[0-9a-z_$]+$/i)) {
         return name;
+      }
 
       if (this.__privateMangling == "readable") {
-        if (name.indexOf("_PRIVATE_") > -1)
+        if (name.indexOf("_PRIVATE_") > -1) {
           return name;
-      } else {
-        if (name.indexOf("__P_") > -1)
-          return name;
+        }
+      } else if (name.indexOf("__P_") > -1) {
+        return name;
       }
       
       let coded = this.__privates[name];
