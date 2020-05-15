@@ -601,8 +601,12 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
 
           t.getLocales().forEach(localeId => {
             let localePkg = this.isI18nAsParts() ? appMeta.getLocalePackage(localeId) : pkg;
-            let id = dbClassInfo.libraryName + ":" + localeId;
+            let id = appMeta.getAppLibrary().getNamespace() + ":" + localeId;
             let translation = translations[id];
+            if (!translation) {
+              id = dbClassInfo.libraryName + ":" + localeId;
+              translation = translations[id];
+            }
             dbClassInfo.translations.forEach(transInfo => {
               let entry = translation.getEntry(transInfo.msgid);
               if (entry) {

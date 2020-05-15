@@ -24,6 +24,11 @@ test("test translation file update", async assert => {
   try {
     await testUtils.deleteRecursive("tranapp/compiled");
     await testUtils.safeDelete("tranapp/source/translation/en.po");
+    await fsPromises.writeFile("tranapp/source/translation/en.po", 
+`
+msgid "Lib Override"
+msgstr "lib-override-replaced-value"
+`, "utf8");
     await testUtils.runCompiler("tranapp", "-u");
     let po = await simpleParsePo("tranapp/source/translation/en.po");
     assert.ok(po["App Alpha"] !== undefined);
@@ -44,6 +49,10 @@ test("test translation file update", async assert => {
     assert.ok(po["Lib Alpha"] === "lib-alpha-value");
     assert.ok(po["Lib Beta"] !== undefined);
     assert.ok(po["Lib Charlie"] !== undefined);
+    assert.ok(po["Lib Charlie"] !== undefined);
+    
+    let data = await fsPromises.readFile("tranapp/compiled/source/tranapp/package-0.js", "utf8");
+    assert.ok(!!data.match(/lib-override-replaced-value/));
     
     assert.end();
   }catch(ex) {
