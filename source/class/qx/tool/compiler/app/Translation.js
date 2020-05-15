@@ -367,6 +367,22 @@ qx.Class.define("qx.tool.compiler.app.Translation", {
       var data = lines.join("\n");
       return qx.tool.utils.Promisify.fs.writeFileAsync(filename, data, { encoding: "utf8" });
     },
+    
+    /**
+     * Tests whether an entry exists and has translation values
+     * 
+     * @param id {String} msgid
+     * @return {Boolean}
+     */
+    hasEntryValue(id) {
+      let entry = this.getEntry(id);
+      if (!entry)
+        return false;
+      if (qx.lang.Type.isArray(entry.msgstr)) {
+        return entry.msgstr.every(value => !!value);
+      }
+      return !!entry.msgstr;
+    },
 
     /**
      * Returns the entry with the given msgid, null if it does not exist

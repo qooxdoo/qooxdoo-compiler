@@ -63,6 +63,11 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         type: "boolean",
         default: false
       },
+      "library-po": {
+        describe: "The policy for translations in libraries",
+        type: [ "ignore", "untranslated", "all" ],
+        default: "ignore"
+      },
       "write-all-translations": {
         describe: "enables output of all translations, not just those that are explicitly referenced",
         type: "boolean"
@@ -667,6 +672,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         }
         target.setWriteLibraryInfo(this.argv.writeLibraryInfo);
         target.setUpdatePoFiles(this.argv.updatePoFiles);
+        target.setLibraryPoPolicy(this.argv.libraryPo);
 
         // Take the command line for `minify` as most precedent only if provided
         var minify;

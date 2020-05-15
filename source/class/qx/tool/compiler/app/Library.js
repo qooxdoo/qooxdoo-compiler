@@ -351,6 +351,17 @@ qx.Class.define("qx.tool.compiler.app.Library", {
 
       return null;
     },
+    
+    /**
+     * Checks whether the classname is an actual class, in this library
+     * 
+     * @param classname {String} classname to look for
+     * @return {Boolean}
+     */
+    isClass(classname) {
+      var type = this.__knownSymbols[classname];
+      return type === "class";
+    },
 
     /**
      * Returns all known symbols as a map indexed by symbol name
