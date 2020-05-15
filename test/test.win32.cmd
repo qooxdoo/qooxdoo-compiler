@@ -11,6 +11,10 @@ call node test-config-schemas.js || EXIT /B 1
 call node test-pkg-migrate.js    || EXIT /B 1
 call node test-commands.js       || EXIT /B 1
 call node test-cli.js            || EXIT /B 1
+cd testTranslation
+call node run-tests.js            || EXIT /B 1
+cd ..
+
 @echo [101;93m setup [0m
 cd ..
 rmdir  /Q /S myapp
