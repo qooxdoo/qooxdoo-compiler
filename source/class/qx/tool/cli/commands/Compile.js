@@ -763,6 +763,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
           maker.getAnalyser().addLibrary(libraries[ns]);
         }
 
+        maker.getAnalyser().setManglePrivates(target instanceof qx.tool.compiler.targets.BuildTarget ? "unreadable" : "readable"); 
 
         let allApplicationTypes = {};
         appConfigs.forEach(appConfig => {

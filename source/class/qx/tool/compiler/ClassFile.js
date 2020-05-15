@@ -223,6 +223,8 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
 
     analyser.getIgnores().forEach(s => this.addIgnore(s));
     this.__globalSymbols = {};
+    this.__privates = {};
+    this.__privateMangling = analyser.getManglePrivates();
     
     const CF = qx.tool.compiler.ClassFile;
     const addSymbols = arr => arr.forEach(s => this.__globalSymbols[s] = true);
@@ -263,6 +265,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
     __sourceFilename: null,
     __taskQueueDrain: null,
     __globalSymbols: null,
+    __privates: null,
 	
     _onTaskQueueDrain: function() {
       var cbs = this.__taskQueueDrain;
@@ -1272,6 +1275,8 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         },
         
         Identifier(path) {
+          path.node.name = t.encodePrivate(path.node.name);
+          
           // These are AST node types which do not cause undefined references for the identifier,
           // eg ObjectProperty could be `{ abc: 1 }`, and `abc` is not undefined, it is an identifier
           const CHECK_FOR_UNDEFINED = { 
@@ -1915,6 +1920,26 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
       } else if (loc) {
         scope.unresolved[name].locations.push(loc);
       }
+    },
+    
+    /**
+     * Repeatably encodes a private symbol name, caching the result; ignores non-private symbols
+     * 
+     * @param name {String} symbol name
+     * @return {String} the encoded name if private, the original name if not private
+     */
+    encodePrivate: function(name) {
+      if (this.__privateMangling == "off" || !name.startsWith("__"))
+        return name;
+      let coded = this.__privates[name];
+      if (!coded) {
+        if (this.__privateMangling == "readable") {
+          coded = this.__privates[name] = name + "_PRIVATE_" + Object.keys(this.__privates).length;
+        } else {
+          coded = this.__privates[name] = "__P_" + Object.keys(this.__privates).length;
+        }
+      }
+      return coded;
     },
 
     /**

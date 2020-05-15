@@ -71,7 +71,6 @@ module.exports = qx.Class.define("qx.tool.compiler.targets.BuildTarget", {
     defaultEnvironment: {
       init: { "qx.debug" : false }
     }
-
   },
 
   events: {
