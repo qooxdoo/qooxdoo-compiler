@@ -376,12 +376,13 @@ qx.Class.define("qx.tool.compiler.app.Translation", {
      */
     hasEntryValue(id) {
       let entry = this.getEntry(id);
-      if (!entry)
+      if (!entry) {
         return false;
-      if (qx.lang.Type.isArray(entry.msgstr)) {
-        return entry.msgstr.every(value => !!value);
       }
-      return !!entry.msgstr;
+      if (qx.lang.Type.isArray(entry.msgstr)) {
+        return entry.msgstr.every(value => Boolean(value));
+      }
+      return Boolean(entry.msgstr);
     },
 
     /**

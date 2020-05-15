@@ -988,8 +988,9 @@ qx.Class.define("qx.tool.compiler.Analyser", {
      * @param cb
      */
     async updateTranslations(appLibrary, locales, libraries, copyAllMsgs) {
-      if (!libraries)
+      if (!libraries) {
         libraries = [];
+      }
       libraries = libraries.filter(lib => lib != appLibrary);
       
       await qx.Promise.all(locales.map(async locale => {
@@ -1022,8 +1023,9 @@ qx.Class.define("qx.tool.compiler.Analyser", {
           }
           
           function isEmpty(entry) {
-            if (!entry)
+            if (!entry) {
               return true;
+            }
             if (qx.lang.Type.isArray(entry.msgstr)) {
               return entry.msgstr.every(value => !value);
             }
@@ -1035,8 +1037,9 @@ qx.Class.define("qx.tool.compiler.Analyser", {
             
             if (classLibrary) {
               let entry = translation.getEntry(src.msgid);
-              if (!isEmpty(entry))
+              if (!isEmpty(entry)) {
                 return;
+              }
               let libTranslation = libTranslations[classLibrary.toHashCode()];
               let libEntry = libTranslation.getEntry(src.msgid);
               if (isEmpty(libEntry) || copyAllMsgs) {
