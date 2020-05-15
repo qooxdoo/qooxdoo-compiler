@@ -366,6 +366,9 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
           if (extraPreset[0].plugins.length) {
             config.presets.push(extraPreset);
           }
+          if (this.__privateMangling == "unreadable") {
+            config.blacklist = [ "spec.functionName" ];
+          }
           result = babelCore.transform(src, config);
         } catch (ex) {
           qx.tool.compiler.Console.log(ex);
@@ -1642,11 +1645,13 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
 
         ObjectProperty: {
           exit(path) {
-            if (path.node.value.type == "FunctionExpression" && 
-                path.node.value.id === null) {
-              let functionName = typeof path.node.key.value == "string" ? path.node.key.value : path.node.key.name;
-              if (!qx.tool.compiler.ClassFile.RESERVED_WORDS[functionName]) {
-                path.node.value.id = types.identifier(functionName);
+            if (this.__privateMangling == "readable") {
+              if (path.node.value.type == "FunctionExpression" && 
+                  path.node.value.id === null) {
+                let functionName = typeof path.node.key.value == "string" ? path.node.key.value : path.node.key.name;
+                if (!qx.tool.compiler.ClassFile.RESERVED_WORDS[functionName]) {
+                  path.node.value.id = types.identifier(functionName);
+                }
               }
             }
           }
@@ -1660,10 +1665,12 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
             makeMeta(t.__classMeta._topLevel.keyName, t.__classMeta.functionName, path.node);
             path.skip();
             let functionId = null;
-            if (path.node.value.type == "FunctionExpression" && path.node.value.id === null) {
-              let functionName = typeof path.node.key.value == "string" ? path.node.key.value : path.node.key.name;
-              if (!qx.tool.compiler.ClassFile.RESERVED_WORDS[functionName]) {
-                functionId = types.identifier(functionName);
+            if (this.__privateMangling == "readable") {
+              if (path.node.value.type == "FunctionExpression" && path.node.value.id === null) {
+                let functionName = typeof path.node.key.value == "string" ? path.node.key.value : path.node.key.name;
+                if (!qx.tool.compiler.ClassFile.RESERVED_WORDS[functionName]) {
+                  functionId = types.identifier(functionName);
+                }
               }
             }
             path.traverse(VISITOR);
