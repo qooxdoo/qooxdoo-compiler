@@ -11,7 +11,7 @@ node_modules/
 qooxdoo
 foo*/
 .package-cache.json
-myapp
+/myapp
 *~
 qooxdoo/
 compiled/
