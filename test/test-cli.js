@@ -2,7 +2,7 @@ var test = require("tape");
 var fs = require("fs");
 var fsPromises = require("fs").promises;
 const qx = require("@qooxdoo/framework");
-const testUtils = require("utils");
+const testUtils = require("./utils");
 
 test("Issue553", async assert => {
   try {
