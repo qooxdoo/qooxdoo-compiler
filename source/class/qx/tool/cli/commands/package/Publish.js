@@ -323,7 +323,7 @@ qx.Class.define("qx.tool.cli.commands.package.Publish", {
       // commit and push
       try {
         await this.run("git", ["add", "--all"]);
-        await this.run("git", ["commit", `-m "${message}"`]);
+        await this.run("git", ["commit", `-m "${message}"`, "--allow-empty"]);
         await this.run("git", ["push"]);
         let release_data = {
           owner,
