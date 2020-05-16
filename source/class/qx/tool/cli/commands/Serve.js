@@ -61,8 +61,8 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
         describe  : "runs a webserver to run the current application with continuous compilation, using compile.json",
         builder   : (() => {
           let res = Object.assign({}, 
-               qx.tool.cli.commands.Compile.YARGS_BUILDER, 
-               qx.tool.cli.commands.Serve.YARGS_BUILDER
+            qx.tool.cli.commands.Compile.YARGS_BUILDER, 
+            qx.tool.cli.commands.Serve.YARGS_BUILDER
           );
           delete res.watch;
           return res;

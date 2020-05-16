@@ -59,18 +59,18 @@ qx.Class.define("qx.tool.cli.commands.Deploy", {
         command: "deploy [options]",
         describe: "deploys qooxdoo application(s)",
         builder   : (() => {
-             let res = Object.assign({}, 
-              qx.tool.cli.commands.Compile.YARGS_BUILDER, 
-              qx.tool.cli.commands.Deploy.YARGS_BUILDER
-             );
-             delete res.watch;
-             delete res["write-library-info"];
-             delete res.download;
-             delete res["update-po-files"];
-             delete res["save-unminified"];
-             delete res.bundling;
-             delete res.minify;
-             return res;
+          let res = Object.assign({}, 
+            qx.tool.cli.commands.Compile.YARGS_BUILDER, 
+            qx.tool.cli.commands.Deploy.YARGS_BUILDER
+          );
+          delete res.watch;
+          delete res["write-library-info"];
+          delete res.download;
+          delete res["update-po-files"];
+          delete res["save-unminified"];
+          delete res.bundling;
+          delete res.minify;
+          return res;
         })()
       };
     }
@@ -108,7 +108,7 @@ qx.Class.define("qx.tool.cli.commands.Deploy", {
       }
       
       if (argv.clean) {
-        await qx.tool.utils.Promisify.eachOfSeries(this.getMakers(), async (maker) => {
+        await qx.tool.utils.Promisify.eachOfSeries(this.getMakers(), async maker => {
           let target = maker.getTarget();
           
           await qx.tool.utils.Promisify.eachOfSeries(maker.getApplications(), async app => {
@@ -136,9 +136,9 @@ qx.Class.define("qx.tool.cli.commands.Deploy", {
             return;
           }
 
-          let sourceMaps = argv.sourceMaps 
-                         || ((typeof target.getDeployMap == "function") && target.getDeployMap()) 
-                         || ((typeof target.getSaveSourceInMap == "function") && target.getSaveSourceInMap());
+          let sourceMaps = argv.sourceMaps || 
+                         ((typeof target.getDeployMap == "function") && target.getDeployMap()) || 
+                         ((typeof target.getSaveSourceInMap == "function") && target.getSaveSourceInMap());
 
           await qx.tool.utils.Utils.makeDirs(deployDir);
           let appRoot = target.getApplicationRoot(app);

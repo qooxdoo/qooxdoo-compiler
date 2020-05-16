@@ -94,7 +94,7 @@ qx.Class.define("qx.tool.cli.commands.Test", {
       this.argv["feedback"] = false;
       // check for special test compiler config
       if (!this.argv.configFile && fs.existsSync(path.join(process.cwd(), qx.tool.cli.commands.Test.CONFIG_FILENAME))) {
-         this.argv.configFile = qx.tool.cli.commands.Test.CONFIG_FILENAME;
+        this.argv.configFile = qx.tool.cli.commands.Test.CONFIG_FILENAME;
       }
       this.addListener("making", () => {
         if (!this.hasListener("runTests")) {
