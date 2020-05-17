@@ -139,38 +139,10 @@ qx.Class.define("qx.tool.cli.commands.Deploy", {
           let sourceMaps = argv.sourceMaps || 
                          ((typeof target.getDeployMap == "function") && target.getDeployMap()) || 
                          ((typeof target.getSaveSourceInMap == "function") && target.getSaveSourceInMap());
-
-          await qx.tool.utils.Utils.makeDirs(deployDir);
           let appRoot = target.getApplicationRoot(app);
+          let destRoot = path.join(deployDir, app.getName());
+          await this.__copyFiles(appRoot, destRoot, sourceMaps);
           
-          let files = await fs.readdirAsync(appRoot);
-          await qx.tool.utils.Promisify.eachOf(files, async file => {
-            let stat = await fs.statAsync(path.join(appRoot, file));
-            if (!stat.isFile()) {
-              return;
-            }
-            let ext = path.extname(file);
-            if (ext == ".map" && !sourceMaps) {
-              return;
-            }
-            let from = path.join(appRoot, file);
-            let to = path.join(deployDir, app.getName(), file);
-            if (ext == ".js" && !sourceMaps) {
-              await util.mkParentPathAsync(to);
-              let rs = fs.createReadStream(from, { encoding: "utf8", emitClose: true });
-              let ws = fs.createWriteStream(to, { encoding: "utf8", emitClose: true });
-              let ss = new qx.tool.utils.Utils.StripSourceMapTransform();
-              await new qx.Promise((resolve, reject) => {
-                rs.on("error", reject);
-                ws.on("error", reject);
-                ws.on("finish", resolve);
-                rs.pipe(ss);
-                ss.pipe(ws);
-              });
-            } else {
-              await qx.tool.utils.files.Utils.copyFile(from, to);
-            }
-          });
           {
             let from = path.join(target.getOutputDir(), "resource");
             if (fs.existsSync(from)) {
@@ -190,6 +162,43 @@ qx.Class.define("qx.tool.cli.commands.Deploy", {
           }
         });
       });
+    },
+    
+    __copyFiles: async function(srcDir, destDir, sourceMaps) {
+      await qx.tool.utils.Utils.makeDirs(destDir);
+      let files = await fs.readdirAsync(srcDir);
+      await qx.tool.utils.Promisify.eachOf(files, async file => {
+        let from = path.join(srcDir, file);
+        let to = path.join(destDir, file);
+
+        let stat = await fs.statAsync(from);
+        if (!stat.isFile()) {
+          await this.__copyFiles(from, to, sourceMaps);
+          return;
+        }
+        let ext = path.extname(file);
+        if (ext == ".map" && !sourceMaps) {
+          return;
+        }
+        
+        
+        if (ext == ".js" && !sourceMaps) {
+          await util.mkParentPathAsync(to);
+          let rs = fs.createReadStream(from, { encoding: "utf8", emitClose: true });
+          let ws = fs.createWriteStream(to, { encoding: "utf8", emitClose: true });
+          let ss = new qx.tool.utils.Utils.StripSourceMapTransform();
+          await new qx.Promise((resolve, reject) => {
+            rs.on("error", reject);
+            ws.on("error", reject);
+            ws.on("finish", resolve);
+            rs.pipe(ss);
+            ss.pipe(ws);
+          });
+        } else {
+          await qx.tool.utils.files.Utils.copyFile(from, to);
+        }
+      });
+
     }
   },
 
