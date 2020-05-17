@@ -202,21 +202,10 @@ qx.Class.define("qx.tool.compiler.app.WebFont", {
           return;
         }
 
-        font.characterSet.forEach(function(codePoint) {
-          let glyph = font.glyphForCodePoint(codePoint);
-          if (glyph.name) {
-            resources["@" + this.getName() + "/" + glyph.name] = [
-              Math.ceil(this.getDefaultSize() * glyph.advanceWidth / glyph.advanceHeight), // width
-              this.getDefaultSize(), // height
-              codePoint
-            ];
-          }
-        }, this);
-
         // some IconFonts (MaterialIcons for example) use ligatures
         // to name their icons. This code extracts the ligatures
         // hat tip to Jossef Harush https://stackoverflow.com/questions/54721774/extracting-ttf-font-ligature-mappings/54728584
-
+        let ligatureName = {};
         let lookupList = font.GSUB.lookupList.toArray();
         let lookupListIndexes = font.GSUB.featureList[0].feature.lookupListIndexes;
         lookupListIndexes.forEach(index => {
@@ -233,18 +222,34 @@ qx.Class.define("qx.tool.compiler.app.WebFont", {
             let leadingCharacter = leadingCharacters[ligatureSetIndex];
             ligatureSet.forEach(ligature => {
               let character = font.stringsForGlyph(ligature.glyph)[0];
+              if (!character){
+                // qx.tool.compiler.Console.log(`WARN: ${this.getName()} no character ${ligature}`);
+                return;
+              }
               let ligatureText = leadingCharacter + ligature
                 .components
                 .map(x => font.stringsForGlyph(x)[0])
                 .join('');
-              resources["@" + this.getName() + "/" + ligatureText] = [
-                Math.ceil(this.getDefaultSize() * ligature.glyph.advanceWidth / ligature.glyph.advanceHeight), // width
-                this.getDefaultSize(), // height
-                character.charCodeAt(0)
-              ];
+              ligatureName[character.charCodeAt(0).toString(16)] = ligatureText;
             });
           });
         });
+        let done = 0;
+        font.characterSet.forEach( codePoint => {
+          let glyph = font.glyphForCodePoint(codePoint);
+
+          let gName = glyph.name || ligatureName[codePoint.toString(16)];
+          if (!gName) return;
+          if (glyph.path.commands.length > 0 || glyph.layers) {
+
+            resources["@" + this.getName() + "/" + gName] = [
+              Math.ceil(this.getDefaultSize() * glyph.advanceWidth / glyph.advanceHeight), // width
+              this.getDefaultSize(), // height
+              codePoint
+            ];
+          }
+        }, this);
+
 
         resolve(resources);
       }.bind(this));
