@@ -123,6 +123,12 @@ qx.Class.define("qx.tool.compiler.Analyser", {
       nullable: false,
       check: "Array"
     },
+    
+    /** Whether and how to mangle private identifiers */
+    manglePrivates: {
+      init: "readable",
+      check: [ "off", "readable", "unreadable" ]
+    },
 
     /** Whether to write line numbers to .po files */
     writePoLineNumbers: {
