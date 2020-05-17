@@ -198,7 +198,6 @@ qx.Class.define("qx.tool.cli.commands.Deploy", {
           await qx.tool.utils.files.Utils.copyFile(from, to);
         }
       });
-
     }
   },
 
