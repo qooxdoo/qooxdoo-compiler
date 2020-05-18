@@ -1980,11 +1980,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         return name;
       }
 
-      if (this.__privateMangling == "readable") {
-        if (name.indexOf("_PRIVATE_") > -1) {
-          return name;
-        }
-      } else if (name.indexOf("__P_") > -1) {
+      if (name.indexOf("__P_") > -1) {
         return name;
       }
       
