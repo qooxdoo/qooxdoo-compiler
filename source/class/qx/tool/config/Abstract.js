@@ -173,7 +173,7 @@ qx.Class.define("qx.tool.config.Abstract", {
         if (this.isWarnOnly()) {
           qx.tool.compiler.Console.warn(msg);
         } else {
-          throw new Error(msg);
+          throw new qx.tool.utils.Utils.UserError(msg);
         }
       }
     },
