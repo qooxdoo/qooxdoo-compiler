@@ -123,6 +123,12 @@ qx.Class.define("qx.tool.compiler.Analyser", {
       nullable: false,
       check: "Array"
     },
+    
+    /** Whether and how to mangle private identifiers */
+    manglePrivates: {
+      init: "readable",
+      check: [ "off", "readable", "unreadable" ]
+    },
 
     /** Whether to write line numbers to .po files */
     writePoLineNumbers: {
@@ -983,81 +989,121 @@ qx.Class.define("qx.tool.compiler.Analyser", {
 
     /**
      * Updates all translations to include all msgids found in code
-     * @param the library to update
+     * @param appLibrary the library to update
      * @param locales
      * @param cb
      */
-    updateTranslations: function(library, locales) {
-      const Promisify = qx.tool.utils.Promisify;
-
-      return Promise.all(locales.map(locale => {
-        var translation = new qx.tool.compiler.app.Translation(library, locale);
+    async updateTranslations(appLibrary, locales, libraries, copyAllMsgs) {
+      if (!libraries) {
+        libraries = [];
+      }
+      libraries = libraries.filter(lib => lib != appLibrary);
+      
+      await qx.Promise.all(locales.map(async locale => {
+        let libTranslations = {};
+        await qx.Promise.all(libraries.map(async lib => {
+          var translation = new qx.tool.compiler.app.Translation(lib, locale);
+          await translation.read();
+          libTranslations[lib.toHashCode()] = translation; 
+        }));
+        
+        var translation = new qx.tool.compiler.app.Translation(appLibrary, locale);
         translation.setWriteLineNumbers(this.isWritePoLineNumbers());
-        return translation.read()
-          .then(() => {
-            let unusedEntries = {};
-            for (let msgid in translation.getEntries()) {
-              unusedEntries[msgid] = true;
+        await translation.read();
+        
+        let unusedEntries = {};
+        for (let msgid in translation.getEntries()) {
+          unusedEntries[msgid] = true;
+        }
+        
+        await qx.Promise.all(this.__classes.map(async classname => {
+          let isAppClass = appLibrary.isClass(classname);
+          let classLibrary = !isAppClass && libraries.find(lib => lib.isClass(classname)) || null;
+          if (!isAppClass && !classLibrary) {
+            return;
+          }
+
+          let dbClassInfo = await qx.tool.utils.Promisify.call(cb => this.getClassInfo(classname, cb));
+          if (!dbClassInfo.translations) {
+            return;
+          }
+          
+          function isEmpty(entry) {
+            if (!entry) {
+              return true;
             }
+            if (qx.lang.Type.isArray(entry.msgstr)) {
+              return entry.msgstr.every(value => !value);
+            }
+            return !entry.msgstr;
+          }
 
-            return Promise.all(this.__classes.map(async classname => {
-              if (!classname.startsWith(library.getNamespace())) {
+          dbClassInfo.translations.forEach(function(src) {
+            delete unusedEntries[src.msgid];
+            
+            if (classLibrary) {
+              let entry = translation.getEntry(src.msgid);
+              if (!isEmpty(entry)) {
                 return;
               }
-
-              let dbClassInfo = await Promisify.call(cb => this.getClassInfo(classname, cb));
-              if (!dbClassInfo.translations) {
-                return;
+              let libTranslation = libTranslations[classLibrary.toHashCode()];
+              let libEntry = libTranslation.getEntry(src.msgid);
+              if (isEmpty(libEntry) || copyAllMsgs) {
+                if (!entry) {
+                  entry = translation.getOrCreateEntry(src.msgid);
+                }
+                if (libEntry !== null) {
+                  Object.assign(entry, libEntry);
+                }
+              }
+              return;
+            }
+            
+            let entry = translation.getOrCreateEntry(src.msgid);
+            if (src.msgid_plural) {
+              entry.msgid_plural = src.msgid_plural;
+            }
+            if (!entry.comments) {
+              entry.comments = {};
+            }
+            entry.comments.extracted = src.comment;
+            entry.comments.reference = {};
+            let ref = entry.comments.reference;
+            const fileName = classname.replace(/\./g, "/") + ".js";
+            const fnAddReference = lineNo => {
+              let arr = ref[fileName];
+              if (!arr) {
+                arr = ref[fileName] = [];
               }
 
-              dbClassInfo.translations.forEach(function(src) {
-                var entry = translation.getOrCreateEntry(src.msgid);
-                delete unusedEntries[src.msgid];
-                if (src.msgid_plural) {
-                  entry.msgid_plural = src.msgid_plural;
-                }
-                if (!entry.comments) {
-                  entry.comments = {};
-                }
-                entry.comments.extracted = src.comment;
-                entry.comments.reference = {};
-                let ref = entry.comments.reference;
-                const fileName = classname.replace(/\./g, "/") + ".js";
-                const fnAddReference = lineNo => {
-                  let arr = ref[fileName];
-                  if (!arr) {
-                    arr = ref[fileName] = [];
-                  }
-
-                  if (!arr.includes(src.lineNo)) {
-                    arr.push(lineNo);
-                  }
-                };
-                if (qx.lang.Type.isArray(src.lineNo)) {
-                  src.lineNo.forEach(fnAddReference);
-                } else {
-                  fnAddReference(src.lineNo);
-                }
-              });
-            }))
-              .then(() => {
-                Object.keys(unusedEntries).forEach(msgid => {
-                  var entry = translation.getEntry(msgid);
-                  if (entry) {
-                    if (!entry.comments) {
-                      entry.comments = {};
-                    }
-                    if (Object.keys(entry.comments).length == 0 && entry.msgstr === "") {
-                      translation.deleteEntry(msgid);
-                    } else {
-                      entry.comments.extracted = "NO LONGER USED";
-                      entry.comments.reference = {};
-                    }
-                  }
-                });
-              });
-          })
-          .then(() => translation.write());
+              if (!arr.includes(src.lineNo)) {
+                arr.push(lineNo);
+              }
+            };
+            if (qx.lang.Type.isArray(src.lineNo)) {
+              src.lineNo.forEach(fnAddReference);
+            } else {
+              fnAddReference(src.lineNo);
+            }
+          });
+        }));
+        
+        Object.keys(unusedEntries).forEach(msgid => {
+          var entry = translation.getEntry(msgid);
+          if (entry) {
+            if (!entry.comments) {
+              entry.comments = {};
+            }
+            if (Object.keys(entry.comments).length == 0 && entry.msgstr === "") {
+              translation.deleteEntry(msgid);
+            } else {
+              entry.comments.extracted = "NO LONGER USED";
+              entry.comments.reference = {};
+            }
+          }
+        });
+        
+        await translation.write();
       }));
     },
 

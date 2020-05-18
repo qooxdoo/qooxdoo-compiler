@@ -117,6 +117,22 @@ qx.Class.define("qx.tool.cli.commands.Deploy", {
       let cmd = new qx.tool.cli.commands.Compile(compileArgv);
       await cmd.process();
       
+      if (argv.clean) {
+        await qx.tool.utils.Promisify.eachOfSeries(cmd.getMakers(), async (maker, makerIndex) => {
+          let target = maker.getTarget();
+          
+          await qx.tool.utils.Promisify.eachOfSeries(maker.getApplications(), async app => {
+            if (appNames && !appNames[app.getName()]) {
+              return;
+            }
+            let deployDir = argv.out || target.getDeployDir();
+            if (deployDir) {
+              await qx.tool.utils.files.Utils.deleteRecursive(deployDir);
+            }
+          });
+        });
+      }
+      
       await qx.tool.utils.Promisify.eachOfSeries(cmd.getMakers(), async (maker, makerIndex) => {
         let target = maker.getTarget();
         
@@ -132,10 +148,6 @@ qx.Class.define("qx.tool.cli.commands.Deploy", {
 
           let sourceMaps = argv.sourceMaps || target.getDeployMap() || target.getSaveSourceInMap();
 
-          if (argv.clean) {
-            await qx.tool.utils.files.Utils.deleteRecursive(deployDir);
-          }
-          
           await qx.tool.utils.Utils.makeDirs(deployDir);
           let appRoot = target.getApplicationRoot(app);
           
@@ -191,7 +203,7 @@ qx.Class.define("qx.tool.cli.commands.Deploy", {
 
   defer: function(statics) {
     qx.tool.compiler.Console.addMessageIds({
-      "qx.tool.cli.deploy.deployDirNotSpecified": "No deploy dir configured! Use --out parameter or deployDir in compile.json."      
+      "qx.tool.cli.deploy.deployDirNotSpecified": "No deploy dir configured! Use --out parameter or deployPath target property in compile.json."
     }, "error");
     qx.tool.compiler.Console.addMessageIds({
       "qx.tool.cli.deploy.sourceMapsNotSpecified": "Source maps are not being deployed, see --source-maps command line option",

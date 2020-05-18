@@ -75,6 +75,15 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
     },
 
     /**
+     * Target type default environment property map
+     */
+    defaultEnvironment: {
+      init: null,
+      inheritable: true,
+      nullable: true
+    },
+
+    /**
      * The analyser being generated
      */
     analyser: {
@@ -107,6 +116,12 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
       init: false,
       nullable: false,
       check: "Boolean"
+    },
+    
+    /** What to do with library transation strings */
+    libraryPoPolicy: {
+      init: "ignore",
+      check: [ "ignore", "untranslated", "all" ]
     },
 
     /** Whether to write a summary of the compile info to disk, ie everything about dependencies and
@@ -437,7 +452,12 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
     async _writeTranslations(appMeta) {
       const analyser = appMeta.getAnalyser();
       if (this.isUpdatePoFiles()) {
-        await analyser.updateTranslations(appMeta.getAppLibrary(), this.getLocales());
+        let policy = this.getLibraryPoPolicy();
+        if (policy != "ignore") {
+          await analyser.updateTranslations(appMeta.getAppLibrary(), this.getLocales(), appMeta.getLibraries(), policy == "all");
+        } else {
+          await analyser.updateTranslations(appMeta.getAppLibrary(), this.getLocales(), null, false);
+        }
       }
 
       await this._writeLocales(appMeta);
@@ -581,8 +601,12 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
 
           t.getLocales().forEach(localeId => {
             let localePkg = this.isI18nAsParts() ? appMeta.getLocalePackage(localeId) : pkg;
-            let id = dbClassInfo.libraryName + ":" + localeId;
+            let id = appMeta.getAppLibrary().getNamespace() + ":" + localeId;
             let translation = translations[id];
+            if (!translation) {
+              id = dbClassInfo.libraryName + ":" + localeId;
+              translation = translations[id];
+            }
             dbClassInfo.translations.forEach(transInfo => {
               let entry = translation.getEntry(transInfo.msgid);
               if (entry) {
