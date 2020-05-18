@@ -211,7 +211,7 @@ qx.Class.define("qx.tool.compiler.app.WebFont", {
         lookupListIndexes.forEach(index => {
           let subTable = lookupList[index].subTables[0];
           let leadingCharacters = [];
-          subTable.coverage.rangeRecords.forEach((coverage) => {
+          subTable.coverage.rangeRecords.forEach(coverage => {
             for (let i = coverage.start; i <= coverage.end; i++) {
               let character = font.stringsForGlyph(i)[0];
               leadingCharacters.push(character);
@@ -222,26 +222,27 @@ qx.Class.define("qx.tool.compiler.app.WebFont", {
             let leadingCharacter = leadingCharacters[ligatureSetIndex];
             ligatureSet.forEach(ligature => {
               let character = font.stringsForGlyph(ligature.glyph)[0];
-              if (!character){
+              if (!character) {
                 // qx.tool.compiler.Console.log(`WARN: ${this.getName()} no character ${ligature}`);
                 return;
               }
               let ligatureText = leadingCharacter + ligature
                 .components
                 .map(x => font.stringsForGlyph(x)[0])
-                .join('');
-              ligatureName[character.charCodeAt(0).toString(16)] = ligatureText;
+                .join("");
+              ligatureName[character.charCodeAt(0).toString(16)] = ligatureText;
             });
           });
         });
-        let done = 0;
-        font.characterSet.forEach( codePoint => {
+
+        font.characterSet.forEach(codePoint => {
           let glyph = font.glyphForCodePoint(codePoint);
 
           let gName = glyph.name || ligatureName[codePoint.toString(16)];
-          if (!gName) return;
+          if (!gName) {
+            return;
+          }
           if (glyph.path.commands.length > 0 || glyph.layers) {
-
             resources["@" + this.getName() + "/" + gName] = [
               Math.ceil(this.getDefaultSize() * glyph.advanceWidth / glyph.advanceHeight), // width
               this.getDefaultSize(), // height
@@ -298,7 +299,7 @@ qx.Class.define("qx.tool.compiler.app.WebFont", {
      */
     generateForTarget: function(target) {
       return new Promise((resolve, reject) => {
-        for(let resource of this.getResources()){
+        for (let resource of this.getResources()) {
           // Search for the first supported extension
           let basename = resource.match(/^.*[/\\]([^/\\\?#]+).*$/)[1];
           // fontkit knows about these font formats
@@ -312,9 +313,9 @@ qx.Class.define("qx.tool.compiler.app.WebFont", {
               this.__fontData = data;
               resolve();
             })
-            .catch(err => {
-              reject(err);
-            });
+              .catch(err => {
+                reject(err);
+              });
             return;
           }
           // handle local file
@@ -322,12 +323,12 @@ qx.Class.define("qx.tool.compiler.app.WebFont", {
             this.__fontData = data;
             resolve();
           })
-          .catch(err => {
-            reject(err);
-          });
+            .catch(err => {
+              reject(err);
+            });
           return;
         }
-        reject(`Failed to load/validate FontMap for ${resource}`);
+        reject(`Failed to load/validate FontMap for webfont (expected ttf, otf, woff or woff2) ${this.getName()}`);
       });
     },
 
