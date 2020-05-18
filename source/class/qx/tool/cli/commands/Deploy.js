@@ -13,6 +13,7 @@
 
    Authors:
      * John Spackman (john.spackman@zenesis.com, @johnspackman)
+     * Henner Kollmann (Henner.Kollmann@gmx.de, @hkollmann)
 
 ************************************************************************ */
 require("./Compile");
@@ -27,48 +28,50 @@ const util = require("../../compiler/util");
  * 
  */
 qx.Class.define("qx.tool.cli.commands.Deploy", {
-  extend: qx.tool.cli.commands.Command,
+  extend: qx.tool.cli.commands.Compile,
   statics: {
+    YARGS_BUILDER: {
+      "out": {
+        describe: "Output directory for the deployment",
+        alias: "o"
+      },
+      "app-name": {
+        describe: "The name of the application to deploy (default is all apps), can be comma separated list",
+        nargs: 1,
+        type: "string"
+      },
+      "source-maps": {
+        describe: "Enable source maps",
+        type: "boolean",
+        default: false,
+        alias: "m"
+      },
+      "target": {
+        alias: "t",
+        describe: "Set the target type. Default is build",
+        type: "string",
+        default: "build"
+      }
+    },
+
     getYargsCommand: function() {
       return {
         command: "deploy [options]",
         describe: "deploys qooxdoo application(s)",
-        builder: {
-          "out": {
-            describe: "Output directory for the deployment",
-            alias: "o"
-          },
-          "app-name": {
-            describe: "The name of the application to deploy (default is all apps), can be comma separated list",
-            nargs: 1,
-            type: "string"
-          },
-          "source-maps": {
-            describe: "Enable source maps",
-            type: "boolean",
-            default: null,
-            alias: "m"
-          },
-          "save-source-in-map": {
-            describe: "Saves the source code in the map file (build target only)",
-            type: "boolean",
-            default: false
-          },
-    
-          "clean": {
-            describe: "Deletes the application output directory before deploying",
-            type: "boolean",
-            default: false,
-            alias: "D"
-          },
-          "target": {
-            alias: "t",
-            describe: "Set the target type. Default is build",
-            type: "string",
-            default: "build"
-          }
-    
-        }
+        builder   : (() => {
+          let res = Object.assign({}, 
+            qx.tool.cli.commands.Compile.YARGS_BUILDER, 
+            qx.tool.cli.commands.Deploy.YARGS_BUILDER
+          );
+          delete res.watch;
+          delete res["write-library-info"];
+          delete res.download;
+          delete res["update-po-files"];
+          delete res["save-unminified"];
+          delete res.bundling;
+          delete res.minify;
+          return res;
+        })()
       };
     }
   },
@@ -81,51 +84,38 @@ qx.Class.define("qx.tool.cli.commands.Deploy", {
     process: async function() {
       let argv = this.argv;
       
-      let config = await qx.tool.cli.Cli.getInstance().getParsedArgs();
-      if (!config) {
-        throw new qx.tool.utils.Utils.UserError("Error: Cannot find any configuration");
-      }
-      
-      if (argv.sourceMaps === null) {
-        qx.tool.compiler.Console.print("qx.tool.cli.deploy.sourceMapsNotSpecified");
-      }
-      
       if (!argv.clean) {
         qx.tool.compiler.Console.print("qx.tool.cli.deploy.notClean");
       }
       
       let compileArgv = {
-        target: config.targetType,
         writeLibraryInfo: false,
         download: false,
         updatePoFiles: false,
         saveUnminified: false,
         bundling: true,
         minify: "mangle",
-        saveSourceInMap: config.saveSourceInMap,
         __deploying: true
       };
+      qx.lang.Object.mergeWith(argv, compileArgv);
+      await this.base(arguments);
+
       let appNames = null;
       if (argv.appName) {
         compileArgv.appName = argv.appName;
         appNames = {};
         argv.appName.split(",").forEach(appName => appNames[appName] = true);
       }
-      if (argv.clean) {
-        compileArgv.clean = true;
-      }
-      let cmd = new qx.tool.cli.commands.Compile(compileArgv);
-      await cmd.process();
       
       if (argv.clean) {
-        await qx.tool.utils.Promisify.eachOfSeries(cmd.getMakers(), async (maker, makerIndex) => {
+        await qx.tool.utils.Promisify.eachOfSeries(this.getMakers(), async maker => {
           let target = maker.getTarget();
           
           await qx.tool.utils.Promisify.eachOfSeries(maker.getApplications(), async app => {
             if (appNames && !appNames[app.getName()]) {
               return;
             }
-            let deployDir = argv.out || target.getDeployDir();
+            let deployDir = argv.out || ((typeof target.getDeployDir == "function") && target.getDeployDir());
             if (deployDir) {
               await qx.tool.utils.files.Utils.deleteRecursive(deployDir);
             }
@@ -133,52 +123,26 @@ qx.Class.define("qx.tool.cli.commands.Deploy", {
         });
       }
       
-      await qx.tool.utils.Promisify.eachOfSeries(cmd.getMakers(), async (maker, makerIndex) => {
+      await qx.tool.utils.Promisify.eachOfSeries(this.getMakers(), async (maker, makerIndex) => {
         let target = maker.getTarget();
         
         await qx.tool.utils.Promisify.eachOfSeries(maker.getApplications(), async app => {
           if (appNames && !appNames[app.getName()]) {
             return;
           }
-          let deployDir = argv.out || target.getDeployDir();
+          let deployDir = argv.out || ((typeof target.getDeployDir == "function") && target.getDeployDir());
           if (!deployDir) {
             qx.tool.compiler.Console.print("qx.tool.cli.deploy.deployDirNotSpecified");
             return;
           }
 
-          let sourceMaps = argv.sourceMaps || target.getDeployMap() || target.getSaveSourceInMap();
-
-          await qx.tool.utils.Utils.makeDirs(deployDir);
+          let sourceMaps = argv.sourceMaps || 
+                         ((typeof target.getDeployMap == "function") && target.getDeployMap()) || 
+                         ((typeof target.getSaveSourceInMap == "function") && target.getSaveSourceInMap());
           let appRoot = target.getApplicationRoot(app);
+          let destRoot = path.join(deployDir, app.getName());
+          await this.__copyFiles(appRoot, destRoot, sourceMaps);
           
-          let files = await fs.readdirAsync(appRoot);
-          await qx.tool.utils.Promisify.eachOf(files, async file => {
-            let stat = await fs.statAsync(path.join(appRoot, file));
-            if (!stat.isFile()) {
-              return;
-            }
-            let ext = path.extname(file);
-            if (ext == ".map" && !sourceMaps) {
-              return;
-            }
-            let from = path.join(appRoot, file);
-            let to = path.join(deployDir, app.getName(), file);
-            if (ext == ".js" && !sourceMaps) {
-              await util.mkParentPathAsync(to);
-              let rs = fs.createReadStream(from, { encoding: "utf8", emitClose: true });
-              let ws = fs.createWriteStream(to, { encoding: "utf8", emitClose: true });
-              let ss = new qx.tool.utils.Utils.StripSourceMapTransform();
-              await new qx.Promise((resolve, reject) => {
-                rs.on("error", reject);
-                ws.on("error", reject);
-                ws.on("finish", resolve);
-                rs.pipe(ss);
-                ss.pipe(ws);
-              });
-            } else {
-              await qx.tool.utils.files.Utils.copyFile(from, to);
-            }
-          });
           {
             let from = path.join(target.getOutputDir(), "resource");
             if (fs.existsSync(from)) {
@@ -198,6 +162,42 @@ qx.Class.define("qx.tool.cli.commands.Deploy", {
           }
         });
       });
+    },
+    
+    __copyFiles: async function(srcDir, destDir, sourceMaps) {
+      await qx.tool.utils.Utils.makeDirs(destDir);
+      let files = await fs.readdirAsync(srcDir);
+      await qx.tool.utils.Promisify.eachOf(files, async file => {
+        let from = path.join(srcDir, file);
+        let to = path.join(destDir, file);
+
+        let stat = await fs.statAsync(from);
+        if (!stat.isFile()) {
+          await this.__copyFiles(from, to, sourceMaps);
+          return;
+        }
+        let ext = path.extname(file);
+        if (ext == ".map" && !sourceMaps) {
+          return;
+        }
+        
+        
+        if (ext == ".js" && !sourceMaps) {
+          await util.mkParentPathAsync(to);
+          let rs = fs.createReadStream(from, { encoding: "utf8", emitClose: true });
+          let ws = fs.createWriteStream(to, { encoding: "utf8", emitClose: true });
+          let ss = new qx.tool.utils.Utils.StripSourceMapTransform();
+          await new qx.Promise((resolve, reject) => {
+            rs.on("error", reject);
+            ws.on("error", reject);
+            ws.on("finish", resolve);
+            rs.pipe(ss);
+            ss.pipe(ws);
+          });
+        } else {
+          await qx.tool.utils.files.Utils.copyFile(from, to);
+        }
+      });
     }
   },
 
@@ -206,7 +206,6 @@ qx.Class.define("qx.tool.cli.commands.Deploy", {
       "qx.tool.cli.deploy.deployDirNotSpecified": "No deploy dir configured! Use --out parameter or deployPath target property in compile.json."
     }, "error");
     qx.tool.compiler.Console.addMessageIds({
-      "qx.tool.cli.deploy.sourceMapsNotSpecified": "Source maps are not being deployed, see --source-maps command line option",
       "qx.tool.cli.deploy.notClean": "Incremental compilation - this is faster but may preserve old artifacts, it is recommended to use --clean command line option"
     }, "warning");
   }

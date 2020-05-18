@@ -126,7 +126,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
     
     /** Whether and how to mangle private identifiers */
     manglePrivates: {
-      init: "readble",
+      init: "readable",
       check: [ "off", "readable", "unreadable" ]
     },
 
