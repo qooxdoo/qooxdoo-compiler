@@ -1505,9 +1505,9 @@
       "integrity": "sha512-0FLN72XwbuIxRRASvP0TwLP0W+ORtrj6NnM14k6pKVBjzl7fbdhPAZE2bTNhlPyjbB6HKpDpTFKwIuI9Pq/4EA=="
     },
     "@qooxdoo/framework": {
-      "version": "6.0.0-beta-20200401-1413",
-      "resolved": "https://registry.npmjs.org/@qooxdoo/framework/-/framework-6.0.0-beta-20200401-1413.tgz",
-      "integrity": "sha512-B3Aje+1bER2zGcF9/LW1Yd9//2hx2o3DIz0z6EPUb8AQCYTdX2me33d4J545A9QXJWgF0nbaZ2a7pcwpRmhrNA=="
+      "version": "6.0.0-beta-20200515-0957",
+      "resolved": "https://registry.npmjs.org/@qooxdoo/framework/-/framework-6.0.0-beta-20200515-0957.tgz",
+      "integrity": "sha512-YC6nvbdrX5MUT1XP0GTafvd/lOXC8VTKCMHru/USZ6BpUgp3CoVKhpQ7HRN28JqKWGyQFxHzL5qYoDiUvudeTw=="
     },
     "@types/color-name": {
       "version": "1.1.1",
