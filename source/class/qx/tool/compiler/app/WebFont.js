@@ -202,14 +202,55 @@ qx.Class.define("qx.tool.compiler.app.WebFont", {
           return;
         }
 
-        font.characterSet.forEach(function(codePoint) {
+        // some IconFonts (MaterialIcons for example) use ligatures
+        // to name their icons. This code extracts the ligatures
+        // hat tip to Jossef Harush https://stackoverflow.com/questions/54721774/extracting-ttf-font-ligature-mappings/54728584
+        let ligatureName = {};
+        let lookupList = font.GSUB.lookupList.toArray();
+        let lookupListIndexes = font.GSUB.featureList[0].feature.lookupListIndexes;
+        lookupListIndexes.forEach(index => {
+          let subTable = lookupList[index].subTables[0];
+          let leadingCharacters = [];
+          subTable.coverage.rangeRecords.forEach(coverage => {
+            for (let i = coverage.start; i <= coverage.end; i++) {
+              let character = font.stringsForGlyph(i)[0];
+              leadingCharacters.push(character);
+            }
+          });
+          let ligatureSets = subTable.ligatureSets.toArray();
+          ligatureSets.forEach((ligatureSet, ligatureSetIndex) => {
+            let leadingCharacter = leadingCharacters[ligatureSetIndex];
+            ligatureSet.forEach(ligature => {
+              let character = font.stringsForGlyph(ligature.glyph)[0];
+              if (!character) {
+                // qx.tool.compiler.Console.log(`WARN: ${this.getName()} no character ${ligature}`);
+                return;
+              }
+              let ligatureText = leadingCharacter + ligature
+                .components
+                .map(x => font.stringsForGlyph(x)[0])
+                .join("");
+              ligatureName[character.charCodeAt(0).toString(16)] = ligatureText;
+            });
+          });
+        });
+
+        font.characterSet.forEach(codePoint => {
           let glyph = font.glyphForCodePoint(codePoint);
-          resources["@" + this.getName() + "/" + glyph.name] = [
-            Math.ceil(this.getDefaultSize() * glyph.advanceWidth / glyph.advanceHeight), // width
-            this.getDefaultSize(), // height
-            codePoint
-          ];
+
+          let gName = glyph.name || ligatureName[codePoint.toString(16)];
+          if (!gName) {
+            return;
+          }
+          if (glyph.path.commands.length > 0 || glyph.layers) {
+            resources["@" + this.getName() + "/" + gName] = [
+              Math.ceil(this.getDefaultSize() * glyph.advanceWidth / glyph.advanceHeight), // width
+              this.getDefaultSize(), // height
+              codePoint
+            ];
+          }
         }, this);
+
 
         resolve(resources);
       }.bind(this));
@@ -258,13 +299,13 @@ qx.Class.define("qx.tool.compiler.app.WebFont", {
      */
     generateForTarget: function(target) {
       return new Promise((resolve, reject) => {
-        this.getResources().some(resource => {
+        for (let resource of this.getResources()) {
           // Search for the first supported extension
-          let basename = resource.match(/^.*[/\\]([^/\\\?]+).*$/)[1];
-          if (!basename.endsWith(".ttf")) {
-            return false;
+          let basename = resource.match(/^.*[/\\]([^/\\\?#]+).*$/)[1];
+          // fontkit knows about these font formats
+          if (!basename.match(/\.(ttf|otf|woff|woff2)$/)) {
+            continue;
           }
-
           // We support http/https and local files, check for URLs
           // first.
           if (resource.match(/^https?:\/\//)) {
@@ -275,20 +316,19 @@ qx.Class.define("qx.tool.compiler.app.WebFont", {
               .catch(err => {
                 reject(err);
               });
-
-          // ... local file
-          } else {
-            this._loadLocalFont(resource).then(data => {
-              this.__fontData = data;
-              resolve();
-            })
-              .catch(err => {
-                reject(err);
-              });
+            return;
           }
-
-          return true;
-        });
+          // handle local file
+          this._loadLocalFont(resource).then(data => {
+            this.__fontData = data;
+            resolve();
+          })
+            .catch(err => {
+              reject(err);
+            });
+          return;
+        }
+        reject(`Failed to load/validate FontMap for webfont (expected ttf, otf, woff or woff2) ${this.getName()}`);
       });
     },
 

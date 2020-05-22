@@ -1980,20 +1980,30 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         return name;
       }
 
-      if (this.__privateMangling == "readable") {
-        if (name.indexOf("_PRIVATE_") > -1) {
-          return name;
-        }
-      } else if (name.indexOf("__P_") > -1) {
+      if (name.indexOf("__P_") > -1) {
         return name;
       }
       
       let coded = this.__privates[name];
       if (!coded) {
+        let db = this.__analyser.getDatabase();
+        if (!db.manglePrefixes) {
+          db.manglePrefixes = {
+            nextPrefix: 1,
+            classPrefixes: {}
+          };
+        }
+        let prefixes = db.manglePrefixes;
+        let prefix = prefixes.classPrefixes[this.__className];
+        if (!prefix) {
+          prefix = "__P_" + (++prefixes.nextPrefix) + "_";
+          prefixes.classPrefixes[this.__className] = prefix;
+        }
+        
         if (this.__privateMangling == "readable") {
-          coded = this.__privates[name] = name + "_PRIVATE_" + Object.keys(this.__privates).length;
+          coded = this.__privates[name] = name + prefix + Object.keys(this.__privates).length;
         } else {
-          coded = this.__privates[name] = "__P_" + Object.keys(this.__privates).length;
+          coded = this.__privates[name] = prefix + Object.keys(this.__privates).length;
         }
       }
       return coded;

@@ -50,7 +50,7 @@
     "@qooxdoo/eslint-config-jsdoc-disable": "^1.0.3",
     "@qooxdoo/eslint-config-qx": "1.2.1",
     "@qooxdoo/eslint-plugin-qx": "^1.2.7",
-    "@qooxdoo/framework": "^6.0.0-beta",
+    "@qooxdoo/framework": "6.0.0-beta-20200515-0957",
     "ajv": "^6.12.0",
     "app-module-path": "^2.2.0",
     "async": "^2.6.3",
