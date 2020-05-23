@@ -555,14 +555,14 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
         let pkg = this.isI18nAsParts() ? appMeta.getLocalePackage(localeId) : bootPackage;
         function addTrans(library, localeId) {
           return analyser.getTranslation(library, localeId)
-          .then(translation => {
-            var id = library.getNamespace() + ":" + localeId;
-            translations[id] = translation;
-            var entries = translation.getEntries();
-            for (var msgid in entries) {
-              pkg.addTranslationEntry(localeId, entries[msgid]);
-            }
-          })
+            .then(translation => {
+              var id = library.getNamespace() + ":" + localeId;
+              translations[id] = translation;
+              var entries = translation.getEntries();
+              for (var msgid in entries) {
+                pkg.addTranslationEntry(localeId, entries[msgid]);
+              }
+            });
         }
         appMeta.getLibraries().forEach(function(library) {
           if (library === appMeta.getAppLibrary()) {
@@ -631,7 +631,7 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
               if (!entry && (id !== idLib)) {
                 let translation = translations[idLib];
                 if (translation) {
-                   entry = translation.getEntry(transInfo.msgid);
+                  entry = translation.getEntry(transInfo.msgid);
                 }
               }
               if (entry) {
