@@ -549,14 +549,33 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
       var t = this;
       var analyser = appMeta.getAnalyser();
       let bootPackage = appMeta.getPackages()[0];
-
-      var promises = t.getLocales().map(async localeId => {
-        let translation = await analyser.getTranslation(appMeta.getAppLibrary(), localeId);
+      var translations = {};
+      var promises = [];
+      t.getLocales().forEach(localeId => {
         let pkg = this.isI18nAsParts() ? appMeta.getLocalePackage(localeId) : bootPackage;
-        var entries = translation.getEntries();
-        for (var msgid in entries) {
-          pkg.addTranslationEntry(localeId, entries[msgid]);
+        function addTrans(library, localeId) {
+          return analyser.getTranslation(library, localeId)
+          .then(translation => {
+            var id = library.getNamespace() + ":" + localeId;
+            translations[id] = translation;
+            var entries = translation.getEntries();
+            for (var msgid in entries) {
+              pkg.addTranslationEntry(localeId, entries[msgid]);
+            }
+          })
         }
+        appMeta.getLibraries().forEach(function(library) {
+          if (library === appMeta.getAppLibrary()) {
+            return;
+          }
+          promises.push(
+            addTrans(library, localeId)
+          );
+        });  
+        // translation from main app should overwrite package translations 
+        promises.push(
+          addTrans(appMeta.getAppLibrary(), localeId)
+        );
       });
       await qx.Promise.all(promises);
     },
