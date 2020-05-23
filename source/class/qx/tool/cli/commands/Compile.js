@@ -64,7 +64,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         default: false
       },
       "library-po": {
-        describe: "The policy for translations in libraries",
+        describe: "The policy for updating translations in libraries",
         type: [ "ignore", "untranslated", "all" ],
         default: "ignore"
       },
