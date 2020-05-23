@@ -617,17 +617,23 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
           if (!dbClassInfo.translations) {
             return;
           }
-
           t.getLocales().forEach(localeId => {
             let localePkg = this.isI18nAsParts() ? appMeta.getLocalePackage(localeId) : pkg;
-            let id = appMeta.getAppLibrary().getNamespace() + ":" + localeId;
-            let translation = translations[id];
-            if (!translation) {
-              id = dbClassInfo.libraryName + ":" + localeId;
-              translation = translations[id];
-            }
             dbClassInfo.translations.forEach(transInfo => {
-              let entry = translation.getEntry(transInfo.msgid);
+              let entry;
+              let id = appMeta.getAppLibrary().getNamespace() + ":" + localeId;
+              // search in main app first
+              let translation = translations[id];
+              if (translation) {
+                entry = translation.getEntry(transInfo.msgid);
+              }
+              let idLib = dbClassInfo.libraryName + ":" + localeId;
+              if (!entry && (id !== idLib)) {
+                let translation = translations[idLib];
+                if (translation) {
+                   entry = translation.getEntry(transInfo.msgid);
+                }
+              }
               if (entry) {
                 localePkg.addTranslationEntry(localeId, entry);
               }
