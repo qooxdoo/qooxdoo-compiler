@@ -1,7 +1,14 @@
-var fs = require("fs");
-var fsPromises = require("fs").promises;
-var async = require("async");
+const fs = require("fs");
+const async = require("async");
 const child_process = require("child_process");
+//var fsPromises = require("fs").promises;
+// node 8 compatibility
+const {promisify} = require('util');
+const fsPromises = {
+  readFile: promisify(fs.readFile),
+  writeFile: promisify(fs.writeFile),
+  unlink: promisify(fs.unlink)
+};
 
 async function runCompiler(dir, ...cmd) {
   let result = await runCommand(dir, "qx", "compile", "--machine-readable", ...cmd);
@@ -112,8 +119,9 @@ async function safeDelete(filename) {
 }
 
 module.exports = {
-    runCompiler,
-    runCommand,
-    deleteRecursive,
-    safeDelete
+  runCompiler,
+  runCommand,
+  deleteRecursive,
+  safeDelete,
+  fsPromises
 };
