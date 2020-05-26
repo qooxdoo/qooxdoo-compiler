@@ -54,6 +54,16 @@ qx.Class.define("qx.tool.cli.commands.Test", {
       method: {
         describe: "only run tests of this method",
         type: "string"
+      },
+      "fail-fast": {
+        describe: "Exit on first failing test",
+        defaut: true,
+        type: "boolean"
+      },
+      serve: {
+        describe: "Run built-in server",
+        default: true,
+        type: "boolean"
       }
     },
 
@@ -70,7 +80,7 @@ qx.Class.define("qx.tool.cli.commands.Test", {
           delete res.watch;
           delete res["machine-readable"];
           delete res["feedback"];
-    
+
           return res;
         })()
       };
@@ -92,6 +102,47 @@ qx.Class.define("qx.tool.cli.commands.Test", {
   },
 
   members: {
+
+    /**
+     * The error code of the last run test
+     * @var {Number}
+     */
+    errorCode: 0,
+
+    /**
+     * @var {qx.data.Array}
+     */
+    __tests: null,
+
+    /**
+     * Registers a test object and listens for the change of errorCode property
+     * @param {qx.tool.cli.api.Test} test
+     */
+    registerTest: function(test) {
+      qx.core.Assert.assertInstance(test, qx.tool.cli.api.Test);
+      test.addListenerOnce("changeExitCode", evt => {
+        let exitCode = evt.getData();
+        // overwrite error code only in case of errors
+        if (exitCode) {
+          this.errorCode = exitCode;
+        }
+        // handle result and inform user
+        if (exitCode === 0) {
+          if (test.getName() && !this.argv.quiet) {
+            qx.tool.compiler.Console.info(`Test '${test.getName()}' passed.`);
+          }
+        } else {
+          if (test.getName()) {
+            qx.tool.compiler.Console.error(`Test '${test.getName()}' failed with exit code ${exitCode}.`);
+          }
+          if (this.argv.failFast) {
+            process.exit(exitCode);
+          }
+        }
+      });
+      this.__tests.push(test);
+    },
+
     /*
      * @Override
      */
@@ -114,14 +165,22 @@ qx.Class.define("qx.tool.cli.commands.Test", {
           process.exit(-1);
         }
       });
+      this.__tests = new qx.data.Array();
       this.addListener("afterStart", () => {
-        let result = {errorCode: 0};
-        let res = this.fireDataEvent("runTests", result);
+        let res = this.fireDataEvent("runTests", this);
         res.then(() => {
-          process.exit(result.errorCode);
+          process.exit(this.errorCode);
         });
       });
-      await this.base(arguments);
+      if (this.argv.serve) {
+        // start server
+        await this.base(arguments);
+      } else {
+        // compile only
+        await qx.tool.cli.commands.Compile.prototype.process.call(this);
+        // since the server is not started, manually fire the event test necessary for firing the "runTests" event
+        this.fireEvent("afterStart");
+      }
     }
   },
 

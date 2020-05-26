@@ -43,3 +43,4 @@ require("./commands/package/Migrate.js");
 require("./api/AbstractApi.js");
 require("./api/CompilerApi.js");
 require("./api/LibraryApi.js");
+require("./api/Test.js");

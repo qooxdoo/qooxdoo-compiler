@@ -35,35 +35,35 @@ qx.Class.define("qx.tool.cli.Cli", {
     }
     qx.tool.cli.Cli.__instance = this;
   },
-  
+
   members: {
     /** @type {yargs} the current yargs instance */
     yargs: null,
-    
+
     /** @type {Object} the current argv */
     argv: null,
-    
-    /** @type {CompilerApi} the CompilerApi instance */ 
+
+    /** @type {CompilerApi} the CompilerApi instance */
     _compilerApi: null,
-    
+
     /** @type {String} the compile.js filename, if there is one */
     _compileJsFilename: null,
-    
+
     /** @type {String} the compile.json filename, if there is one */
     _compileJsonFilename: null,
-    
+
     /** @type {Object} Parsed arguments */
     _parsedArgs: null,
-    
+
     /** @type {Promise} Promise that resolves to the _parsedArgs, but only when completely finished parsing them */
     __promiseParseArgs: null,
-    
+
     /** @type {Boolean} Whether libraries have had their `.load()` method called yet */
     __librariesNotified: false,
-    
+
     /**
      * Creates an instance of yargs, with minimal options
-     * 
+     *
      * @return {yargs}
      */
     __createYargs() {
@@ -95,7 +95,7 @@ qx.Class.define("qx.tool.cli.Cli", {
           type: "boolean"
         });
     },
-    
+
     /**
      * Initialises this.argv with the bare minimum required to load the config files and begin
      * processing
@@ -113,7 +113,7 @@ qx.Class.define("qx.tool.cli.Cli", {
         .usage(title);
       this.argv = yargs.argv;
     },
-    
+
     /**
      * Reloads this.argv with the full set of arguments
      */
@@ -139,7 +139,7 @@ qx.Class.define("qx.tool.cli.Cli", {
           // set it's items are strings in the form of key=value
           const regexp = /^[^=\s]+=.+$/;
           const setEnv = argv["set-env"];
-  
+
           if (!(setEnv === undefined || !setEnv.some(item => !regexp.test(item)))) {
             throw (new Error("Argument check failed: --set-env must be a key=value pair."));
           }
@@ -163,14 +163,14 @@ qx.Class.define("qx.tool.cli.Cli", {
           "Serve"
         ],
         "qx.tool.cli.commands");
-      
+
       this.argv = await yargs
         .demandCommand()
         .strict()
         .argv;
       await this.__notifyLibraries();
     },
-    
+
     /**
      * Calls the `.load()` method of each library, safe to call multiple times.  This is
      * to delay the calling of `load()` until after we know that the command has been selected
@@ -187,12 +187,12 @@ qx.Class.define("qx.tool.cli.Cli", {
       }
       await this._compilerApi.afterLibrariesLoaded();
     },
-    
+
     /**
-     * Processes a command.  All commands should use this method when invoked by Yargs, because it 
+     * Processes a command.  All commands should use this method when invoked by Yargs, because it
      * provides a standard error control and makes sure that the libraries know what command has
      * been selected.
-     * 
+     *
      * @param command {qx.tool.cli.Command} the command being run
      */
     async processCommand(command) {
@@ -209,26 +209,26 @@ qx.Class.define("qx.tool.cli.Cli", {
 
     /**
      * Returns the parsed command line and configuration data
-     * 
+     *
      * @return {Object}
      */
     async getParsedArgs() {
       return await this.__promiseParseArgs;
     },
-    
+
     /**
-     * Parses the command line and loads configuration data from a .js or .json file; 
-     * if you provide a .js file the file must be a module which returns an object which 
+     * Parses the command line and loads configuration data from a .js or .json file;
+     * if you provide a .js file the file must be a module which returns an object which
      * has any of these properties:
-     * 
+     *
      *  CompilerConfig - the class (derived from qx.tool.cli.api.CompilerApi)
      *    for configuring the compiler
-     *    
+     *
      * Each library can also have a compile.js, and that is also a module which can
      * return an object with any of these properties:
-     *  
+     *
      *  LibraryConfig - the class (derived from qx.tool.cli.api.LibraryApi)
-     *    for configuring the library 
+     *    for configuring the library
      *
      */
     async run() {
@@ -238,19 +238,19 @@ qx.Class.define("qx.tool.cli.Cli", {
       this.__promiseParseArgs = this.__parseArgsImpl();
       await this.__promiseParseArgs;
     },
-    
+
     /**
      * Does the work of parsing command line arguments and loading `compile.js[on]`
      */
     async __parseArgsImpl() {
       this.__bootstrapArgv();
-      
-      
+
+
       /*
        * Detect and load compile.json and compile.js
        */
       let defaultConfigFilename = this.argv.configFile || qx.tool.config.Compile.config.fileName;
-      
+
       var lockfileContent = {
         version: qx.tool.config.Lockfile.getInstance().getVersion()
       };
@@ -264,16 +264,16 @@ qx.Class.define("qx.tool.cli.Cli", {
           compileJsonFilename = defaultConfigFilename;
         }
       }
-      
+
       if (await fs.existsAsync(compileJsonFilename)) {
         this._compileJsonFilename = compileJsonFilename;
       }
-      
-      
+
+
       /*
        * Create a CompilerAPI
        */
-      
+
       let CompilerApi = qx.tool.cli.api.CompilerApi;
       if (await fs.existsAsync(compileJsFilename)) {
         let compileJs = await this.__loadJs(compileJsFilename);
@@ -282,15 +282,15 @@ qx.Class.define("qx.tool.cli.Cli", {
           CompilerApi = compileJs.CompilerApi;
         }
       }
-      let compilerApi = this._compilerApi = new CompilerApi(this).set({ 
+      let compilerApi = this._compilerApi = new CompilerApi(this).set({
         rootDir: ".",
         configFilename: compileJsonFilename
       });
-      
+
       await compilerApi.load();
       let config = compilerApi.getConfiguration();
-      
-      
+
+
       /*
        * Open the lockfile and check versions
        */
@@ -342,11 +342,11 @@ qx.Class.define("qx.tool.cli.Cli", {
         }
       }
 
-      
+
       /*
        * Locate and load libraries
        */
-      
+
       if (!config.libraries) {
         if (fs.existsSync("Manifest.json")) {
           config.libraries = [ "." ];
@@ -360,8 +360,10 @@ qx.Class.define("qx.tool.cli.Cli", {
           config.packages[library.uri] = library.path;
         });
       }
-
-      if (config.libraries) {
+      // check if we need to load libraries, needs more robust test
+      let needLibraries = qx.lang.Type.isArray(this.argv._) && this.argv._[0] !== "clean";
+      // check if libraries are loaded
+      if (config.libraries && needLibraries) {
         if (!config.libraries.every(libData => fs.existsSync(libData + "/Manifest.json"))) {
           qx.tool.compiler.Console.log("One or more libraries not found - trying to install them from library repository...");
           const installer = new qx.tool.cli.commands.package.Install({
@@ -380,8 +382,8 @@ qx.Class.define("qx.tool.cli.Cli", {
               LibraryApi = compileJs.LibraryApi;
             }
           }
-          
-          let libraryApi = new LibraryApi().set({ 
+
+          let libraryApi = new LibraryApi().set({
             rootDir: aPath,
             compilerApi: compilerApi
           });
@@ -389,8 +391,8 @@ qx.Class.define("qx.tool.cli.Cli", {
           await libraryApi.initialize();
         }
       }
-      
-      
+
+
       /*
        * Now everything is loaded, we can process the command line properly
        */
@@ -449,20 +451,20 @@ qx.Class.define("qx.tool.cli.Cli", {
       if (!config.serve) {
         config.serve = {};
       }
-        
+
       if (this.isExplicitArg("listen-port")) {
         config.serve.listenPort = this.argv.listenPort;
       } else {
         config.serve.listenPort = config.serve.listenPort || this.argv.listenPort;
       }
-      
+
       this._parsedArgs = await compilerApi.getConfiguration();
       return this._parsedArgs;
     },
-    
+
     /**
      * Loads a .js file using `require`, handling exceptions as best as possible
-     * 
+     *
      * @param aPath {String} the file to load
      * @return {Object} the module
      */
@@ -474,7 +476,7 @@ qx.Class.define("qx.tool.cli.Cli", {
         let lines = e.stack.split("\n");
         for (let i = 0; i < lines.length; i++) {
           if (lines[i].match(/^\s+at/)) {
-            lines.splice(i); 
+            lines.splice(i);
           }
         }
         let lineNumber = lines[0].split("evalmachine.<anonymous>:")[1];
@@ -489,16 +491,16 @@ qx.Class.define("qx.tool.cli.Cli", {
 
     /**
      * Returns the CompilerApi instance
-     * 
+     *
      * @return {CompilerApi}
      */
     getCompilerApi() {
       return this._compilerApi;
     },
-    
+
     /**
      * Returns the filename of compile.js, if there is one
-     * 
+     *
      * @return {String?} filename
      */
     getCompileJsFilename() {
@@ -507,13 +509,13 @@ qx.Class.define("qx.tool.cli.Cli", {
 
     /**
      * Returns the filename of compile.json, if there is one
-     * 
+     *
      * @return {String?} filename
      */
     getCompileJsonFilename() {
       return this._compileJsonFilename;
     },
-    
+
     /**
      * Detects whether the command line explicit set an option (as opposed to yargs
      * providing a default value).  Note that this does not handle aliases, use the
@@ -532,13 +534,13 @@ qx.Class.define("qx.tool.cli.Cli", {
 
   statics: {
     compileJsFilename: "compile.js",
-    
+
     /** {CompileJs} singleton instance */
     __instance: null,
-    
+
     /**
      * Returns the singleton instance, throws an error if it has not been created
-     * 
+     *
      * @return {qx.tool.cli.Cli}
      */
     getInstance() {
@@ -547,7 +549,7 @@ qx.Class.define("qx.tool.cli.Cli", {
       }
       return qx.tool.cli.Cli.__instance;
     },
-    
+
     /**
      * Adds commands to Yargs
      *
