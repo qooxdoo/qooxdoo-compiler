@@ -121,7 +121,7 @@ qx.Class.define("qx.tool.cli.commands.Test", {
     __tests: null,
 
     /**
-     * Registers a test object and listens for the change of errorCode property
+     * Registers a test object and listens for the change of exitCode property
      * @param {qx.tool.cli.api.Test} test
      */
     registerTest: function(test) {
