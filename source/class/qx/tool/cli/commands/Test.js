@@ -184,7 +184,7 @@ qx.Class.define("qx.tool.cli.commands.Test", {
       } else {
         // compile only
         await qx.tool.cli.commands.Compile.prototype.process.call(this);
-        // since the server is not started, manually fire the event test necessary for firing the "runTests" event
+        // since the server is not started, manually fire the event necessary for firing the "runTests" event
         this.fireEvent("afterStart");
       }
     }
