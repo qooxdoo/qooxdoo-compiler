@@ -549,14 +549,33 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
       var t = this;
       var analyser = appMeta.getAnalyser();
       let bootPackage = appMeta.getPackages()[0];
-
-      var promises = t.getLocales().map(async localeId => {
-        let translation = await analyser.getTranslation(appMeta.getAppLibrary(), localeId);
+      var translations = {};
+      var promises = [];
+      t.getLocales().forEach(localeId => {
         let pkg = this.isI18nAsParts() ? appMeta.getLocalePackage(localeId) : bootPackage;
-        var entries = translation.getEntries();
-        for (var msgid in entries) {
-          pkg.addTranslationEntry(localeId, entries[msgid]);
+        function addTrans(library, localeId) {
+          return analyser.getTranslation(library, localeId)
+            .then(translation => {
+              var id = library.getNamespace() + ":" + localeId;
+              translations[id] = translation;
+              var entries = translation.getEntries();
+              for (var msgid in entries) {
+                pkg.addTranslationEntry(localeId, entries[msgid]);
+              }
+            });
         }
+        appMeta.getLibraries().forEach(function(library) {
+          if (library === appMeta.getAppLibrary()) {
+            return;
+          }
+          promises.push(
+            addTrans(library, localeId)
+          );
+        });  
+        // translation from main app should overwrite package translations 
+        promises.push(
+          addTrans(appMeta.getAppLibrary(), localeId)
+        );
       });
       await qx.Promise.all(promises);
     },
@@ -598,17 +617,23 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
           if (!dbClassInfo.translations) {
             return;
           }
-
           t.getLocales().forEach(localeId => {
             let localePkg = this.isI18nAsParts() ? appMeta.getLocalePackage(localeId) : pkg;
-            let id = appMeta.getAppLibrary().getNamespace() + ":" + localeId;
-            let translation = translations[id];
-            if (!translation) {
-              id = dbClassInfo.libraryName + ":" + localeId;
-              translation = translations[id];
-            }
             dbClassInfo.translations.forEach(transInfo => {
-              let entry = translation.getEntry(transInfo.msgid);
+              let entry;
+              let id = appMeta.getAppLibrary().getNamespace() + ":" + localeId;
+              // search in main app first
+              let translation = translations[id];
+              if (translation) {
+                entry = translation.getEntry(transInfo.msgid);
+              }
+              let idLib = dbClassInfo.libraryName + ":" + localeId;
+              if (!entry && (id !== idLib)) {
+                let translation = translations[idLib];
+                if (translation) {
+                  entry = translation.getEntry(transInfo.msgid);
+                }
+              }
               if (entry) {
                 localePkg.addTranslationEntry(localeId, entry);
               }

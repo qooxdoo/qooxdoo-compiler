@@ -974,7 +974,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
     },
 
     /**
-     * Gets the translation for the locale and library, caching teh result.
+     * Gets the translation for the locale and library, caching the result.
      * @param library
      * @param locale
      * @returns {Promise(translation)}

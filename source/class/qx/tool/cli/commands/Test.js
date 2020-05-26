@@ -80,7 +80,14 @@ qx.Class.define("qx.tool.cli.commands.Test", {
   events: {
     /**
      * Fired to start tests
-    */
+     *  
+     *  data: {
+     *    errorCode: 0 
+     *  }
+     *  
+     *  After all tests are run the process is terminated 
+     *  with the cumulated errorCode of all tests.
+     */
     "runTests": "qx.event.type.Data"
   },
 
