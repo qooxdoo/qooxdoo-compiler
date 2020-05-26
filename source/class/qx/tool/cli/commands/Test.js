@@ -25,7 +25,7 @@ const process = require("process");
  * register an event handler. The handlers are called with a {@link qx.even.type.Data}
  * containing the command instance.
  *
- * A test can write to the `errorCode` property of this instance,
+ * A test can write to the (native) `errorCode` property of this instance,
  * which is used to determine the exit code of the `qx test` command.
  * This means, however, that the last run test overwrites the
  * `errorCode` of any previous test, and has to take care of this.
