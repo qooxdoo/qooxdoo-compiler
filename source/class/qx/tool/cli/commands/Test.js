@@ -20,7 +20,20 @@ const path = require("path");
 const process = require("process");
 
 /**
- * Compiles the project and serves it up as a web page
+ * Compiles the project, serves it up as a web page (default, can be turned off),
+ * and dispatches the "runTests" event. All tests that should be run need to
+ * register an event handler. The handlers are called with a {@link qx.even.type.Data}
+ * containing the command instance.
+ *
+ * A test can write to the `errorCode` property of this instance,
+ * which is used to determine the exit code of the `qx test` command.
+ * This means, however, that the last run test overwrites the
+ * `errorCode` of any previous test, and has to take care of this.
+ *
+ * A more scalable solution is to  call {@link
+  * qx.tool.cli.commands.Test#registerTest} with an
+ * instance of {@link qx.tool.cli.api.Test} and then
+ * set the `exitCode` qx property of that instance.
  */
 qx.Class.define("qx.tool.cli.commands.Test", {
   extend: qx.tool.cli.commands.Serve,
@@ -89,14 +102,7 @@ qx.Class.define("qx.tool.cli.commands.Test", {
 
   events: {
     /**
-     * Fired to start tests
-     *  
-     *  data: {
-     *    errorCode: 0 
-     *  }
-     *  
-     *  After all tests are run the process is terminated 
-     *  with the cumulated errorCode of all tests.
+     * Fired to start tests. Event data is this command instance
      */
     "runTests": "qx.event.type.Data"
   },
@@ -143,7 +149,7 @@ qx.Class.define("qx.tool.cli.commands.Test", {
       this.__tests.push(test);
     },
 
-    /*
+    /**
      * @Override
      */
     process: async function() {
