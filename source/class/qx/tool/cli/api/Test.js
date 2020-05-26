@@ -1,5 +1,5 @@
 /**
- * This is used by listener of the "runTests" event
+ * This is used by listeners of the "runTests" event
  */
 qx.Class.define("qx.tool.cli.api.Test", {
   extend: qx.core.Object,
