@@ -1733,6 +1733,8 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
                 if (prop.value.type == "AssignmentPattern") {
                   prop.value.left.name = t.encodePrivate(prop.value.left.name);
                   t.addDeclaration(prop.value.left.name);
+                } else if (prop.value.type == "ObjectPattern") {
+                  prop.value.properties.forEach(prop => prop.key.name = t.encodePrivate(prop.key.name));
                 } else {
                   prop.value.name = t.encodePrivate(prop.value.name);
                   t.addDeclaration(prop.value.name);
