@@ -1,8 +1,8 @@
-var test = require("tape");
-var fs = require("fs");
-var fsPromises = require("fs").promises;
+const test = require("tape");
+const fs = require("fs");
 const qx = require("@qooxdoo/framework");
 const testUtils = require("./utils");
+const fsPromises = testUtils.fsPromises;
 
 test("Issue553", async assert => {
   try {
@@ -11,7 +11,7 @@ test("Issue553", async assert => {
     assert.ok(fs.existsSync("issue553/compiled/source/index.html"));
     let indexHtml = await fsPromises.readFile("issue553/compiled/source/index.html", "utf8");
     assert.ok(!!indexHtml.match(/issue553one\/boot.js/m));
-  
+
     assert.end();
   }catch(ex) {
     assert.end(ex);
@@ -23,7 +23,7 @@ test("Dynamic commands", async assert => {
     await testUtils.deleteRecursive("testapp/compiled");
     let result = await testUtils.runCommand("testapp", "qx", "testlib", "hello", "-t=4");
     assert.ok(result.output.match(/The commmand testlib; message=hello, type=4/));
-  
+
     assert.end();
   }catch(ex) {
     assert.end(ex);
@@ -40,14 +40,14 @@ test("Issue440", async assert => {
       if (line.match(/This is an error/i))
         errorLine = index;
     });
-    
+
     let result;
-    
+
     code[errorLine] = "This is an error";
     await fsPromises.writeFile("issue440/source/class/issue440/Application.js", code.join("\n"), "utf8");
     result = await testUtils.runCompiler("issue440");
     assert.ok(result.exitCode === 1);
-    
+
     code[errorLine] = "new abc.ClassNoDef(); //This is an error";
     await fsPromises.writeFile("issue440/source/class/issue440/Application.js", code.join("\n"), "utf8");
     result = await testUtils.runCompiler("issue440", "--warnAsError");
@@ -57,7 +57,7 @@ test("Issue440", async assert => {
     await fsPromises.writeFile("issue440/source/class/issue440/Application.js", code.join("\n"), "utf8");
     result = await testUtils.runCompiler("issue440");
     assert.ok(result.exitCode === 0);
-    
+
     code[errorLine] = "//This is an error";
     await fsPromises.writeFile("issue440/source/class/issue440/Application.js", code.join("\n"), "utf8");
     result = await testUtils.runCompiler("issue440");
@@ -67,9 +67,9 @@ test("Issue440", async assert => {
     assert.end(ex);
   }
 });
-  
+
 test("testLegalSCSS", async assert => {
-  try {  
+  try {
     await testUtils.deleteRecursive("testLegalSCSS/compiled");
     let result = await testUtils.runCompiler("testLegalSCSS");
     assert.ok(fs.existsSync("testLegalSCSS/compiled/source/resource/testLegalSCSS/css/test_css.css"));

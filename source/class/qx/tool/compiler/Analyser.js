@@ -493,10 +493,13 @@ qx.Class.define("qx.tool.compiler.Analyser", {
                     overriddenFrom: null,
                     jsdoc: null,
                     abstract: meta.type === "interface",
-                    mixin: meta.type === "mixin",
+                    mixin: (meta.type === "mixin") && !first,
                     inherited: !first,
                     access: entityName.startsWith("__") ? "private" : entityName.startsWith("_") ? "protected" : "public"
                   };
+                }
+                if (entityMeta.event) {
+                  entityInfo.event = entityMeta.event;
                 }
                 if (entityMeta.property) {
                   entityInfo.property = entityMeta.property;
@@ -517,7 +520,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
                   entityInfo.overriddenFrom = meta.className;
                 }
 
-                if (!entityInfo.jsdoc && hasSignature(entityMeta.jsdoc)) {
+                if (!entityInfo.jsdoc) {
                   entityInfo.jsdoc = entityMeta.jsdoc;
                 }
               }
@@ -679,7 +682,8 @@ qx.Class.define("qx.tool.compiler.Analyser", {
                 abstract: Boolean(propertyInfo.abstract),
                 mixin: Boolean(propertyInfo.mixin),
                 access: propertyInfo.access,
-                overriddenFrom: propertyInfo.overriddenFrom
+                overriddenFrom: propertyInfo.overriddenFrom,
+                event: propertyInfo.event
               };
               if (propertyInfo.appearsIn.length) {
                 propertyMeta.appearsIn = Object.keys(propertyInfo.appearsIn);
@@ -970,7 +974,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
     },
 
     /**
-     * Gets the translation for the locale and library, caching teh result.
+     * Gets the translation for the locale and library, caching the result.
      * @param library
      * @param locale
      * @returns {Promise(translation)}
