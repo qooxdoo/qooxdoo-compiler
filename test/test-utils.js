@@ -1,9 +1,4 @@
 var test = require("tape");
-var fs = require("fs");
-var fsPromises = require("fs").promises;
-var async = require("async");
-const child_process = require("child_process");
-const stream = require("stream");
 require("../index");
 
 test("StripSourceMapWriteStream - whole stream", async assert => {
