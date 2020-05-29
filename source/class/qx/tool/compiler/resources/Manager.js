@@ -48,7 +48,8 @@ qx.Class.define("qx.tool.compiler.resources.Manager", {
       new qx.tool.compiler.resources.MetaLoader()
     ];
     this.__converters = [
-      new qx.tool.compiler.resources.ScssConverter()
+      new qx.tool.compiler.resources.ScssConverter(),
+      new qx.tool.compiler.resources.ScssIncludeConverter()
     ];
   },
 

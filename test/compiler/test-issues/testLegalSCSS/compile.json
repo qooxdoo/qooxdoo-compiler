@@ -26,6 +26,7 @@
     }
   ],
   "sass": {
-    "compiler": "legacy"
+    "compiler": "legacy",
+    "copyOriginal": true
   }
 }
