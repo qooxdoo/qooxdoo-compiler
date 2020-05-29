@@ -41,6 +41,9 @@
     "en"
   ],
   "ignores": [
+    "manifest_path",
+    "setImmediate",
+    "__dirname",
     "module.*",
     "process.*",
     "Promise.*",

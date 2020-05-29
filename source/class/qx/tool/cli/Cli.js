@@ -575,7 +575,6 @@ qx.Class.define("qx.tool.cli.Cli", {
           if (data.handler === undefined) {
             data.handler = argv => qx.tool.cli.Cli.getInstance().processCommand(new Clazz(argv));
           }
-
           yargs.command(data);
         }
       });
