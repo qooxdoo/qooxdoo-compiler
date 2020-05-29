@@ -2041,15 +2041,17 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
       if (!scope.ignore) {
         scope.ignore = {};
       }
-      var segs = name.split(",");
+      var segs = (name).split(",");
       segs.forEach(name => {
         name = name.trim();
-        if (name.endsWith(".*")) {
-          scope.ignore[name] = name.substring(0, name.length - 2);
-        } else if (name.endsWith("*")) {
-          scope.ignore[name] = name.substring(0, name.length - 1);
-        } else {
-          scope.ignore[name] = true;
+        if (name.length) {
+          if (name.endsWith(".*")) {
+            scope.ignore[name] = name.substring(0, name.length - 2);
+          } else if (name.endsWith("*")) {
+            scope.ignore[name] = name.substring(0, name.length - 1);
+          } else {
+            scope.ignore[name] = true;
+          }
         }
       });
     },
