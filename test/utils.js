@@ -47,8 +47,14 @@ async function runCommand(dir, ...args) {
         output: "",
         messages: null
     };
-    proc.stdout.on('data', data => result.output += data);
-    proc.stderr.on('data', data => result.output += data);
+    proc.stdout.on('data', (data) => {
+      console.log(data.toString());
+      result.output += data;
+  });
+    proc.stderr.on('data', (data) => {
+      console.error(data.toString());
+      result.output += data;
+    });
 
     proc.on('close', code => {
       result.exitCode = code;

@@ -7,7 +7,7 @@ qx.Class.define("qx.tool.cli.api.Test", {
     this.base(arguments);
     this.setName(name);
     if (testFunction) {
-       this.setTestFunction(testFunction);
+      this.setTestFunction(testFunction);
     }
   },
   properties: {
@@ -15,7 +15,7 @@ qx.Class.define("qx.tool.cli.api.Test", {
      * Name of the process
      */
     name: {
-      check: "String",
+      check: "String"
     },
     /**
      * A description of the test. 
@@ -39,9 +39,9 @@ qx.Class.define("qx.tool.cli.api.Test", {
      * Is the webserver instance needed for this test?
      */
     needsServer: {
-       check: "Boolean",
-       nullable: false,
-       init: true
+      check: "Boolean",
+      nullable: false,
+      init: true
     },
     /**
      * The test function called by qx test

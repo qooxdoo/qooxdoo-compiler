@@ -153,7 +153,7 @@ qx.Class.define("qx.tool.cli.commands.Test", {
 
       this.addListener("afterStart", () => {
         let res = this.__tests.map(test => test.execute());
-        res.push(this.fireDataEventAsync("runTests", this));
+     //   res.push(this.fireDataEventAsync("runTests", this));
         qx.Promise.all(res).then(() => {
           process.exit(this.errorCode);
         });
@@ -171,7 +171,7 @@ qx.Class.define("qx.tool.cli.commands.Test", {
     },
 
     __needsServer: function() {
-       return this.__tests.some(test => test.getNeedsServer());
+      return this.__tests.some(test => test.getNeedsServer());
     }
   }
 });
