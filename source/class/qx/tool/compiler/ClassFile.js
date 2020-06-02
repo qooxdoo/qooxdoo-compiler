@@ -1339,7 +1339,8 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
             AwaitExpression: 1,
             DoWhileStatement: 1,
             ForOfStatement: 1,
-            TaggedTemplateExpression: 1
+            TaggedTemplateExpression: 1,
+            ClassExpression: 1
           };
           let root = path;
           while (root) {
@@ -1598,48 +1599,50 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
           }
         },
 
-        MemberExpression(path) {
-          // regular expression or string property (eg "aa".charCodeAt())
-          if (path.node.object.type == "Literal") {
-            return;
-          }
-
-          // Handle `[ 123 ].blah()` by visiting
-          if (path.node.object.type == "ArrayExpression") {
-            return;
-          }
-
-          // Handle `[ 123 ].blah()` by visiting
-          if (path.node.object.type == "MemberExpression" && path.node.object.object.type == "ArrayExpression") {
-            return;
-          }
-
-          let name = collapseMemberExpression(path.node);
-          if (name.startsWith("(")) {
-            return;
-          }
-          let members = name.split(".");
-
-          // Ignore 'this' references
-          if (members[0] === "this") {
-            return;
-          }
-
-          // Global variable or a local variable?
-          if (t.__globalSymbols[members[0]] || t.hasDeclaration(members[0])) {
-            return;
-          }
-
-          let info = t._requireClass(name, { location: path.node.loc });
-          if (!info || !info.className) {
-            // The code `abc.def.ghi()` will produce a member expression for both `abc.def` (two Identifier's)
-            //  and another for `abc.def` and `.ghi` (MemberExpression + Identifier).  Our logic for detecting
-            //  references and unresolved symbols expects the full `abc.def.ghi` so by excluding MemberExpression's
-            //  where the container is also a MemberExpression means that we skip the incomplete `abc.def`
-            if (path.container.type == "MemberExpression") {
+        MemberExpression: {
+          exit(path) {
+            // regular expression or string property (eg "aa".charCodeAt())
+            if (path.node.object.type == "Literal") {
               return;
             }
-            t.addReference(members, path.node.loc);
+
+            // Handle `[ 123 ].blah()` by visiting
+            if (path.node.object.type == "ArrayExpression") {
+              return;
+            }
+
+            // Handle `[ 123 ].blah()` by visiting
+            if (path.node.object.type == "MemberExpression" && path.node.object.object.type == "ArrayExpression") {
+              return;
+            }
+
+            let name = collapseMemberExpression(path.node);
+            if (name.startsWith("(")) {
+              return;
+            }
+            let members = name.split(".");
+
+            // Ignore 'this' references
+            if (members[0] === "this") {
+              return;
+            }
+
+            // Global variable or a local variable?
+            if (t.__globalSymbols[members[0]] || t.hasDeclaration(members[0])) {
+              return;
+            }
+
+            let info = t._requireClass(name, { location: path.node.loc });
+            if (!info || !info.className) {
+              // The code `abc.def.ghi()` will produce a member expression for both `abc.def` (two Identifier's)
+              //  and another for `abc.def` and `.ghi` (MemberExpression + Identifier).  Our logic for detecting
+              //  references and unresolved symbols expects the full `abc.def.ghi` so by excluding MemberExpression's
+              //  where the container is also a MemberExpression means that we skip the incomplete `abc.def`
+              if (path.container.type == "MemberExpression") {
+                return;
+              }
+              t.addReference(members, path.node.loc);
+            }
           }
         },
 
@@ -1708,49 +1711,47 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         FunctionExpression: FUNCTION_DECL_OR_EXPR,
         ArrowFunctionExpression: FUNCTION_DECL_OR_EXPR,
 
-        VariableDeclaration(path) {
-          checkNodeJsDocDirectives(path.node);
-          path.node.declarations.forEach(decl => {
-            // Simple `var x` form
-            if (decl.id.type == "Identifier") {
-              let value = null;
-              decl.id.name = t.encodePrivate(decl.id.name);
-              if (decl.init) {
-                if (decl.init.type == "Identifier") {
-                  value = decl.init.name;
-                } else if (decl.init.type == "ThisExpression") {
-                  value = "this";
-                }
-              }
-              t.addDeclaration(decl.id.name, value);
-
-            // Object destructuring `var {a,b} = {...}`
-            } else if (decl.id.type == "ObjectPattern") {
-              decl.id.properties.forEach(prop => {
-                if (prop.value.type == "AssignmentPattern") {
-                  prop.value.left.name = t.encodePrivate(prop.value.left.name);
-                  t.addDeclaration(prop.value.left.name);
-                } else {
-                  prop.value.name = t.encodePrivate(prop.value.name);
-                  t.addDeclaration(prop.value.name);
-                }
-              });
-
-            // Array destructuring `var [a,b] = [...]`
-            } else if (decl.id.type == "ArrayPattern") {
-              decl.id.elements.forEach(prop => {
-                if (prop) {
-                  if (prop.type == "AssignmentPattern") {
-                    prop.left.name = t.encodePrivate(prop.left.name);
-                    t.addDeclaration(prop.left.name);
-                  } else {
-                    prop.name = t.encodePrivate(prop.name);
-                    t.addDeclaration(prop.name);
+        VariableDeclaration: {
+          exit(path) {
+            checkNodeJsDocDirectives(path.node);
+            path.node.declarations.forEach(decl => {
+              // Simple `var x` form
+              if (decl.id.type == "Identifier") {
+                let value = null;
+                //decl.id.name = t.encodePrivate(decl.id.name);
+                if (decl.init) {
+                  if (decl.init.type == "Identifier") {
+                    value = decl.init.name;
+                  } else if (decl.init.type == "ThisExpression") {
+                    value = "this";
                   }
                 }
-              });
-            }
-          });
+                t.addDeclaration(decl.id.name, value);
+
+              // Object destructuring `var {a,b} = {...}`
+              } else if (decl.id.type == "ObjectPattern") {
+                decl.id.properties.forEach(prop => {
+                  if (prop.value.type == "AssignmentPattern") {
+                    t.addDeclaration(prop.value.left.name);
+                  } else {
+                    t.addDeclaration(prop.value.name);
+                  }
+                });
+
+              // Array destructuring `var [a,b] = [...]`
+              } else if (decl.id.type == "ArrayPattern") {
+                decl.id.elements.forEach(prop => {
+                  if (prop) {
+                    if (prop.type == "AssignmentPattern") {
+                      t.addDeclaration(prop.left.name);
+                    } else {
+                      t.addDeclaration(prop.name);
+                    }
+                  }
+                });
+              }
+            });
+          }
         },
         
         ClassDeclaration(path) {
@@ -1974,26 +1975,38 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
     encodePrivate: function(name) {
       const DO_NOT_ENCODE = {
         "__proto__": 1,
-        "__iterator__": 1
+        "__iterator__": 1,
+        "__dirname": 1,
+        "__filename": 1
       };
       if (DO_NOT_ENCODE[name] || this.__privateMangling == "off" || !name.startsWith("__") || !name.match(/^[0-9a-z_$]+$/i)) {
         return name;
       }
 
-      if (this.__privateMangling == "readable") {
-        if (name.indexOf("_PRIVATE_") > -1) {
-          return name;
-        }
-      } else if (name.indexOf("__P_") > -1) {
+      if (name.indexOf("__P_") > -1) {
         return name;
       }
-      
+
       let coded = this.__privates[name];
       if (!coded) {
+        let db = this.__analyser.getDatabase();
+        if (!db.manglePrefixes) {
+          db.manglePrefixes = {
+            nextPrefix: 1,
+            classPrefixes: {}
+          };
+        }
+        let prefixes = db.manglePrefixes;
+        let prefix = prefixes.classPrefixes[this.__className];
+        if (!prefix) {
+          prefix = "__P_" + (++prefixes.nextPrefix) + "_";
+          prefixes.classPrefixes[this.__className] = prefix;
+        }
+        
         if (this.__privateMangling == "readable") {
-          coded = this.__privates[name] = name + "_PRIVATE_" + Object.keys(this.__privates).length;
+          coded = this.__privates[name] = name + prefix + Object.keys(this.__privates).length;
         } else {
-          coded = this.__privates[name] = "__P_" + Object.keys(this.__privates).length;
+          coded = this.__privates[name] = prefix + Object.keys(this.__privates).length;
         }
       }
       return coded;
@@ -2519,7 +2532,10 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
       "Module",
       "require",
       "module",
-      "process"
+      "process",
+      "setImmediate",
+      "__dirname",
+      "__filename"
     ],
     
     RHINO_GLOBALS: [

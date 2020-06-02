@@ -64,7 +64,7 @@ $(function() {
   $.qxcli.get(query.targetDir + "/db.json")
     .then(function(tmp) {
       db = tmp;
-      return $.qxcli.get(query.targetDir + "/" + query.appDir + "/app-summary.json");
+      return $.qxcli.get(query.targetDir + "/" + query.appDir + "/compile-info.json");
     })
     .then(function(tmp) {
       appDb = tmp;
