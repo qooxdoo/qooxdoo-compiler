@@ -1711,53 +1711,47 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         FunctionExpression: FUNCTION_DECL_OR_EXPR,
         ArrowFunctionExpression: FUNCTION_DECL_OR_EXPR,
 
-        VariableDeclaration(path) {
-          checkNodeJsDocDirectives(path.node);
-          path.node.declarations.forEach(decl => {
-            // Simple `var x` form
-            if (decl.id.type == "Identifier") {
-              let value = null;
-              decl.id.name = t.encodePrivate(decl.id.name);
-              if (decl.init) {
-                if (decl.init.type == "Identifier") {
-                  value = decl.init.name;
-                } else if (decl.init.type == "ThisExpression") {
-                  value = "this";
-                }
-              }
-              t.addDeclaration(decl.id.name, value);
-
-            // Object destructuring `var {a,b} = {...}`
-            } else if (decl.id.type == "ObjectPattern") {
-              decl.id.properties.forEach(prop => {
-                if (prop.value.type == "AssignmentPattern") {
-                  prop.value.left.name = t.encodePrivate(prop.value.left.name);
-                  t.addDeclaration(prop.value.left.name);
-                } else if (prop.value.type == "ObjectPattern") {
-                  prop.value.properties.forEach(prop => prop.key.name = t.encodePrivate(prop.key.name));
-                } else {
-                  prop.value.name = t.encodePrivate(prop.value.name);
-                  t.addDeclaration(prop.value.name);
-                }
-              });
-
-            // Array destructuring `var [a,b] = [...]`
-            } else if (decl.id.type == "ArrayPattern") {
-              decl.id.elements.forEach(prop => {
-                if (prop) {
-                  if (prop.type == "AssignmentPattern") {
-                    prop.left.name = t.encodePrivate(prop.left.name);
-                    t.addDeclaration(prop.left.name);
-                  } else if (prop.type == "ObjectPattern") {
-                    prop.properties.forEach(prop => prop.key.name = t.encodePrivate(prop.key.name));
-                  } else {
-                    prop.name = t.encodePrivate(prop.name);
-                    t.addDeclaration(prop.name);
+        VariableDeclaration: {
+          exit(path) {
+            checkNodeJsDocDirectives(path.node);
+            path.node.declarations.forEach(decl => {
+              // Simple `var x` form
+              if (decl.id.type == "Identifier") {
+                let value = null;
+                //decl.id.name = t.encodePrivate(decl.id.name);
+                if (decl.init) {
+                  if (decl.init.type == "Identifier") {
+                    value = decl.init.name;
+                  } else if (decl.init.type == "ThisExpression") {
+                    value = "this";
                   }
                 }
-              });
-            }
-          });
+                t.addDeclaration(decl.id.name, value);
+
+              // Object destructuring `var {a,b} = {...}`
+              } else if (decl.id.type == "ObjectPattern") {
+                decl.id.properties.forEach(prop => {
+                  if (prop.value.type == "AssignmentPattern") {
+                    t.addDeclaration(prop.value.left.name);
+                  } else {
+                    t.addDeclaration(prop.value.name);
+                  }
+                });
+
+              // Array destructuring `var [a,b] = [...]`
+              } else if (decl.id.type == "ArrayPattern") {
+                decl.id.elements.forEach(prop => {
+                  if (prop) {
+                    if (prop.type == "AssignmentPattern") {
+                      t.addDeclaration(prop.left.name);
+                    } else {
+                      t.addDeclaration(prop.name);
+                    }
+                  }
+                });
+              }
+            });
+          }
         },
         
         ClassDeclaration(path) {
