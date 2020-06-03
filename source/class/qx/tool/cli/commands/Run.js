@@ -47,7 +47,7 @@ qx.Class.define("qx.tool.cli.commands.Run", {
       return {
         command   : "run [configFile]",
         describe  : "runs a server application (written in node) with continuous compilation, using compile.json",
-        builder   : Object.assign(qx.tool.cli.commands.Compile.YARGS_BUILDER, qx.tool.cli.commands.Run.YARGS_BUILDER)
+        builder   : Object.assign({}, qx.tool.cli.commands.Compile.YARGS_BUILDER, qx.tool.cli.commands.Run.YARGS_BUILDER)
       };
     }
   },
