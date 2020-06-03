@@ -171,7 +171,7 @@ qx.Class.define("qx.tool.cli.commands.Test", {
     },
 
     __needsServer: function() {
-       return this.__tests.some(test => test.getNeedsServer());
+      return this.__tests.some(test => test.getNeedsServer());
     }
   }
 });

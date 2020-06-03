@@ -5,8 +5,8 @@ require("../index");
 test("Checks rotateUnique", assert => {
   var p = Promise.resolve();
   for (var i = 1; i < 6; i++) {
- p = p.then(qx.tool.utils.files.Utils.safeUnlink("test-rotate-unique.txt." + i)); 
-}
+   p = p.then(qx.tool.utils.files.Utils.safeUnlink("test-rotate-unique.txt." + i)); 
+  }
   p.then(async () => {
     for (var i = 1; i < 10; i++) {
       await qx.tool.utils.files.Utils.rotateUnique("test-rotate-unique.txt", 5);
