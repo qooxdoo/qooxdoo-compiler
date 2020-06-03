@@ -65,7 +65,8 @@ qx.Class.define("qx.tool.cli.commands.Test", {
           delete res.watch;
           delete res["machine-readable"];
           delete res["feedback"];
-
+          delete res["show-startpage"];
+          delete res["rebuild-startpage"];
           return res;
         })()
       };
@@ -134,6 +135,7 @@ qx.Class.define("qx.tool.cli.commands.Test", {
       this.argv.watch = false;
       this.argv["machine-readable"] = false;
       this.argv["feedback"] = false;
+      this.argv["show-startpage"] = false;
       // check for special test compiler config
       if (!this.argv.configFile && fs.existsSync(path.join(process.cwd(), qx.tool.cli.commands.Test.CONFIG_FILENAME))) {
         this.argv.configFile = qx.tool.cli.commands.Test.CONFIG_FILENAME;
