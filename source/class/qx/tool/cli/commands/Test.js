@@ -85,6 +85,28 @@ qx.Class.define("qx.tool.cli.commands.Test", {
     this.__tests = [];
   },
 
+  properties: {
+    /**
+     * The exit code of all tests.
+     *
+     */
+    exitCode: {
+      check: "Number",
+      event: "changeExitCode",
+      nullable: true,
+      init: null
+    },
+
+    /**
+     * Is the webserver instance needed for the test?
+     */
+    needsServer: {
+      check: "Boolean",
+      nullable: false,
+      init: false
+    },
+  },
+
   members: {
 
     /**
@@ -173,7 +195,7 @@ qx.Class.define("qx.tool.cli.commands.Test", {
     },
 
     __needsServer: function() {
-      return this.__tests.some(test => test.getNeedsServer());
+      return this.getNeedsServer() || this.__tests.some(test => test.getNeedsServer());
     }
   }
 });

@@ -113,6 +113,7 @@
   qx.$$loader = {
       parts : %{Parts},
       packages : %{Packages},
+      urisBefore : %{UrisBefore},
       boot : %{Boot},
       closureParts : %{ClosureParts},
       delayDefer: false,
@@ -141,7 +142,9 @@
         var l = qx.$$loader;
         var t = this;
 
-        var bootPackageHash=l.parts[l.boot][0];
+        var allScripts = l.decodeUris(l.urisBefore, "resourceUri");
+        t.loadScriptList(allScripts);
+    
         l.parts[l.boot].forEach(function(pkg) {
           t.loadScriptList(l.decodeUris(l.packages[pkg].uris));
         });
@@ -157,7 +160,8 @@
         list.forEach(function(uri) {
           var f = loaderMethod(uri);
           if (typeof f === "function") {
-            window[f.name] = f;
+            var s = f.name === ""?path.basename(uri, ".js"):f.name;
+            window[s] = f;
           }
         });
       },
