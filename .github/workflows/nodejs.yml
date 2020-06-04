@@ -1,8 +1,4 @@
-# This workflow will do a clean install of node dependencies, build the source
-# code and run tests across different versions of node For more information see:
-# https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
-
-name: Node.js CI
+name: Test and Deploy
 
 on:
   push:
@@ -11,37 +7,40 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
-
+  # Test changes from PRs
+  test:
+    name: Run tests
     runs-on: ubuntu-latest
-
+    if: github.ref != 'refs/heads/master'
     strategy:
       matrix:
         node-version: [8.x, 10.x, 12.x]
-
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm ci
+      - name: Run qx test for built-in compiler tests
+        run: ./qx test --serve=0 || true
+      - name: Run  external CLI and API tests
+        run: npm test
+        env:
+          CI: true
 
-    - run: npm ci
-    - run: npm run build --if-present
-
-    - name: Run qx test for built-in compiler tests
-      run: ./qx test --serve=0 || true
-
-    - name: Run  external CLI and API tests
-      run: npm test
-      env:
-        CI: true
-
-    - name: Build API Viewer
-      run: ./qx deploy --out=./html --source-maps
-
-    - name: Deploy API Viewer
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./html
+  deploy:
+    name: Deploy API Viewer
+    needs: [test]
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v2
+        - run: npm ci
+        - name: Build API Viewer
+          run: ./qx deploy --out=./html --source-maps
+        - name: Deploy API Viewer
+          uses: peaceiris/actions-gh-pages@v3
+          with:
+            github_token: ${{ secrets.GITHUB_TOKEN }}
+            publish_dir: ./html
