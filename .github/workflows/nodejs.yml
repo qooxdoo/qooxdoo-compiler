@@ -33,13 +33,13 @@ jobs:
     name: Deploy API Viewer
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v2
-        - run: npm ci
-        - name: Build API Viewer
-          run: ./qx deploy --out=./html --source-maps
-        - name: Deploy API Viewer
-          uses: peaceiris/actions-gh-pages@v3
-          with:
-            github_token: ${{ secrets.GITHUB_TOKEN }}
-            publish_dir: ./html
+    steps:
+      - uses: actions/checkout@v2
+      - run: npm ci
+      - name: Build API Viewer
+        run: ./qx deploy --out=./html --source-maps
+      - name: Deploy API Viewer
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./html
