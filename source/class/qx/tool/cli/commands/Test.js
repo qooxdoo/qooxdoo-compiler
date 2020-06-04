@@ -104,7 +104,7 @@ qx.Class.define("qx.tool.cli.commands.Test", {
       check: "Boolean",
       nullable: false,
       init: false
-    },
+    }
   },
 
   members: {
