@@ -25,3 +25,7 @@ require("./PackageJavascript");
 require("./Part");
 require("./PolyfillJs");
 require("./Uglify");
+
+// define dummy class to make the compiler happy
+qx.Class.define("qx.tool.compiler.targets.meta.index", {
+});

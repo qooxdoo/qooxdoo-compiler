@@ -25,3 +25,6 @@ require("./Parser");
 require("./Writer");
 require("./Stringify");
 
+// define dummy class to make the compiler happy
+qx.Class.define("qx.tool.utils.json.index", {
+});

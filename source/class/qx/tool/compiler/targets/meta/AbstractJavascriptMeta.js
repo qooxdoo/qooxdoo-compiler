@@ -6,7 +6,7 @@ const sourceMap = require("source-map");
  * compromised of a number of input files which are merged together as required.
  * 
  * This object could represent a file which already exists on disk (eg a transpiled
- * source file), or something that is generated on the fly (such as a boot.js), or
+ * source file), or something that is generated on the fly (such as a index.js), or
  * a compilation of files (eg a part)
  */
 qx.Class.define("qx.tool.compiler.targets.meta.AbstractJavascriptMeta", {

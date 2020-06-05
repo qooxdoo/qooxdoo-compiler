@@ -11,7 +11,7 @@ test("Issue553", async assert => {
     await testUtils.runCompiler("issue553");
     assert.ok(fs.existsSync("issue553/compiled/source/index.html"));
     let indexHtml = await fsPromises.readFile("issue553/compiled/source/index.html", "utf8");
-    assert.ok(!!indexHtml.match(/issue553one\/boot.js/m));
+    assert.ok(!!indexHtml.match(/issue553one\/index.js/m));
 
     assert.end();
   }catch(ex) {
@@ -76,8 +76,8 @@ test("testLegalSCSS", async assert => {
     assert.ok(fs.existsSync("testLegalSCSS/compiled/source/resource/testLegalSCSS/css/test_css.css"));
     assert.ok(fs.existsSync("testLegalSCSS/compiled/source/resource/testLegalSCSS/css/test_scss.css"));
     assert.ok(fs.existsSync("testLegalSCSS/compiled/source/resource/testLegalSCSS/css/test_theme_scss.css"));
-    assert.ok(fs.existsSync("testLegalSCSS/compiled/source/testLegalSCSS/boot.js"));
-    let bootJS = await fsPromises.readFile("testLegalSCSS/compiled/source/testLegalSCSS/boot.js", "utf8");
+    assert.ok(fs.existsSync("testLegalSCSS/compiled/source/testLegalSCSS/index.js"));
+    let bootJS = await fsPromises.readFile("testLegalSCSS/compiled/source/testLegalSCSS/index.js", "utf8");
     let pos1 = bootJS.indexOf("cssBefore");
     let pos2 = bootJS.indexOf("]", pos1 + 1);
     let test = bootJS.substring(pos1, pos2 + 1);

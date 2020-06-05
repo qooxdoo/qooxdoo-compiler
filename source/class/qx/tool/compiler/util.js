@@ -425,3 +425,6 @@ module.exports.mkParentPathAsync = filename => new Promise((resolve, reject) => 
 module.exports.newExternalPromise = newExternalPromise;
 module.exports.promisifyThis = promisifyThis;
 
+// define dummy class to make the compiler happy
+qx.Class.define("qx.tool.compiler.util", {
+});

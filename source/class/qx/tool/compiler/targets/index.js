@@ -22,3 +22,7 @@ require("./SourceCodeCopier");
 require("./SourceTarget");
 require("./TypeScriptWriter");
 require("./meta/index");
+
+// define dummy class to make the compiler happy
+qx.Class.define("qx.tool.compiler.targets.index", {
+});

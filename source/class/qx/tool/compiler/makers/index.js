@@ -23,4 +23,6 @@
 require("./AbstractAppMaker");
 require("./AppMaker");
 
-module.exports = qx.makers;
+// define dummy class to make the compiler happy
+qx.Class.define("qx.tool.compiler.makers.index", {
+});

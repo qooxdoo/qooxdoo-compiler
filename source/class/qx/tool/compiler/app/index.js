@@ -26,3 +26,8 @@ require("./Library");
 require("./Part");
 require("./Translation");
 require("./WebFont");
+
+// define dummy class to make the compiler happy
+qx.Class.define("qx.tool.compiler.app.index", {
+});
+

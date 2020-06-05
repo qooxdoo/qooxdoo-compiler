@@ -16,6 +16,7 @@ node_modules/
 .package-cache.json
 qooxdoo/
 compiled/
+bin/
 qx_packages/
 
 # test apps

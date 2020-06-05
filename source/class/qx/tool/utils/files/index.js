@@ -24,3 +24,7 @@ module.exports = {
   FindFiles: require("./FindFiles"),
   Utils: require("./Utils")
 };
+
+// define dummy class to make the compiler happy
+qx.Class.define("qx.tool.utils.files.index", {
+});

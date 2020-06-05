@@ -91,11 +91,11 @@
             "$ref": "#/properties/environment"
            },
           "outputPath": {
-            "description": "The directory to place the application files (e.g. boot.js and resource.js), relative to the target output directory",
+            "description": "The directory to place the application files (e.g. index.js and resource.js), relative to the target output directory",
             "type": "string"
           },
           "bootPath": {
-            "description": "The URI used to access the application directory, i.e. the directory containing boot.js and resource.js",
+            "description": "The URI used to access the application directory, i.e. the directory containing index.js and resource.js",
             "type": "string",
             "default": "."
           },

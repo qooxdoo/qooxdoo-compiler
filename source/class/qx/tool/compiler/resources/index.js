@@ -32,3 +32,7 @@ require("./ScssConverter");
 require("./ScssFile");
 
 require("./Manager");
+
+// define dummy class to make the compiler happy
+qx.Class.define("qx.tool.compiler.resources.index", {
+});

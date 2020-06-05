@@ -15,6 +15,14 @@
       "uri": "qooxdoo/qxl.versionlabel",
       "repo_name": "qooxdoo/qxl.versionlabel",
       "repo_tag": "v1.0.1"
+    },
+    {
+      "library_name": "qxl.testnode",
+      "library_version": "1.0.1",
+      "path": "qx_packages/qooxdoo_qxl_testnode_v1_0_1",
+      "uri": "qooxdoo/qxl.testnode",
+      "repo_name": "qooxdoo/qxl.testnode",
+      "repo_tag": "v1.0.1"
     }
   ],
   "version": "2.1.0"

@@ -197,7 +197,7 @@ qx.Class.define("qx.tool.compiler.app.Application", {
     },
 
     /**
-     * Template file used to create boot.js; note that this is changed when the `type` property
+     * Template file used to create index.js; note that this is changed when the `type` property
      * is changed
      */
     loaderTemplate: {

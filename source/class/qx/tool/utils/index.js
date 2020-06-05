@@ -26,3 +26,6 @@ require("./Website.js");
 require("./files");
 require("./json/index.js");
 
+// define dummy class to make the compiler happy
+qx.Class.define("qx.tool.utils.index", {
+});

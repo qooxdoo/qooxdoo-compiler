@@ -43,8 +43,8 @@ qx.Class.define("qx.tool.utils.Website", {
 
   statics: {
     APP_NAMESPACE: "apps",
-    SOURCE_DIR: path.join(qx.tool.$$resourceDir, "website"),
-    TARGET_DIR: path.join(qx.tool.$$resourceDir, "website/build")
+    SOURCE_DIR: path.join(qx.tool.$$resourceDir || "", "website"),
+    TARGET_DIR: path.join(qx.tool.$$resourceDir || "", "website/build")
   },
 
   construct: function(options={}) {

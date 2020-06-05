@@ -41,12 +41,12 @@ qx.Class.define("qx.tool.cli.commands.Command", {
     /**
      * The path to the directory containing the templates
      */
-    TEMPLATE_DIR: path.join(qx.tool.$$resourceDir, "cli/templates"),
+    TEMPLATE_DIR: path.join(qx.tool.$$resourceDir || "", "cli/templates"),
 
     /**
      * The path to the node_modules dir
      */
-    NODE_MODULES_DIR: path.join(qx.tool.$$rootDir, "node_modules")
+    NODE_MODULES_DIR: path.join(qx.tool.$$rootDir || "", "node_modules")
   },
 
   construct: function(argv) {

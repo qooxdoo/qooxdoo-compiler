@@ -45,3 +45,7 @@ require("./api/AbstractApi.js");
 require("./api/CompilerApi.js");
 require("./api/LibraryApi.js");
 require("./api/Test.js");
+
+// define dummy class to make the compiler happy
+qx.Class.define("qx.tool.cli.index", {
+});

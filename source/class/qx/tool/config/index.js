@@ -21,3 +21,7 @@ require("./Manifest.js");
 require("./Compile.js");
 require("./Registry.js");
 require("./Lockfile.js");
+
+// define dummy class to make the compiler happy
+qx.Class.define("qx.tool.config.index", {
+});

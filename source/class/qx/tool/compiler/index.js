@@ -27,3 +27,6 @@ require("./resources");
 require("./targets");
 require("../utils/IndexedArray");
 
+// define dummy class to make the compiler happy
+qx.Class.define("qx.tool.compiler.index", {
+});
