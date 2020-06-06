@@ -125,7 +125,7 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
     },
 
     /** Whether to write a summary of the compile info to disk, ie everything about dependencies and
-     * resources that are used to create the boot.js file, but stored as pure JSON for third party code
+     * resources that are used to create the index.js file, but stored as pure JSON for third party code
      * to use.
      */
     writeCompileInfo: {
@@ -745,7 +745,7 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
           "       the one below because they will be added automatically)\n" +
           "    -->\n" +
           "${preBootJs}\n" +
-          "  <script type=\"text/javascript\" src=\"${appPath}boot.js\"></script>\n" +
+          "  <script type=\"text/javascript\" src=\"${appPath}index.js\"></script>\n" +
           "</body>\n" +
           "</html>\n";
       /* eslint-enable no-template-curly-in-string */
@@ -767,9 +767,9 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
                 /* eslint-enable no-template-curly-in-string */
                 qx.tool.compiler.Console.print("qx.tool.compiler.target.missingPreBootJs", from);
               }
-              if (!data.match(/\s*boot.js\s*/)) {
+              if (!data.match(/\s*index.js\s*/)) {
               /* eslint-disable no-template-curly-in-string */
-                data = data.replace("</body>", "\n  <script type=\"text/javascript\" src=\"${appPath}boot.js\"></script>\n</body>");
+                data = data.replace("</body>", "\n  <script type=\"text/javascript\" src=\"${appPath}index.js\"></script>\n</body>");
                 /* eslint-enable no-template-curly-in-string */
                 qx.tool.compiler.Console.print("qx.tool.compiler.target.missingBootJs", from);
               }

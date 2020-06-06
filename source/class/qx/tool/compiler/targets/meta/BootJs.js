@@ -3,13 +3,13 @@ const fs = qx.tool.utils.Promisify.fs;
 const path = require("upath");
 
 /**
- * Represents a "boot.js" that is generated as part of a compile 
+ * Represents a "index.js" that is generated as part of a compile 
  */
 qx.Class.define("qx.tool.compiler.targets.meta.BootJs", {
   extend: qx.tool.compiler.targets.meta.AbstractJavascriptMeta,
   
   construct(appMeta) {
-    this.base(arguments, appMeta, `${appMeta.getApplicationRoot()}boot.js`);
+    this.base(arguments, appMeta, `${appMeta.getApplicationRoot()}index.js`);
     this.__embeddedJs = [];
     this.__embeddedJsLookup = {};
   },
@@ -26,7 +26,7 @@ qx.Class.define("qx.tool.compiler.targets.meta.BootJs", {
     __sourceMapOffsets: null,
 
     /**
-     * Adds Javascript which is to be added to the end of the boot.js, just before the app
+     * Adds Javascript which is to be added to the end of the index.js, just before the app
      * is finalised
      * 
      * @param jsMeta {AbstractJavascriptMeta} the jaavscript to add

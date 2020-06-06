@@ -308,7 +308,7 @@ test("Checks dependencies and environment settings", assert => {
        */
       .then(async () => {
         let src = await readFile("unit-tests-output/index.html", "utf8");
-        assert.ok(src.match(/src="appone\/boot.js"/), "Default application");
+        assert.ok(src.match(/src="appone\/index.js"/), "Default application");
       })
 
       /*
