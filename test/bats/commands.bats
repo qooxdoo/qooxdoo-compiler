@@ -12,7 +12,7 @@ setup() {
   npx qx create myapp -I --type server -v
   cd myapp
   npx qx compile --clean
-  node compiled/source/myapp/boot.js
+  node compiled/source/myapp/index.js
 }
 
 @test "qx package list" {
@@ -29,7 +29,7 @@ setup() {
   npx qx package install johnspackman/UploadMgr -v
   npx qx package install ergobyte/qookery/qookeryace@0.7.0-pre -v
   npx qx compile --clean
-  node compiled/source/myapp/boot.js
+  node compiled/source/myapp/index.js
   npx qx package list --installed --short --noheaders
 }
 
@@ -37,7 +37,7 @@ setup() {
   npx qx clean -v
   npx qx package install -v
   npx qx compile --clean
-  node compiled/source/myapp/boot.js
+  node compiled/source/myapp/index.js
   npx qx package list -isH
 }
 
@@ -46,7 +46,7 @@ setup() {
   npx qx package remove ergobyte/qookery/qookeryace -v
   npx qx package remove ergobyte/qookery/qookerymaps -v
   npx qx compile --clean
-  node compiled/source/myapp/boot.js
+  node compiled/source/myapp/index.js
   npx qx package list --installed --short --noheaders
 }
 
@@ -54,7 +54,7 @@ setup() {
   npx qx clean -v
   npx qx package install ergobyte/qookery -v
   npx qx compile --clean
-  node compiled/source/myapp/boot.js
+  node compiled/source/myapp/index.js
   npx qx package list --installed --short --noheaders
 }
 
@@ -63,7 +63,7 @@ setup() {
 #  npx qx add script ../testdata/npm/script/jszip.js --rename=zip.js
   cp ../testdata/npm/application/*.js source/class/myapp
   npx qx compile --clean || true
-  node compiled/source/myapp/boot.js
+  node compiled/source/myapp/index.js
 }
 
 @test "Clean up" {

@@ -71,7 +71,7 @@ qx.Class.define("qx.tool.compiler.targets.meta.Package", {
      * file in the output, and just means that the content of the file should be embedded
      * (or ignored) instead of written into that package file; however, there can still
      * be script files which need to be loaded by this package (and that is handled by
-     * the boot.js file) 
+     * the index.js file) 
      * 
      * @return {Boolean}
      */
