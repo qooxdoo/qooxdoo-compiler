@@ -42,9 +42,9 @@ qx.Class.define("qx.tool.cli.commands.package.Install", {
         command: "install [uri[@release_tag]]",
         describe: `installs the latest compatible release of package (as per Manifest.json). Use "-r <release tag>" or @<release tag> to install a particular release.
         examples: 
-           * qx contrib install name: Install latest published version
-           * qx contrib install name@v0.0.2: Install version 0.0.2,
-           * qx contrib install name@master: Install current master branch from github`,
+           * qx package install name: Install latest published version
+           * qx package install name@v0.0.2: Install version 0.0.2,
+           * qx package install name@master: Install current master branch from github`,
         builder: {
           "release" : {
             alias: "r",
