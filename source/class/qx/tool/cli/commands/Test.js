@@ -167,7 +167,7 @@ qx.Class.define("qx.tool.cli.commands.Test", {
           qx.tool.compiler.Console.error(
             `No tests are registered!
                Please register a testrunner, e.g. testtapper with:
-               qx contrib install @qooxdoo/qxl.testtapper
+               qx package install @qooxdoo/qxl.testtapper
                See documentation https://qooxdoo.org/docs/#/development/testing/
               `
           );

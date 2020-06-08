@@ -1,6 +1,7 @@
 var test = require("tape");
 require("../index");
 
+
 test("Check params", assert => {
 	let text = `
      @param {String} json jsdoc style
@@ -12,12 +13,27 @@ test("Check params", assert => {
   assert.end();
 });
 
-test("Check issue 663", assert => {
-	let text = `
-  // [Constructor]
-  `  
-  var test = qx.tool.compiler.jsdoc.Parser.parseComment(text);
-  console.log(test["@description"][0].body);
+test("Check issue 633", assert => {
+  {
+	  let text = `
+    // [Constructor]
+    `  
+    var test = qx.tool.compiler.jsdoc.Parser.parseComment(text);
+    console.log(test["@description"][0].body);
+  }
+  {
+    let text = `
+    /**
+     * Create an editor instance
+     * 
+     * [Constructor]
+     * 
+     * @return {Object}
+     */
+    `  
+    var test = qx.tool.compiler.jsdoc.Parser.parseComment(text);
+    console.log(test["@description"][0].body);
+  }
   assert.end();
 });
 

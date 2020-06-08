@@ -14,6 +14,7 @@ node_modules/
 
 # qooxdoo
 .package-cache.json
+html/
 qooxdoo/
 compiled/
 bin/

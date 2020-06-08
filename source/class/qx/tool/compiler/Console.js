@@ -30,6 +30,12 @@ qx.Class.define("qx.tool.compiler.Console", {
   extend: qx.core.Object,
 
   properties: {
+    /** Whether verbose logging is enabled */
+    verbose: {
+      init: false,
+      check: "Boolean"
+    },
+
     /** Whether to output all messages as machine readable data structures */
     machineReadable: {
       init: false,

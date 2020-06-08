@@ -8,6 +8,20 @@ lib.setRootDir(".");
 lib.setSourcePath("test-compiler");
 lib.getSourceFileExtension = () => ".js";
 
+test("test issue 633", assert => {
+  try {  
+    var classFile = new qx.tool.compiler.ClassFile(analyser, "classIssue633", lib);
+    classFile.load(() => {
+      var dbClassInfo = {};
+      classFile.writeDbInfo(dbClassInfo);
+      assert.ok(!dbClassInfo.unresolved);
+      assert.end();
+    });
+  }catch(ex) {
+    assert.end(ex);
+  }
+});
+
 test("test issue 519", assert => {
   try {  
     var classFile = new qx.tool.compiler.ClassFile(analyser, "classIssue519", lib);
