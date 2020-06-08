@@ -64,7 +64,9 @@
   }
   var envinfo = %{EnvSettings};
   for (var k in envinfo) {
-    qx.$$environment[k] = envinfo[k];
+    if (qx.$$environment[k] === undefined) {
+      qx.$$environment[k] = envinfo[k];
+   }
   }
 
   if (!qx.$$libraries) {
