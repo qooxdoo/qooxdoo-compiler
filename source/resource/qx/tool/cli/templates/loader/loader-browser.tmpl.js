@@ -140,7 +140,7 @@ qx.$$loader = {
   on: function(eventType, handler) {
     if (qx.$$loader.applicationHandlerReady) {
       if (window.qx && qx.event && qx.event.handler && qx.event.handler.Application) {
-        let Application = qx.event.handler.Application.$$instance;
+        var Application = qx.event.handler.Application.$$instance;
         if (eventType == "ready" && Application.isApplicationReady()) {
           handler(null);
           return;
