@@ -21,7 +21,7 @@
  * ************************************************************************/
 
 require("../../utils/Promisify");
-require("@qooxdoo/framework");
+
 
 require("./Target");
 

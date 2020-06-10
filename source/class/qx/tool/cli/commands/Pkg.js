@@ -17,7 +17,7 @@
 ************************************************************************ */
 
 require("./Command");
-require("@qooxdoo/framework");
+
 
 /**
  * "qx pkg" is an alias for "qx package"

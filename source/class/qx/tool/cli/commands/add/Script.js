@@ -15,7 +15,7 @@
      * Christian Boulanger (info@bibliograph.org, @cboulanger)
 
 ************************************************************************ */
-require("@qooxdoo/framework");
+
 const fs = require("fs");
 const process = require("process");
 const path = require("upath");

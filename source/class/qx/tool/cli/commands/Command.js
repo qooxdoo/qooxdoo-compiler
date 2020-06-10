@@ -17,7 +17,7 @@
 
 ************************************************************************ */
 
-require("@qooxdoo/framework");
+
 require("../../utils/Utils");
 
 const fs = qx.tool.utils.Promisify.fs;

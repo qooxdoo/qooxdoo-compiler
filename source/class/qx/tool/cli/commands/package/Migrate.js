@@ -17,7 +17,7 @@
 ************************************************************************ */
 require("../Package");
 
-require("@qooxdoo/framework");
+
 const process = require("process");
 const path = require("upath");
 const semver = require("semver");

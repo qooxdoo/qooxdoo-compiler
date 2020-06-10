@@ -22,7 +22,7 @@
 
 const fs = qx.tool.utils.Promisify.fs;
 
-require("@qooxdoo/framework");
+
 const util = require("../util");
 const path = require("upath");
 

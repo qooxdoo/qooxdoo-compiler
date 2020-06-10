@@ -20,7 +20,7 @@
  *
  * *********************************************************************** */
 
-require("@qooxdoo/framework");
+
 require("./AbstractAppMaker");
 var util = require("../util");
 const mkParentPath = util.promisify(util.mkParentPath);

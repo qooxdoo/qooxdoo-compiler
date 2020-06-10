@@ -22,7 +22,7 @@
  *
  * *********************************************************************** */
 
-require("@qooxdoo/framework");
+
 const Ajv = require("ajv");
 const betterAjvErrors = require("better-ajv-errors");
 const fs = qx.tool.utils.Promisify.fs;

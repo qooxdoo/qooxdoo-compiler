@@ -17,7 +17,7 @@
 ************************************************************************ */
 require("../Package");
 
-require("@qooxdoo/framework");
+
 const semver = require("semver");
 const columnify = require("columnify");
 const path = require("upath");

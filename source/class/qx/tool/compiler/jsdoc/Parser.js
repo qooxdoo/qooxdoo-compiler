@@ -20,7 +20,7 @@
  *
  * *********************************************************************** */
 
-require("@qooxdoo/framework");
+
 require("./ChildControlParser");
 require("./ParamParser");
 require("./ReturnParser");

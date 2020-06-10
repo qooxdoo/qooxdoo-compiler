@@ -13,8 +13,7 @@
 
 ************************************************************************ */
 
-qx.Class.define("qx.test.tool.utils.Utils",
-  {
+qx.Class.define("qx.test.tool.utils.Utils", {
     extend : qx.dev.unit.TestCase,
 
     members :

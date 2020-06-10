@@ -18,7 +18,7 @@
 
 require("./Command");
 
-require("@qooxdoo/framework");
+
 
 /**
  * Adds scripts, classes, etc. to the projects

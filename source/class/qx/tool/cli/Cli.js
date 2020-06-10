@@ -16,7 +16,7 @@
 
 ************************************************************************ */
 
-require("@qooxdoo/framework");
+
 const path = require("upath");
 const fs = qx.tool.utils.Promisify.fs;
 const semver = require("semver");

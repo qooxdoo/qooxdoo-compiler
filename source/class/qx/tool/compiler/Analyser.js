@@ -26,7 +26,7 @@
 
 var fs = require("fs");
 var async = require("async");
-require("@qooxdoo/framework");
+
 var util = require("./util");
 var jsonlint = require("jsonlint");
 var hash = require("object-hash");

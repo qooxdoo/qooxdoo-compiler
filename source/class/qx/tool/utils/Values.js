@@ -20,7 +20,7 @@
  *
  * *********************************************************************** */
 
-require("@qooxdoo/framework");
+
 
 qx.Class.define("qx.tool.utils.Values", {
 

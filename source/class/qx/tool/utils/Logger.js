@@ -20,7 +20,7 @@
  *
  * *********************************************************************** */
 
-require("@qooxdoo/framework");
+
 require("./LogManager");
 
 qx.Class.define("qx.tool.utils.Logger", {

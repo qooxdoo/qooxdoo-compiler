@@ -20,7 +20,7 @@
  *
  * *********************************************************************** */
 
-require("@qooxdoo/framework");
+
 const nodePromisify = require("util").promisify;
 const PromisePool = require("es6-promise-pool");
 

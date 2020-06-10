@@ -21,7 +21,7 @@
  * *********************************************************************** */
 
 var path = require("upath");
-require("@qooxdoo/framework");
+
 
 /**
  * Base class for makers; does not include anything about targets, locales, etc (see AbstractAppMaker)

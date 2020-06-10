@@ -16,7 +16,7 @@
 
 ************************************************************************ */
 require("../Package");
-require("@qooxdoo/framework");
+
 
 /**
  * Lists compatible library packages

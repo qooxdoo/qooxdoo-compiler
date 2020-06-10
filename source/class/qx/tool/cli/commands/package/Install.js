@@ -17,7 +17,7 @@
 ************************************************************************ */
 
 require("../Package");
-require("@qooxdoo/framework");
+
 
 const download = require("download");
 const fs = qx.tool.utils.Promisify.fs;

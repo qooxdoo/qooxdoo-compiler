@@ -21,7 +21,7 @@
  * *********************************************************************** */
 
 const path = require("upath");
-require("@qooxdoo/framework");
+
 
 qx.Class.define("qx.tool.compiler.app.Application", {
   extend: qx.core.Object,

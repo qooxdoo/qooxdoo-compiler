@@ -23,7 +23,7 @@
 const fs = qx.tool.utils.Promisify.fs;
 const path = require("path");
 const util = require("../../compiler/util");
-require("@qooxdoo/framework");
+
 const rimraf = require("rimraf");
 
 const stat = util.promisify(fs.stat);

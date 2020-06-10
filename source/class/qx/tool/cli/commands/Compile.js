@@ -16,7 +16,7 @@
 
 ************************************************************************ */
 
-require("@qooxdoo/framework");
+
 const process = require("process");
 const Gauge = require("gauge");
 const semver = require("semver");

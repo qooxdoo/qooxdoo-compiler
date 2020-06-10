@@ -18,7 +18,7 @@
 ************************************************************************ */
 require("./Compile");
 
-require("@qooxdoo/framework");
+
 const fs = require("fs");
 const path = require("upath");
 const util = require("../../compiler/util");
