@@ -63,10 +63,6 @@ qx.Class.define("qx.tool.cli.commands.add.Class", {
             alias : "f",
             describe: "overwrite an existing file"
           }
-          // "verbose":{
-          //   alias : "v",
-          //   describe: 'Verbose logging'
-          // }
         }
       };
     }

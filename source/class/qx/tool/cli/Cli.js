@@ -558,7 +558,6 @@ qx.Class.define("qx.tool.cli.Cli", {
      * @param classNames {String[]} array of class names, each of which is in the `packageName` package
      * @param packageName {String} the name of the package to find each command class
      */
-    /* @ignore qx.tool.$$classPath */
     addYargsCommands: function(yargs, classNames, packageName) {
       let pkg = null;
       packageName.split(".").forEach(seg => {

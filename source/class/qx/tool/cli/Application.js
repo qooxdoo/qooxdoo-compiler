@@ -30,10 +30,9 @@ qx.Class.define("qx.tool.cli.Application",
      * This method contains the initial application code and gets called
      * during startup of the application
      */
-    main : function()
+    main : async function()
     {
-      qx.log.Logger.register(qx.log.appender.NodeConsole);
-      new qx.tool.cli.Cli().run();
+      await (new qx.tool.cli.Cli()).run();
     }
   }
 });

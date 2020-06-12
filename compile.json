@@ -178,5 +178,8 @@
         }
       ]
     }
+  },
+  "sass": {
+    "compiler": "legacy"
   }
 }

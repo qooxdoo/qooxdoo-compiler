@@ -208,6 +208,7 @@ qx.Class.define("qx.tool.config.Abstract", {
      * @return {String}
      */
     getSchemaPath() {
+      //TODO: Check resources
       return path.join(qx.util.ResourceManager.getInstance().toUri(""), "schema", this._getSchemaFileName());
     },
 

@@ -149,6 +149,9 @@ qx.Class.define("qx.tool.utils.Utils", {
         });
     },
 
+
+    // TODO: mkParentPath and makeParentDir are equal.
+    
     mkParentPath: function mkParentPath(dir, cb) {
       var segs = dir.split(/[\\\/]/);
       segs.pop();

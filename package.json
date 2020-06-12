@@ -2,6 +2,9 @@
   "name": "@qooxdoo/compiler",
   "description": "node.js based replacement for the Qooxdoo python toolchain",
   "main": "index.js",
+  "bin": {
+    "qx": "bin/qx"
+  },
   "scripts": {
     "devtools": "node source/resource/qx/tool/bin/build-devtools",
     "website": "node source/resource/qx/tool/bin/build-website",
@@ -32,6 +35,14 @@
     "url": "https://github.com/qooxdoo/qooxdoo-compiler/issues"
   },
   "license": "MIT",
+  "files": [
+    "LICENSE",
+    "README.md",
+    "Manifest.json",
+    "lib/compiler",
+    "lib/resource",
+    "bin"
+  ],
   "dependencies": {
     "@babel/core": "^7.9.0",
     "@babel/generator": "^7.9.5",
@@ -112,9 +123,5 @@
       "@qooxdoo/qx"
     ]
   },
-  "engine": "node >= 8",
-  "bin": {
-    "qx": "qx"
-  },
-  "preferGlobal": true
+  "engine": "node >= 8"
 }

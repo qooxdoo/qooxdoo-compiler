@@ -45,6 +45,7 @@ qx.Class.define("qx.tool.utils.Website", {
   construct: function(options={}) {
     qx.core.Object.apply(this, arguments);
     const self = qx.tool.utils.Website;
+    // TODO: Check resource
     this.initSourceDir(path.join(qx.util.ResourceManager.getInstance().toUri(""), "website"));
     this.initTargetDir(path.join(qx.util.ResourceManager.getInstance().toUri(""), "website/build"));
     this.initAppsNamespace(self.APP_NAMESPACE);
