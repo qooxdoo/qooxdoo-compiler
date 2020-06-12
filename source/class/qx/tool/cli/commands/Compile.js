@@ -646,8 +646,9 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         }
 
         var outputPath = targetConfig.outputPath;
-        if (this.argv.outputPathPrefix)
+        if (this.argv.outputPathPrefix) {
           outputPath = path.join(this.argv.outputPathPrefix, outputPath);
+        }
         if (!outputPath) {
           throw new qx.tool.utils.Utils.UserError("Missing output-path for target " + targetConfig.type);
         }
