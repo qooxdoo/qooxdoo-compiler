@@ -31,6 +31,7 @@ require("./commands/Lint.js");
 require("./commands/Package.js");
 require("./commands/Run.js");
 require("./commands/Serve.js");
+require("./commands/Test.js");
 require("./commands/add/Class.js");
 require("./commands/add/Script.js");
 require("./commands/package/Install.js");
