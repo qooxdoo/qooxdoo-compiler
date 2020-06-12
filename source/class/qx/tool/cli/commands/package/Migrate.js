@@ -15,9 +15,6 @@
      * Christian Boulanger (info@bibliograph.org, @cboulanger)
 
 ************************************************************************ */
-require("../Package");
-
-
 const process = require("process");
 const path = require("upath");
 const semver = require("semver");

@@ -144,7 +144,7 @@ qx.Class.define("qx.tool.compiler.app.Application", {
      * Default is true.
      */
     publish: {
-      type: "Boolean",
+      check: "Boolean",
       init: true
     },
 
@@ -153,7 +153,7 @@ qx.Class.define("qx.tool.compiler.app.Application", {
      * application (false)
      */
     standalone: {
-      type: "Boolean",
+      check: "Boolean",
       init: true
     },
 
@@ -917,5 +917,3 @@ qx.Class.define("qx.tool.compiler.app.Application", {
     }
   }
 });
-
-module.exports = qx.tool.compiler.app.Application;

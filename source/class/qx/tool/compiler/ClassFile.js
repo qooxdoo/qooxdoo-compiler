@@ -25,14 +25,12 @@
 var fs = require("fs");
 var babelCore = require("@babel/core");
 
-var util = require("./util");
 var types = require("@babel/types");
 var babylon = require("@babel/parser");
 var async = require("async");
 var pathModule = require("upath");
-require("./jsdoc/Parser");
 
-var log = util.createLog("analyser");
+var log = qx.tool.utils.LogManager.createLog("analyser");
 
 /**
  * Helper method that collapses the MemberExpression into a string
@@ -395,7 +393,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         var pos = className.lastIndexOf(".");
         var name = pos > -1 ? className.substring(pos + 1) : className;
         var outputPath = t.getOutputPath();
-        util.mkParentPath(outputPath, function(err) {
+        qx.tool.utils.Utils.mkParentPath(outputPath, function(err) {
           if (err) {
             callback(err);
             return;
@@ -3654,4 +3652,3 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
 
 });
 
-module.exports = qx.tool.compiler.ClassFile;

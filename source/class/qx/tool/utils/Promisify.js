@@ -20,8 +20,8 @@
  *
  * *********************************************************************** */
 
-
-const nodePromisify = require("util").promisify;
+const {promisify} = require("util");
+const nodePromisify = promisify;
 const PromisePool = require("es6-promise-pool");
 
 qx.Class.define("qx.tool.utils.Promisify", {
@@ -218,5 +218,5 @@ qx.Class.define("qx.tool.utils.Promisify", {
     statics.fs = statics.promisifyAll(require("fs"), function(key, fs) {
       return key !== "SyncWriteStream";
     });
-  }
+}
 });

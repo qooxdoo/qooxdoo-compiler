@@ -19,16 +19,10 @@
  *      * John Spackman (john.spackman@zenesis.com, @johnspackman)
  *
  * ************************************************************************/
-
-require("../../utils/Promisify");
-
-
-require("./Target");
-
 /**
  * Compiles a "build" application, minified and self contained application
  */
-module.exports = qx.Class.define("qx.tool.compiler.targets.BuildTarget", {
+qx.Class.define("qx.tool.compiler.targets.BuildTarget", {
   extend: qx.tool.compiler.targets.Target,
 
   properties: {

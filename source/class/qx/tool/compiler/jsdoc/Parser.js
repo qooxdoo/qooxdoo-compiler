@@ -19,13 +19,6 @@
  *      * John Spackman (john.spackman@zenesis.com, @johnspackman)
  *
  * *********************************************************************** */
-
-
-require("./ChildControlParser");
-require("./ParamParser");
-require("./ReturnParser");
-require("./ThrowsParser");
-
 const showdown = require("showdown");
 
 /**

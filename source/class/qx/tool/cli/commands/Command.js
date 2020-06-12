@@ -16,10 +16,6 @@
      * Christian Boulanger (info@bibliograph.org, @cboulanger)
 
 ************************************************************************ */
-
-
-require("../../utils/Utils");
-
 const fs = qx.tool.utils.Promisify.fs;
 const process = require("process");
 const child_process = require("child_process");
@@ -30,24 +26,8 @@ const replace_in_file = require("replace-in-file");
 /**
  * Base class for commands
  */
-/*
-  * @ignore qx.tool.$$resourceDir
-  * @ignore qx.tool.$$rootDir
-  */
 qx.Class.define("qx.tool.cli.commands.Command", {
   extend: qx.core.Object,
-
-  statics:{
-    /**
-     * The path to the directory containing the templates
-     */
-    TEMPLATE_DIR: path.join(qx.tool.$$resourceDir || "", "cli/templates"),
-
-    /**
-     * The path to the node_modules dir
-     */
-    NODE_MODULES_DIR: path.join(qx.tool.$$rootDir || "", "node_modules")
-  },
 
   construct: function(argv) {
     this.base(arguments);

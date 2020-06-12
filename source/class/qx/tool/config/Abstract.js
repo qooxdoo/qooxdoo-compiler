@@ -207,9 +207,8 @@ qx.Class.define("qx.tool.config.Abstract", {
      * Path to the schema json file in the file system
      * @return {String}
      */
-    /* @ignore qx.tool.$$resourceDir */
     getSchemaPath() {
-      return path.join(qx.tool.$$resourceDir, "schema", this._getSchemaFileName());
+      return path.join(qx.util.ResourceManager.getInstance().toUri(""), "schema", this._getSchemaFileName());
     },
 
     /**

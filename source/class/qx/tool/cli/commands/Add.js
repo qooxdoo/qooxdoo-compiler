@@ -15,11 +15,6 @@
      * Christian Boulanger (info@bibliograph.org, @cboulanger)
 
 ************************************************************************ */
-
-require("./Command");
-
-
-
 /**
  * Adds scripts, classes, etc. to the projects
  */

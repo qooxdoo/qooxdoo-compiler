@@ -15,9 +15,6 @@
      * Christian Boulanger (info@bibliograph.org, @cboulanger)
 
 ************************************************************************ */
-require("../Package");
-
-
 const fs = require("fs");
 const path = require("upath");
 const rimraf = require("rimraf");

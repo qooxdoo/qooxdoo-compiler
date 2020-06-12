@@ -19,9 +19,6 @@
 const path = require("upath");
 const process = require("process");
 const psTree = require("ps-tree");
-
-require("./Compile");
-
 /**
  * Runs a server application
  */

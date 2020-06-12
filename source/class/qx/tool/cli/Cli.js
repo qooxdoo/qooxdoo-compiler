@@ -569,7 +569,6 @@ qx.Class.define("qx.tool.cli.Cli", {
         }
       });
       classNames.forEach(cmd => {
-        require(path.join(qx.tool.$$classPath, packageName.replace(/\./g, "/"), cmd));
         let Clazz = pkg[cmd];
         let data = Clazz.getYargsCommand();
         if (data) {

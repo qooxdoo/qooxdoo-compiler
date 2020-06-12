@@ -16,12 +16,8 @@
      * Henner Kollmann (Henner.Kollmann@gmx.de, @hkollmann)
 
 ************************************************************************ */
-require("./Compile");
-
-
 const fs = require("fs");
 const path = require("upath");
-const util = require("../../compiler/util");
 
 /**
  * Build and deploy a project
@@ -183,7 +179,7 @@ qx.Class.define("qx.tool.cli.commands.Deploy", {
         
         
         if (ext == ".js" && !sourceMaps) {
-          await util.mkParentPathAsync(to);
+          await qx.tool.utils.Utils.makeParentDir(to);
           let rs = fs.createReadStream(from, { encoding: "utf8", emitClose: true });
           let ws = fs.createWriteStream(to, { encoding: "utf8", emitClose: true });
           let ss = new qx.tool.utils.Utils.StripSourceMapTransform();

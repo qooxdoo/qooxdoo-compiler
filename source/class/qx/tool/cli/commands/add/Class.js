@@ -15,14 +15,9 @@
      * Christian Boulanger (info@bibliograph.org, @cboulanger)
 
 ************************************************************************ */
-
-
 const fs = require("fs");
 const process = require("process");
 const path = require("upath");
-
-require("../Command");
-
 /**
  * Add a new class file to the current project, based on a template.
  *

@@ -15,10 +15,6 @@
      * Christian Boulanger (info@bibliograph.org, @cboulanger)
 
 ************************************************************************ */
-
-require("./Command");
-
-
 /**
  * "qx pkg" is an alias for "qx package"
  */

@@ -15,9 +15,6 @@
    * Christian Boulanger (info@bibliograph.org, @cboulanger)
 
 ************************************************************************ */
-require("../Package");
-
-
 const semver = require("semver");
 const columnify = require("columnify");
 const path = require("upath");

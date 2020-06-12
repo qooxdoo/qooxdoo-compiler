@@ -24,9 +24,8 @@ var path = require("path");
 
 var fs = require("fs");
 var async = require("async");
-var util = require("../util");
 
-var log = util.createLog("library");
+var log = qx.tool.utils.LogManager.createLog("library");
 
 /**
  * A Qooxdoo Library or application; typical usage is to call .loadManifest to configure from
@@ -425,5 +424,3 @@ qx.Class.define("qx.tool.compiler.app.Library", {
     }
   }
 });
-
-module.exports =qx.tool.compiler.app.Library;

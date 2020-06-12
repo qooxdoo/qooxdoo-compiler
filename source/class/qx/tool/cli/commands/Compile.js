@@ -26,8 +26,6 @@ const fs = qx.tool.utils.Promisify.fs;
 
 require("app-module-path").addPath(process.cwd() + "/node_modules");
 
-require("./Command");
-
 /**
  * Handles compilation of the project
  */

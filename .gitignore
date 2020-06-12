@@ -17,7 +17,6 @@ node_modules/
 html/
 qooxdoo/
 compiled/
-bin/
 qx_packages/
 
 # test apps

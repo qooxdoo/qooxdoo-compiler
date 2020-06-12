@@ -35,23 +35,18 @@ const chokidar = require("chokidar");
 // config
 dot.templateSettings.strip = false;
 
-/**
- * @ignore(qx.tool.$$resourceDir)
- */
 qx.Class.define("qx.tool.utils.Website", {
   extend: qx.core.Object,
 
   statics: {
-    APP_NAMESPACE: "apps",
-    SOURCE_DIR: path.join(qx.tool.$$resourceDir || "", "website"),
-    TARGET_DIR: path.join(qx.tool.$$resourceDir || "", "website/build")
+    APP_NAMESPACE: "apps"
   },
 
   construct: function(options={}) {
     qx.core.Object.apply(this, arguments);
     const self = qx.tool.utils.Website;
-    this.initSourceDir(self.SOURCE_DIR);
-    this.initTargetDir(self.TARGET_DIR);
+    this.initSourceDir(path.join(qx.util.ResourceManager.getInstance().toUri(""), "website"));
+    this.initTargetDir(path.join(qx.util.ResourceManager.getInstance().toUri(""), "website/build"));
     this.initAppsNamespace(self.APP_NAMESPACE);
 
     for (let key of Object.getOwnPropertyNames(options)) {

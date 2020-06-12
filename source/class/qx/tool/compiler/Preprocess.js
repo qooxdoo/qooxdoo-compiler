@@ -77,5 +77,3 @@ qx.Class.define("qx.tool.compiler.Preprocess", {
     }
   }
 });
-
-module.exports = qx.tool.compiler.Preprocess;

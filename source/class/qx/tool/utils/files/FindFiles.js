@@ -92,4 +92,3 @@ qx.Class.define("qx.tool.utils.files.FindFiles", {
 
 });
 
-module.exports = qx.tool.utils.files.FindFiles;

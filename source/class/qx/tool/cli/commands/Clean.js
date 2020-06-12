@@ -16,8 +16,6 @@
      * Henner Kollmann (hkollmann)
 
 ************************************************************************ */
-require("./Package");
-
 
 const fs = require("fs");
 const process = require("process");
