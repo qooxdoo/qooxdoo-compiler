@@ -303,7 +303,7 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
       
       const requiredLibs = application.getRequiredLibraries();
       
-      await qx.tool.utils.Utils.mkpathAsync(appRootDir);
+      await qx.tool.utils.Utils.makeDirs(appRootDir);
 
       appMeta.setEnvironment({
         "qx.application": application.getClassName(),
@@ -502,7 +502,7 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
     async _writeLocales(appMeta) {
       var t = this;
       var analyser = appMeta.getAnalyser();
-      let bootPackage = appMeta.getPackages()[0];
+      let bootPackage =  appMeta.getPackages()[0];
 
       function loadLocaleData(localeId) {
         var combinedCldr = null;

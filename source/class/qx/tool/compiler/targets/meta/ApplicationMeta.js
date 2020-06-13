@@ -38,7 +38,7 @@ qx.Class.define("qx.tool.compiler.targets.meta.ApplicationMeta", {
     },
     
     bootMetaJs: {
-      check: "qx.tool.compiler.targets.meta.IJavascriptMeta"
+      check: "qx.tool.compiler.targets.meta.AbstractJavascriptMeta"
     },
     
     sourceUri: {
@@ -177,7 +177,7 @@ qx.Class.define("qx.tool.compiler.targets.meta.ApplicationMeta", {
      * @return {Package[]}
      */
     getPackages() {
-      return Object.values(this.__packages);
+      return this.__packages;
     },
     
     /**

@@ -8,7 +8,7 @@ qx.Class.define("qx.tool.compiler.targets.meta.Uglify", {
   /**
    * Constructor
    * 
-   * @param jsMeta {IJavascriptMeta} the source
+   * @param jsMeta {AbstractJavascriptMeta} the source
    */
   construct(appMeta, jsMeta) {
     this.base(arguments, appMeta, jsMeta.getFilename());
