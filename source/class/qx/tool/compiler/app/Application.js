@@ -857,7 +857,6 @@ qx.Class.define("qx.tool.compiler.app.Application", {
     _applyType: function(value, oldValue) {
       var loader = path.join(this.getTemplatePath(), "loader", "loader-" + this.getType() + ".tmpl.js");
       this.setLoaderTemplate(loader);
-      this.setTheme(null);
     },
 
     /**

@@ -288,7 +288,9 @@ qx.Class.define("qx.tool.cli.commands.Command", {
      * @return {String}
      */
     getTemplateDir : function() {
-      return qx.tool.cli.commands.Command.TEMPLATE_DIR;
+      let dir = qx.util.ResourceManager.getInstance().toUri("qx/tool/cli/templates/template_vars.js");
+      dir = path.dirname(dir);
+      return dir;
     },
 
     /**

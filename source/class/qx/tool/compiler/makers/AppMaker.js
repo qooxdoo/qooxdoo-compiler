@@ -80,7 +80,7 @@ qx.Class.define("qx.tool.compiler.makers.AppMaker", {
       const compileEnv = qx.tool.utils.Values.merge({},
         qx.tool.compiler.ClassFile.ENVIRONMENT_CONSTANTS,
         {
-          "qx.compilerVersion": qx.tool.compiler.Version.VERSION
+          "qx.compiler.version": qx.tool.compiler.Version.VERSION
         },
         this.getEnvironment(),
         this.getTarget().getDefaultEnvironment(),

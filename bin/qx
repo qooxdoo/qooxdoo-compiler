@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 const path=require("path");
+const fs=require("fs");
 require(path.join(__dirname, "..", "index"));
 require(path.join(__dirname, "..", "lib", "compiler"));
 

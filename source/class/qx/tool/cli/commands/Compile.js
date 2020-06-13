@@ -41,6 +41,10 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         requiresArg: true,
         type: "string"
       },
+      "output-path-prefix": {
+        describe: "Sets a prefix for the output path of the target - used to compile a version into a non-standard directory",
+        type: "string"
+      },
       "download": {
         alias: "d",
         describe: "Whether to automatically download missing libraries",
@@ -640,6 +644,9 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         }
 
         var outputPath = targetConfig.outputPath;
+        if (this.argv.outputPathPrefix) {
+          outputPath = path.join(this.argv.outputPathPrefix, outputPath);
+        }
         if (!outputPath) {
           throw new qx.tool.utils.Utils.UserError("Missing output-path for target " + targetConfig.type);
         }

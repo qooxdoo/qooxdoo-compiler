@@ -83,14 +83,13 @@ qx.Class.define("qx.tool.cli.commands.Create", {
      * @returns {string[]}
      */
     getSkeletonNames: function() {
-      let dirList = qx.util.ResourceManager.getInstance().getIds("qx/tool/cli/templates/skeleton");
-      let dir = qx.util.ResourceManager.getInstance().toUri(dirList[0]);
-      dir = path.dirname(path.dirname(dir));
+      // need access to an non static method...
+      let dir = path.join(this.prototype.getTemplateDir(), "skeleton");
       let res = fs
         .readdirSync(dir)
         .filter(entry => {
           try {
-            return fs.existsSync(path.join(dir, entry, "Manifest.tmpl.json"));
+            return fs.existsSync(`${dir}/${entry}/Manifest.tmpl.json`);
           } catch (e) {
             return false;
           }
