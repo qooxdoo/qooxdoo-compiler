@@ -15,7 +15,7 @@
      * John Spackman (john.spackman@zenesis.com, @johnspackman)
 
 ************************************************************************ */
-const path = require("path");
+const path = require("upath");
 const fs = require("fs");
 const async = require("async");
 const {promisify} = require("util");
@@ -150,8 +150,9 @@ qx.Class.define("qx.tool.utils.Utils", {
     },
 
 
-    // TODO: mkParentPath and makeParentDir are equal.
-    
+    /**
+     * Creates the parent directory of a filename, if it does not already exist
+     */
     mkParentPath: function mkParentPath(dir, cb) {
       var segs = dir.split(/[\\\/]/);
       segs.pop();
@@ -168,20 +169,24 @@ qx.Class.define("qx.tool.utils.Utils", {
      * Creates the parent directory of a filename, if it does not already exist
      *
      * @param {string} filename the filename to create the parent directory of
+     * 
+     * @return {Promise?} the value
      */
-    makeParentDir: async function (filename) {
-      var parentDir = path.dirname(filename);
-      await this.makeDirs(parentDir);
+    makeParentDir: function (filename) {
+      const mkParentPath = promisify(this.mkParentPath).bind(this);
+      return mkParentPath(filename);
     },
 
     /**
      * Creates a directory, if it does not exist, including all intermediate paths
      *
      * @param {string} filename the directory to create
+     * 
+     * @return {Promise?} the value
      */
-    makeDirs: async function (filename) {
+    makeDirs: function (filename) {
       const mkpath = promisify(this.mkpath);
-      await mkpath(filename);
+      return mkpath(filename);
     },
 
     /**
