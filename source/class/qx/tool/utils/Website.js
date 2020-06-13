@@ -45,9 +45,10 @@ qx.Class.define("qx.tool.utils.Website", {
   construct: function(options={}) {
     qx.core.Object.apply(this, arguments);
     const self = qx.tool.utils.Website;
-    // TODO: Check resource
-    this.initSourceDir(path.join(qx.util.ResourceManager.getInstance().toUri(""), "website"));
-    this.initTargetDir(path.join(qx.util.ResourceManager.getInstance().toUri(""), "website/build"));
+    let p = qx.util.ResourceManager.getInstance().toUri("qx/tool/website/.gitignore");
+    p = path.dirname(p);
+    this.initSourceDir(p);
+    this.initTargetDir(path.join(p, "build"));
     this.initAppsNamespace(self.APP_NAMESPACE);
 
     for (let key of Object.getOwnPropertyNames(options)) {

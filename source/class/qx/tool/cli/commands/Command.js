@@ -284,7 +284,7 @@ qx.Class.define("qx.tool.cli.commands.Command", {
     },
 
     /**
-     * Returns the absolute path to the tempate directory
+     * Returns the absolute path to the template directory
      * @return {String}
      */
     getTemplateDir : function() {
