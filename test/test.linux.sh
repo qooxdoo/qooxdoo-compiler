@@ -3,14 +3,14 @@ set -x
 set -e
 NODE_OPTS="--no-warnings"
 
-npm link
+#npm link
 
 echo "Testing qooxdoo-compiler version $(./qx --version)"
 echo
 
-./qx package update
-./qx package install
-./qx lint
+npx qx package update
+npx qx package install
+npx qx lint
 
 # node API tests
 pushd test
