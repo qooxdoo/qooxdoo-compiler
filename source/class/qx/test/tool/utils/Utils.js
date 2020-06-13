@@ -14,9 +14,9 @@
 ************************************************************************ */
 
 qx.Class.define("qx.test.tool.utils.Utils", {
-    extend : qx.dev.unit.TestCase,
+  extend : qx.dev.unit.TestCase,
 
-    members :
+  members :
   {
     stripSourceMapWriteStreamWholeStream : async function() {
       let ss = new qx.tool.utils.Utils.ToStringWriteStream();
@@ -65,4 +65,4 @@ qx.Class.define("qx.test.tool.utils.Utils", {
       this.assertTrue(ss.toString() == "abc\ndef\nghi");
     }
   }
-  });
+});

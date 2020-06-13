@@ -218,5 +218,5 @@ qx.Class.define("qx.tool.utils.Promisify", {
     statics.fs = statics.promisifyAll(require("fs"), function(key, fs) {
       return key !== "SyncWriteStream";
     });
-}
+  }
 });
