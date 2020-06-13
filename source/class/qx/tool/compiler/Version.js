@@ -34,8 +34,8 @@ qx.Class.define("qx.tool.compiler.Version", {
     } catch (e) {
       statics.VERSION = qx.core.Environment.get("qx.compiler.version");
       if (!statics.VERSION) {
-         // Compatibility issue: Older compiler has version in qx.compilerVersion
-         statics.VERSION = qx.core.Environment.get("qx.compilerVersion");
+        // Compatibility issue: Older compiler has version in qx.compilerVersion
+        statics.VERSION = qx.core.Environment.get("qx.compilerVersion");
       }
     }
   }

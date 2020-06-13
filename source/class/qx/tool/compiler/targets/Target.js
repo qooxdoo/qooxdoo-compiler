@@ -502,7 +502,7 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
     async _writeLocales(appMeta) {
       var t = this;
       var analyser = appMeta.getAnalyser();
-      let bootPackage =  appMeta.getPackages()[0];
+      let bootPackage = appMeta.getPackages()[0];
 
       function loadLocaleData(localeId) {
         var combinedCldr = null;
