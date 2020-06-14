@@ -43,13 +43,3 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./html
-      - name: Register Token
-        run: |
-             echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" > ~/.npmrc
-             echo "_auth=$NODE_AUTH_TOKEN" >>  ~/.npmrc
-             echo "email=<your@email.address>" >>  ~/.npmrc
-             echo "always-auth=true" >>  ~/.npmrc
-           env:
-             NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - name: Publish
-        run: npm publish

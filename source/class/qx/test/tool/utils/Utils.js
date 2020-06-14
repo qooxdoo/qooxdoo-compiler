@@ -18,7 +18,7 @@ qx.Class.define("qx.test.tool.utils.Utils", {
 
   members :
   {
-    stripSourceMapWriteStreamWholeStream : async function() {
+    testStripSourceMapWriteStreamWholeStream : async function() {
       let ss = new qx.tool.utils.Utils.ToStringWriteStream();
       let ws = new qx.tool.utils.Utils.StripSourceMapTransform();
       ws.pipe(ss);
@@ -32,7 +32,7 @@ qx.Class.define("qx.test.tool.utils.Utils", {
       this.assertTrue(ss.toString() == "abc\ndef\nghi");
     },
 
-    stripSourceMapWriteStreamChunked1 : async function() {
+    testStripSourceMapWriteStreamChunked1 : async function() {
       let ss = new qx.tool.utils.Utils.ToStringWriteStream();
       let ws = new qx.tool.utils.Utils.StripSourceMapTransform();
       ws.pipe(ss);
@@ -48,7 +48,7 @@ qx.Class.define("qx.test.tool.utils.Utils", {
       this.assertTrue(ss.toString() == "abc\ndef\nghi\njkl");
     },
 
-    stripSourceMapWriteStreamChunked2 : async function() {
+    testStripSourceMapWriteStreamChunked2 : async function() {
       let ss = new qx.tool.utils.Utils.ToStringWriteStream();
       let ws = new qx.tool.utils.Utils.StripSourceMapTransform();
       ws.pipe(ss);
