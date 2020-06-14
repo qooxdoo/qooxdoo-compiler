@@ -80,7 +80,7 @@ qx.Class.define("qx.tool.compiler.targets.BuildTarget", {
     "minifyingApplication": "qx.event.type.Data",
 
     /**
-     * Fired when minification begins, data is a map containing:
+     * Fired when minification is done, data is a map containing:
      *  application {qx.tool.compiler.app.Application} the app being minified
      *  part: {String} the part being minified
      *  filename: {String} the part filename
