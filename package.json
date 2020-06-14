@@ -14,8 +14,8 @@
   "cross-os": {
     "test.os": {
       "win32": "test\\test.win32.cmd",
-      "linux": "test/test.linux.sh",
-      "darwin": "test/test.linux.sh"
+      "linux": "npm link && test/test.linux.sh",
+      "darwin": "npm link && test/test.linux.sh"
     }
   },
   "author": "John Spackman (johnspackman), Christian Boulanger (cboulanger), Henner Kollmann (hkollmann), and others",
