@@ -8,15 +8,8 @@
   "scripts": {
     "devtools": "node source/resource/qx/tool/bin/build-devtools",
     "website": "node source/resource/qx/tool/bin/build-website",
-    "test": "cross-os test.os",
+    "test": "qx test --target=build --output-path-prefix=tmp",
     "prepack": "npm deploy"
-  },
-  "cross-os": {
-    "test.os": {
-      "win32": "test\\test.win32.cmd",
-      "linux": "npm link && test/test.linux.sh",
-      "darwin": "npm link && test/test.linux.sh"
-    }
   },
   "author": "John Spackman (johnspackman), Christian Boulanger (cboulanger), Henner Kollmann (hkollmann), and others",
   "version": "1.0.0-beta",
@@ -107,10 +100,7 @@
     "yargs": "^15.3.1"
   },
   "devDependencies": {
-    "bats": "^1.1.0",
-    "cross-os": "^1.2.2",
     "mocha": "^6.2.3",
-    "runscript": "^1.4.0",
     "source-map-support": "^0.5.16",
     "tape": "^4.13.2"
   },

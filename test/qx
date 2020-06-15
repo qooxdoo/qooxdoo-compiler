@@ -1,2 +1,2 @@
 #!/usr/bin/env node
-             require("C:/_vza/@repos/github.windows/qooxdoo/qooxdoo-compiler/compiled.new/compiled/node/source/compiler");
+             require("C:/_vza/@repos/github.windows/qooxdoo/qooxdoo-compiler/tmp/compiled/node/source/compiler");

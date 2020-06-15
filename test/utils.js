@@ -51,6 +51,7 @@ async function runCommand(dir, ...args) {
     let result = {
         exitCode: null,
         output: "",
+        error: "",
         messages: null
     };
     proc.stdout.on('data', (data) => {
@@ -61,7 +62,7 @@ async function runCommand(dir, ...args) {
     proc.stderr.on('data', (data) => {
       data = data.toString().trim();
       console.error(data);
-      result.output += data;
+      result.error += data;
     });
 
     proc.on('close', code => {

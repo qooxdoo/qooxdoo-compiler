@@ -21,17 +21,19 @@
  * @asset(qx/tool/*)
  *
  */
-qx.Class.define("qx.tool.cli.Application",
-  {
-    extend : qx.application.Basic,
-    members :
-  {
-    /**
-     * This method contains the initial application code and gets called
-     * during startup of the application
-     */
-    main : async function() {
-      await (new qx.tool.cli.Cli()).run();
-    }
+qx.Class.define("qx.tool.cli.Application", {
+  extend: qx.application.Basic,
+  members:
+    {
+      /**
+       * This method contains the initial application code and gets called
+       * during startup of the application
+       */
+      main: async function () {
+        await (new qx.tool.cli.Cli()).run();
+      }
+    },
+  defer: function(statics) {
+    qx.log.Logger.setLevel("error");
   }
-  });
+});
