@@ -22,13 +22,11 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - name: install
-        run: npm install @qooxdoo/compiler -g
+        run:  npm install @qooxdoo/compiler -g
       - name: compile the compiler
         run:  qx deploy --target=build      
       - name: Run qx test for built-in compiler tests
-        run: ./bin/qx test 
-      - name: Run  external CLI and API tests
-        run: npm test
+        run:  ./bin/qx test 
         env:
           CI: true
 
