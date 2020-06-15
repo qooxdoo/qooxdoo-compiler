@@ -24,7 +24,9 @@ jobs:
       - name: install
         run:  npm install @qooxdoo/compiler -g
       - name: compile the compiler
-        run:  qx deploy --target=build      
+        run:  |
+              qx deploy --target=build 
+              chmod 777 ./bin/qx 
       - name: Run qx test for built-in compiler tests
         run:  ./bin/qx test 
         env:
