@@ -81,7 +81,14 @@ qx.Class.define("qx.tool.cli.commands.Test", {
   construct(argv) {
     this.base(arguments, argv);
     this.__tests = [];
-  },
+    this.addListener("changeExitCode", evt => {
+      let exitCode = evt.getData();
+      // overwrite error code only in case of errors
+      if (exitCode && this.argv.failFast) {
+          process.exit(exitCode);
+        }
+      });
+   },
 
   properties: {
     /**
@@ -108,12 +115,6 @@ qx.Class.define("qx.tool.cli.commands.Test", {
   members: {
 
     /**
-     * The error code of the last run test
-     * @var {Number}
-     */
-    errorCode: 0,
-
-    /**
      * @var {Array}
      */
     __tests: null,
@@ -128,19 +129,16 @@ qx.Class.define("qx.tool.cli.commands.Test", {
         let exitCode = evt.getData();
         // overwrite error code only in case of errors
         if (exitCode) {
-          this.errorCode = exitCode;
+          this.setExitCode(exitCode);
         }
         // handle result and inform user
         if (exitCode === 0) {
-          if (test.getName() && !this.argv.quiet) {
+          if (test.getName() && !this.argv.quiet){
             qx.tool.compiler.Console.info(`Test '${test.getName()}' passed.`);
-          }
+          }      
         } else {
           if (test.getName()) {
             qx.tool.compiler.Console.error(`Test '${test.getName()}' failed with exit code ${exitCode}.`);
-          }
-          if (this.argv.failFast) {
-            process.exit(exitCode);
           }
         }
       });
@@ -173,11 +171,12 @@ qx.Class.define("qx.tool.cli.commands.Test", {
         }
       });
 
-      this.addListener("afterStart", () => {
+      this.addListener("afterStart", async () => {
+        // run unit tests first
+        await this.fireDataEventAsync("runTests", this);
         let res = this.__tests.map(test => test.execute());
-        res.push(this.fireDataEventAsync("runTests", this));
         qx.Promise.all(res).then(() => {
-          process.exit(this.errorCode);
+          process.exit(this.getExitCode());
         });
       });
       

@@ -21,9 +21,12 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm ci
+      - name: install
+        run: npm install @qooxdoo/compiler -g
+      - name: compile the compiler
+        run:  qx deploy --target=build      
       - name: Run qx test for built-in compiler tests
-        run: ./qx test --serve=0 || true
+        run: ./bin/qx test 
       - name: Run  external CLI and API tests
         run: npm test
         env:

@@ -1,3 +1,0 @@
-Test 'Test 1' passed.
-The next test fails on purpose.
-Test 'Test 3' passed.

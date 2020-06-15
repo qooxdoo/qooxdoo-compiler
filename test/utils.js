@@ -1,5 +1,6 @@
 const fs = require("fs");
 const async = require("async");
+const path = require("path")
 const child_process = require("child_process");
 //var fsPromises = require("fs").promises;
 // node 8 compatibility
@@ -12,7 +13,7 @@ const fsPromises = {
 };
 
 async function runCompiler(dir, ...cmd) {
-  let result = await runCommand(dir, "qx", "compile", "--machine-readable", ...cmd);
+  let result = await runCommand(dir, path.join(__dirname, "qx"), "compile", "--machine-readable", ...cmd);
   result.messages = [];
   result.output.split("\n").forEach(line => {
     let m = line.match(/^\#\#([^:]+):\[(.*)\]$/);
@@ -37,7 +38,7 @@ async function runCompiler(dir, ...cmd) {
 }
 
 async function runCommand(dir, ...args) {
-  return new qx.Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     let cmd = args.shift();
     let proc = child_process.spawn(cmd, args, {
       cwd: dir,
@@ -49,11 +50,13 @@ async function runCommand(dir, ...args) {
         messages: null
     };
     proc.stdout.on('data', (data) => {
-      console.log(data.toString());
+      data = data.toString().trim();
+      console.log(data);
       result.output += data;
-  });
+    });
     proc.stderr.on('data', (data) => {
-      console.error(data.toString());
+      data = data.toString().trim();
+      console.error(data);
       result.output += data;
     });
 

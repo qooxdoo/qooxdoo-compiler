@@ -1,8 +1,0 @@
-{
-    "environment": {
-        "qx.debug.dispose": false,
-        "qx.debug.databinding": false,
-        "qx.aspects": false,
-        "qx.globalErrorHandling": false
-    }
-}
