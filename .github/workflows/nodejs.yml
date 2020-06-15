@@ -30,7 +30,7 @@ jobs:
               qx deploy --target=build 
               chmod 777 ./bin/qx 
       - name: Run qx test for built-in compiler tests
-        run:  ./bin/qx test 
+        run:  ./bin/qx test --output-path-prefix=tmp
         env:
           CI: true
 
