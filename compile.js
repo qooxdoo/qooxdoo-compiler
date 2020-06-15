@@ -7,11 +7,12 @@ qx.Class.define("qx.compiler.LibraryApi", {
 
   members: {
     async load() {
+      let self = this;
 
       function addTest(test) {
         command.addTest(new qx.tool.cli.api.Test(test, async () => {
           result = await testUtils.runCommand(path.join("test", "compiler"), "node", test + ".js");
-          this.setErrorCode(result.errorCode);
+          self.setErrorCode(result.errorCode);
         })).setNeedsServer(false);
       }
 
@@ -30,13 +31,12 @@ qx.Class.define("qx.compiler.LibraryApi", {
           await testUtils.safeDelete("test/qx");
           fs.writeFileSync("test/qx", cmd, { mode: 777 });
         });
-        addTest("test-cli");
-        /*
-                let files = fs.readdirSync("test/compiler");.
-                files.forEach(file => {
-                   addTest(path.changeExt(path.basename(file), ""));
-                });
-        */
+        let files = fs.readdirSync("test/compiler", {withFileTypes:true});
+        files.forEach(file => {
+          if (file.isFile()) {
+            addTest(path.changeExt(path.basename(file.name), ""));
+          }
+        });
       }
     }
   }

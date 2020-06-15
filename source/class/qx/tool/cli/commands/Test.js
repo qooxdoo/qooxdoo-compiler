@@ -172,12 +172,13 @@ qx.Class.define("qx.tool.cli.commands.Test", {
       });
 
       this.addListener("afterStart", async () => {
-        // run unit tests first
+        qx.tool.compiler.Console.info(`run unit tests`);
         await this.fireDataEventAsync("runTests", this);
-        let res = this.__tests.map(test => test.execute());
-        qx.Promise.all(res).then(() => {
-          process.exit(this.getExitCode());
-        });
+        for (let test of this.__tests) {
+          qx.tool.compiler.Console.info(`run ${test.getName()}`);
+          await test.execute();          
+        }
+        process.exit(this.getExitCode());
       });
       
       if (this.__needsServer()) {

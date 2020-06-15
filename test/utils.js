@@ -12,8 +12,12 @@ const fsPromises = {
   unlink: promisify(fs.unlink)
 };
 
+function getCompiler() {
+  return path.join(__dirname, "qx");
+}
+
 async function runCompiler(dir, ...cmd) {
-  let result = await runCommand(dir, path.join(__dirname, "qx"), "compile", "--machine-readable", ...cmd);
+  let result = await runCommand(dir, getCompiler(), "compile", "--machine-readable", ...cmd);
   result.messages = [];
   result.output.split("\n").forEach(line => {
     let m = line.match(/^\#\#([^:]+):\[(.*)\]$/);
@@ -129,6 +133,7 @@ async function safeDelete(filename) {
 }
 
 module.exports = {
+  getCompiler,
   runCompiler,
   runCommand,
   deleteRecursive,

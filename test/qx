@@ -1,5 +1,2 @@
 #!/usr/bin/env node
-const path=require("path");
-require(path.join(__dirname, "..", "index"));
-require(path.join(__dirname, "..", "lib", "compiler"));
-
+             require("C:/_vza/@repos/github.windows/qooxdoo/qooxdoo-compiler/compiled.new/compiled/node/source/compiler");
