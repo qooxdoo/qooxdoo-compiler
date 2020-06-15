@@ -22,7 +22,9 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - name: install
-        run:  npm install @qooxdoo/compiler -g
+        run:  |
+              npm install @qooxdoo/compiler -g
+              npm install
       - name: compile the compiler
         run:  |
               qx deploy --target=build 
