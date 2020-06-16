@@ -18,11 +18,11 @@
     },
     {
       "library_name": "qxl.testnode",
-      "library_version": "1.0.1",
-      "path": "qx_packages/qooxdoo_qxl_testnode_v1_0_1",
+      "library_version": "1.0.4",
+      "path": "qx_packages/qooxdoo_qxl_testnode_v1_0_4",
       "uri": "qooxdoo/qxl.testnode",
       "repo_name": "qooxdoo/qxl.testnode",
-      "repo_tag": "v1.0.1"
+      "repo_tag": "v1.0.4"
     }
   ],
   "version": "2.1.0"

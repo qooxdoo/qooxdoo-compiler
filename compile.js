@@ -31,10 +31,11 @@ qx.Class.define("qx.compiler.LibraryApi", {
           await testUtils.safeDelete("test/qx");
           fs.writeFileSync("test/qx", cmd, { mode: 777 });
         });
-        let files = fs.readdirSync("test/compiler", {withFileTypes:true});
+        let files = fs.readdirSync("test/compiler");
+        // node 8 compatible...
         files.forEach(file => {
-          if (file.isFile()) {
-            addTest(path.changeExt(path.basename(file.name), ""));
+          if (fs.statSync(path.join("test/compiler", file)).isFile()) {
+            addTest(path.changeExt(path.basename(file), ""));
           }
         });
       }
