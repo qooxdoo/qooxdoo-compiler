@@ -28,7 +28,6 @@ jobs:
       - name: compile the compiler
         run:  |
               qx deploy --target=build 
-              chmod 777 ./bin/qx 
       - name: Run qx test for built-in compiler tests
         run:  ./bin/qx test --output-path-prefix=tmp
         env:
