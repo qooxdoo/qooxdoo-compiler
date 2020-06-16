@@ -22,3 +22,4 @@ qx_packages/
 # test apps
 /foo*
 /myapp
+/test/qx
