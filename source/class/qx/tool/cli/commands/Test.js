@@ -45,7 +45,7 @@ qx.Class.define("qx.tool.cli.commands.Test", {
     YARGS_BUILDER: {
       "fail-fast": {
         describe: "Exit on first failing test",
-        defaut: true,
+        default: true,
         type: "boolean"
       }
     },
@@ -84,7 +84,7 @@ qx.Class.define("qx.tool.cli.commands.Test", {
     this.addListener("changeExitCode", evt => {
       let exitCode = evt.getData();
       // overwrite error code only in case of errors
-      if (exitCode && this.argv.failFast) {
+      if (exitCode && argv.failFast) {
         process.exit(exitCode);
       }
     });
@@ -127,10 +127,6 @@ qx.Class.define("qx.tool.cli.commands.Test", {
       qx.core.Assert.assertInstance(test, qx.tool.cli.api.Test);
       test.addListenerOnce("changeExitCode", evt => {
         let exitCode = evt.getData();
-        // overwrite error code only in case of errors
-        if (exitCode) {
-          this.setExitCode(exitCode);
-        }
         // handle result and inform user
         if (exitCode === 0) {
           if (test.getName() && !this.argv.quiet) {
@@ -138,6 +134,10 @@ qx.Class.define("qx.tool.cli.commands.Test", {
           }      
         } else if (test.getName()) {
           qx.tool.compiler.Console.error(`Test '${test.getName()}' failed with exit code ${exitCode}.`);
+        }
+        // overwrite error code only in case of errors
+        if (exitCode) {
+          this.setExitCode(exitCode);
         }
       });
       this.__tests.push(test);

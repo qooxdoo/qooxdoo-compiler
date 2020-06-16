@@ -65,7 +65,7 @@ qx.Class.define("qx.tool.cli.api.Test", {
      */
     execute: function() {
       let f = this.getTestFunction(); 
-      return qx.Promise.resolve(f.apply(this));
+      return qx.Promise.resolve(f.call(this, this));
     }
   }
 });

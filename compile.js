@@ -7,12 +7,14 @@ qx.Class.define("qx.compiler.LibraryApi", {
 
   members: {
     async load() {
+      const COMPILER_TEST_PATH = path.join("test", "compiler");
       let self = this;
+     
 
       function addTest(test) {
-        command.addTest(new qx.tool.cli.api.Test(test, async () => {
-          result = await testUtils.runCommand(path.join("test", "compiler"), "node", test + ".js");
-          self.setErrorCode(result.errorCode);
+        command.addTest(new qx.tool.cli.api.Test(test, async function() {
+          result = await testUtils.runCommand(COMPILER_TEST_PATH, "node", test + ".js");
+          this.setExitCode(result.exitCode);
         })).setNeedsServer(false);
       }
 
@@ -29,12 +31,12 @@ qx.Class.define("qx.compiler.LibraryApi", {
              require("${path.resolve(path.join(maker.getOutputDir(), "compiler"))}");
 `;
           await testUtils.safeDelete("test/qx");
-          fs.writeFileSync("test/qx", cmd, { mode: 777 });
+          fs.writeFileSync("test/qx", cmd, { mode: 0o777 });
         });
-        let files = fs.readdirSync("test/compiler");
+        let files = fs.readdirSync(COMPILER_TEST_PATH);
         // node 8 compatible...
         files.forEach(file => {
-          if (fs.statSync(path.join("test/compiler", file)).isFile()) {
+          if (fs.statSync(path.join(COMPILER_TEST_PATH, file)).isFile()) {
             addTest(path.changeExt(path.basename(file), ""));
           }
         });
