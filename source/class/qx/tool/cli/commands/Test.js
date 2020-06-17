@@ -25,11 +25,6 @@ const process = require("process");
  * The runTests event is called with a {@link qx.even.type.Data}
  * containing the command instance.
  *
- * A test can write to the (native) `errorCode` property of this instance,
- * which is used to determine the exit code of the `qx test` command.
- * This means, however, that the last run test overwrites the
- * `errorCode` of any previous test, and has to take care of this.
- *
  */
 qx.Class.define("qx.tool.cli.commands.Test", {
   extend: qx.tool.cli.commands.Serve,
@@ -162,7 +157,7 @@ qx.Class.define("qx.tool.cli.commands.Test", {
             `No tests are registered!
                Please register a testrunner, e.g. testtapper with:
                qx package install @qooxdoo/qxl.testtapper
-               See documentation https://qooxdoo.org/docs/#/development/testing/
+               See documentation at https://qooxdoo.org/docs/#/development/testing/
               `
           );
           process.exit(-1);
@@ -170,7 +165,7 @@ qx.Class.define("qx.tool.cli.commands.Test", {
       });
 
       this.addListener("afterStart", async () => {
-        qx.tool.compiler.Console.info(`run unit tests`);
+        qx.tool.compiler.Console.info(`running unit tests`);
         await this.fireDataEventAsync("runTests", this);
         for (let test of this.__tests) {
           qx.tool.compiler.Console.info(`run ${test.getName()}`);
