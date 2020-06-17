@@ -9,7 +9,7 @@
     "devtools": "node source/resource/qx/tool/bin/build-devtools",
     "website": "node source/resource/qx/tool/bin/build-website",
     "pretest": "qx deploy --target=build",
-    "test"   : "node bin/qx test --target=build --output-path-prefix=tmp",
+    "test": "node bin/qx test --target=build --output-path-prefix=tmp",
     "prepack": "qx deploy --target=build --clean"
   },
   "author": "John Spackman (johnspackman), Christian Boulanger (cboulanger), Henner Kollmann (hkollmann), and others",
@@ -101,6 +101,7 @@
     "yargs": "^15.3.1"
   },
   "devDependencies": {
+    "@qooxdoo/compiler": "^1.0.0-beta",
     "mocha": "^6.2.3",
     "source-map-support": "^0.5.16",
     "tape": "^4.13.2"

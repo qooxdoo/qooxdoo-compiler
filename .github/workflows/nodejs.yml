@@ -14,7 +14,7 @@ jobs:
     if: github.ref != 'refs/heads/master'
     strategy:
       matrix:
-        node-version: [8.x, 10.x, 12.x]
+        node-version: [10.x, 12.x, latest]
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
@@ -23,11 +23,10 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: install
         run:  |
-              npm install @qooxdoo/compiler -g
               npm install
       - name: compile the compiler
         run:  |
-              qx deploy --target=build 
+              npx qx deploy --target=build 
       - name: Run qx test for built-in compiler tests
         run:  ./bin/qx test --output-path-prefix=tmp
         env:
@@ -39,9 +38,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: npm ci
+        uses: actions/setup-node@v1
+      - name: install
+        run:  |
+              npm install
       - name: Build API Viewer
-        run:  npx qx compile --target=build -v --clean
+        run:  qx compile --target=build -v --clean
       - name: Deploy API Viewer
         uses: peaceiris/actions-gh-pages@v3
         with:
