@@ -1,19 +1,24 @@
-node_modules/
-compiled/
-qx_packages/
-.package-cache.json
-
-/myapp
-/foo*/
-/test/transpiled
-/test/myapp/
-
+# local files
 .DS_Store
-.cache
 .eslintcache
 .project
 .settings/
 .idea/
-.vscode/
-
+notused/
+.cache
+.vscode
 *~
+
+# node
+node_modules/
+
+# qooxdoo
+.package-cache.json
+html/
+qooxdoo/
+compiled/
+qx_packages/
+
+# test apps
+/foo*
+/myapp

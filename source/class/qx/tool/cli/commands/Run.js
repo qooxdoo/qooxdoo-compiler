@@ -124,7 +124,7 @@ qx.Class.define("qx.tool.cli.commands.Run", {
         });
       }
       
-      let scriptname = path.join(target.getApplicationRoot(app), "boot.js");
+      let scriptname = path.join(target.getApplicationRoot(app), "index.js");
       let args = config.run.arguments||"";
       let debug = "";
       if (this.argv["inspect-brk"]) {

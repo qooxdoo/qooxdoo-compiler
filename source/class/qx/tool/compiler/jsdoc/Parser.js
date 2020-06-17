@@ -99,7 +99,14 @@ qx.Class.define("qx.tool.compiler.jsdoc.Parser", {
           try {
             cmd.body = converter.makeHtml(cmd.body);
           } catch (e) {
-            qx.tool.compiler.Console.error(`Markdown conversion error: "${e.message}" found in \n${cmd.body.trim()}`);
+            if (qx.tool.compiler.Console.getInstance().isVerbose()) {
+              qx.tool.compiler.Console.info(`
+              Markdown conversion problem: 
+              Error "${e.message}" was thrown parsing 
+              "${cmd.body.trim()}". 
+              Please review your doc comments for compatibility with Markdown syntax.
+              `);
+            }
           }
         } else {
           // If the body is surrounded by parameters, remove them
