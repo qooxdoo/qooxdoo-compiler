@@ -1,9 +1,20 @@
 const test = require("tape");
 const fs = require("fs");
 const testUtils = require("../utils");
-const fsPromises = testUtils.fsPromises;
 
-test("Create app", async assert => {
+test("test version", async assert => {
+  try {
+    await testUtils.deleteRecursive("test-cli/myapp");
+    let result;
+    result = await testUtils.runCommand("test-cli", testUtils.getCompiler(), "--version");
+    assert.ok(result.exitCode === 0);
+    assert.end();
+  } catch (ex) {
+    assert.end(ex);
+  }
+});
+
+test("create app", async assert => {
   try {
     await testUtils.deleteRecursive("test-cli/myapp");
     let result;
@@ -40,7 +51,7 @@ test("qx package list", async assert => {
   }
 });
 
-test("Install packages", async assert => {
+test("install packages", async assert => {
   try {
     let result;
     result = await testUtils.runCommand("test-cli/myapp", testUtils.getCompiler(), "package", "list", "-v");
@@ -64,7 +75,7 @@ test("Install packages", async assert => {
   }
 });
 
-test("Reinstall package", async assert => {
+test("reinstall package", async assert => {
   try {
     let result;
     result = await testUtils.runCommand("test-cli/myapp", testUtils.getCompiler(), "clean", "-v");
@@ -84,7 +95,7 @@ test("Reinstall package", async assert => {
   }
 });
 
-test("Remove packages", async assert => {
+test("remove packages", async assert => {
   try {
     let result;
     result = await testUtils.runCommand("test-cli/myapp", testUtils.getCompiler(), "package", "remove", "oetiker/UploadWidget", "-v");
@@ -106,7 +117,7 @@ test("Remove packages", async assert => {
   }
 });
 
-test("Install without manifest", async assert => {
+test("install without manifest", async assert => {
   try {
     result = await testUtils.runCommand("test-cli/myapp", testUtils.getCompiler(), "clean", "-v");
     assert.ok(result.exitCode === 0);
@@ -125,7 +136,7 @@ test("Install without manifest", async assert => {
   }
 });
 
-test("Add class and add script", async assert => {
+test("add class and add script", async assert => {
   try {
     result = await testUtils.runCommand("test-cli/myapp", testUtils.getCompiler(), "add", "class", "myapp.Window", "--extend=qx.ui.window.Window");
     assert.ok(result.exitCode === 0);

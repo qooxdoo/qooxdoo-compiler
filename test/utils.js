@@ -69,7 +69,9 @@ async function runCommand(dir, ...args) {
       result.exitCode = code;
       resolve(result);
     });
-    proc.on('error', reject);
+    proc.on('error', err => {
+       reject(err);
+    });
   });
 }
 
