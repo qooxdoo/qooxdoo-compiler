@@ -24,9 +24,8 @@ const path = require("path");
 const tmp = require("tmp");
 const http = require("http");
 const fontkit = require("fontkit");
-const util = require("../util");
 
-const log = util.createLog("font");
+var log = qx.tool.utils.LogManager.createLog("font");
 
 
 

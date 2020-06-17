@@ -20,13 +20,13 @@
  *
  * *********************************************************************** */
 
-require("@qooxdoo/framework");
+
 var fs = require("fs");
-var util = require("../util");
 
-const readFile = util.promisify(fs.readFile);
+const {promisify} = require("util");
+const readFile = promisify(fs.readFile);
 
-var log = util.createLog("translation");
+var log = qx.tool.utils.LogManager.createLog("translation");
 
 /**
  * Reads and writes .po files for translation
@@ -439,5 +439,3 @@ qx.Class.define("qx.tool.compiler.app.Translation", {
 
   }
 });
-
-module.exports = qx.tool.compiler.app.Translation;

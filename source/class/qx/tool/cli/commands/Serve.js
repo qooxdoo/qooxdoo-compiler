@@ -21,11 +21,7 @@ const process = require("process");
 const express = require("express");
 const http = require("http");
 const fs = qx.tool.utils.Promisify.fs;
-
 require("app-module-path").addPath(process.cwd() + "/node_modules");
-
-require("./Compile");
-
 /**
  * Compiles the project and serves it up as a web page
  */
@@ -122,8 +118,6 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
 
     /**
      * Runs the web server
-     *
-     * @ignore qx.tool.$$resourceDir
      */
     runWebServer: async function() {
       let makers = this.getMakers().filter(maker => maker.getApplications().some(app => app.getStandalone()));

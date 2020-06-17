@@ -2,19 +2,15 @@
   "name": "@qooxdoo/compiler",
   "description": "node.js based replacement for the Qooxdoo python toolchain",
   "main": "index.js",
+  "bin": {
+    "qx": "bin/qx"
+  },
   "scripts": {
     "devtools": "node source/resource/qx/tool/bin/build-devtools",
     "website": "node source/resource/qx/tool/bin/build-website",
-    "test": "cross-os test.os",
-    "prepare": "npm update --no-save @qooxdoo/framework",
-    "prepack": "npm update --save @qooxdoo/framework && npm shrinkwrap"
-  },
-  "cross-os": {
-    "test.os": {
-      "win32": "test\\test.win32.cmd",
-      "linux": "npm link && test/test.linux.sh",
-      "darwin": "npm link && test/test.linux.sh"
-    }
+    "pretest": "qx deploy --target=build",
+    "test"   : "node bin/qx test --target=build --output-path-prefix=tmp",
+    "prepack": "qx deploy --target=build --clean"
   },
   "author": "John Spackman (johnspackman), Christian Boulanger (cboulanger), Henner Kollmann (hkollmann), and others",
   "version": "1.0.0-beta",
@@ -32,6 +28,14 @@
     "url": "https://github.com/qooxdoo/qooxdoo-compiler/issues"
   },
   "license": "MIT",
+  "files": [
+    "LICENSE",
+    "README.md",
+    "Manifest.json",
+    "lib/compiler",
+    "lib/resource",
+    "bin"
+  ],
   "dependencies": {
     "@babel/core": "^7.9.0",
     "@babel/generator": "^7.9.5",
@@ -50,7 +54,7 @@
     "@qooxdoo/eslint-config-jsdoc-disable": "^1.0.3",
     "@qooxdoo/eslint-config-qx": "1.2.1",
     "@qooxdoo/eslint-plugin-qx": "^1.2.7",
-    "@qooxdoo/framework": "6.0.0-beta-20200515-0957",
+    "@qooxdoo/framework": "^6.0.0-beta",
     "ajv": "^6.12.0",
     "app-module-path": "^2.2.0",
     "async": "^2.6.3",
@@ -97,10 +101,7 @@
     "yargs": "^15.3.1"
   },
   "devDependencies": {
-    "bats": "^1.1.0",
-    "cross-os": "^1.2.2",
     "mocha": "^6.2.3",
-    "runscript": "^1.4.0",
     "source-map-support": "^0.5.16",
     "tape": "^4.13.2"
   },
@@ -112,9 +113,5 @@
       "@qooxdoo/qx"
     ]
   },
-  "engine": "node >= 8",
-  "bin": {
-    "qx": "qx"
-  },
-  "preferGlobal": true
+  "engine": "node >= 8"
 }

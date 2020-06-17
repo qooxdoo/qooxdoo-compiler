@@ -15,14 +15,9 @@
      * Christian Boulanger (info@bibliograph.org, @cboulanger)
 
 ************************************************************************ */
-
-require("@qooxdoo/framework");
 const fs = require("fs");
 const process = require("process");
 const path = require("upath");
-
-require("../Command");
-
 /**
  * Add a new class file to the current project, based on a template.
  *
@@ -68,10 +63,6 @@ qx.Class.define("qx.tool.cli.commands.add.Class", {
             alias : "f",
             describe: "overwrite an existing file"
           }
-          // "verbose":{
-          //   alias : "v",
-          //   describe: 'Verbose logging'
-          // }
         }
       };
     }

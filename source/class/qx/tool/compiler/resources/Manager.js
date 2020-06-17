@@ -24,7 +24,7 @@
 
 var path = require("upath");
 
-var log = require("../util").createLog("resource-manager");
+var log = qx.tool.utils.LogManager.createLog("resource-manager");
 
 /**
  * Analyses library resources, collecting information into a cached database
@@ -456,5 +456,3 @@ qx.Class.define("qx.tool.compiler.resources.Manager", {
     }
   }
 });
-
-module.exports = qx.tool.compiler.resources.Manager;

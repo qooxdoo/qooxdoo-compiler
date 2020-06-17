@@ -19,10 +19,6 @@
  *      * John Spackman (john.spackman@zenesis.com, @johnspackman)
  *
  * *********************************************************************** */
-
-require("@qooxdoo/framework");
-require("./CommandParser");
-
 /**
  * Parser for JSDoc "@param"
  */

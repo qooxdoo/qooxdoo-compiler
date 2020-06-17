@@ -21,7 +21,7 @@
  * *********************************************************************** */
 
 var path = require("upath");
-require("@qooxdoo/framework");
+
 
 /**
  * Base class for makers; does not include anything about targets, locales, etc (see AbstractAppMaker)
@@ -182,11 +182,9 @@ qx.Class.define("qx.tool.compiler.makers.Maker", {
      * @protected
      */
     _createAnalyser: function() {
-      var analyser = this._analyser = new (require("../Analyser"))(path.join(this.getOutputDir(), (this.getDbFilename()||"db.json")));
+      var analyser = this._analyser = new qx.tool.compiler.Analyser(path.join(this.getOutputDir(), (this.getDbFilename()||"db.json")));
       analyser.setOutputDir(this.getOutputDir());
       return analyser;
     }
   }
 });
-
-module.exports = qx.tool.compiler.makers.Maker;

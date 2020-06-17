@@ -16,12 +16,10 @@
 
 ************************************************************************ */
 
-require("@qooxdoo/framework");
+
 
 const CLIEngine = require("eslint").CLIEngine;
 const fs = qx.tool.utils.Promisify.fs;
-
-require("./Command");
 
 qx.Class.define("qx.tool.cli.commands.Lint", {
   extend: qx.tool.cli.commands.Command,

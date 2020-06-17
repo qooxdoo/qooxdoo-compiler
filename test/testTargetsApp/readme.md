@@ -1,5 +1,0 @@
-# johnApp
-
-undefined
-
-undefined

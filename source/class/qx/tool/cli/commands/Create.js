@@ -16,14 +16,10 @@
      * Henner Kollmann (hkollmann)
 
 ************************************************************************ */
-require("./Package");
-
-require("@qooxdoo/framework");
 const fs = require("fs");
 const path = require("upath");
 const inquirer = require("inquirer");
 
-const template_vars_path = path.join(qx.tool.cli.commands.Command.TEMPLATE_DIR, "template_vars");
 
 /**
  * Create a new qooxdoo project. This will assemble the information needed to create the
@@ -87,16 +83,18 @@ qx.Class.define("qx.tool.cli.commands.Create", {
      * @returns {string[]}
      */
     getSkeletonNames: function() {
-      let dir = path.join(qx.tool.cli.commands.Command.TEMPLATE_DIR, "skeleton");
-      return fs
+      // need access to an non static method...
+      let dir = path.join(this.prototype.getTemplateDir(), "skeleton");
+      let res = fs
         .readdirSync(dir)
         .filter(entry => {
           try {
-            return fs.existsSync(path.join(dir, entry, "Manifest.tmpl.json"));
+            return fs.existsSync(`${dir}/${entry}/Manifest.tmpl.json`);
           } catch (e) {
             return false;
           }
         });
+      return res;
     }
   },
 
@@ -127,6 +125,8 @@ qx.Class.define("qx.tool.cli.commands.Create", {
       data.template_dir = this.getTemplateDir();
       data.getLibraryVersion = this.getLibraryVersion.bind(this);
       let template_vars;
+      
+      const template_vars_path = path.join(this.getTemplateDir(), "template_vars");
       template_vars = require(template_vars_path)(argv, data);
 
       // prepare inquirer question data

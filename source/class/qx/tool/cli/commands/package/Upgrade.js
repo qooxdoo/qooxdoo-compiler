@@ -15,9 +15,6 @@
    * Christian Boulanger (info@bibliograph.org, @cboulanger)
 
 ************************************************************************ */
-require("../Package");
-require("@qooxdoo/framework");
-
 /**
  * Lists compatible library packages
  */

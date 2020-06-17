@@ -20,16 +20,15 @@
  *
  * *********************************************************************** */
 
-const fs = qx.tool.utils.Promisify.fs;
+const fs = require("fs");
 const path = require("path");
-const util = require("../../compiler/util");
-require("@qooxdoo/framework");
 const rimraf = require("rimraf");
 
-const stat = util.promisify(fs.stat);
-const mkdir = util.promisify(fs.mkdir);
-const readdir = util.promisify(fs.readdir);
-const rename = util.promisify(fs.rename);
+const {promisify} = require("util");
+const stat = promisify(fs.stat);
+const mkdir = promisify(fs.mkdir);
+const readdir = promisify(fs.readdir);
+const rename = promisify(fs.rename);
 
 qx.Class.define("qx.tool.utils.files.Utils", {
   extend: qx.core.Object,
@@ -123,7 +122,7 @@ qx.Class.define("qx.tool.utils.files.Utils", {
      */
     copyFile: function(from, to) {
       return new Promise((resolve, reject) => {
-        util.mkParentPath(to, function() {
+        qx.tool.utils.Utils.mkParentPath(to, function() {
           var rs = fs.createReadStream(from, { flags: "r", encoding: "binary" });
           var ws = fs.createWriteStream(to, { flags: "w", encoding: "binary" });
           rs.on("end", function() {
@@ -329,4 +328,3 @@ qx.Class.define("qx.tool.utils.files.Utils", {
   }
 });
 
-module.exports = qx.tool.utils.files.Utils;

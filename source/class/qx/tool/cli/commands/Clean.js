@@ -16,9 +16,7 @@
      * Henner Kollmann (hkollmann)
 
 ************************************************************************ */
-require("./Package");
 
-require("@qooxdoo/framework");
 const fs = require("fs");
 const process = require("process");
 const path = require("upath");
@@ -53,6 +51,9 @@ qx.Class.define("qx.tool.cli.commands.Clean", {
       let compileConfig = await qx.tool.config.Compile.getInstance().load();
       for (let target of compileConfig.getValue("targets")) {
         await this.__removePath(path.join(process.cwd(), target.outputPath));
+        if (target.deployPath) {
+          await this.__removePath(path.join(process.cwd(), target.deployPath));
+        }
       }
       await this.__removePath(path.join(process.cwd(), qx.tool.cli.commands.Package.cache_dir));
     },

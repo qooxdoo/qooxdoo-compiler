@@ -20,8 +20,8 @@
  *
  * *********************************************************************** */
 
-require("@qooxdoo/framework");
-const nodePromisify = require("util").promisify;
+const {promisify} = require("util");
+const nodePromisify = promisify;
 const PromisePool = require("es6-promise-pool");
 
 qx.Class.define("qx.tool.utils.Promisify", {

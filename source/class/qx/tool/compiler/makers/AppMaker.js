@@ -19,12 +19,7 @@
  *      * John Spackman (john.spackman@zenesis.com, @johnspackman)
  *
  * *********************************************************************** */
-
-require("@qooxdoo/framework");
-require("./AbstractAppMaker");
-var util = require("../util");
-const mkParentPath = util.promisify(util.mkParentPath);
-var log = util.createLog("analyser");
+var log = qx.tool.utils.LogManager.createLog("analyser");
 
 /**
  * Application maker; supports multiple applications to compile against a single
@@ -85,7 +80,7 @@ qx.Class.define("qx.tool.compiler.makers.AppMaker", {
       const compileEnv = qx.tool.utils.Values.merge({},
         qx.tool.compiler.ClassFile.ENVIRONMENT_CONSTANTS,
         {
-          "qx.compilerVersion": qx.tool.compiler.Version.VERSION
+          "qx.compiler.version": qx.tool.compiler.Version.VERSION
         },
         this.getEnvironment(),
         this.getTarget().getDefaultEnvironment(),
@@ -140,12 +135,12 @@ qx.Class.define("qx.tool.compiler.makers.AppMaker", {
           if (!this.isNoErase() && analyser.isContextChanged()) {
             log.log("enviroment changed - delete output dir");
             return this.eraseOutputDir()
-              .then(() => mkParentPath(this.getOutputDir()))
+              .then(() => qx.tool.utils.Utils.makeParentDir(this.getOutputDir()))
               .then(() => analyser.resetDatabase());
           }
           return Promise.resolve();
         })
-        .then(() => util.promisifyThis(analyser.initialScan, analyser))
+        .then(() => qx.tool.utils.Utils.promisifyThis(analyser.initialScan, analyser))
         .then(() => analyser.updateEnvironmentData())
         .then(() => {
           this.getTarget().setAnalyser(analyser);

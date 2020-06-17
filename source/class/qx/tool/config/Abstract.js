@@ -207,9 +207,8 @@ qx.Class.define("qx.tool.config.Abstract", {
      * Path to the schema json file in the file system
      * @return {String}
      */
-    /* @ignore qx.tool.$$resourceDir */
     getSchemaPath() {
-      return path.join(qx.tool.$$resourceDir, "schema", this._getSchemaFileName());
+      return qx.util.ResourceManager.getInstance().toUri(`qx/tool/schema/${this._getSchemaFileName()}`);
     },
 
     /**
@@ -281,10 +280,11 @@ qx.Class.define("qx.tool.config.Abstract", {
       // load schema if validation is enabled
       if (this.isValidate() && this.getVersion() !== null) {
         if (!this.__schema) {
-          if (!fs.existsSync(this.getSchemaPath())) {
+          let s = this.getSchemaPath();
+          if (!fs.existsSync(s)) {
             throw new Error(`No schema file exists at ${this.getSchemaPath()}`);
           }
-          this.__schema = await qx.tool.utils.Json.loadJsonAsync(this.getSchemaPath());
+          this.__schema = await qx.tool.utils.Json.loadJsonAsync(s);
         }
         // check initial data
         let dataSchemaInfo = qx.tool.utils.Json.getSchemaInfo(data);

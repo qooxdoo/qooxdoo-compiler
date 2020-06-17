@@ -26,19 +26,15 @@
 
 var fs = require("fs");
 var async = require("async");
-require("@qooxdoo/framework");
-var util = require("./util");
+
 var jsonlint = require("jsonlint");
 var hash = require("object-hash");
 
-require("./ClassFile");
-require("./app/Library");
-require("./resources/Manager");
+const {promisify} = require("util");
+const readFile = promisify(fs.readFile);
+const writeFile = promisify(fs.writeFile);
 
-const readFile = util.promisify(fs.readFile);
-const writeFile = util.promisify(fs.writeFile);
-
-var log = util.createLog("analyser");
+var log = qx.tool.utils.LogManager.createLog("analyser");
 
 /**
  * Entry point for analysing source files; maintains a list of known libraries
@@ -1352,4 +1348,3 @@ qx.Class.define("qx.tool.compiler.Analyser", {
   }
 });
 
-module.exports = qx.tool.compiler.Analyser;

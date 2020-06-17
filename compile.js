@@ -1,56 +1,47 @@
+const testUtils = require("./test/utils");
+const fs = require("fs");
+const path = require("upath");
+
 qx.Class.define("qx.compiler.LibraryApi", {
   extend: qx.tool.cli.api.LibraryApi,
 
   members: {
     async load() {
+      const COMPILER_TEST_PATH = path.join("test", "compiler");
+      let self = this;
+     
+
+      function addTest(test) {
+        command.addTest(new qx.tool.cli.api.Test(test, async function() {
+          result = await testUtils.runCommand(COMPILER_TEST_PATH, "node", test + ".js");
+          this.setExitCode(result.exitCode);
+        })).setNeedsServer(false);
+      }
+
       let command = this.getCompilerApi().getCommand();
       if (command instanceof qx.tool.cli.commands.Test) {
-        command.addListener("runTests", this.__test1, this);
-        command.addListener("runTests", this.__test2, this);
-        command.addListener("runTests", this.__test3, this);
+        command.addListener("writtenApplication", async (evt) => {
+          let app = evt.getData();
+          if (app.getName() !== "compiler") {
+            return;
+          }
+          let maker = command.getMakersForApp("compiler")[0];
+          let cmd =
+            `#!/usr/bin/env node
+             require("${path.resolve(path.join(maker.getOutputDir(), "compiler"))}");
+`;
+          await testUtils.safeDelete("test/qx");
+          fs.writeFileSync("test/qx", cmd, { mode: 0o777 });
+        });
+        let files = fs.readdirSync(COMPILER_TEST_PATH);
+        // node 8 compatible...
+        files.forEach(file => {
+          if (fs.statSync(path.join(COMPILER_TEST_PATH, file)).isFile()) {
+            addTest(path.changeExt(path.basename(file), ""));
+          }
+        });
       }
-    },
-
-    /**
-     * @param {qx.event.type.Data} evt Event which has the current command instance
-     * of type {@link qx.tool.cli.commands.Test} as data.
-     * @private
-     */
-    async __test1(evt) {
-      const cmd = evt.getData();
-      const test = new qx.tool.cli.api.Test("Test 1");
-      cmd.registerTest(test);
-      // do some async testing and set exit code explicitly
-      await new qx.Promise(resolve =>  qx.event.Timer.once(resolve, null, 1000));
-      test.setExitCode(0);
-    },
-
-    /**
-     * @param {qx.event.type.Data} evt
-     * @private
-     */
-    async __test2(evt) {
-      const cmd = evt.getData();
-      const test = new qx.tool.cli.api.Test("Test 2");
-      cmd.registerTest(test);
-      // do some async testing
-      await new qx.Promise(resolve =>  qx.event.Timer.once(resolve, null, 1000));
-      qx.tool.compiler.Console.info(`The next test fails on purpose.`);
-      test.setExitCode(255);
-    },
-
-    /**
-     * @param {qx.event.type.Data} evt
-     * @private
-     */
-    async __test3(evt) {
-      const cmd = evt.getData();
-      const test = new qx.tool.cli.api.Test("Test 3");
-      cmd.registerTest(test);
-      // do some async testing
-      await new qx.Promise(resolve =>  qx.event.Timer.once(resolve, null, 1000));
-      test.setExitCode(0);
-    },
+    }
   }
 });
 

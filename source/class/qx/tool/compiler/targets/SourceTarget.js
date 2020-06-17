@@ -19,15 +19,10 @@
  *      * John Spackman (john.spackman@zenesis.com, @johnspackman)
  *
  * ************************************************************************/
-
-require("@qooxdoo/framework");
-
-require("./Target");
-
 /**
  * Compiles a target where source files and resources are loaded in place
  */
-module.exports = qx.Class.define("qx.tool.compiler.targets.SourceTarget", {
+qx.Class.define("qx.tool.compiler.targets.SourceTarget", {
   extend: qx.tool.compiler.targets.Target,
 
   properties: {

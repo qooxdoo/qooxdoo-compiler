@@ -15,10 +15,6 @@
      * Christian Boulanger (info@bibliograph.org, @cboulanger)
 
 ************************************************************************ */
-
-require("../Package");
-require("@qooxdoo/framework");
-
 const download = require("download");
 const fs = qx.tool.utils.Promisify.fs;
 const path = require("upath");

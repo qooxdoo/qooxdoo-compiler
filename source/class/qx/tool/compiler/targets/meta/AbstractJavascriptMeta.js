@@ -2,7 +2,7 @@ const fs = qx.tool.utils.Promisify.fs;
 const sourceMap = require("source-map");
 
 /**
- * An IJavascriptMeta provides an abstraction of some source code, and might be
+ * An AbstractJavascriptMeta provides an abstraction of some source code, and might be
  * compromised of a number of input files which are merged together as required.
  * 
  * This object could represent a file which already exists on disk (eg a transpiled

@@ -16,7 +16,7 @@
 
 ************************************************************************ */
 
-require("@qooxdoo/framework");
+
 const process = require("process");
 const Gauge = require("gauge");
 const semver = require("semver");
@@ -25,8 +25,6 @@ const consoleControl = require("console-control-strings");
 const fs = qx.tool.utils.Promisify.fs;
 
 require("app-module-path").addPath(process.cwd() + "/node_modules");
-
-require("./Command");
 
 /**
  * Handles compilation of the project
@@ -230,8 +228,23 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
     /**
      * Fired when making of apps is done.
     */
-    "made": "qx.event.type.Event"
+    "made": "qx.event.type.Event",
 
+    /**
+     * Fired when minification begins, data is a map containing:
+     *  application {qx.tool.compiler.app.Application} the app being minified
+     *  part: {String} the part being minified
+     *  filename: {String} the part filename
+     */
+    "minifyingApplication": "qx.event.type.Data",
+
+    /**
+     * Fired when minification is done, data is a map containing:
+     *  application {qx.tool.compiler.app.Application} the app being minified
+     *  part: {String} the part being minified
+     *  filename: {String} the part filename
+     */
+    "minifiedApplication": "qx.event.type.Data"
   },
 
 
@@ -417,7 +430,10 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         analyser.addListener("compiledClass", e => this.dispatchEvent(e.clone()));
         analyser.addListener("saveDatabase", e => this.dispatchEvent(e.clone()));
         target.addListener("checkEnvironment", e => this.dispatchEvent(e.clone()));
-        target.addListener("minifyingApplication", e => this.dispatchEvent(e.clone()));
+        if (target instanceof qx.tool.compiler.targets.BuildTarget) {
+          target.addListener("minifyingApplication", e => this.dispatchEvent(e.clone()));
+          target.addListener("minifiedApplication", e => this.dispatchEvent(e.clone()));
+        }
 
         var p = qx.tool.utils.files.Utils.safeStat("source/index.html")
           .then(stat => stat && qx.tool.compiler.Console.print("qx.tool.cli.compile.legacyFiles", "source/index.html"));

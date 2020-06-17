@@ -21,11 +21,15 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm ci
+      - name: install
+        run:  |
+              npm install @qooxdoo/compiler -g
+              npm install
+      - name: compile the compiler
+        run:  |
+              qx deploy --target=build 
       - name: Run qx test for built-in compiler tests
-        run: ./qx test --serve=0 || true
-      - name: Run  external CLI and API tests
-        run: npm test
+        run:  ./bin/qx test --output-path-prefix=tmp
         env:
           CI: true
 
@@ -37,9 +41,9 @@ jobs:
       - uses: actions/checkout@v2
       - run: npm ci
       - name: Build API Viewer
-        run: ./qx deploy --out=./html --source-maps
+        run:  npx qx compile --target=build -v --clean
       - name: Deploy API Viewer
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./html
+          publish_dir: ./compiled/browser/build

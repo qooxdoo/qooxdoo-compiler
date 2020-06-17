@@ -24,14 +24,15 @@
 
 var fs = require("fs");
 var path = require("path");
-require("@qooxdoo/framework");
+
 var xml2js = require("xml2js");
-var util = require("../util");
+const CLDR = require("cldr");
 const {promisify} = require("util");
 const readFile = promisify(fs.readFile);
-var log = util.createLog("cldr");
 
-const CLDR = require("cldr");
+var log = qx.tool.utils.LogManager.createLog("cldr");
+
+
 
 qx.Class.define("qx.tool.compiler.app.Cldr", {
   extend: qx.core.Object,
@@ -63,7 +64,7 @@ qx.Class.define("qx.tool.compiler.app.Cldr", {
 
 
       return readFile(path.join(cldrPath, data_path, locale + ".xml"), {encoding: "utf-8"})
-        .then(data => util.promisifyThis(parser.parseString, parser, data))
+        .then(data => qx.tool.utils.Utils.promisifyThis(parser.parseString, parser, data))
         .then(src => {
           function find(arr, name, value, cb) {
             if (!arr) {

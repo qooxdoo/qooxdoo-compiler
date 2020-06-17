@@ -1,7 +1,0 @@
-{
-    "libraries": [
-        ".",
-        "../../framework",
-        "./blah"
-    ]
-}

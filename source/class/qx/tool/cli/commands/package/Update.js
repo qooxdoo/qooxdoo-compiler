@@ -15,11 +15,6 @@
      * Christian Boulanger (info@bibliograph.org, @cboulanger)
 
 ************************************************************************ */
-
-
-require("../Package");
-
-require("@qooxdoo/framework");
 const process = require("process");
 const Search = require("github-api/dist/components/Search");
 const Repository = require("github-api/dist/components/Repository");

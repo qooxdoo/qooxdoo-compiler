@@ -22,8 +22,7 @@
 
 const fs = qx.tool.utils.Promisify.fs;
 
-require("@qooxdoo/framework");
-const util = require("../util");
+
 const path = require("upath");
 
 /**
@@ -288,11 +287,12 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
       var rm = analyser.getResourceManager();
 
       let appMeta = new qx.tool.compiler.targets.meta.ApplicationMeta(this, application);
+      /*      
       if (!appMeta.getAppLibrary()) {
         qx.tool.compiler.Console.print("qx.tool.compiler.target.missingAppLibrary", application.getClassName());
         return;
       }
-      
+*/      
       let targetUri = t._getOutputRootUri(application);
       var appRootDir = this.getApplicationRoot(application);
       
@@ -303,7 +303,7 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
       
       const requiredLibs = application.getRequiredLibraries();
       
-      await util.mkpathAsync(appRootDir);
+      await qx.tool.utils.Utils.makeDirs(appRootDir);
 
       appMeta.setEnvironment({
         "qx.application": application.getClassName(),
@@ -800,5 +800,3 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
     }
   }
 });
-
-module.exports = qx.tool.compiler.targets.Target;
