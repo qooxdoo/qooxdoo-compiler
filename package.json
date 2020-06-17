@@ -8,9 +8,9 @@
   "scripts": {
     "devtools": "node source/resource/qx/tool/bin/build-devtools",
     "website": "node source/resource/qx/tool/bin/build-website",
-    "pretest": "qx deploy --target=build",
+    "pretest": "npx qx deploy --target=build",
     "test": "node bin/qx test --target=build --output-path-prefix=tmp",
-    "prepack": "qx deploy --target=build --clean"
+    "prepack": "npx qx deploy --target=build --clean"
   },
   "author": "John Spackman (johnspackman), Christian Boulanger (cboulanger), Henner Kollmann (hkollmann), and others",
   "version": "1.0.0-beta",
