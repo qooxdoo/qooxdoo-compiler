@@ -10,7 +10,7 @@ jobs:
   # Test changes from PRs
   test:
     name: Run tests
-    runs-on: ubuntu-latest
+    runs-on: [ubuntu-latest, windows-latest]
     if: github.ref != 'refs/heads/master'
     strategy:
       matrix:
