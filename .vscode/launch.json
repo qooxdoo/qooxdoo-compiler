@@ -1,0 +1,95 @@
+{
+    // Verwendet IntelliSense zum Ermitteln möglicher Attribute.
+    // Zeigen Sie auf vorhandene Attribute, um die zugehörigen Beschreibungen anzuzeigen.
+    // Weitere Informationen finden Sie unter https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "console": "integratedTerminal",
+            "name": "qx compile",
+            "program": "${workspaceRoot}/compiled/node/source/compiler/index.js",
+            "cwd": "${workspaceRoot}",
+            "args": [
+                "compile",
+                "--output-path-prefix=tmp"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "console": "integratedTerminal",
+            "name": "qx deploy",
+            "program": "${workspaceRoot}/compiled/node/source/compiler/index.js",
+            "cwd": "${workspaceRoot}",
+            "args": [
+                "deploy",
+                "--output-path-prefix=tmp"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "console": "integratedTerminal",
+            "name": "qx test",
+            "program": "${workspaceRoot}/compiled/node/source/compiler/index.js",
+            "cwd": "${workspaceRoot}",
+            "args": [
+                "test",
+                "--output-path-prefix=tmp"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "console": "integratedTerminal",
+            "name": "testnode",
+            "program": "${workspaceRoot}/tmp/compiled/node/source/testnode/index.js",
+            "cwd": "${workspaceRoot}",
+            "args": [
+            ]
+        },
+
+        {
+            "type": "node",
+            "request": "launch",
+            "console": "integratedTerminal",
+            "name": "test-issues",
+            "program": "${workspaceRoot}/test/compiler/test-issues.js",
+            "cwd": "${workspaceRoot}/test/compiler",
+            "args": [
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "console": "integratedTerminal",
+            "name": "testTranslation",
+            "program": "${workspaceRoot}/test/compiler/testTranslation.js",
+            "cwd": "${workspaceRoot}/test/compiler",
+            "args": [
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "console": "integratedTerminal",
+            "name": "test-cli",
+            "program": "${workspaceRoot}/test/compiler/test-cli.js",
+            "cwd": "${workspaceRoot}/test/compiler",
+            "args": [
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "console": "integratedTerminal",
+            "name": "test-dependencies",
+            "program": "${workspaceRoot}/test/compiler/test-dependencies.js",
+            "cwd": "${workspaceRoot}/test/compiler",
+            "args": [
+            ]
+        }
+    ]
+}
