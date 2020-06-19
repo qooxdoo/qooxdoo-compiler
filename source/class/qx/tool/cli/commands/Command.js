@@ -60,6 +60,18 @@ qx.Class.define("qx.tool.cli.commands.Command", {
       // check if we have to migrate files
       await (new qx.tool.cli.commands.package.Migrate(this.argv)).process(true);
     },
+    
+    /**
+     * This is to notify the commands after loading the full args.
+     * The commands can overload special arg arguments here.
+     * e.g. Deploy will will overload the target.
+     * 
+     * @param {*} argv : args to procvess
+     * 
+     */
+    processArgs: function(argv) {
+       // Nothing
+    },
 
     /**
      * Returns data on the project in which the CLI commands are executed. If a qooxdoo.json file

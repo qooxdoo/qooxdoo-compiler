@@ -179,14 +179,17 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
 
     /*** fired when application writing starts */
     "writingApplications": "qx.event.type.Event",
+
     /** fired when writing of single application starts
      *  data: app {Application}
      */
     "writingApplication": "qx.event.type.Data",
+
     /** fired when writing of single application is written
      *  data: app {Application}
      */
     "writtenApplication": "qx.event.type.Data",
+
     /*** fired after writing of all applications */
     "writtenApplications" :"qx.event.type.Event",
 
@@ -366,7 +369,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         if (success && (hasWarnings && this.argv.warnAsError)) {
           success = false;
         }
-        if (!this.argv.__deploying && !this.argv["machine-readable"] && this.argv["feedback"] && this.__outputDirWasCreated) {
+        if (!this.argv.deploying && !this.argv["machine-readable"] && this.argv["feedback"] && this.__outputDirWasCreated && (this.argv.target === "build")) {
           qx.tool.compiler.Console.warn(
             "   *******************************************************************************************\n" +
             "   **                                                                                       **\n" +

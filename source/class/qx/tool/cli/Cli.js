@@ -170,6 +170,15 @@ qx.Class.define("qx.tool.cli.Cli", {
         .argv;
       await this.__notifyLibraries();
     },
+    
+    /**
+     * This is to notify the commands after loading the full args.
+     * The commands can overload special arg arguments here.
+     * e.g. Deploy will will overload the target.
+     */
+    __notifyCommand: function() {
+      this._compilerApi.getCommand().processArgs(this.argv);
+    },
 
     /**
      * Calls the `.load()` method of each library, safe to call multiple times.  This is
@@ -398,6 +407,7 @@ qx.Class.define("qx.tool.cli.Cli", {
        * Now everything is loaded, we can process the command line properly
        */
       await this.__fullArgv();
+      this.__notifyCommand();
 
       let parsedArgs = {
         target: this.argv.target,
