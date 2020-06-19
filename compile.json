@@ -72,26 +72,18 @@
       "environment": {
         "qx.icontheme": "Tango",
         "excludeFromAPIViewer": [
-          "qxl.*",
-          "qx.*"
         ],
         "includeToAPIViewer": [
-          "qx.tool.*"
         ]
       },
       "include": [
         "qx.*",
-        "qxl.*"
+        "qxl.*",
+        "q",
+        "qxWeb"
       ],
       "exclude": [
-        "qx.test.*",
-        "q",
-        "qxWeb",
-        "qx.module.Blocker",
-        "qx.module.Placement",
-        "qx.tool.compiler.util",
-        "qx.ui.website.*",
-        "*.index"
+        "qx.test.*"
       ]
     },
     {

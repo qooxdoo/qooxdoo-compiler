@@ -27,8 +27,8 @@ qx.Class.define("qx.compiler.LibraryApi", {
           }
           let maker = command.getMakersForApp("compiler")[0];
           let cmd =
-            `#!/usr/bin/env node
-             require("${path.resolve(path.join(maker.getOutputDir(), "compiler"))}");
+`#!/usr/bin/env node
+require("${path.resolve(path.join(maker.getOutputDir(), "compiler"))}");
 `;
           await testUtils.safeDelete("test/qx");
           fs.writeFileSync("test/qx", cmd, { mode: 0o777 });
