@@ -219,7 +219,7 @@ qx.Class.define("qx.tool.cli.commands.Deploy", {
 
   defer: function(statics) {
     qx.tool.compiler.Console.addMessageIds({
-      "qx.tool.cli.deploy.deployDirNotSpecified": "No deploy dir fot target <%1> configured! Use --out parameter or deployPath target property in compile.json."
+      "qx.tool.cli.deploy.deployDirNotSpecified": "No deploy dir for target <%1> configured! Use --out parameter or deployPath target property in compile.json."
     }, "error");
     qx.tool.compiler.Console.addMessageIds({
       "qx.tool.cli.deploy.notClean": "Incremental build compilation - this is faster but may preserve old artifacts, it is recommended to use --clean command line option"
