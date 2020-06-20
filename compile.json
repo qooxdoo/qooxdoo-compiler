@@ -68,19 +68,17 @@
       "theme": "qxl.apiviewer.Theme",
       "name": "apiviewer",
       "title": "Qooxdoo compiler API",
+			"bootPath": "source/boot",
       "default": true,
       "environment": {
         "qx.icontheme": "Tango",
+        "buildApiForApp": "compiler",
         "excludeFromAPIViewer": [
         ],
         "includeToAPIViewer": [
         ]
       },
       "include": [
-        "qx.*",
-        "qxl.*",
-        "q",
-        "qxWeb"
       ],
       "exclude": [
         "qx.test.*"

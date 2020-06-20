@@ -72,10 +72,10 @@ qx.Class.define("qx.tool.cli.commands.Deploy", {
      * fired after deploying. With this event 
      * application can do aditional copying 
      * 
-     * targetDir: {String}  The target dir of the build
-     * deployDir: {String}  The output dir for the deployment
-     * argv     : {Object}  Arguments
-     * app      : {Object}  application to build
+     * targetDir  : {String}  The target dir of the build
+     * deployDir  : {String}  The output dir for the deployment
+     * argv       : {Object}  Arguments
+     * application: {Object}  application to build
      */
     "afterDeploy" : "qx.event.type.Data",
   },
@@ -176,7 +176,7 @@ qx.Class.define("qx.tool.cli.commands.Deploy", {
             targetDir: target.getOutputDir(),
             deployDir: deployDir,
             argv: argv,
-            app: app
+            application: app
           })
         });
       });
