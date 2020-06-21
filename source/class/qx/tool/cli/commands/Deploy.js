@@ -70,7 +70,9 @@ qx.Class.define("qx.tool.cli.commands.Deploy", {
 
     /*** 
      * fired after deploying. With this event 
-     * application can do aditional copying 
+     * application can do aditional copying.
+     *
+     * The event data is an object with the following properties: 
      * 
      * targetDir  : {String}  The target dir of the build
      * deployDir  : {String}  The output dir for the deployment
