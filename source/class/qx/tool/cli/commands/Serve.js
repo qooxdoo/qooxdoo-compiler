@@ -70,10 +70,9 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
     /**
      * Fired before server start
      *
-     *  data: {
-     *    server: the http server
-     *    application: the used express server instance
-     *  }
+     * The event data is an object with the following properties: 
+     *   server: the http server
+     *   application: the used express server instance
      */
     "beforeStart": "qx.event.type.Data",
     /**

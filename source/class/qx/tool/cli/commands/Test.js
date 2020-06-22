@@ -69,7 +69,9 @@ qx.Class.define("qx.tool.cli.commands.Test", {
   events: {
     /**
      * Fired to start tests.
-     * Event data is this command instance
+     * 
+     * The event data is the command instance:
+     *  cmd: {qx.tool.cli.commands.Test} 
      */
     "runTests": "qx.event.type.Data"
   },

@@ -25,10 +25,12 @@ qx.Class.define("qx.compiler.LibraryApi", {
           if (app.getName() !== "compiler") {
             return;
           }
+          // add qx program with current build path to test directory.
+          // this command is used in the defined tests as compiler
           let maker = command.getMakersForApp("compiler")[0];
           let cmd =
-            `#!/usr/bin/env node
-             require("${path.resolve(path.join(maker.getOutputDir(), "compiler"))}");
+`#!/usr/bin/env node
+require("${path.resolve(path.join(maker.getOutputDir(), "compiler"))}");
 `;
           await testUtils.safeDelete("test/qx");
           fs.writeFileSync("test/qx", cmd, { mode: 0o777 });
