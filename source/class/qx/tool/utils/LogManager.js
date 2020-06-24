@@ -18,12 +18,9 @@
  *    Authors:
  *      * John Spackman (john.spackman@zenesis.com, @johnspackman)
  *
+ * @require( qx.tool.utils.Logger)
+ * 
  * *********************************************************************** */
-
-require("@qooxdoo/framework");
-
-require("./Logger");
-
 var LEVELS = [ "trace", "debug", "info", "warn", "error", "fatal" ];
 
 function zeropad2(val) {
@@ -76,6 +73,18 @@ qx.Class.define("qx.tool.utils.LogManager", {
 
   statics: {
     __instance: null,
+    
+    /**
+     * create a logger for a specified category
+     * 
+     * @param {*} categoryName 
+     */
+    createLog: function(categoryName) {
+      if (!categoryName) {
+        categoryName = "generic";
+      }
+      return this.getInstance().getLogger(categoryName);
+    },
 
     /**
      * Returns the global instance
@@ -173,4 +182,3 @@ qx.Class.define("qx.tool.utils.LogManager", {
 });
 
 
-module.exports = qx.tool.utils.LogManager;

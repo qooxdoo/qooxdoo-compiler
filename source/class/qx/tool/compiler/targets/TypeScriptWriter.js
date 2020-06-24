@@ -22,15 +22,11 @@
  * *********************************************************************** */
 
 var path = require("path");
-require("@qooxdoo/framework");
+
 var fs = require("fs");
-var util = require("../util");
 var jsonlint = require("jsonlint");
-
-const readFile = util.promisify(fs.readFile);
-
-require("./SourceTarget");
-
+const {promisify} = require("util");
+const readFile = promisify(fs.readFile);
 /**
  * Generates TypeScript .d.ts files
  */

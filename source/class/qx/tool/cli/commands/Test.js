@@ -13,8 +13,6 @@
 
 
 ************************************************************************ */
-require("./Serve");
-
 const fs = require("fs");
 const path = require("path");
 const process = require("process");
@@ -22,18 +20,11 @@ const process = require("process");
 /**
  * Compiles the project, serves it up as a web page (default, can be turned off),
  * and dispatches the "runTests" event. All tests that should be run need to
- * register an event handler. The handlers are called with a {@link qx.even.type.Data}
+ * register themselfs by the test command. 
+ * 
+ * The runTests event is called with a {@link qx.even.type.Data}
  * containing the command instance.
  *
- * A test can write to the (native) `errorCode` property of this instance,
- * which is used to determine the exit code of the `qx test` command.
- * This means, however, that the last run test overwrites the
- * `errorCode` of any previous test, and has to take care of this.
- *
- * A more scalable solution is to  call {@link
-  * qx.tool.cli.commands.Test#registerTest} with an
- * instance of {@link qx.tool.cli.api.Test} and then
- * set the `exitCode` qx property of that instance.
  */
 qx.Class.define("qx.tool.cli.commands.Test", {
   extend: qx.tool.cli.commands.Serve,
@@ -47,34 +38,8 @@ qx.Class.define("qx.tool.cli.commands.Test", {
     CONFIG_FILENAME : "compile-test.json",
 
     YARGS_BUILDER: {
-      verbose: {
-        describe: "Verbose logging",
-        alias: "v",
-        type: "boolean"
-      },
-      diag: {
-        describe: "show diagnostic output",
-        type: "boolean"
-      },
-      terse: {
-        describe: "show only summary and errors",
-        type: "boolean"
-      },
-      class: {
-        describe: "only run tests of this class",
-        type: "string"
-      },
-      method: {
-        describe: "only run tests of this method",
-        type: "string"
-      },
       "fail-fast": {
         describe: "Exit on first failing test",
-        defaut: true,
-        type: "boolean"
-      },
-      serve: {
-        describe: "Run built-in server",
         default: true,
         type: "boolean"
       }
@@ -93,7 +58,8 @@ qx.Class.define("qx.tool.cli.commands.Test", {
           delete res.watch;
           delete res["machine-readable"];
           delete res["feedback"];
-
+          delete res["show-startpage"];
+          delete res["rebuild-startpage"];
           return res;
         })()
       };
@@ -102,51 +68,77 @@ qx.Class.define("qx.tool.cli.commands.Test", {
 
   events: {
     /**
-     * Fired to start tests. Event data is this command instance
+     * Fired to start tests.
+     * 
+     * The event data is the command instance:
+     *  cmd: {qx.tool.cli.commands.Test} 
      */
     "runTests": "qx.event.type.Data"
+  },
+  construct(argv) {
+    this.base(arguments, argv);
+    this.__tests = [];
+    this.addListener("changeExitCode", evt => {
+      let exitCode = evt.getData();
+      // overwrite error code only in case of errors
+      if (exitCode && argv.failFast) {
+        process.exit(exitCode);
+      }
+    });
+  },
+
+  properties: {
+    /**
+     * The exit code of all tests.
+     *
+     */
+    exitCode: {
+      check: "Number",
+      event: "changeExitCode",
+      nullable: true,
+      init: null
+    },
+
+    /**
+     * Is the webserver instance needed for the test?
+     */
+    needsServer: {
+      check: "Boolean",
+      nullable: false,
+      init: false
+    }
   },
 
   members: {
 
     /**
-     * The error code of the last run test
-     * @var {Number}
-     */
-    errorCode: 0,
-
-    /**
-     * @var {qx.data.Array}
+     * @var {Array}
      */
     __tests: null,
 
     /**
-     * Registers a test object and listens for the change of exitCode property
+     * add a test object and listens for the change of exitCode property
      * @param {qx.tool.cli.api.Test} test
      */
-    registerTest: function(test) {
+    addTest: function(test) {
       qx.core.Assert.assertInstance(test, qx.tool.cli.api.Test);
       test.addListenerOnce("changeExitCode", evt => {
         let exitCode = evt.getData();
-        // overwrite error code only in case of errors
-        if (exitCode) {
-          this.errorCode = exitCode;
-        }
         // handle result and inform user
         if (exitCode === 0) {
           if (test.getName() && !this.argv.quiet) {
             qx.tool.compiler.Console.info(`Test '${test.getName()}' passed.`);
-          }
-        } else {
-          if (test.getName()) {
-            qx.tool.compiler.Console.error(`Test '${test.getName()}' failed with exit code ${exitCode}.`);
-          }
-          if (this.argv.failFast) {
-            process.exit(exitCode);
-          }
+          }      
+        } else if (test.getName()) {
+          qx.tool.compiler.Console.error(`Test '${test.getName()}' failed with exit code ${exitCode}.`);
+        }
+        // overwrite error code only in case of errors
+        if (exitCode) {
+          this.setExitCode(exitCode);
         }
       });
       this.__tests.push(test);
+      return test;
     },
 
     /**
@@ -156,29 +148,35 @@ qx.Class.define("qx.tool.cli.commands.Test", {
       this.argv.watch = false;
       this.argv["machine-readable"] = false;
       this.argv["feedback"] = false;
+      this.argv["show-startpage"] = false;
       // check for special test compiler config
       if (!this.argv.configFile && fs.existsSync(path.join(process.cwd(), qx.tool.cli.commands.Test.CONFIG_FILENAME))) {
         this.argv.configFile = qx.tool.cli.commands.Test.CONFIG_FILENAME;
       }
       this.addListener("making", () => {
-        if (!this.hasListener("runTests")) {
+        if (!this.hasListener("runTests") && (this.__tests.length === 0)) {
           qx.tool.compiler.Console.error(
-            `No test runner registered!
+            `No tests are registered!
                Please register a testrunner, e.g. testtapper with:
                qx package install @qooxdoo/qxl.testtapper
+               See documentation at https://qooxdoo.org/docs/#/development/testing/
               `
           );
           process.exit(-1);
         }
       });
-      this.__tests = new qx.data.Array();
-      this.addListener("afterStart", () => {
-        let res = this.fireDataEvent("runTests", this);
-        res.then(() => {
-          process.exit(this.errorCode);
-        });
+
+      this.addListener("afterStart", async () => {
+        qx.tool.compiler.Console.info(`running unit tests`);
+        await this.fireDataEventAsync("runTests", this);
+        for (let test of this.__tests) {
+          qx.tool.compiler.Console.info(`run ${test.getName()}`);
+          await test.execute();          
+        }
+        process.exit(this.getExitCode());
       });
-      if (this.argv.serve) {
+      
+      if (this.__needsServer()) {
         // start server
         await this.base(arguments);
       } else {
@@ -187,16 +185,11 @@ qx.Class.define("qx.tool.cli.commands.Test", {
         // since the server is not started, manually fire the event necessary for firing the "runTests" event
         this.fireEvent("afterStart");
       }
+    },
+
+    __needsServer: function() {
+      return this.getNeedsServer() || this.__tests.some(test => test.getNeedsServer());
     }
-  },
-
-
-  defer: function(statics) {
-    qx.tool.compiler.Console.addMessageIds({
-      "qx.tool.cli.test.noAppName": "Cannot run anything because the config.json does not specify a unique application name",
-      "qx.tool.cli.test.tooManyMakers": "Cannot run anything because multiple targets are detected",
-      "qx.tool.cli.test.tooManyApplications": "Cannot run anything because multiple applications are detected"
-    });
   }
 });
 

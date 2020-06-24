@@ -28,7 +28,15 @@ qx.Class.define("qx.tool.compiler.Version", {
   },
 
   defer: function(statics) {
-    var pkg = require("../../../../../package.json");
-    statics.VERSION = pkg.version;
+    try {
+      var pkg = require("../../../../../package.json");
+      statics.VERSION = pkg.version;
+    } catch (e) {
+      statics.VERSION = qx.core.Environment.get("qx.compiler.version");
+      if (!statics.VERSION) {
+        // Compatibility issue: Older compiler has version in qx.compilerVersion
+        statics.VERSION = qx.core.Environment.get("qx.compilerVersion");
+      }
+    }
   }
 });

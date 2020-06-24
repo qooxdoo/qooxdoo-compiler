@@ -16,7 +16,7 @@
 
 ************************************************************************ */
 
-require("@qooxdoo/framework");
+
 const path = require("upath");
 const fs = qx.tool.utils.Promisify.fs;
 const semver = require("semver");
@@ -169,6 +169,15 @@ qx.Class.define("qx.tool.cli.Cli", {
         .strict()
         .argv;
       await this.__notifyLibraries();
+    },
+    
+    /**
+     * This is to notify the commands after loading the full args.
+     * The commands can overload special arg arguments here.
+     * e.g. Deploy will will overload the target.
+     */
+    __notifyCommand: function() {
+      this._compilerApi.getCommand().processArgs(this.argv);
     },
 
     /**
@@ -398,6 +407,7 @@ qx.Class.define("qx.tool.cli.Cli", {
        * Now everything is loaded, we can process the command line properly
        */
       await this.__fullArgv();
+      this.__notifyCommand();
 
       let parsedArgs = {
         target: this.argv.target,
@@ -558,7 +568,6 @@ qx.Class.define("qx.tool.cli.Cli", {
      * @param classNames {String[]} array of class names, each of which is in the `packageName` package
      * @param packageName {String} the name of the package to find each command class
      */
-    /* @ignore qx.tool.$$classPath */
     addYargsCommands: function(yargs, classNames, packageName) {
       let pkg = null;
       packageName.split(".").forEach(seg => {
@@ -569,14 +578,12 @@ qx.Class.define("qx.tool.cli.Cli", {
         }
       });
       classNames.forEach(cmd => {
-        require(path.join(qx.tool.$$classPath, packageName.replace(/\./g, "/"), cmd));
         let Clazz = pkg[cmd];
         let data = Clazz.getYargsCommand();
         if (data) {
           if (data.handler === undefined) {
             data.handler = argv => qx.tool.cli.Cli.getInstance().processCommand(new Clazz(argv));
           }
-
           yargs.command(data);
         }
       });

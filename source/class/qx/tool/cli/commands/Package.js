@@ -15,10 +15,6 @@
      * Christian Boulanger (info@bibliograph.org, @cboulanger)
 
 ************************************************************************ */
-
-require("./Command");
-
-require("@qooxdoo/framework");
 const fs = qx.tool.utils.Promisify.fs;
 const path = require("upath");
 const process = require("process");

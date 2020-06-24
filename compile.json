@@ -3,44 +3,58 @@
   "targets": [
     {
       "type": "source",
-      "outputPath": "compiled/source",
-      "bundle": {
-        "include": [
-          "qx.*",
-          "qxWeb",
-          "qxl.*"
-        ]
-      },
+      "application-types": [
+        "browser"
+      ],
+      "outputPath": "compiled/browser/source",
       "babelOptions": {
-        "targets": "edge >=18, chrome >= 73, firefox >= 66"
+        "targets": {
+          "edge": "18",
+          "chrome": "79",
+          "firefox": "72"
+        }
       }
     },
     {
       "type": "build",
-      "outputPath": "compiled/build"
+      "application-types": [
+        "browser"
+      ],
+      "outputPath": "compiled/browser/build",
+      "deployPath": "html"
+    },
+    {
+      "type": "source",
+      "application-types": [
+        "node"
+      ],
+      "outputPath": "compiled/node/source",
+      "minify": "off",
+      "babelOptions": {
+        "targets": "node >= 11"
+      }
+    },
+    {
+      "type": "build",
+      "application-types": [
+        "node"
+      ],
+      "outputPath": "compiled/node/build",
+      "deployPath": "lib",
+      "minify": "off",
+      "babelOptions": {
+        "targets": "node >= 11"
+      }
     }
   ],
-  "parts": {
-    "boot": {
-      "include": [
-        "qx.*",
-        "qxl.*"
-      ],
-      "exclude": [
-        "qx.tool.*"
-      ]
-    },
-    "compiler": {
-      "include": [
-        "qx.tool.*"
-      ]
-    }
-  },
   "defaultTarget": "source",
   "locales": [
     "en"
   ],
   "ignores": [
+    "manifest_path",
+    "setImmediate",
+    "__dirname",
     "module.*",
     "process.*",
     "Promise.*",
@@ -54,51 +68,108 @@
       "theme": "qxl.apiviewer.Theme",
       "name": "apiviewer",
       "title": "Qooxdoo compiler API",
+			"bootPath": "source/boot",
       "default": true,
       "environment": {
         "qx.icontheme": "Tango",
+        "buildApiForApp": "compiler",
         "excludeFromAPIViewer": [
-          "qxl.*",
-          "qx.*",
-          "qxWeb"
         ],
         "includeToAPIViewer": [
-          "qx.tool.*"
         ]
       },
       "include": [
-        "qx.*",
-        "qxl.*"
       ],
       "exclude": [
-        "qx.test.*",
-        "qx.module.Blocker",
-        "qx.module.Placement",
-        "qx.tool.compiler.util",
-        "qx.ui.website.*",
-        "*.index"
+        "qx.test.*"
+      ]
+    },
+    {
+      "class": "qx.tool.cli.Application",
+      "name": "compiler",
+      "title": "Qooxdoo Compiler",
+      "type": "node",
+      "include": [
+        "qx.core.BaseInit",
+        "qx.tool.*"
+      ],
+      "exclude": [
+        "q",
+        "qxWeb",
+        "qx.module.*",
+        "qx.ui.*",
+        "qx.log.appender.Native",
+        "qx.log.appender.Element",
+        "qx.bom.Stylesheet",
+        "qx.bom.Selector",
+        "qx.bom.MediaQuery",
+        "qx.bom.Flash",
+        "qx.bom.Vml",
+        "qx.bom.client.Html",
+        "qx.bom.client.Plugin",
+        "qx.bom.client.Pdfjs",
+        "qx.event.handler.Pointer",
+        "qx.event.handler.Gesture",
+        "qx.event.handler.PointerCore"
+      ]
+    },
+    {
+      "class": "qxl.testnode.Application",
+      "name": "testnode",
+      "title": "Qooxdoo Testnode",
+      "type": "node",
+      "environment": {
+        "testnode.testNameSpace": "qx.test"
+      },
+      "include": [
+        "qx.core.BaseInit",
+        "qx.test.tool.*",
+        "qx.tool.*",
+        "qx.dev.*"
+      ],
+      "exclude": [
+        "q",
+        "qxWeb",
+        "qx.module.*",
+        "qx.ui.*",
+        "qx.log.appender.Native",
+        "qx.log.appender.Element",
+        "qx.bom.Stylesheet",
+        "qx.bom.Selector",
+        "qx.bom.MediaQuery",
+        "qx.bom.Flash",
+        "qx.bom.Vml",
+        "qx.bom.client.Html",
+        "qx.bom.client.Plugin",
+        "qx.bom.client.Pdfjs",
+        "qx.event.handler.Pointer",
+        "qx.event.handler.Gesture",
+        "qx.event.handler.PointerCore"
       ]
     }
   ],
   "eslintConfig": {
-      "env": {
-        "node": true
-      },
-      "extends": [
-        "@qooxdoo/qx"
-      ],
-      "parserOptions": {
-         "ecmaVersion": 2017
-      },
-      "rules": {
-        "@qooxdoo/qx/no-illegal-private-usage": "error",
-        "indent": [
-           "error",
-           2,
-           {
-             "SwitchCase": 1
-           }
-        ]
-     }
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "@qooxdoo/qx"
+    ],
+    "parserOptions": {
+      "ecmaVersion": 2017
+    },
+    "rules": {
+      "@qooxdoo/qx/no-illegal-private-usage": "error",
+      "indent": [
+        "error",
+        2,
+        {
+          "SwitchCase": 1
+        }
+      ]
+    }
+  },
+  "sass": {
+    "compiler": "legacy"
   }
 }

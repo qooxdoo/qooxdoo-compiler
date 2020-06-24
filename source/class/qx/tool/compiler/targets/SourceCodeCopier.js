@@ -20,14 +20,11 @@
  *
  * ************************************************************************/
 
-require("../../utils/Promisify");
 const fs = qx.tool.utils.Promisify.fs;
 const path = require("upath");
-require("@qooxdoo/framework");
+
 const crypto = require("crypto");
 const sourceMap = require("source-map");
-
-require("./Target");
 
 /**
  * Copies multiple javascript source files into a single destination, preserving (merging)

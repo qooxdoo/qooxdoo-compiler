@@ -19,10 +19,6 @@
  *      * John Spackman (john.spackman@zenesis.com, @johnspackman)
  *
  * *********************************************************************** */
-
-require("@qooxdoo/framework");
-require("./LogManager");
-
 qx.Class.define("qx.tool.utils.Logger", {
   extend: qx.core.Object,
 
@@ -86,5 +82,3 @@ qx.Class.define("qx.tool.utils.Logger", {
   }
 });
 
-
-module.exports = qx.tool.utils.Logger;

@@ -21,7 +21,7 @@
  * *********************************************************************** */
 
 var fs = require("fs");
-require("@qooxdoo/framework");
+
 
 qx.Class.define("qx.tool.compiler.Preprocess", {
   extend: qx.core.Object,
@@ -77,5 +77,3 @@ qx.Class.define("qx.tool.compiler.Preprocess", {
     }
   }
 });
-
-module.exports = qx.tool.compiler.Preprocess;

@@ -15,14 +15,10 @@
      * John Spackman (john.spackman@zenesis.com, @johnspackman)
 
 ************************************************************************ */
-
-require("@qooxdoo/framework");
 const process = require("process");
 const path = require("path");
 const columnify = require("columnify");
 const fs = qx.tool.utils.Promisify.fs;
-
-require("./Command");
 
 /**
  * Handles persistent configuration

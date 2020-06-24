@@ -1,17 +1,23 @@
 const fs = require("fs");
 const async = require("async");
+const path = require("path")
 const child_process = require("child_process");
 //var fsPromises = require("fs").promises;
 // node 8 compatibility
 const {promisify} = require('util');
+
 const fsPromises = {
   readFile: promisify(fs.readFile),
   writeFile: promisify(fs.writeFile),
   unlink: promisify(fs.unlink)
 };
 
+function getCompiler() {
+  return path.join(__dirname, "qx");
+}
+
 async function runCompiler(dir, ...cmd) {
-  let result = await runCommand(dir, "qx", "compile", "--machine-readable", ...cmd);
+  let result = await runCommand(dir, getCompiler(), "compile", "--machine-readable", ...cmd);
   result.messages = [];
   result.output.split("\n").forEach(line => {
     let m = line.match(/^\#\#([^:]+):\[(.*)\]$/);
@@ -36,7 +42,7 @@ async function runCompiler(dir, ...cmd) {
 }
 
 async function runCommand(dir, ...args) {
-  return new qx.Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     let cmd = args.shift();
     let proc = child_process.spawn(cmd, args, {
       cwd: dir,
@@ -45,16 +51,27 @@ async function runCommand(dir, ...args) {
     let result = {
         exitCode: null,
         output: "",
+        error: "",
         messages: null
     };
-    proc.stdout.on('data', data => result.output += data);
-    proc.stderr.on('data', data => result.output += data);
+    proc.stdout.on('data', (data) => {
+      data = data.toString().trim();
+      console.log(data);
+      result.output += data;
+    });
+    proc.stderr.on('data', (data) => {
+      data = data.toString().trim();
+      console.error(data);
+      result.error += data;
+    });
 
     proc.on('close', code => {
       result.exitCode = code;
       resolve(result);
     });
-    proc.on('error', reject);
+    proc.on('error', err => {
+       reject(err);
+    });
   });
 }
 
@@ -119,6 +136,7 @@ async function safeDelete(filename) {
 }
 
 module.exports = {
+  getCompiler,
   runCompiler,
   runCommand,
   deleteRecursive,

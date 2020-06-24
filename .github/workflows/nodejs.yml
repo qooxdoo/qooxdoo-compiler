@@ -10,22 +10,26 @@ jobs:
   # Test changes from PRs
   test:
     name: Run tests
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     if: github.ref != 'refs/heads/master'
     strategy:
       matrix:
-        node-version: [8.x, 10.x, 12.x]
+        os: [ubuntu-latest]
+        node-version: [10.x, 12.x]
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm ci
+      - name: install
+        run:  |
+              npm ci
+      - name: compile the compiler
+        run:  |
+              npx qx deploy --target=build 
       - name: Run qx test for built-in compiler tests
-        run: ./qx test --serve=0 || true
-      - name: Run  external CLI and API tests
-        run: npm test
+        run:  ./bin/qx test --output-path-prefix=tmp
         env:
           CI: true
 
@@ -35,11 +39,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: npm ci
+      - uses: actions/setup-node@v1
+      - name: install
+        run:  |
+              npm ci
       - name: Build API Viewer
-        run: ./qx deploy --out=./html --source-maps
+        run:  qx compile --target=build -v --clean
       - name: Deploy API Viewer
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./html
+          publish_dir: ./compiled/browser/build

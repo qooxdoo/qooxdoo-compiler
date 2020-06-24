@@ -17,7 +17,7 @@
      * Sebastian Werner (wpbasti)
 
  ************************************************************************ */
-require("@qooxdoo/framework");
+
 
 qx.Class.define("qx.tool.cli.LogAppender", {
   statics: {

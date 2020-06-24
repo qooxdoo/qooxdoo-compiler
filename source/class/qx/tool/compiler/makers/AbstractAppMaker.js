@@ -20,9 +20,6 @@
  *
  * *********************************************************************** */
 
-require("@qooxdoo/framework");
-require("./Maker");
-
 /**
  * Base class for application makers, add targets, locales etc
  */

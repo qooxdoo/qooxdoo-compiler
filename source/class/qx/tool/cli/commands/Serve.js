@@ -21,11 +21,7 @@ const process = require("process");
 const express = require("express");
 const http = require("http");
 const fs = qx.tool.utils.Promisify.fs;
-
 require("app-module-path").addPath(process.cwd() + "/node_modules");
-
-require("./Compile");
-
 /**
  * Compiles the project and serves it up as a web page
  */
@@ -74,10 +70,9 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
     /**
      * Fired before server start
      *
-     *  data: {
-     *    server: the http server
-     *    application: the used express server instance
-     *  }
+     * The event data is an object with the following properties: 
+     *   server: the http server
+     *   application: the used express server instance
      */
     "beforeStart": "qx.event.type.Data",
     /**
@@ -122,8 +117,6 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
 
     /**
      * Runs the web server
-     *
-     * @ignore qx.tool.$$resourceDir
      */
     runWebServer: async function() {
       let makers = this.getMakers().filter(maker => maker.getApplications().some(app => app.getStandalone()));

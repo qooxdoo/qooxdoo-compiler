@@ -16,10 +16,6 @@
      * Christian Boulanger (info@bibliograph.org, @cboulanger)
 
 ************************************************************************ */
-
-require("@qooxdoo/framework");
-require("../../utils/Utils");
-
 const fs = qx.tool.utils.Promisify.fs;
 const process = require("process");
 const child_process = require("child_process");
@@ -30,24 +26,8 @@ const replace_in_file = require("replace-in-file");
 /**
  * Base class for commands
  */
-/*
-  * @ignore qx.tool.$$resourceDir
-  * @ignore qx.tool.$$rootDir
-  */
 qx.Class.define("qx.tool.cli.commands.Command", {
   extend: qx.core.Object,
-
-  statics:{
-    /**
-     * The path to the directory containing the templates
-     */
-    TEMPLATE_DIR: path.join(qx.tool.$$resourceDir, "cli/templates"),
-
-    /**
-     * The path to the node_modules dir
-     */
-    NODE_MODULES_DIR: path.join(qx.tool.$$rootDir, "node_modules")
-  },
 
   construct: function(argv) {
     this.base(arguments);
@@ -79,6 +59,18 @@ qx.Class.define("qx.tool.cli.commands.Command", {
 
       // check if we have to migrate files
       await (new qx.tool.cli.commands.package.Migrate(this.argv)).process(true);
+    },
+    
+    /**
+     * This is to notify the commands after loading the full args.
+     * The commands can overload special arg arguments here.
+     * e.g. Deploy will will overload the target.
+     * 
+     * @param {*} argv : args to procvess
+     * 
+     */
+    processArgs: function(argv) {
+       // Nothing
     },
 
     /**
@@ -304,11 +296,13 @@ qx.Class.define("qx.tool.cli.commands.Command", {
     },
 
     /**
-     * Returns the absolute path to the tempate directory
+     * Returns the absolute path to the template directory
      * @return {String}
      */
     getTemplateDir : function() {
-      return qx.tool.cli.commands.Command.TEMPLATE_DIR;
+      let dir = qx.util.ResourceManager.getInstance().toUri("qx/tool/cli/templates/template_vars.js");
+      dir = path.dirname(dir);
+      return dir;
     },
 
     /**

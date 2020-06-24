@@ -16,7 +16,7 @@
 
 ************************************************************************ */
 
-require("@qooxdoo/framework");
+
 const process = require("process");
 const Gauge = require("gauge");
 const semver = require("semver");
@@ -25,8 +25,6 @@ const consoleControl = require("console-control-strings");
 const fs = qx.tool.utils.Promisify.fs;
 
 require("app-module-path").addPath(process.cwd() + "/node_modules");
-
-require("./Command");
 
 /**
  * Handles compilation of the project
@@ -181,19 +179,26 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
 
     /*** fired when application writing starts */
     "writingApplications": "qx.event.type.Event",
+
     /** fired when writing of single application starts
-     *  data: app {Application}
+     *  data: 
+     *   app {Application}
      */
     "writingApplication": "qx.event.type.Data",
+
     /** fired when writing of single application is written
-     *  data: app {Application}
+     *  data: 
+     *   app {Application}
      */
     "writtenApplication": "qx.event.type.Data",
+
     /*** fired after writing of all applications */
     "writtenApplications" :"qx.event.type.Event",
 
     /**
-     * Fired when a class is about to be compiled; data is a map:
+     * Fired when a class is about to be compiled.
+     *
+     * The event data is an object with the following properties: 
      *
      * dbClassInfo: {Object} the newly populated class info
      * oldDbClassInfo: {Object} the previous populated class info
@@ -202,7 +207,9 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
     "compilingClass": "qx.event.type.Data",
 
     /**
-     * Fired when a class is compiled; data is a map:
+     * Fired when a class is compiled.
+     * 
+     * The event data is an object with the following properties: 
      * dbClassInfo: {Object} the newly populated class info
      * oldDbClassInfo: {Object} the previous populated class info
      * classFile - {ClassFile} the qx.tool.compiler.ClassFile instance
@@ -211,12 +218,16 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
 
     /**
      * Fired when the database is been saved
+     * 
+     *  data: 
      * database: {Object} the database to save
      */
     "saveDatabase": "qx.event.type.Data",
 
     /**
      * Fired after all enviroment data is collected
+     * 
+     * The event data is an object with the following properties: 
      *  application {qx.tool.compiler.app.Application} the app
      *  enviroment: {Object} enviroment data
      */
@@ -230,8 +241,27 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
     /**
      * Fired when making of apps is done.
     */
-    "made": "qx.event.type.Event"
+    "made": "qx.event.type.Event",
 
+    /**
+     * Fired when minification begins.
+     * 
+     * The event data is an object with the following properties: 
+     *  application {qx.tool.compiler.app.Application} the app being minified
+     *  part: {String} the part being minified
+     *  filename: {String} the part filename
+     */
+    "minifyingApplication": "qx.event.type.Data",
+
+    /**
+     * Fired when minification is done.
+     * 
+     * The event data is an object with the following properties: 
+     *  application {qx.tool.compiler.app.Application} the app being minified
+     *  part: {String} the part being minified
+     *  filename: {String} the part filename
+     */
+    "minifiedApplication": "qx.event.type.Data"
   },
 
 
@@ -353,7 +383,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         if (success && (hasWarnings && this.argv.warnAsError)) {
           success = false;
         }
-        if (!this.argv.__deploying && !this.argv["machine-readable"] && this.argv["feedback"] && this.__outputDirWasCreated) {
+        if (!this.argv.deploying && !this.argv["machine-readable"] && this.argv["feedback"] && this.__outputDirWasCreated && (this.argv.target === "build")) {
           qx.tool.compiler.Console.warn(
             "   *******************************************************************************************\n" +
             "   **                                                                                       **\n" +
@@ -417,7 +447,10 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         analyser.addListener("compiledClass", e => this.dispatchEvent(e.clone()));
         analyser.addListener("saveDatabase", e => this.dispatchEvent(e.clone()));
         target.addListener("checkEnvironment", e => this.dispatchEvent(e.clone()));
-        target.addListener("minifyingApplication", e => this.dispatchEvent(e.clone()));
+        if (target instanceof qx.tool.compiler.targets.BuildTarget) {
+          target.addListener("minifyingApplication", e => this.dispatchEvent(e.clone()));
+          target.addListener("minifiedApplication", e => this.dispatchEvent(e.clone()));
+        }
 
         var p = qx.tool.utils.files.Utils.safeStat("source/index.html")
           .then(stat => stat && qx.tool.compiler.Console.print("qx.tool.cli.compile.legacyFiles", "source/index.html"));
