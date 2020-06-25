@@ -1,0 +1,948 @@
+{
+  "className": "qx.tool.cli.commands.package.Install",
+  "packageName": "qx.tool.cli.commands.package",
+  "name": "Install",
+  "superClass": "qx.tool.cli.commands.Package",
+  "interfaces": [],
+  "mixins": [],
+  "functionName": null,
+  "clazz": {
+    "location": {
+      "start": {
+        "line": 28,
+        "column": 0
+      },
+      "end": {
+        "line": 616,
+        "column": 3
+      }
+    },
+    "jsdoc": {
+      "@description": [
+        {
+          "name": "@description",
+          "body": "<p>Installs a package</p>"
+        }
+      ]
+    }
+  },
+  "type": "class",
+  "statics": {
+    "getYargsCommand": {
+      "location": {
+        "start": {
+          "line": 36,
+          "column": 4
+        },
+        "end": {
+          "line": 76,
+          "column": 5
+        }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>Yarg commands data</p>"
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "body": "{{}}",
+            "type": "{",
+            "description": "}"
+          }
+        ]
+      },
+      "type": "function",
+      "access": "public"
+    }
+  },
+  "members": {
+    "__cacheUpdated": {
+      "location": {
+        "start": {
+          "line": 84,
+          "column": 4
+        },
+        "end": {
+          "line": 84,
+          "column": 25
+        }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": ""
+          }
+        ],
+        "@var": [
+          {
+            "name": "@var",
+            "body": "{Boolean}"
+          }
+        ]
+      },
+      "type": "variable",
+      "access": "private"
+    },
+    "install": {
+      "location": {
+        "start": {
+          "line": 93,
+          "column": 4
+        },
+        "end": {
+          "line": 101,
+          "column": 5
+        }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>API method to install a library via its URI and version tag</p>"
+          }
+        ],
+        "@param": [
+          {
+            "name": "@param",
+            "body": "{String} library_uri"
+          },
+          {
+            "name": "@param",
+            "body": "{String} release_tag"
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "body": "{Promise<void>}",
+            "type": "Promise<void>",
+            "description": ""
+          }
+        ]
+      },
+      "type": "function",
+      "access": "public"
+    },
+    "installFromLocaPath": {
+      "location": {
+        "start": {
+          "line": 109,
+          "column": 4
+        },
+        "end": {
+          "line": 119,
+          "column": 5
+        }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>API method to install a library from a local path</p>"
+          }
+        ],
+        "@param": [
+          {
+            "name": "@param",
+            "body": "{String} local_path"
+          },
+          {
+            "name": "@param",
+            "body": "{String} library_uri Optional library URI.",
+            "paramName": "library_uri",
+            "description": "Optional library URI.",
+            "type": "String"
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "body": "{Promise<void>}",
+            "type": "Promise<void>",
+            "description": ""
+          }
+        ]
+      },
+      "type": "function",
+      "access": "public"
+    },
+    "isInstalled": {
+      "location": {
+        "start": {
+          "line": 127,
+          "column": 4
+        },
+        "end": {
+          "line": 131,
+          "column": 5
+        }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>API method to check if a library has been installed</p>"
+          }
+        ],
+        "@param": [
+          {
+            "name": "@param",
+            "body": "{String} library_uri"
+          },
+          {
+            "name": "@param",
+            "body": "{String} release_tag"
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "body": "{Promise<Boolean>}",
+            "type": "Promise<Boolean>",
+            "description": ""
+          }
+        ]
+      },
+      "type": "function",
+      "access": "public"
+    },
+    "process": {
+      "location": {
+        "start": {
+          "line": 136,
+          "column": 4
+        },
+        "end": {
+          "line": 193,
+          "column": 5
+        }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>Installs a package</p>"
+          }
+        ]
+      },
+      "type": "function",
+      "access": "public",
+      "overriddenFrom": "qx.tool.cli.commands.Command",
+      "appearsIn": [
+        "qx.tool.cli.commands.Command"
+      ]
+    },
+    "__updateCache": {
+      "location": {
+        "start": {
+          "line": 200,
+          "column": 4
+        },
+        "end": {
+          "line": 211,
+          "column": 5
+        }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>Update repo cache</p>"
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "body": "{Promise<void>}",
+            "type": "Promise<void>",
+            "description": ""
+          }
+        ],
+        "@private": [
+          {
+            "name": "@private",
+            "body": ""
+          }
+        ]
+      },
+      "type": "function",
+      "access": "private"
+    },
+    "__getUriInfo": {
+      "location": {
+        "start": {
+          "line": 219,
+          "column": 4
+        },
+        "end": {
+          "line": 234,
+          "column": 5
+        }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>Returns information on the given URI</p>"
+          }
+        ],
+        "@param": [
+          {
+            "name": "@param",
+            "body": "{String} uri"
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "body": "{{package_path: string | string, repo_name: string}}",
+            "type": "{package_path: string | string, repo_name: string",
+            "description": "}"
+          }
+        ],
+        "@private": [
+          {
+            "name": "@private",
+            "body": ""
+          }
+        ]
+      },
+      "type": "function",
+      "access": "private"
+    },
+    "__installFromRelease": {
+      "location": {
+        "start": {
+          "line": 246,
+          "column": 4
+        },
+        "end": {
+          "line": 294,
+          "column": 5
+        }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>Installs libraries in a repository from a given release tag name</p>"
+          }
+        ],
+        "@param": [
+          {
+            "name": "@param",
+            "body": "{String} uri The name of the repository (e.g. qooxdoo/qxl.apiviewer),\n  or of a library within a repository (such as ergobyte/qookery/qookeryace)",
+            "paramName": "uri",
+            "description": "The name of the repository (e.g. qooxdoo/qxl.apiviewer),\n  or of a library within a repository (such as ergobyte/qookery/qookeryace)",
+            "type": "String"
+          },
+          {
+            "name": "@param",
+            "body": "{String} tag_name The tag name of the release, such as \"v1.1.0\"",
+            "paramName": "tag_name",
+            "description": "The tag name of the release, such as \"v1.1.0\"",
+            "type": "String"
+          },
+          {
+            "name": "@param",
+            "body": "{Boolean} writeToManifest Whether the library should be written to\n Manifest.json as a dependency",
+            "paramName": "writeToManifest",
+            "description": "Whether the library should be written to\n Manifest.json as a dependency",
+            "type": "Boolean"
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "body": "{Promise<void>}",
+            "type": "Promise<void>",
+            "description": ""
+          }
+        ],
+        "@private": [
+          {
+            "name": "@private",
+            "body": ""
+          }
+        ]
+      },
+      "type": "function",
+      "access": "private"
+    },
+    "__installFromTree": {
+      "location": {
+        "start": {
+          "line": 310,
+          "column": 4
+        },
+        "end": {
+          "line": 318,
+          "column": 5
+        }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>Installs libraries in a given repository from the given hash of a code tree\n independent from the library cache. This ignores dependency constraints.\n The given uri must point to a folder containing Manifest.json</p>"
+          }
+        ],
+        "@param": [
+          {
+            "name": "@param",
+            "body": "e.g. qooxdoo/qxl.apiviewer or ergobyte/qookery/qookeryace"
+          },
+          {
+            "name": "@param",
+            "body": "{String} hash\n  A path into the code tree on GitHub such as \"tree/892f44d1d1ae5d65c7dd99b18da6876de2f2a920\"",
+            "paramName": "hash",
+            "description": "A path into the code tree on GitHub such as \"tree/892f44d1d1ae5d65c7dd99b18da6876de2f2a920\"",
+            "type": "String"
+          },
+          {
+            "name": "@param",
+            "body": "{Boolean} writeToManifest Whether the library should be written to\n Manifest.json as a dependency",
+            "paramName": "writeToManifest",
+            "description": "Whether the library should be written to\n Manifest.json as a dependency",
+            "type": "Boolean"
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "body": "{Promise<void>}",
+            "type": "Promise<void>",
+            "description": ""
+          }
+        ],
+        "@private": [
+          {
+            "name": "@private",
+            "body": ""
+          }
+        ]
+      },
+      "type": "function",
+      "access": "private"
+    },
+    "__installFromPath": {
+      "location": {
+        "start": {
+          "line": 332,
+          "column": 4
+        },
+        "end": {
+          "line": 338,
+          "column": 5
+        }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>Installs libraries from a local path</p>"
+          }
+        ],
+        "@param": [
+          {
+            "name": "@param",
+            "body": "{String} uri\n  The URI identifying a library (e.g. qooxdoo/qxl.apiviewer or\n  ergobyte/qookery/qookeryace)",
+            "paramName": "uri",
+            "description": "The URI identifying a library (e.g. qooxdoo/qxl.apiviewer or\n  ergobyte/qookery/qookeryace)",
+            "type": "String"
+          },
+          {
+            "name": "@param",
+            "body": "{String} dir\n  The path to a local directory",
+            "paramName": "dir",
+            "description": "The path to a local directory",
+            "type": "String"
+          },
+          {
+            "name": "@param",
+            "body": "{Boolean} writeToManifest\n  Whether the library should be written to Manifest.json as a dependency",
+            "paramName": "writeToManifest",
+            "description": "Whether the library should be written to Manifest.json as a dependency",
+            "type": "Boolean"
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "body": "{Promise<void>}",
+            "type": "Promise<void>",
+            "description": ""
+          }
+        ],
+        "@private": [
+          {
+            "name": "@private",
+            "body": ""
+          }
+        ]
+      },
+      "type": "function",
+      "access": "private"
+    },
+    "__updateInstalledLibraryData": {
+      "location": {
+        "start": {
+          "line": 353,
+          "column": 4
+        },
+        "end": {
+          "line": 407,
+          "column": 5
+        }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>Updates the data in the lockfile and (optionally) in the manifest</p>"
+          }
+        ],
+        "@param": [
+          {
+            "name": "@param",
+            "body": "e.g. qooxdoo/qxl.apiviewer or ergobyte/qookery/qookeryace"
+          },
+          {
+            "name": "@param",
+            "body": "{String} id\n  The tag name of a release such as \"v1.1.0\" or a tree hash such as\n  tree/892f44d1d1ae5d65c7dd99b18da6876de2f2a920",
+            "paramName": "id",
+            "description": "The tag name of a release such as \"v1.1.0\" or a tree hash such as\n  tree/892f44d1d1ae5d65c7dd99b18da6876de2f2a920",
+            "type": "String"
+          },
+          {
+            "name": "@param",
+            "body": "{String} download_path The path to the downloaded repository",
+            "paramName": "download_path",
+            "description": "The path to the downloaded repository",
+            "type": "String"
+          },
+          {
+            "name": "@param",
+            "body": "{Boolean} writeToManifest\n  Whether the library should be written to Manifest.json as a dependency",
+            "paramName": "writeToManifest",
+            "description": "Whether the library should be written to Manifest.json as a dependency",
+            "type": "Boolean"
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "body": "{Promise<void>}",
+            "type": "Promise<void>",
+            "description": ""
+          }
+        ],
+        "@private": [
+          {
+            "name": "@private",
+            "body": ""
+          }
+        ]
+      },
+      "type": "function",
+      "access": "private"
+    },
+    "__installDependenciesFromPath": {
+      "location": {
+        "start": {
+          "line": 414,
+          "column": 4
+        },
+        "end": {
+          "line": 427,
+          "column": 5
+        }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>Given a download path of a library, install its dependencies</p>"
+          }
+        ],
+        "@param": [
+          {
+            "name": "@param",
+            "body": "{String} downloadPath"
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "body": "{Promise<Boolean>} Wether any libraries were installed",
+            "type": "Promise<Boolean>",
+            "description": " Wether any libraries were installed"
+          }
+        ]
+      },
+      "type": "function",
+      "access": "private"
+    },
+    "__installDependenciesFromManifest": {
+      "location": {
+        "start": {
+          "line": 434,
+          "column": 4
+        },
+        "end": {
+          "line": 483,
+          "column": 5
+        }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>Given a library's manifest data, install its dependencies</p>"
+          }
+        ],
+        "@param": [
+          {
+            "name": "@param",
+            "body": "{Object} manifest"
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "body": "{Promise<Boolean>} Wether any libraries were installed",
+            "type": "Promise<Boolean>",
+            "description": " Wether any libraries were installed"
+          }
+        ]
+      },
+      "type": "function",
+      "access": "private"
+    },
+    "__getHighestCompatibleVersion": {
+      "location": {
+        "start": {
+          "line": 494,
+          "column": 4
+        },
+        "end": {
+          "line": 513,
+          "column": 5
+        }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>Given the URI of a library repo and a semver range, returns the highest\n version compatible with the semver range and the release tag containing\n this version.</p>"
+          }
+        ],
+        "@param": [
+          {
+            "name": "@param",
+            "body": "{String} lib_uri The URI of the library",
+            "paramName": "lib_uri",
+            "description": "The URI of the library",
+            "type": "String"
+          },
+          {
+            "name": "@param",
+            "body": "{String} lib_range The semver range",
+            "paramName": "lib_range",
+            "description": "The semver range",
+            "type": "String"
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "body": "{Object} Returns an object with the keys \"tag\" and \"version\"",
+            "type": "Object",
+            "description": " Returns an object with the keys \"tag\" and \"version\""
+          }
+        ],
+        "@private": [
+          {
+            "name": "@private",
+            "body": ""
+          }
+        ]
+      },
+      "type": "function",
+      "access": "private"
+    },
+    "__installApplication": {
+      "location": {
+        "start": {
+          "line": 521,
+          "column": 4
+        },
+        "end": {
+          "line": 550,
+          "column": 5
+        }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>Given the download path of a library, install its applications\n todo use config API, use compile.js where it exists</p>"
+          }
+        ],
+        "@param": [
+          {
+            "name": "@param",
+            "body": "{String} downloadPath"
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "body": "{Promise<Boolean>} Returns true if applications were installed",
+            "type": "Promise<Boolean>",
+            "description": " Returns true if applications were installed"
+          }
+        ]
+      },
+      "type": "function",
+      "access": "private"
+    },
+    "__downloadLibrariesInLockfile": {
+      "location": {
+        "start": {
+          "line": 557,
+          "column": 4
+        },
+        "end": {
+          "line": 563,
+          "column": 5
+        }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>Download repos listed in the lockfile</p>"
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "body": "{Promise<void>}",
+            "type": "Promise<void>",
+            "description": ""
+          }
+        ],
+        "@private": [
+          {
+            "name": "@private",
+            "body": ""
+          }
+        ]
+      },
+      "type": "function",
+      "access": "private"
+    },
+    "__download": {
+      "location": {
+        "start": {
+          "line": 575,
+          "column": 4
+        },
+        "end": {
+          "line": 614,
+          "column": 5
+        }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>Downloads a release</p>"
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "body": "{Object} A map containing {release_data, download_path}",
+            "type": "Object",
+            "description": " A map containing {release_data, download_path}"
+          },
+          {
+            "name": "@return",
+            "body": "{{download_path:String}}",
+            "type": "{download_path:String",
+            "description": "}"
+          }
+        ],
+        "@param": [
+          {
+            "name": "@param",
+            "body": "{String} repo_name The name of the repository",
+            "paramName": "repo_name",
+            "description": "The name of the repository",
+            "type": "String"
+          },
+          {
+            "name": "@param",
+            "body": "{String} treeish\n  If prefixed by \"v\", the name of a release tag. Otherwise, arbitrary\n  tree-ish expression (see https://help.github.com/en/articles/getting-permanent-links-to-files)",
+            "paramName": "treeish",
+            "description": "If prefixed by \"v\", the name of a release tag. Otherwise, arbitrary\n  tree-ish expression (see https://help.github.com/en/articles/getting-permanent-links-to-files)",
+            "type": "String"
+          },
+          {
+            "name": "@param",
+            "body": "{Boolean} force Overwrite existing downloads",
+            "paramName": "force",
+            "description": "Overwrite existing downloads",
+            "type": "Boolean"
+          }
+        ]
+      },
+      "type": "function",
+      "access": "private"
+    },
+    "getQxOwner": {
+      "type": "function",
+      "name": "getQxOwner",
+      "abstract": false,
+      "mixin": false,
+      "inherited": true,
+      "access": "public",
+      "overriddenFrom": "qx.tool.cli.commands.Package",
+      "property": "get",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Gets the (computed) value of the property <code>qxOwner</code>.\n\nFor further details take a look at the property definition: {@link #qxOwner}."
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "type": "qx.core.Object",
+            "desc": "Returns the value for qxOwner"
+          }
+        ]
+      }
+    },
+    "setQxOwner": {
+      "type": "function",
+      "name": "setQxOwner",
+      "abstract": false,
+      "mixin": false,
+      "inherited": true,
+      "access": "public",
+      "overriddenFrom": "qx.tool.cli.commands.Package",
+      "property": "set",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Sets the user value of the property <code>qxOwner</code>.\n\nFor further details take a look at the property definition: {@link #qxOwner}."
+          }
+        ],
+        "@param": [
+          {
+            "name": "@param",
+            "type": "qx.core.Object",
+            "paramName": "value",
+            "desc": "Value for qxOwner"
+          }
+        ]
+      }
+    },
+    "resetQxOwner": {
+      "type": "function",
+      "name": "resetQxOwner",
+      "abstract": false,
+      "mixin": false,
+      "inherited": true,
+      "access": "public",
+      "overriddenFrom": "qx.tool.cli.commands.Package",
+      "property": "reset",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Resets the user value of the property <code>qxOwner</code>.\n\nThe computed value falls back to the next available value e.g. appearance, init or inheritance value depending on the property configuration and value availability.\n\nFor further details take a look at the property definition: {@link #qxOwner}."
+          }
+        ]
+      }
+    },
+    "getQxObjectId": {
+      "type": "function",
+      "name": "getQxObjectId",
+      "abstract": false,
+      "mixin": false,
+      "inherited": true,
+      "access": "public",
+      "overriddenFrom": "qx.tool.cli.commands.Package",
+      "property": "get",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Gets the (computed) value of the property <code>qxObjectId</code>.\n\nFor further details take a look at the property definition: {@link #qxObjectId}."
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "desc": "Returns the value for qxObjectId"
+          }
+        ]
+      }
+    },
+    "setQxObjectId": {
+      "type": "function",
+      "name": "setQxObjectId",
+      "abstract": false,
+      "mixin": false,
+      "inherited": true,
+      "access": "public",
+      "overriddenFrom": "qx.tool.cli.commands.Package",
+      "property": "set",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Sets the user value of the property <code>qxObjectId</code>.\n\nFor further details take a look at the property definition: {@link #qxObjectId}."
+          }
+        ],
+        "@param": [
+          {
+            "name": "@param",
+            "paramName": "value",
+            "desc": "Value for qxObjectId"
+          }
+        ]
+      }
+    },
+    "resetQxObjectId": {
+      "type": "function",
+      "name": "resetQxObjectId",
+      "abstract": false,
+      "mixin": false,
+      "inherited": true,
+      "access": "public",
+      "overriddenFrom": "qx.tool.cli.commands.Package",
+      "property": "reset",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Resets the user value of the property <code>qxObjectId</code>.\n\nThe computed value falls back to the next available value e.g. appearance, init or inheritance value depending on the property configuration and value availability.\n\nFor further details take a look at the property definition: {@link #qxObjectId}."
+          }
+        ]
+      }
+    }
+  },
+  "descendants": []
+}

@@ -1,0 +1,239 @@
+{
+  "className": "qx.tool.utils.Json",
+  "packageName": "qx.tool.utils",
+  "name": "Json",
+  "superClass": null,
+  "interfaces": [],
+  "mixins": [],
+  "functionName": null,
+  "clazz": {
+    "location": {
+      "start": {
+        "line": 30,
+        "column": 0
+      },
+      "end": {
+        "line": 164,
+        "column": 3
+      }
+    }
+  },
+  "type": "class",
+  "statics": {
+    "parseJson": {
+      "location": {
+        "start": {
+          "line": 38,
+          "column": 4
+        },
+        "end": {
+          "line": 44,
+          "column": 5
+        }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>Parses JSON string into an object</p>"
+          }
+        ],
+        "@param": [
+          {
+            "name": "@param",
+            "body": "str {String} the data to parse",
+            "paramName": "str",
+            "description": " the data to parse",
+            "type": "String"
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "body": "{Object}",
+            "type": "Object",
+            "description": ""
+          }
+        ]
+      },
+      "type": "function",
+      "access": "public"
+    },
+    "validate": {
+      "location": {
+        "start": {
+          "line": 59,
+          "column": 4
+        },
+        "end": {
+          "line": 88,
+          "column": 5
+        }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>Validates a json object against the given schema signature and outputs\n diagnostic information if validation failed</p>"
+          }
+        ],
+        "@param": [
+          {
+            "name": "@param",
+            "body": "json {Object} The json object to check",
+            "paramName": "json",
+            "description": " The json object to check",
+            "type": "Object"
+          },
+          {
+            "name": "@param",
+            "body": "schema {Array|Object}\n    The json-schema object or an array of schema objects. If array,\n    only the first is used to validate, but the first schema can\n    refer to the others.",
+            "paramName": "schema",
+            "description": "\n    The json-schema object or an array of schema objects. If array,\n    only the first is used to validate, but the first schema can\n    refer to the others.",
+            "type": [
+              "Array",
+              "Object"
+            ]
+          },
+          {
+            "name": "@param",
+            "body": "warnOnly {Boolean} If true, do not throw a fatal error",
+            "paramName": "warnOnly",
+            "description": " If true, do not throw a fatal error",
+            "type": "Boolean"
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "body": "{Boolean}\n    Returns true if successful and false on failure if the\n    'warnOnly' parameter is true",
+            "type": "Boolean",
+            "description": "\n    Returns true if successful and false on failure if the\n    'warnOnly' parameter is true"
+          }
+        ]
+      },
+      "type": "function",
+      "access": "public"
+    },
+    "getSchemaInfo": {
+      "location": {
+        "start": {
+          "line": 98,
+          "column": 4
+        },
+        "end": {
+          "line": 129,
+          "column": 5
+        }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>Identify the type and version of the config file schema in the data that\n has been passed. Return an object containing type and version of the json\n schema, or null if no schema could been detected\n Todo: This needs to be rewritten.</p>"
+          }
+        ],
+        "@param": [
+          {
+            "name": "@param",
+            "body": "data {Object} JSON data",
+            "paramName": "data",
+            "description": " JSON data",
+            "type": "Object"
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "body": "{{type,version}|null}",
+            "type": "{type,version",
+            "description": "|null}"
+          }
+        ]
+      },
+      "type": "function",
+      "access": "public"
+    },
+    "loadJsonAsync": {
+      "location": {
+        "start": {
+          "line": 138,
+          "column": 4
+        },
+        "end": {
+          "line": 148,
+          "column": 5
+        }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>Loads JSON data from a file and returns it as an object; if the file does not exist, then\n null is returned</p>"
+          }
+        ],
+        "@param": [
+          {
+            "name": "@param",
+            "body": "filename {String} the filename to load",
+            "paramName": "filename",
+            "description": " the filename to load",
+            "type": "String"
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "body": "{Object|null} the parsed contents, or null if the file does not exist",
+            "type": "Object|null",
+            "description": " the parsed contents, or null if the file does not exist"
+          }
+        ]
+      },
+      "type": "function",
+      "access": "public"
+    },
+    "saveJsonAsync": {
+      "location": {
+        "start": {
+          "line": 156,
+          "column": 4
+        },
+        "end": {
+          "line": 162,
+          "column": 5
+        }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>Saves JSON data to a file, or erases the file if data is null</p>"
+          }
+        ],
+        "@param": [
+          {
+            "name": "@param",
+            "body": "filename {String} filename to write to",
+            "paramName": "filename",
+            "description": " filename to write to",
+            "type": "String"
+          },
+          {
+            "name": "@param",
+            "body": "data {Object|null} the data to write. If null, remove the file",
+            "paramName": "data",
+            "description": " the data to write. If null, remove the file",
+            "type": [
+              "Object",
+              "null"
+            ]
+          }
+        ]
+      },
+      "type": "function",
+      "access": "public"
+    }
+  },
+  "descendants": []
+}

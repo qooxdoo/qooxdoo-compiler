@@ -1,0 +1,1132 @@
+{
+  "className": "qx.tool.compiler.makers.AppMaker",
+  "packageName": "qx.tool.compiler.makers",
+  "name": "AppMaker",
+  "superClass": "qx.tool.compiler.makers.AbstractAppMaker",
+  "interfaces": [],
+  "mixins": [],
+  "functionName": null,
+  "clazz": {
+    "location": {
+      "start": {
+        "line": 28,
+        "column": 0
+      },
+      "end": {
+        "line": 241,
+        "column": 3
+      }
+    },
+    "jsdoc": {
+      "@description": [
+        {
+          "name": "@description",
+          "body": "<p>Application maker; supports multiple applications to compile against a single\n target</p>"
+        }
+      ]
+    }
+  },
+  "type": "class",
+  "construct": {
+    "location": {
+      "start": {
+        "line": 36,
+        "column": 13
+      },
+      "end": {
+        "line": 46,
+        "column": 3
+      }
+    },
+    "jsdoc": {
+      "@description": [
+        {
+          "name": "@description",
+          "body": "<p>Constructor</p>"
+        }
+      ],
+      "@param": [
+        {
+          "name": "@param",
+          "body": "className {String|String[]} classname(s) to generate",
+          "paramName": "className",
+          "description": " classname(s) to generate",
+          "type": [
+            "String",
+            {
+              "type": "String",
+              "dimensions": 2
+            }
+          ]
+        },
+        {
+          "name": "@param",
+          "body": "theme {String} the theme classname",
+          "paramName": "theme",
+          "description": " the theme classname",
+          "type": "String"
+        }
+      ]
+    }
+  },
+  "members": {
+    "__applications": {
+      "location": {
+        "start": {
+          "line": 49,
+          "column": 4
+        },
+        "end": {
+          "line": 49,
+          "column": 24
+        }
+      },
+      "type": "variable",
+      "access": "private"
+    },
+    "addApplication": {
+      "location": {
+        "start": {
+          "line": 55,
+          "column": 4
+        },
+        "end": {
+          "line": 57,
+          "column": 5
+        }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>Adds an Application to be made</p>"
+          }
+        ],
+        "@param": [
+          {
+            "name": "@param",
+            "body": "app",
+            "paramName": "app",
+            "type": ""
+          }
+        ]
+      },
+      "type": "function",
+      "access": "public"
+    },
+    "getApplications": {
+      "location": {
+        "start": {
+          "line": 63,
+          "column": 4
+        },
+        "end": {
+          "line": 65,
+          "column": 5
+        }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>Returns the array of applications</p>"
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "body": "{Application[]}",
+            "type": "Application[]",
+            "description": ""
+          }
+        ]
+      },
+      "type": "function",
+      "access": "public"
+    },
+    "make": {
+      "location": {
+        "start": {
+          "line": 70,
+          "column": 4
+        },
+        "end": {
+          "line": 239,
+          "column": 5
+        }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": ""
+          }
+        ],
+        "@Override": [
+          {
+            "name": "@Override",
+            "body": ""
+          }
+        ]
+      },
+      "type": "function",
+      "access": "public",
+      "overriddenFrom": "qx.tool.compiler.makers.Maker",
+      "appearsIn": [
+        "qx.tool.compiler.makers.Maker"
+      ]
+    },
+    "getQxOwner": {
+      "type": "function",
+      "name": "getQxOwner",
+      "abstract": false,
+      "mixin": false,
+      "inherited": true,
+      "access": "public",
+      "overriddenFrom": "qx.tool.compiler.makers.AbstractAppMaker",
+      "property": "get",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Gets the (computed) value of the property <code>qxOwner</code>.\n\nFor further details take a look at the property definition: {@link #qxOwner}."
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "type": "qx.core.Object",
+            "desc": "Returns the value for qxOwner"
+          }
+        ]
+      }
+    },
+    "setQxOwner": {
+      "type": "function",
+      "name": "setQxOwner",
+      "abstract": false,
+      "mixin": false,
+      "inherited": true,
+      "access": "public",
+      "overriddenFrom": "qx.tool.compiler.makers.AbstractAppMaker",
+      "property": "set",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Sets the user value of the property <code>qxOwner</code>.\n\nFor further details take a look at the property definition: {@link #qxOwner}."
+          }
+        ],
+        "@param": [
+          {
+            "name": "@param",
+            "type": "qx.core.Object",
+            "paramName": "value",
+            "desc": "Value for qxOwner"
+          }
+        ]
+      }
+    },
+    "resetQxOwner": {
+      "type": "function",
+      "name": "resetQxOwner",
+      "abstract": false,
+      "mixin": false,
+      "inherited": true,
+      "access": "public",
+      "overriddenFrom": "qx.tool.compiler.makers.AbstractAppMaker",
+      "property": "reset",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Resets the user value of the property <code>qxOwner</code>.\n\nThe computed value falls back to the next available value e.g. appearance, init or inheritance value depending on the property configuration and value availability.\n\nFor further details take a look at the property definition: {@link #qxOwner}."
+          }
+        ]
+      }
+    },
+    "getQxObjectId": {
+      "type": "function",
+      "name": "getQxObjectId",
+      "abstract": false,
+      "mixin": false,
+      "inherited": true,
+      "access": "public",
+      "overriddenFrom": "qx.tool.compiler.makers.AbstractAppMaker",
+      "property": "get",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Gets the (computed) value of the property <code>qxObjectId</code>.\n\nFor further details take a look at the property definition: {@link #qxObjectId}."
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "desc": "Returns the value for qxObjectId"
+          }
+        ]
+      }
+    },
+    "setQxObjectId": {
+      "type": "function",
+      "name": "setQxObjectId",
+      "abstract": false,
+      "mixin": false,
+      "inherited": true,
+      "access": "public",
+      "overriddenFrom": "qx.tool.compiler.makers.AbstractAppMaker",
+      "property": "set",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Sets the user value of the property <code>qxObjectId</code>.\n\nFor further details take a look at the property definition: {@link #qxObjectId}."
+          }
+        ],
+        "@param": [
+          {
+            "name": "@param",
+            "paramName": "value",
+            "desc": "Value for qxObjectId"
+          }
+        ]
+      }
+    },
+    "resetQxObjectId": {
+      "type": "function",
+      "name": "resetQxObjectId",
+      "abstract": false,
+      "mixin": false,
+      "inherited": true,
+      "access": "public",
+      "overriddenFrom": "qx.tool.compiler.makers.AbstractAppMaker",
+      "property": "reset",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Resets the user value of the property <code>qxObjectId</code>.\n\nThe computed value falls back to the next available value e.g. appearance, init or inheritance value depending on the property configuration and value availability.\n\nFor further details take a look at the property definition: {@link #qxObjectId}."
+          }
+        ]
+      }
+    },
+    "getDbFilename": {
+      "type": "function",
+      "name": "getDbFilename",
+      "abstract": false,
+      "mixin": false,
+      "inherited": true,
+      "access": "public",
+      "overriddenFrom": "qx.tool.compiler.makers.AbstractAppMaker",
+      "property": "get",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Gets the (computed) value of the property <code>dbFilename</code>.\n\nFor further details take a look at the property definition: {@link #dbFilename}."
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "type": "String",
+            "desc": "Returns the value for dbFilename"
+          }
+        ]
+      }
+    },
+    "setDbFilename": {
+      "type": "function",
+      "name": "setDbFilename",
+      "abstract": false,
+      "mixin": false,
+      "inherited": true,
+      "access": "public",
+      "overriddenFrom": "qx.tool.compiler.makers.AbstractAppMaker",
+      "property": "set",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Sets the user value of the property <code>dbFilename</code>.\n\nFor further details take a look at the property definition: {@link #dbFilename}."
+          }
+        ],
+        "@param": [
+          {
+            "name": "@param",
+            "type": "String",
+            "paramName": "value",
+            "desc": "Value for dbFilename"
+          }
+        ]
+      }
+    },
+    "resetDbFilename": {
+      "type": "function",
+      "name": "resetDbFilename",
+      "abstract": false,
+      "mixin": false,
+      "inherited": true,
+      "access": "public",
+      "overriddenFrom": "qx.tool.compiler.makers.AbstractAppMaker",
+      "property": "reset",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Resets the user value of the property <code>dbFilename</code>.\n\nThe computed value falls back to the next available value e.g. appearance, init or inheritance value depending on the property configuration and value availability.\n\nFor further details take a look at the property definition: {@link #dbFilename}."
+          }
+        ]
+      }
+    },
+    "getEnvironment": {
+      "type": "function",
+      "name": "getEnvironment",
+      "abstract": false,
+      "mixin": false,
+      "inherited": true,
+      "access": "public",
+      "overriddenFrom": "qx.tool.compiler.makers.AbstractAppMaker",
+      "property": "get",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Gets the (computed) value of the property <code>environment</code>.\n\nFor further details take a look at the property definition: {@link #environment}."
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "type": "any",
+            "desc": "Returns the value for environment"
+          }
+        ]
+      }
+    },
+    "setEnvironment": {
+      "type": "function",
+      "name": "setEnvironment",
+      "abstract": false,
+      "mixin": false,
+      "inherited": true,
+      "access": "public",
+      "overriddenFrom": "qx.tool.compiler.makers.AbstractAppMaker",
+      "property": "set",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Sets the user value of the property <code>environment</code>.\n\nFor further details take a look at the property definition: {@link #environment}."
+          }
+        ],
+        "@param": [
+          {
+            "name": "@param",
+            "type": "any",
+            "paramName": "value",
+            "desc": "Value for environment"
+          }
+        ]
+      }
+    },
+    "resetEnvironment": {
+      "type": "function",
+      "name": "resetEnvironment",
+      "abstract": false,
+      "mixin": false,
+      "inherited": true,
+      "access": "public",
+      "overriddenFrom": "qx.tool.compiler.makers.AbstractAppMaker",
+      "property": "reset",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Resets the user value of the property <code>environment</code>.\n\nThe computed value falls back to the next available value e.g. appearance, init or inheritance value depending on the property configuration and value availability.\n\nFor further details take a look at the property definition: {@link #environment}."
+          }
+        ]
+      }
+    },
+    "getOutputTypescript": {
+      "type": "function",
+      "name": "getOutputTypescript",
+      "abstract": false,
+      "mixin": false,
+      "inherited": true,
+      "access": "public",
+      "overriddenFrom": "qx.tool.compiler.makers.AbstractAppMaker",
+      "property": "get",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Gets the (computed) value of the property <code>outputTypescript</code>.\n\nFor further details take a look at the property definition: {@link #outputTypescript}."
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "type": "Boolean",
+            "desc": "Returns the value for outputTypescript"
+          }
+        ]
+      }
+    },
+    "isOutputTypescript": {
+      "type": "function",
+      "name": "isOutputTypescript",
+      "abstract": false,
+      "mixin": false,
+      "inherited": true,
+      "access": "public",
+      "overriddenFrom": "qx.tool.compiler.makers.AbstractAppMaker",
+      "property": "is",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Gets the (computed) value of the property <code>outputTypescript</code>.\n\nFor further details take a look at the property definition: {@link #outputTypescript}."
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "type": "Boolean",
+            "desc": "Returns the value for outputTypescript"
+          }
+        ]
+      }
+    },
+    "setOutputTypescript": {
+      "type": "function",
+      "name": "setOutputTypescript",
+      "abstract": false,
+      "mixin": false,
+      "inherited": true,
+      "access": "public",
+      "overriddenFrom": "qx.tool.compiler.makers.AbstractAppMaker",
+      "property": "set",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Sets the user value of the property <code>outputTypescript</code>.\n\nFor further details take a look at the property definition: {@link #outputTypescript}."
+          }
+        ],
+        "@param": [
+          {
+            "name": "@param",
+            "type": "Boolean",
+            "paramName": "value",
+            "desc": "Value for outputTypescript"
+          }
+        ]
+      }
+    },
+    "resetOutputTypescript": {
+      "type": "function",
+      "name": "resetOutputTypescript",
+      "abstract": false,
+      "mixin": false,
+      "inherited": true,
+      "access": "public",
+      "overriddenFrom": "qx.tool.compiler.makers.AbstractAppMaker",
+      "property": "reset",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Resets the user value of the property <code>outputTypescript</code>.\n\nThe computed value falls back to the next available value e.g. appearance, init or inheritance value depending on the property configuration and value availability.\n\nFor further details take a look at the property definition: {@link #outputTypescript}."
+          }
+        ]
+      }
+    },
+    "getOutputTypescriptTo": {
+      "type": "function",
+      "name": "getOutputTypescriptTo",
+      "abstract": false,
+      "mixin": false,
+      "inherited": true,
+      "access": "public",
+      "overriddenFrom": "qx.tool.compiler.makers.AbstractAppMaker",
+      "property": "get",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Gets the (computed) value of the property <code>outputTypescriptTo</code>.\n\nFor further details take a look at the property definition: {@link #outputTypescriptTo}."
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "type": "String",
+            "desc": "Returns the value for outputTypescriptTo"
+          }
+        ]
+      }
+    },
+    "setOutputTypescriptTo": {
+      "type": "function",
+      "name": "setOutputTypescriptTo",
+      "abstract": false,
+      "mixin": false,
+      "inherited": true,
+      "access": "public",
+      "overriddenFrom": "qx.tool.compiler.makers.AbstractAppMaker",
+      "property": "set",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Sets the user value of the property <code>outputTypescriptTo</code>.\n\nFor further details take a look at the property definition: {@link #outputTypescriptTo}."
+          }
+        ],
+        "@param": [
+          {
+            "name": "@param",
+            "type": "String",
+            "paramName": "value",
+            "desc": "Value for outputTypescriptTo"
+          }
+        ]
+      }
+    },
+    "resetOutputTypescriptTo": {
+      "type": "function",
+      "name": "resetOutputTypescriptTo",
+      "abstract": false,
+      "mixin": false,
+      "inherited": true,
+      "access": "public",
+      "overriddenFrom": "qx.tool.compiler.makers.AbstractAppMaker",
+      "property": "reset",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Resets the user value of the property <code>outputTypescriptTo</code>.\n\nThe computed value falls back to the next available value e.g. appearance, init or inheritance value depending on the property configuration and value availability.\n\nFor further details take a look at the property definition: {@link #outputTypescriptTo}."
+          }
+        ]
+      }
+    },
+    "getNoErase": {
+      "type": "function",
+      "name": "getNoErase",
+      "abstract": false,
+      "mixin": false,
+      "inherited": true,
+      "access": "public",
+      "overriddenFrom": "qx.tool.compiler.makers.AbstractAppMaker",
+      "property": "get",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Gets the (computed) value of the property <code>noErase</code>.\n\nFor further details take a look at the property definition: {@link #noErase}."
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "type": "Boolean",
+            "desc": "Returns the value for noErase"
+          }
+        ]
+      }
+    },
+    "isNoErase": {
+      "type": "function",
+      "name": "isNoErase",
+      "abstract": false,
+      "mixin": false,
+      "inherited": true,
+      "access": "public",
+      "overriddenFrom": "qx.tool.compiler.makers.AbstractAppMaker",
+      "property": "is",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Gets the (computed) value of the property <code>noErase</code>.\n\nFor further details take a look at the property definition: {@link #noErase}."
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "type": "Boolean",
+            "desc": "Returns the value for noErase"
+          }
+        ]
+      }
+    },
+    "setNoErase": {
+      "type": "function",
+      "name": "setNoErase",
+      "abstract": false,
+      "mixin": false,
+      "inherited": true,
+      "access": "public",
+      "overriddenFrom": "qx.tool.compiler.makers.AbstractAppMaker",
+      "property": "set",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Sets the user value of the property <code>noErase</code>.\n\nFor further details take a look at the property definition: {@link #noErase}."
+          }
+        ],
+        "@param": [
+          {
+            "name": "@param",
+            "type": "Boolean",
+            "paramName": "value",
+            "desc": "Value for noErase"
+          }
+        ]
+      }
+    },
+    "resetNoErase": {
+      "type": "function",
+      "name": "resetNoErase",
+      "abstract": false,
+      "mixin": false,
+      "inherited": true,
+      "access": "public",
+      "overriddenFrom": "qx.tool.compiler.makers.AbstractAppMaker",
+      "property": "reset",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Resets the user value of the property <code>noErase</code>.\n\nThe computed value falls back to the next available value e.g. appearance, init or inheritance value depending on the property configuration and value availability.\n\nFor further details take a look at the property definition: {@link #noErase}."
+          }
+        ]
+      }
+    },
+    "getSuccess": {
+      "type": "function",
+      "name": "getSuccess",
+      "abstract": false,
+      "mixin": false,
+      "inherited": true,
+      "access": "public",
+      "overriddenFrom": "qx.tool.compiler.makers.AbstractAppMaker",
+      "property": "get",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Gets the (computed) value of the property <code>success</code>.\n\nFor further details take a look at the property definition: {@link #success}."
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "type": "Boolean",
+            "desc": "Returns the value for success"
+          }
+        ]
+      }
+    },
+    "isSuccess": {
+      "type": "function",
+      "name": "isSuccess",
+      "abstract": false,
+      "mixin": false,
+      "inherited": true,
+      "access": "public",
+      "overriddenFrom": "qx.tool.compiler.makers.AbstractAppMaker",
+      "property": "is",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Gets the (computed) value of the property <code>success</code>.\n\nFor further details take a look at the property definition: {@link #success}."
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "type": "Boolean",
+            "desc": "Returns the value for success"
+          }
+        ]
+      }
+    },
+    "setSuccess": {
+      "type": "function",
+      "name": "setSuccess",
+      "abstract": false,
+      "mixin": false,
+      "inherited": true,
+      "access": "public",
+      "overriddenFrom": "qx.tool.compiler.makers.AbstractAppMaker",
+      "property": "set",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Sets the user value of the property <code>success</code>.\n\nFor further details take a look at the property definition: {@link #success}."
+          }
+        ],
+        "@param": [
+          {
+            "name": "@param",
+            "type": "Boolean",
+            "paramName": "value",
+            "desc": "Value for success"
+          }
+        ]
+      }
+    },
+    "resetSuccess": {
+      "type": "function",
+      "name": "resetSuccess",
+      "abstract": false,
+      "mixin": false,
+      "inherited": true,
+      "access": "public",
+      "overriddenFrom": "qx.tool.compiler.makers.AbstractAppMaker",
+      "property": "reset",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Resets the user value of the property <code>success</code>.\n\nThe computed value falls back to the next available value e.g. appearance, init or inheritance value depending on the property configuration and value availability.\n\nFor further details take a look at the property definition: {@link #success}."
+          }
+        ]
+      }
+    },
+    "getHasWarnings": {
+      "type": "function",
+      "name": "getHasWarnings",
+      "abstract": false,
+      "mixin": false,
+      "inherited": true,
+      "access": "public",
+      "overriddenFrom": "qx.tool.compiler.makers.AbstractAppMaker",
+      "property": "get",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Gets the (computed) value of the property <code>hasWarnings</code>.\n\nFor further details take a look at the property definition: {@link #hasWarnings}."
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "type": "Boolean",
+            "desc": "Returns the value for hasWarnings"
+          }
+        ]
+      }
+    },
+    "isHasWarnings": {
+      "type": "function",
+      "name": "isHasWarnings",
+      "abstract": false,
+      "mixin": false,
+      "inherited": true,
+      "access": "public",
+      "overriddenFrom": "qx.tool.compiler.makers.AbstractAppMaker",
+      "property": "is",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Gets the (computed) value of the property <code>hasWarnings</code>.\n\nFor further details take a look at the property definition: {@link #hasWarnings}."
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "type": "Boolean",
+            "desc": "Returns the value for hasWarnings"
+          }
+        ]
+      }
+    },
+    "setHasWarnings": {
+      "type": "function",
+      "name": "setHasWarnings",
+      "abstract": false,
+      "mixin": false,
+      "inherited": true,
+      "access": "public",
+      "overriddenFrom": "qx.tool.compiler.makers.AbstractAppMaker",
+      "property": "set",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Sets the user value of the property <code>hasWarnings</code>.\n\nFor further details take a look at the property definition: {@link #hasWarnings}."
+          }
+        ],
+        "@param": [
+          {
+            "name": "@param",
+            "type": "Boolean",
+            "paramName": "value",
+            "desc": "Value for hasWarnings"
+          }
+        ]
+      }
+    },
+    "resetHasWarnings": {
+      "type": "function",
+      "name": "resetHasWarnings",
+      "abstract": false,
+      "mixin": false,
+      "inherited": true,
+      "access": "public",
+      "overriddenFrom": "qx.tool.compiler.makers.AbstractAppMaker",
+      "property": "reset",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Resets the user value of the property <code>hasWarnings</code>.\n\nThe computed value falls back to the next available value e.g. appearance, init or inheritance value depending on the property configuration and value availability.\n\nFor further details take a look at the property definition: {@link #hasWarnings}."
+          }
+        ]
+      }
+    },
+    "getTarget": {
+      "type": "function",
+      "name": "getTarget",
+      "abstract": false,
+      "mixin": false,
+      "inherited": true,
+      "access": "public",
+      "overriddenFrom": "qx.tool.compiler.makers.AbstractAppMaker",
+      "property": "get",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Gets the (computed) value of the property <code>target</code>.\n\nFor further details take a look at the property definition: {@link #target}."
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "type": "qx.tool.compiler.targets.Target",
+            "desc": "Returns the value for target"
+          }
+        ]
+      }
+    },
+    "setTarget": {
+      "type": "function",
+      "name": "setTarget",
+      "abstract": false,
+      "mixin": false,
+      "inherited": true,
+      "access": "public",
+      "overriddenFrom": "qx.tool.compiler.makers.AbstractAppMaker",
+      "property": "set",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Sets the user value of the property <code>target</code>.\n\nFor further details take a look at the property definition: {@link #target}."
+          }
+        ],
+        "@param": [
+          {
+            "name": "@param",
+            "type": "qx.tool.compiler.targets.Target",
+            "paramName": "value",
+            "desc": "Value for target"
+          }
+        ]
+      }
+    },
+    "resetTarget": {
+      "type": "function",
+      "name": "resetTarget",
+      "abstract": false,
+      "mixin": false,
+      "inherited": true,
+      "access": "public",
+      "overriddenFrom": "qx.tool.compiler.makers.AbstractAppMaker",
+      "property": "reset",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Resets the user value of the property <code>target</code>.\n\nThe computed value falls back to the next available value e.g. appearance, init or inheritance value depending on the property configuration and value availability.\n\nFor further details take a look at the property definition: {@link #target}."
+          }
+        ]
+      }
+    },
+    "getLocales": {
+      "type": "function",
+      "name": "getLocales",
+      "abstract": false,
+      "mixin": false,
+      "inherited": true,
+      "access": "public",
+      "overriddenFrom": "qx.tool.compiler.makers.AbstractAppMaker",
+      "property": "get",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Gets the (computed) value of the property <code>locales</code>.\n\nFor further details take a look at the property definition: {@link #locales}."
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "type": "any",
+            "desc": "Returns the value for locales"
+          }
+        ]
+      }
+    },
+    "setLocales": {
+      "type": "function",
+      "name": "setLocales",
+      "abstract": false,
+      "mixin": false,
+      "inherited": true,
+      "access": "public",
+      "overriddenFrom": "qx.tool.compiler.makers.AbstractAppMaker",
+      "property": "set",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Sets the user value of the property <code>locales</code>.\n\nFor further details take a look at the property definition: {@link #locales}."
+          }
+        ],
+        "@param": [
+          {
+            "name": "@param",
+            "type": "any",
+            "paramName": "value",
+            "desc": "Value for locales"
+          }
+        ]
+      }
+    },
+    "resetLocales": {
+      "type": "function",
+      "name": "resetLocales",
+      "abstract": false,
+      "mixin": false,
+      "inherited": true,
+      "access": "public",
+      "overriddenFrom": "qx.tool.compiler.makers.AbstractAppMaker",
+      "property": "reset",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Resets the user value of the property <code>locales</code>.\n\nThe computed value falls back to the next available value e.g. appearance, init or inheritance value depending on the property configuration and value availability.\n\nFor further details take a look at the property definition: {@link #locales}."
+          }
+        ]
+      }
+    },
+    "getWriteAllTranslations": {
+      "type": "function",
+      "name": "getWriteAllTranslations",
+      "abstract": false,
+      "mixin": false,
+      "inherited": true,
+      "access": "public",
+      "overriddenFrom": "qx.tool.compiler.makers.AbstractAppMaker",
+      "property": "get",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Gets the (computed) value of the property <code>writeAllTranslations</code>.\n\nFor further details take a look at the property definition: {@link #writeAllTranslations}."
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "type": "Boolean",
+            "desc": "Returns the value for writeAllTranslations"
+          }
+        ]
+      }
+    },
+    "isWriteAllTranslations": {
+      "type": "function",
+      "name": "isWriteAllTranslations",
+      "abstract": false,
+      "mixin": false,
+      "inherited": true,
+      "access": "public",
+      "overriddenFrom": "qx.tool.compiler.makers.AbstractAppMaker",
+      "property": "is",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Gets the (computed) value of the property <code>writeAllTranslations</code>.\n\nFor further details take a look at the property definition: {@link #writeAllTranslations}."
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "type": "Boolean",
+            "desc": "Returns the value for writeAllTranslations"
+          }
+        ]
+      }
+    },
+    "setWriteAllTranslations": {
+      "type": "function",
+      "name": "setWriteAllTranslations",
+      "abstract": false,
+      "mixin": false,
+      "inherited": true,
+      "access": "public",
+      "overriddenFrom": "qx.tool.compiler.makers.AbstractAppMaker",
+      "property": "set",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Sets the user value of the property <code>writeAllTranslations</code>.\n\nFor further details take a look at the property definition: {@link #writeAllTranslations}."
+          }
+        ],
+        "@param": [
+          {
+            "name": "@param",
+            "type": "Boolean",
+            "paramName": "value",
+            "desc": "Value for writeAllTranslations"
+          }
+        ]
+      }
+    },
+    "resetWriteAllTranslations": {
+      "type": "function",
+      "name": "resetWriteAllTranslations",
+      "abstract": false,
+      "mixin": false,
+      "inherited": true,
+      "access": "public",
+      "overriddenFrom": "qx.tool.compiler.makers.AbstractAppMaker",
+      "property": "reset",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Resets the user value of the property <code>writeAllTranslations</code>.\n\nThe computed value falls back to the next available value e.g. appearance, init or inheritance value depending on the property configuration and value availability.\n\nFor further details take a look at the property definition: {@link #writeAllTranslations}."
+          }
+        ]
+      }
+    }
+  },
+  "descendants": []
+}

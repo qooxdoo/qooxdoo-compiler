@@ -1,0 +1,275 @@
+{
+  "className": "qx.tool.utils.json.Parser",
+  "packageName": "qx.tool.utils.json",
+  "name": "Parser",
+  "superClass": null,
+  "interfaces": [],
+  "mixins": [],
+  "functionName": null,
+  "clazz": {
+    "location": {
+      "start": {
+        "line": 31,
+        "column": 0
+      },
+      "end": {
+        "line": 540,
+        "column": 3
+      }
+    },
+    "jsdoc": {
+      "@description": [
+        {
+          "name": "@description",
+          "body": "<pre><code>*****************************************************************\nqooxdoo-compiler - node.js based replacement for the Qooxdoo python\ntoolchain\nhttps://github.com/qooxdoo/qooxdoo-compiler\nCopyright:\n  2011-2019 Zenesis Limited, http://www.zenesis.com\n  Vlad Trushin &lt;monospectr@mail.ru&gt; (https://github.com/vtrushin)\nLicense:\n  MIT: https://opensource.org/licenses/MIT\n  This software is provided under the same licensing terms as Qooxdoo,\n  please see the LICENSE file in the Qooxdoo project's top-level directory\n  for details.\nAuthors:\n</code></pre>\n<ul>\n<li>John Spackman (john.spackman<code>zenesis.com, </code>johnspackman)</li>\n<li>Vlad Trushin (monospectr<code>mail.ru, </code>vtrushin)\n<strong><em><em></em></strong><strong><em></em></em></strong><strong><em><em></em></strong><strong><em></em></em></strong><strong><em><em></em></strong><strong><em></em></em></strong><strong><em><em></em></strong><strong><em></em></em></strong><strong><em><em></em></strong></em>*</li>\n</ul>"
+        },
+        {
+          "name": "@description",
+          "body": "<p>Parser, based on json-to-ast by Vlad trushin</p>"
+        }
+      ]
+    }
+  },
+  "type": "class",
+  "statics": {
+    "literals": {
+      "location": {
+        "start": {
+          "line": 33,
+          "column": 4
+        },
+        "end": {
+          "line": 39,
+          "column": 5
+        }
+      },
+      "type": "variable",
+      "access": "public"
+    },
+    "objectStates": {
+      "location": {
+        "start": {
+          "line": 41,
+          "column": 4
+        },
+        "end": {
+          "line": 46,
+          "column": 5
+        }
+      },
+      "type": "variable",
+      "access": "public"
+    },
+    "propertyStates": {
+      "location": {
+        "start": {
+          "line": 48,
+          "column": 4
+        },
+        "end": {
+          "line": 52,
+          "column": 5
+        }
+      },
+      "type": "variable",
+      "access": "public"
+    },
+    "arrayStates": {
+      "location": {
+        "start": {
+          "line": 54,
+          "column": 4
+        },
+        "end": {
+          "line": 59,
+          "column": 5
+        }
+      },
+      "type": "variable",
+      "access": "public"
+    },
+    "defaultSettings": {
+      "location": {
+        "start": {
+          "line": 61,
+          "column": 4
+        },
+        "end": {
+          "line": 64,
+          "column": 5
+        }
+      },
+      "type": "variable",
+      "access": "public"
+    },
+    "location": {
+      "location": {
+        "start": {
+          "line": 66,
+          "column": 4
+        },
+        "end": {
+          "line": 80,
+          "column": 5
+        }
+      },
+      "type": "function",
+      "access": "public"
+    },
+    "comment": {
+      "location": {
+        "start": {
+          "line": 82,
+          "column": 4
+        },
+        "end": {
+          "line": 95,
+          "column": 5
+        }
+      },
+      "type": "function",
+      "access": "public"
+    },
+    "parseObject": {
+      "location": {
+        "start": {
+          "line": 97,
+          "column": 4
+        },
+        "end": {
+          "line": 217,
+          "column": 5
+        }
+      },
+      "type": "function",
+      "access": "public"
+    },
+    "parseProperty": {
+      "location": {
+        "start": {
+          "line": 219,
+          "column": 4
+        },
+        "end": {
+          "line": 303,
+          "column": 5
+        }
+      },
+      "type": "function",
+      "access": "public"
+    },
+    "parseArray": {
+      "location": {
+        "start": {
+          "line": 305,
+          "column": 4
+        },
+        "end": {
+          "line": 414,
+          "column": 5
+        }
+      },
+      "type": "function",
+      "access": "public"
+    },
+    "parseLiteral": {
+      "location": {
+        "start": {
+          "line": 416,
+          "column": 4
+        },
+        "end": {
+          "line": 444,
+          "column": 5
+        }
+      },
+      "type": "function",
+      "access": "public"
+    },
+    "parseValue": {
+      "location": {
+        "start": {
+          "line": 446,
+          "column": 4
+        },
+        "end": {
+          "line": 470,
+          "column": 5
+        }
+      },
+      "type": "function",
+      "access": "public"
+    },
+    "parseToAst": {
+      "location": {
+        "start": {
+          "line": 472,
+          "column": 4
+        },
+        "end": {
+          "line": 502,
+          "column": 5
+        }
+      },
+      "type": "function",
+      "access": "public"
+    },
+    "parse": {
+      "location": {
+        "start": {
+          "line": 504,
+          "column": 4
+        },
+        "end": {
+          "line": 506,
+          "column": 5
+        }
+      },
+      "type": "function",
+      "access": "public"
+    },
+    "unexpectedEnd": {
+      "location": {
+        "start": {
+          "line": 509,
+          "column": 4
+        },
+        "end": {
+          "line": 511,
+          "column": 5
+        }
+      },
+      "type": "function",
+      "access": "public"
+    },
+    "unexpectedToken": {
+      "location": {
+        "start": {
+          "line": 513,
+          "column": 4
+        },
+        "end": {
+          "line": 515,
+          "column": 5
+        }
+      },
+      "type": "function",
+      "access": "public"
+    },
+    "error": {
+      "location": {
+        "start": {
+          "line": 517,
+          "column": 4
+        },
+        "end": {
+          "line": 537,
+          "column": 5
+        }
+      },
+      "type": "function",
+      "access": "public"
+    }
+  },
+  "descendants": []
+}

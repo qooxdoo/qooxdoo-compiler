@@ -1,0 +1,245 @@
+{
+  "className": "qx.tool.cli.LogAppender",
+  "packageName": "qx.tool.cli",
+  "name": "LogAppender",
+  "superClass": null,
+  "interfaces": [],
+  "mixins": [],
+  "functionName": null,
+  "clazz": {
+    "location": {
+      "start": {
+        "line": 22,
+        "column": 0
+      },
+      "end": {
+        "line": 125,
+        "column": 3
+      }
+    },
+    "jsdoc": {
+      "@description": [
+        {
+          "name": "@description",
+          "body": "<pre><code>*****************************************************************\n</code></pre>\n<p>qooxdoo - the new era of web development\n   http://qooxdoo.org\n   Copyright:\n     2017 Zenesis Ltd\n     2004-2008 1&amp;1 Internet AG, Germany, http://www.1und1.de\n   License:\n     MIT: https://opensource.org/licenses/MIT\n     See the LICENSE file in the project's top-level directory for details.\n   Authors:\n John Spackman (john.spackman<code>zenesis.com, </code>johnspackman)\n Sebastian Werner (wpbasti)\n    <strong><em><em></em></strong><strong><em></em></em></strong><strong><em><em></em></strong><strong><em></em></em></strong><strong><em><em></em></strong><strong><em></em></em></strong><strong><em><em></em></strong><strong><em></em></em></strong><strong><em><em></em></strong></em>*</p>"
+        }
+      ]
+    }
+  },
+  "type": "class",
+  "statics": {
+    "__minLevel": {
+      "location": {
+        "start": {
+          "line": 24,
+          "column": 4
+        },
+        "end": {
+          "line": 24,
+          "column": 22
+        }
+      },
+      "type": "variable",
+      "access": "private"
+    },
+    "__LEVELS": {
+      "location": {
+        "start": {
+          "line": 25,
+          "column": 4
+        },
+        "end": {
+          "line": 25,
+          "column": 57
+        }
+      },
+      "type": "variable",
+      "access": "private"
+    },
+    "setMinLevel": {
+      "location": {
+        "start": {
+          "line": 27,
+          "column": 4
+        },
+        "end": {
+          "line": 29,
+          "column": 5
+        }
+      },
+      "type": "function",
+      "access": "public"
+    },
+    "process": {
+      "location": {
+        "start": {
+          "line": 37,
+          "column": 4
+        },
+        "end": {
+          "line": 47,
+          "column": 5
+        }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>Processes a single log entry</p>"
+          }
+        ],
+        "@param": [
+          {
+            "name": "@param",
+            "body": "entry\n          {Map} The entry to process",
+            "paramName": "entry",
+            "description": " The entry to process",
+            "type": "Map"
+          }
+        ]
+      },
+      "type": "function",
+      "access": "public"
+    },
+    "toText": {
+      "location": {
+        "start": {
+          "line": 56,
+          "column": 4
+        },
+        "end": {
+          "line": 58,
+          "column": 5
+        }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>Converts a single log entry to plain text</p>"
+          }
+        ],
+        "@param": [
+          {
+            "name": "@param",
+            "body": "entry\n          {Map} The entry to process",
+            "paramName": "entry",
+            "description": " The entry to process",
+            "type": "Map"
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "body": "{String} the formatted log entry",
+            "type": "String",
+            "description": " the formatted log entry"
+          }
+        ]
+      },
+      "type": "function",
+      "access": "public"
+    },
+    "toTextArray": {
+      "location": {
+        "start": {
+          "line": 67,
+          "column": 4
+        },
+        "end": {
+          "line": 98,
+          "column": 5
+        }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>Converts a single log entry to an array of plain text</p>"
+          }
+        ],
+        "@param": [
+          {
+            "name": "@param",
+            "body": "entry\n          {Map} The entry to process",
+            "paramName": "entry",
+            "description": " The entry to process",
+            "type": "Map"
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "body": "{Array} Argument list ready message array.",
+            "type": "Array",
+            "description": " Argument list ready message array."
+          }
+        ]
+      },
+      "type": "function",
+      "access": "public"
+    },
+    "formatOffset": {
+      "location": {
+        "start": {
+          "line": 109,
+          "column": 4
+        },
+        "end": {
+          "line": 119,
+          "column": 5
+        }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>Formats a numeric time offset to 6 characters.</p>"
+          }
+        ],
+        "@param": [
+          {
+            "name": "@param",
+            "body": "offset\n          {Integer} Current offset value",
+            "paramName": "offset",
+            "description": " Current offset value",
+            "type": "Integer"
+          },
+          {
+            "name": "@param",
+            "body": "length\n          {Integer?6} Refine the length",
+            "paramName": "length",
+            "description": " Refine the length",
+            "optional": true,
+            "defaultValue": "6",
+            "type": "Integer"
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "body": "{String} Padded string",
+            "type": "String",
+            "description": " Padded string"
+          }
+        ]
+      },
+      "type": "function",
+      "access": "public"
+    }
+  },
+  "defer": {
+    "location": {
+      "start": {
+        "line": 122,
+        "column": 9
+      },
+      "end": {
+        "line": 124,
+        "column": 3
+      }
+    },
+    "jsdoc": {}
+  },
+  "descendants": []
+}
