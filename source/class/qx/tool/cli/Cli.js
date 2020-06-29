@@ -458,6 +458,9 @@ qx.Class.define("qx.tool.cli.Cli", {
       } else {
         qx.tool.compiler.resources.ScssConverter.USE_V6_COMPILER = null;
       }
+      if (config.sass && config.sass.copyOriginal) {
+        qx.tool.compiler.resources.ScssConverter.COPY_ORIGINAL_FILES = true;
+      }
 
       if (!config.serve) {
         config.serve = {};
