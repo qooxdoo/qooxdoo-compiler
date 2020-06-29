@@ -86,10 +86,10 @@
       "qx/tool/cli/templates/class/interface.tmpl.js": {
         "resourcePath": "resourcePath"
       },
-      "qx/tool/cli/templates/class/mixin.tmpl.js": {
+      "qx/tool/cli/templates/class/singleton.tmpl.js": {
         "resourcePath": "resourcePath"
       },
-      "qx/tool/cli/templates/class/singleton.tmpl.js": {
+      "qx/tool/cli/templates/class/mixin.tmpl.js": {
         "resourcePath": "resourcePath"
       },
       "qx/tool/cli/templates/loader/loader-browser.tmpl.js": {
@@ -227,28 +227,16 @@
       "qx/tool/website/src/diagnostics/dependson.html": {
         "resourcePath": "resourcePath"
       },
-      "qx/tool/website/src/diagnostics/dependson.js": {
-        "resourcePath": "resourcePath"
-      },
       "qx/tool/website/src/diagnostics/requiredby.html": {
         "resourcePath": "resourcePath"
       },
       "qx/tool/website/src/diagnostics/requiredby.js": {
         "resourcePath": "resourcePath"
       },
+      "qx/tool/website/src/diagnostics/dependson.js": {
+        "resourcePath": "resourcePath"
+      },
       "qx/tool/website/src/scripts/serve.js": {
-        "resourcePath": "resourcePath"
-      },
-      "qx/tool/cli/templates/skeleton/desktop/.gitignore.tmpl": {
-        "resourcePath": "resourcePath"
-      },
-      "qx/tool/cli/templates/skeleton/desktop/Manifest.tmpl.json": {
-        "resourcePath": "resourcePath"
-      },
-      "qx/tool/cli/templates/skeleton/desktop/compile.tmpl.json": {
-        "resourcePath": "resourcePath"
-      },
-      "qx/tool/cli/templates/skeleton/desktop/readme.tmpl.md": {
         "resourcePath": "resourcePath"
       },
       "qx/tool/cli/templates/skeleton/mobile/.gitignore.tmpl": {
@@ -287,13 +275,16 @@
       "qx/tool/cli/templates/skeleton/server/readme.tmpl.txt": {
         "resourcePath": "resourcePath"
       },
-      "qx/tool/cli/templates/skeleton/desktop/source/boot/index.tmpl.html": {
+      "qx/tool/cli/templates/skeleton/desktop/.gitignore.tmpl": {
         "resourcePath": "resourcePath"
       },
-      "qx/tool/cli/templates/skeleton/desktop/source/boot/nojs.tmpl.html": {
+      "qx/tool/cli/templates/skeleton/desktop/Manifest.tmpl.json": {
         "resourcePath": "resourcePath"
       },
-      "qx/tool/cli/templates/skeleton/desktop/source/translation/readme.txt": {
+      "qx/tool/cli/templates/skeleton/desktop/compile.tmpl.json": {
+        "resourcePath": "resourcePath"
+      },
+      "qx/tool/cli/templates/skeleton/desktop/readme.tmpl.md": {
         "resourcePath": "resourcePath"
       },
       "qx/tool/cli/templates/skeleton/mobile/source/boot/index.tmpl.html": {
@@ -311,31 +302,14 @@
       "qx/tool/cli/templates/skeleton/server/source/translation/readme.txt": {
         "resourcePath": "resourcePath"
       },
-      "qx/tool/cli/templates/skeleton/desktop/source/class/custom/Application.tmpl.js": {
+      "qx/tool/cli/templates/skeleton/desktop/source/boot/index.tmpl.html": {
         "resourcePath": "resourcePath"
       },
-      "qx/tool/cli/templates/skeleton/desktop/source/class/custom/__init__.tmpl.js": {
+      "qx/tool/cli/templates/skeleton/desktop/source/boot/nojs.tmpl.html": {
         "resourcePath": "resourcePath"
       },
-      "qx/tool/cli/templates/skeleton/desktop/source/resource/custom/app.png": {
-        "resourcePath": "resourcePath",
-        "width": 180,
-        "height": 180
-      },
-      "qx/tool/cli/templates/skeleton/desktop/source/resource/custom/favicon.png": {
-        "resourcePath": "resourcePath",
-        "width": 32,
-        "height": 32
-      },
-      "qx/tool/cli/templates/skeleton/desktop/source/resource/custom/js_256x256.png": {
-        "resourcePath": "resourcePath",
-        "width": 256,
-        "height": 256
-      },
-      "qx/tool/cli/templates/skeleton/desktop/source/resource/custom/test.png": {
-        "resourcePath": "resourcePath",
-        "width": 32,
-        "height": 32
+      "qx/tool/cli/templates/skeleton/desktop/source/translation/readme.txt": {
+        "resourcePath": "resourcePath"
       },
       "qx/tool/cli/templates/skeleton/mobile/source/class/custom/Application.tmpl.js": {
         "resourcePath": "resourcePath"
@@ -378,23 +352,31 @@
       "qx/tool/cli/templates/skeleton/server/source/resource/custom/.gitignore.tmpl": {
         "resourcePath": "resourcePath"
       },
-      "qx/tool/cli/templates/skeleton/desktop/source/class/custom/test/DemoTest.tmpl.js": {
+      "qx/tool/cli/templates/skeleton/desktop/source/class/custom/Application.tmpl.js": {
         "resourcePath": "resourcePath"
       },
-      "qx/tool/cli/templates/skeleton/desktop/source/class/custom/theme/Appearance.tmpl.js": {
+      "qx/tool/cli/templates/skeleton/desktop/source/class/custom/__init__.tmpl.js": {
         "resourcePath": "resourcePath"
       },
-      "qx/tool/cli/templates/skeleton/desktop/source/class/custom/theme/Color.tmpl.js": {
-        "resourcePath": "resourcePath"
+      "qx/tool/cli/templates/skeleton/desktop/source/resource/custom/app.png": {
+        "resourcePath": "resourcePath",
+        "width": 180,
+        "height": 180
       },
-      "qx/tool/cli/templates/skeleton/desktop/source/class/custom/theme/Decoration.tmpl.js": {
-        "resourcePath": "resourcePath"
+      "qx/tool/cli/templates/skeleton/desktop/source/resource/custom/favicon.png": {
+        "resourcePath": "resourcePath",
+        "width": 32,
+        "height": 32
       },
-      "qx/tool/cli/templates/skeleton/desktop/source/class/custom/theme/Font.tmpl.js": {
-        "resourcePath": "resourcePath"
+      "qx/tool/cli/templates/skeleton/desktop/source/resource/custom/js_256x256.png": {
+        "resourcePath": "resourcePath",
+        "width": 256,
+        "height": 256
       },
-      "qx/tool/cli/templates/skeleton/desktop/source/class/custom/theme/Theme.tmpl.js": {
-        "resourcePath": "resourcePath"
+      "qx/tool/cli/templates/skeleton/desktop/source/resource/custom/test.png": {
+        "resourcePath": "resourcePath",
+        "width": 32,
+        "height": 32
       },
       "qx/tool/cli/templates/skeleton/mobile/source/class/custom/page/Login.tmpl.js": {
         "resourcePath": "resourcePath"
@@ -436,6 +418,24 @@
         "resourcePath": "resourcePath"
       },
       "qx/tool/cli/templates/skeleton/server/source/class/custom/test/DemoTest.tmpl.js": {
+        "resourcePath": "resourcePath"
+      },
+      "qx/tool/cli/templates/skeleton/desktop/source/class/custom/test/DemoTest.tmpl.js": {
+        "resourcePath": "resourcePath"
+      },
+      "qx/tool/cli/templates/skeleton/desktop/source/class/custom/theme/Appearance.tmpl.js": {
+        "resourcePath": "resourcePath"
+      },
+      "qx/tool/cli/templates/skeleton/desktop/source/class/custom/theme/Color.tmpl.js": {
+        "resourcePath": "resourcePath"
+      },
+      "qx/tool/cli/templates/skeleton/desktop/source/class/custom/theme/Decoration.tmpl.js": {
+        "resourcePath": "resourcePath"
+      },
+      "qx/tool/cli/templates/skeleton/desktop/source/class/custom/theme/Font.tmpl.js": {
+        "resourcePath": "resourcePath"
+      },
+      "qx/tool/cli/templates/skeleton/desktop/source/class/custom/theme/Theme.tmpl.js": {
         "resourcePath": "resourcePath"
       },
       "qx/tool/cli/templates/skeleton/package/source/class/custom/resource/custom/test.png": {
@@ -5796,6 +5796,46 @@
         "width": 20,
         "height": 20
       },
+      "qx/decoration/Classic/datechooser/last-month-invert.png": {
+        "resourcePath": "resourcePath",
+        "width": 16,
+        "height": 16
+      },
+      "qx/decoration/Classic/datechooser/last-month.png": {
+        "resourcePath": "resourcePath",
+        "width": 16,
+        "height": 16
+      },
+      "qx/decoration/Classic/datechooser/last-year-invert.png": {
+        "resourcePath": "resourcePath",
+        "width": 16,
+        "height": 16
+      },
+      "qx/decoration/Classic/datechooser/last-year.png": {
+        "resourcePath": "resourcePath",
+        "width": 16,
+        "height": 16
+      },
+      "qx/decoration/Classic/datechooser/next-month-invert.png": {
+        "resourcePath": "resourcePath",
+        "width": 16,
+        "height": 16
+      },
+      "qx/decoration/Classic/datechooser/next-month.png": {
+        "resourcePath": "resourcePath",
+        "width": 16,
+        "height": 16
+      },
+      "qx/decoration/Classic/datechooser/next-year-invert.png": {
+        "resourcePath": "resourcePath",
+        "width": 16,
+        "height": 16
+      },
+      "qx/decoration/Classic/datechooser/next-year.png": {
+        "resourcePath": "resourcePath",
+        "width": 16,
+        "height": 16
+      },
       "qx/decoration/Classic/form/checkbox-checked-disabled.png": {
         "resourcePath": "resourcePath",
         "width": 14,
@@ -6030,46 +6070,6 @@
         "resourcePath": "resourcePath",
         "width": 16,
         "height": 5
-      },
-      "qx/decoration/Classic/datechooser/last-month-invert.png": {
-        "resourcePath": "resourcePath",
-        "width": 16,
-        "height": 16
-      },
-      "qx/decoration/Classic/datechooser/last-month.png": {
-        "resourcePath": "resourcePath",
-        "width": 16,
-        "height": 16
-      },
-      "qx/decoration/Classic/datechooser/last-year-invert.png": {
-        "resourcePath": "resourcePath",
-        "width": 16,
-        "height": 16
-      },
-      "qx/decoration/Classic/datechooser/last-year.png": {
-        "resourcePath": "resourcePath",
-        "width": 16,
-        "height": 16
-      },
-      "qx/decoration/Classic/datechooser/next-month-invert.png": {
-        "resourcePath": "resourcePath",
-        "width": 16,
-        "height": 16
-      },
-      "qx/decoration/Classic/datechooser/next-month.png": {
-        "resourcePath": "resourcePath",
-        "width": 16,
-        "height": 16
-      },
-      "qx/decoration/Classic/datechooser/next-year-invert.png": {
-        "resourcePath": "resourcePath",
-        "width": 16,
-        "height": 16
-      },
-      "qx/decoration/Classic/datechooser/next-year.png": {
-        "resourcePath": "resourcePath",
-        "width": 16,
-        "height": 16
       },
       "qx/decoration/Classic/shadow/shadow-b.png": {
         "resourcePath": "resourcePath",
@@ -8990,11 +8990,6 @@
         "width": 128,
         "height": 128
       },
-      "qx/icon/Oxygen/128/actions/media-playback-start.png": {
-        "resourcePath": "resourcePath",
-        "width": 128,
-        "height": 128
-      },
       "qx/icon/Oxygen/128/actions/media-playback-stop.png": {
         "resourcePath": "resourcePath",
         "width": 128,
@@ -9011,6 +9006,11 @@
         "height": 128
       },
       "qx/icon/Oxygen/128/actions/media-seek-forward.png": {
+        "resourcePath": "resourcePath",
+        "width": 128,
+        "height": 128
+      },
+      "qx/icon/Oxygen/128/actions/media-playback-start.png": {
         "resourcePath": "resourcePath",
         "width": 128,
         "height": 128
@@ -9280,17 +9280,17 @@
         "width": 128,
         "height": 128
       },
-      "qx/icon/Oxygen/128/apps/preferences-sound.png": {
-        "resourcePath": "resourcePath",
-        "width": 128,
-        "height": 128
-      },
       "qx/icon/Oxygen/128/apps/preferences-theme.png": {
         "resourcePath": "resourcePath",
         "width": 128,
         "height": 128
       },
       "qx/icon/Oxygen/128/apps/preferences-users.png": {
+        "resourcePath": "resourcePath",
+        "width": 128,
+        "height": 128
+      },
+      "qx/icon/Oxygen/128/apps/preferences-sound.png": {
         "resourcePath": "resourcePath",
         "width": 128,
         "height": 128
@@ -9305,17 +9305,17 @@
         "width": 128,
         "height": 128
       },
-      "qx/icon/Oxygen/128/apps/utilities-calculator.png": {
-        "resourcePath": "resourcePath",
-        "width": 128,
-        "height": 128
-      },
       "qx/icon/Oxygen/128/apps/utilities-character-map.png": {
         "resourcePath": "resourcePath",
         "width": 128,
         "height": 128
       },
       "qx/icon/Oxygen/128/apps/utilities-color-chooser.png": {
+        "resourcePath": "resourcePath",
+        "width": 128,
+        "height": 128
+      },
+      "qx/icon/Oxygen/128/apps/utilities-calculator.png": {
         "resourcePath": "resourcePath",
         "width": 128,
         "height": 128
@@ -9415,17 +9415,17 @@
         "width": 128,
         "height": 128
       },
+      "qx/icon/Oxygen/128/categories/science.png": {
+        "resourcePath": "resourcePath",
+        "width": 128,
+        "height": 128
+      },
       "qx/icon/Oxygen/128/categories/system.png": {
         "resourcePath": "resourcePath",
         "width": 128,
         "height": 128
       },
       "qx/icon/Oxygen/128/categories/utilities.png": {
-        "resourcePath": "resourcePath",
-        "width": 128,
-        "height": 128
-      },
-      "qx/icon/Oxygen/128/categories/science.png": {
         "resourcePath": "resourcePath",
         "width": 128,
         "height": 128
@@ -9795,6 +9795,11 @@
         "width": 16,
         "height": 16
       },
+      "qx/icon/Oxygen/16/actions/dialog-cancel.png": {
+        "resourcePath": "resourcePath",
+        "width": 16,
+        "height": 16
+      },
       "qx/icon/Oxygen/16/actions/dialog-close.png": {
         "resourcePath": "resourcePath",
         "width": 16,
@@ -9806,11 +9811,6 @@
         "height": 16
       },
       "qx/icon/Oxygen/16/actions/document-new.png": {
-        "resourcePath": "resourcePath",
-        "width": 16,
-        "height": 16
-      },
-      "qx/icon/Oxygen/16/actions/dialog-cancel.png": {
         "resourcePath": "resourcePath",
         "width": 16,
         "height": 16
@@ -10265,17 +10265,17 @@
         "width": 16,
         "height": 16
       },
-      "qx/icon/Oxygen/16/apps/internet-mail.png": {
-        "resourcePath": "resourcePath",
-        "width": 16,
-        "height": 16
-      },
       "qx/icon/Oxygen/16/apps/internet-messenger.png": {
         "resourcePath": "resourcePath",
         "width": 16,
         "height": 16
       },
       "qx/icon/Oxygen/16/apps/internet-telephony.png": {
+        "resourcePath": "resourcePath",
+        "width": 16,
+        "height": 16
+      },
+      "qx/icon/Oxygen/16/apps/internet-mail.png": {
         "resourcePath": "resourcePath",
         "width": 16,
         "height": 16
@@ -10395,17 +10395,17 @@
         "width": 16,
         "height": 16
       },
-      "qx/icon/Oxygen/16/apps/preferences-network.png": {
-        "resourcePath": "resourcePath",
-        "width": 16,
-        "height": 16
-      },
       "qx/icon/Oxygen/16/apps/preferences-security.png": {
         "resourcePath": "resourcePath",
         "width": 16,
         "height": 16
       },
       "qx/icon/Oxygen/16/apps/preferences-sound.png": {
+        "resourcePath": "resourcePath",
+        "width": 16,
+        "height": 16
+      },
+      "qx/icon/Oxygen/16/apps/preferences-network.png": {
         "resourcePath": "resourcePath",
         "width": 16,
         "height": 16
@@ -10465,12 +10465,12 @@
         "width": 16,
         "height": 16
       },
-      "qx/icon/Oxygen/16/apps/utilities-log-viewer.png": {
+      "qx/icon/Oxygen/16/apps/utilities-network-manager.png": {
         "resourcePath": "resourcePath",
         "width": 16,
         "height": 16
       },
-      "qx/icon/Oxygen/16/apps/utilities-network-manager.png": {
+      "qx/icon/Oxygen/16/apps/utilities-log-viewer.png": {
         "resourcePath": "resourcePath",
         "width": 16,
         "height": 16
@@ -10625,12 +10625,12 @@
         "width": 16,
         "height": 16
       },
-      "qx/icon/Oxygen/16/devices/network-wired.png": {
+      "qx/icon/Oxygen/16/devices/network-wireless.png": {
         "resourcePath": "resourcePath",
         "width": 16,
         "height": 16
       },
-      "qx/icon/Oxygen/16/devices/network-wireless.png": {
+      "qx/icon/Oxygen/16/devices/network-wired.png": {
         "resourcePath": "resourcePath",
         "width": 16,
         "height": 16
@@ -10991,6 +10991,11 @@
         "height": 22
       },
       "qx/icon/Oxygen/22/actions/edit-copy.png": {
+        "resourcePath": "resourcePath",
+        "width": 22,
+        "height": 22
+      },
+      "qx/icon/Oxygen/22/actions/edit-cut.png": {
         "resourcePath": "resourcePath",
         "width": 22,
         "height": 22
@@ -12001,11 +12006,6 @@
         "height": 22
       },
       "qx/icon/Oxygen/22/status/security-medium.png": {
-        "resourcePath": "resourcePath",
-        "width": 22,
-        "height": 22
-      },
-      "qx/icon/Oxygen/22/actions/edit-cut.png": {
         "resourcePath": "resourcePath",
         "width": 22,
         "height": 22
@@ -18165,6 +18165,11 @@
         "width": 22,
         "height": 22
       },
+      "qx/icon/Tango/22/apps/media-photo-album.png": {
+        "resourcePath": "resourcePath",
+        "width": 22,
+        "height": 22
+      },
       "qx/icon/Tango/22/apps/media-video-player.png": {
         "resourcePath": "resourcePath",
         "width": 22,
@@ -20240,12 +20245,12 @@
         "width": 48,
         "height": 48
       },
-      "qx/icon/Tango/48/actions/media-record.png": {
+      "qx/icon/Tango/48/actions/media-seek-backward.png": {
         "resourcePath": "resourcePath",
         "width": 48,
         "height": 48
       },
-      "qx/icon/Tango/48/actions/media-seek-backward.png": {
+      "qx/icon/Tango/48/actions/media-record.png": {
         "resourcePath": "resourcePath",
         "width": 48,
         "height": 48
@@ -20614,11 +20619,6 @@
         "resourcePath": "resourcePath",
         "width": 48,
         "height": 48
-      },
-      "qx/icon/Tango/22/apps/media-photo-album.png": {
-        "resourcePath": "resourcePath",
-        "width": 22,
-        "height": 22
       },
       "qx/icon/Tango/48/categories/accessories.png": {
         "resourcePath": "resourcePath",
@@ -21810,6 +21810,11 @@
         "width": 64,
         "height": 64
       },
+      "qx/icon/Tango/64/devices/battery.png": {
+        "resourcePath": "resourcePath",
+        "width": 64,
+        "height": 64
+      },
       "qx/icon/Tango/64/devices/camera-photo.png": {
         "resourcePath": "resourcePath",
         "width": 64,
@@ -21951,11 +21956,6 @@
         "height": 64
       },
       "qx/icon/Tango/64/emotes/face-surprise.png": {
-        "resourcePath": "resourcePath",
-        "width": 64,
-        "height": 64
-      },
-      "qx/icon/Tango/64/devices/battery.png": {
         "resourcePath": "resourcePath",
         "width": 64,
         "height": 64
