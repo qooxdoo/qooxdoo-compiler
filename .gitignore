@@ -13,12 +13,12 @@ notused/
 node_modules/
 
 # qooxdoo
-.package-cache.json
-html/
-lib/
-qooxdoo/
-compiled/
-qx_packages/
+/.package-cache.json
+/html/
+/lib/
+/qooxdoo/
+/compiled/
+/qx_packages/
 # test apps
 /foo*
 /myapp

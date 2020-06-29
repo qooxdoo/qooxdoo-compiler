@@ -11,7 +11,7 @@ jobs:
   test:
     name: Run tests
     runs-on: ${{ matrix.os }}
-    if: github.ref != 'refs/heads/master'
+#    if: github.ref != 'refs/heads/master'
     strategy:
       matrix:
         os: [ubuntu-latest]
@@ -44,7 +44,7 @@ jobs:
         run:  |
               npm ci
       - name: Build API Viewer
-        run:  qx compile --target=build -v --clean
+        run:  npx qx compile --target=build -v --clean
       - name: Deploy API Viewer
         uses: peaceiris/actions-gh-pages@v3
         with:
