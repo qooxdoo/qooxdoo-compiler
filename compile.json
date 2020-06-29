@@ -29,7 +29,6 @@
         "node"
       ],
       "outputPath": "compiled/node/source",
-      "minify": "off",
       "babelOptions": {
         "targets": "node >= 11"
       }
