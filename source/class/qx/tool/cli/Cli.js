@@ -170,7 +170,7 @@ qx.Class.define("qx.tool.cli.Cli", {
         .argv;
       await this.__notifyLibraries();
     },
-    
+
     /**
      * This is to notify the commands after loading the full args.
      * The commands can overload special arg arguments here.
