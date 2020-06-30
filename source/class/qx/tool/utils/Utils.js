@@ -169,7 +169,7 @@ qx.Class.define("qx.tool.utils.Utils", {
      * Creates the parent directory of a filename, if it does not already exist
      *
      * @param {string} filename the filename to create the parent directory of
-     * 
+     *
      * @return {Promise?} the value
      */
     makeParentDir: function (filename) {
@@ -181,7 +181,7 @@ qx.Class.define("qx.tool.utils.Utils", {
      * Creates a directory, if it does not exist, including all intermediate paths
      *
      * @param {string} filename the directory to create
-     * 
+     *
      * @return {Promise?} the value
      */
     makeDirs: function (filename) {
@@ -231,6 +231,117 @@ qx.Class.define("qx.tool.utils.Utils", {
 
       // Not an object
       return false;
+    },
+
+    /**
+     * Runs the given command and returns an object containing information on the
+     * `exitCode`, the `output`, potential `error`s, and additional `messages`.
+     * @param {String} cwd The current working directory
+     * @param {String} args One or more command line arguments, including the
+     * command itself
+     * @return {Promise<{exitCode: Number, output: String, error: *, messages: *}>}
+     */
+    async runCommand(cwd, ...args) {
+      return new Promise((resolve, reject) => {
+        let cmd = args.shift();
+        let proc = child_process.spawn(cmd, args, {
+          cwd: cwd,
+          shell: true
+        });
+        let result = {
+          exitCode: null,
+          output: "",
+          error: "",
+          messages: null
+        };
+        proc.stdout.on('data', (data) => {
+          data = data.toString().trim();
+          console.log(data);
+          result.output += data;
+        });
+        proc.stderr.on('data', (data) => {
+          data = data.toString().trim();
+          console.error(data);
+          result.error += data;
+        });
+        proc.on('close', code => {
+          result.exitCode = code;
+          resolve(result);
+        });
+        proc.on('error', err => {
+          reject(err);
+        });
+      });
+    },
+
+    /**
+     * Node-8 compatible function to delete a directory recursively
+     * @param {String} dirname The name of the directory to delete
+     * @return {Promise}
+     */
+    async deleteRecursive(dirname) {
+      return new Promise((resolve, reject) => {
+        fs.exists(dirname, function (exists) {
+          if (!exists) {
+            return resolve();
+          }
+          deleteRecursiveImpl(dirname, err => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(err);
+            }
+          });
+          return null;
+        });
+
+        function deleteRecursiveImpl(name, cb) {
+          fs.stat(name, function (err, stat) {
+            if (err) {
+              return cb && cb(err);
+            }
+            if (stat.isDirectory()) {
+              fs.readdir(name, function (err, files) {
+                if (err) {
+                  return cb && cb(err);
+                }
+                async.each(files,
+                  function (file, cb) {
+                    deleteRecursiveImpl(name + "/" + file, cb);
+                  },
+                  function (err) {
+                    if (err) {
+                      return cb && cb(err);
+                    }
+                    fs.rmdir(name, cb);
+                    return null;
+                  }
+                );
+                return null;
+              });
+            } else {
+              fs.unlink(name, cb);
+            }
+            return null;
+          });
+        }
+      });
+    },
+
+    /**
+     * Safely deletes a file asynchronously, without throwing
+     * if the file does not exist
+     * @param filename
+     * @return {Promise<void>}
+     */
+    async safeDelete(filename) {
+      try {
+        await fsPromises.unlink(filename);
+      } catch(ex) {
+        if (ex.code === "ENOENT")
+          return;
+        throw ex;
+      }
     }
   },
 
