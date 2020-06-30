@@ -9,7 +9,7 @@ qx.Class.define("qx.compiler.LibraryApi", {
     async load() {
       const COMPILER_TEST_PATH = path.join("test", "compiler");
       let self = this;
-     
+
 
       function addTest(test) {
         command.addTest(new qx.tool.cli.api.Test(test, async function() {
