@@ -26,7 +26,7 @@ const path = require("upath");
  *
  * - adding a listener for the "afterDeploy" event fired on the command
  * instance  in the `load()` method of the class extending {@link
- * qx.tool.cli.api.CompilerApi} or {@link qx.tool.cli.api.CompilerApi}.
+ * qx.tool.cli.api.LibraryApi} or {@link qx.tool.cli.api.CompilerApi}.
  *
  * - or by implementing a `afterDeploy()` method in the class
  * extending {@link qx.tool.cli.api.CompilerApi}
