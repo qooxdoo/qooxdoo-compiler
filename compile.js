@@ -24,7 +24,6 @@ qx.Class.define("qx.compiler.CompilerApi", {
         // this command is used in the defined tests as compiler
         let maker = command.getMakersForApp("compiler")[0];
         let compilerPath = path.resolve(path.join(maker.getOutputDir(), "compiler"));
-        console.log(compilerPath);
         let cmd ="#!/usr/bin/env node\n" + `require("${compilerPath}");\n`;
         fs.writeFileSync("test/qx", cmd, {mode: 0o777});
         let files = fs.readdirSync(COMPILER_TEST_PATH);
