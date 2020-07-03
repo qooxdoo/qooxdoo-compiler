@@ -269,6 +269,10 @@ qx.Class.define("qx.tool.compiler.app.Translation", {
                 }
               });
 
+              if(entry) {
+                saveEntry();
+              }
+
               resolve();
             });
         });
