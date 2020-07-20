@@ -7195,12 +7195,12 @@
         "width": 40,
         "height": 51
       },
-      "qx/decoration/Modern/groupbox/groupbox-l.png": {
+      "qx/decoration/Modern/groupbox/groupbox-r.png": {
         "resourcePath": "resourcePath",
         "width": 4,
         "height": 51
       },
-      "qx/decoration/Modern/groupbox/groupbox-r.png": {
+      "qx/decoration/Modern/groupbox/groupbox-l.png": {
         "resourcePath": "resourcePath",
         "width": 4,
         "height": 51
@@ -7270,14 +7270,14 @@
         "width": 6,
         "height": 6
       },
-      "qx/decoration/Modern/pane/pane-c.png": {
-        "resourcePath": "resourcePath",
-        "width": 40,
-        "height": 238
-      },
       "qx/decoration/Modern/pane/pane-l.png": {
         "resourcePath": "resourcePath",
         "width": 6,
+        "height": 238
+      },
+      "qx/decoration/Modern/pane/pane-c.png": {
+        "resourcePath": "resourcePath",
+        "width": 40,
         "height": 238
       },
       "qx/decoration/Modern/pane/pane-r.png": {
@@ -7375,11 +7375,6 @@
         "width": 15,
         "height": 15
       },
-      "qx/decoration/Modern/shadow/shadow-c.png": {
-        "resourcePath": "resourcePath",
-        "width": 40,
-        "height": 382
-      },
       "qx/decoration/Modern/shadow/shadow-l.png": {
         "resourcePath": "resourcePath",
         "width": 15,
@@ -7409,6 +7404,11 @@
         "resourcePath": "resourcePath",
         "width": 40,
         "height": 136
+      },
+      "qx/decoration/Modern/shadow/shadow-c.png": {
+        "resourcePath": "resourcePath",
+        "width": 40,
+        "height": 382
       },
       "qx/decoration/Modern/shadow/shadow-small-l.png": {
         "resourcePath": "resourcePath",
@@ -7525,15 +7525,15 @@
         "width": 5,
         "height": 14
       },
-      "qx/decoration/Modern/tabview/tab-button-bottom-active-r.png": {
-        "resourcePath": "resourcePath",
-        "width": 5,
-        "height": 14
-      },
       "qx/decoration/Modern/tabview/tab-button-bottom-active-t.png": {
         "resourcePath": "resourcePath",
         "width": 5,
         "height": 5
+      },
+      "qx/decoration/Modern/tabview/tab-button-bottom-active-r.png": {
+        "resourcePath": "resourcePath",
+        "width": 5,
+        "height": 14
       },
       "qx/decoration/Modern/tabview/tab-button-bottom-active-tl.png": {
         "resourcePath": "resourcePath",
@@ -7655,11 +7655,6 @@
         "width": 3,
         "height": 3
       },
-      "qx/decoration/Modern/tabview/tab-button-left-inactive-bl.png": {
-        "resourcePath": "resourcePath",
-        "width": 3,
-        "height": 3
-      },
       "qx/decoration/Modern/tabview/tab-button-left-inactive-br.png": {
         "resourcePath": "resourcePath",
         "width": 3,
@@ -7669,6 +7664,11 @@
         "resourcePath": "resourcePath",
         "width": 40,
         "height": 39
+      },
+      "qx/decoration/Modern/tabview/tab-button-left-inactive-bl.png": {
+        "resourcePath": "resourcePath",
+        "width": 3,
+        "height": 3
       },
       "qx/decoration/Modern/tabview/tab-button-left-inactive-l.png": {
         "resourcePath": "resourcePath",
@@ -7805,12 +7805,12 @@
         "width": 5,
         "height": 5
       },
-      "qx/decoration/Modern/tabview/tab-button-top-active-bl.png": {
+      "qx/decoration/Modern/tabview/tab-button-top-active-br.png": {
         "resourcePath": "resourcePath",
         "width": 5,
         "height": 5
       },
-      "qx/decoration/Modern/tabview/tab-button-top-active-br.png": {
+      "qx/decoration/Modern/tabview/tab-button-top-active-bl.png": {
         "resourcePath": "resourcePath",
         "width": 5,
         "height": 5
@@ -7870,12 +7870,12 @@
         "width": 40,
         "height": 15
       },
-      "qx/decoration/Modern/tabview/tab-button-top-inactive-l.png": {
+      "qx/decoration/Modern/tabview/tab-button-top-inactive-r.png": {
         "resourcePath": "resourcePath",
         "width": 3,
         "height": 15
       },
-      "qx/decoration/Modern/tabview/tab-button-top-inactive-r.png": {
+      "qx/decoration/Modern/tabview/tab-button-top-inactive-l.png": {
         "resourcePath": "resourcePath",
         "width": 3,
         "height": 15
@@ -7950,11 +7950,6 @@
         "width": 185,
         "height": 250
       },
-      "qx/decoration/Modern/toolbar/toolbar-gradient-blue.png": {
-        "resourcePath": "resourcePath",
-        "width": 40,
-        "height": 130
-      },
       "qx/decoration/Modern/toolbar/toolbar-gradient.png": {
         "resourcePath": "resourcePath",
         "width": 40,
@@ -7969,6 +7964,11 @@
         "resourcePath": "resourcePath",
         "width": 7,
         "height": 1
+      },
+      "qx/decoration/Modern/toolbar/toolbar-gradient-blue.png": {
+        "resourcePath": "resourcePath",
+        "width": 40,
+        "height": 130
       },
       "qx/decoration/Modern/tree/closed-selected.png": {
         "resourcePath": "resourcePath",
@@ -8218,11 +8218,6 @@
         "width": 7,
         "height": 4
       },
-      "qx/decoration/Simple/arrows/forward.gif": {
-        "resourcePath": "resourcePath",
-        "width": 8,
-        "height": 7
-      },
       "qx/decoration/Simple/arrows/left-invert.gif": {
         "resourcePath": "resourcePath",
         "width": 4,
@@ -8233,17 +8228,17 @@
         "width": 4,
         "height": 7
       },
+      "qx/decoration/Simple/arrows/forward.gif": {
+        "resourcePath": "resourcePath",
+        "width": 8,
+        "height": 7
+      },
       "qx/decoration/Simple/arrows/rewind.gif": {
         "resourcePath": "resourcePath",
         "width": 8,
         "height": 7
       },
       "qx/decoration/Simple/arrows/right-invert.gif": {
-        "resourcePath": "resourcePath",
-        "width": 4,
-        "height": 7
-      },
-      "qx/decoration/Simple/arrows/right.gif": {
         "resourcePath": "resourcePath",
         "width": 4,
         "height": 7
@@ -8257,6 +8252,11 @@
         "resourcePath": "resourcePath",
         "width": 5,
         "height": 3
+      },
+      "qx/decoration/Simple/arrows/right.gif": {
+        "resourcePath": "resourcePath",
+        "width": 4,
+        "height": 7
       },
       "qx/decoration/Simple/arrows/up.gif": {
         "resourcePath": "resourcePath",
@@ -8293,15 +8293,15 @@
         "width": 35,
         "height": 11
       },
-      "qx/decoration/Simple/colorselector/huesaturation-field.jpg": {
-        "resourcePath": "resourcePath",
-        "width": 256,
-        "height": 256
-      },
       "qx/decoration/Simple/colorselector/huesaturation-handle.gif": {
         "resourcePath": "resourcePath",
         "width": 11,
         "height": 11
+      },
+      "qx/decoration/Simple/colorselector/huesaturation-field.jpg": {
+        "resourcePath": "resourcePath",
+        "width": 256,
+        "height": 256
       },
       "qx/decoration/Simple/cursors/alias.gif": {
         "resourcePath": "resourcePath",
@@ -8403,12 +8403,12 @@
         "width": 19,
         "height": 16
       },
-      "qx/decoration/Simple/treevirtual/cross.gif": {
+      "qx/decoration/Simple/treevirtual/cross_minus.gif": {
         "resourcePath": "resourcePath",
         "width": 19,
         "height": 16
       },
-      "qx/decoration/Simple/treevirtual/cross_minus.gif": {
+      "qx/decoration/Simple/treevirtual/cross.gif": {
         "resourcePath": "resourcePath",
         "width": 19,
         "height": 16
@@ -8428,12 +8428,12 @@
         "width": 19,
         "height": 16
       },
-      "qx/decoration/Simple/treevirtual/end_plus.gif": {
+      "qx/decoration/Simple/treevirtual/line.gif": {
         "resourcePath": "resourcePath",
         "width": 19,
         "height": 16
       },
-      "qx/decoration/Simple/treevirtual/line.gif": {
+      "qx/decoration/Simple/treevirtual/end_plus.gif": {
         "resourcePath": "resourcePath",
         "width": 19,
         "height": 16
@@ -8557,9 +8557,6 @@
       "qx/mobile/scss/ui/_masterdetail.scss": {
         "resourcePath": "resourcePath"
       },
-      "qx/mobile/scss/ui/_menu.scss": {
-        "resourcePath": "resourcePath"
-      },
       "qx/mobile/scss/ui/_navigation.scss": {
         "resourcePath": "resourcePath"
       },
@@ -8576,6 +8573,9 @@
         "resourcePath": "resourcePath"
       },
       "qx/mobile/scss/ui/_selectbox.scss": {
+        "resourcePath": "resourcePath"
+      },
+      "qx/mobile/scss/ui/_menu.scss": {
         "resourcePath": "resourcePath"
       },
       "qx/mobile/scss/ui/_slider.scss": {
@@ -15550,6 +15550,11 @@
         "width": 128,
         "height": 128
       },
+      "qx/icon/Tango/128/actions/format-justify-fill.png": {
+        "resourcePath": "resourcePath",
+        "width": 128,
+        "height": 128
+      },
       "qx/icon/Tango/128/actions/format-justify-left.png": {
         "resourcePath": "resourcePath",
         "width": 128,
@@ -15866,11 +15871,6 @@
         "height": 128
       },
       "qx/icon/Tango/128/actions/zoom-out.png": {
-        "resourcePath": "resourcePath",
-        "width": 128,
-        "height": 128
-      },
-      "qx/icon/Tango/128/actions/format-justify-fill.png": {
         "resourcePath": "resourcePath",
         "width": 128,
         "height": 128
@@ -16355,6 +16355,11 @@
         "width": 128,
         "height": 128
       },
+      "qx/icon/Tango/128/mimetypes/media-image.png": {
+        "resourcePath": "resourcePath",
+        "width": 128,
+        "height": 128
+      },
       "qx/icon/Tango/128/mimetypes/media-video.png": {
         "resourcePath": "resourcePath",
         "width": 128,
@@ -16396,11 +16401,6 @@
         "height": 128
       },
       "qx/icon/Tango/128/mimetypes/text-plain.png": {
-        "resourcePath": "resourcePath",
-        "width": 128,
-        "height": 128
-      },
-      "qx/icon/Tango/128/mimetypes/media-image.png": {
         "resourcePath": "resourcePath",
         "width": 128,
         "height": 128
