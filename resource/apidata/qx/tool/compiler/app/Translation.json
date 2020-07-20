@@ -13,7 +13,7 @@
         "column": 0
       },
       "end": {
-        "line": 441,
+        "line": 445,
         "column": 3
       }
     },
@@ -292,7 +292,7 @@
           "column": 4
         },
         "end": {
-          "line": 276,
+          "line": 280,
           "column": 5
         }
       },
@@ -310,11 +310,11 @@
     "write": {
       "location": {
         "start": {
-          "line": 281,
+          "line": 285,
           "column": 4
         },
         "end": {
-          "line": 283,
+          "line": 287,
           "column": 5
         }
       },
@@ -332,11 +332,11 @@
     "writeTo": {
       "location": {
         "start": {
-          "line": 289,
+          "line": 293,
           "column": 4
         },
         "end": {
-          "line": 369,
+          "line": 373,
           "column": 5
         }
       },
@@ -360,11 +360,11 @@
     "hasEntryValue": {
       "location": {
         "start": {
-          "line": 377,
+          "line": 381,
           "column": 4
         },
         "end": {
-          "line": 386,
+          "line": 390,
           "column": 5
         }
       },
@@ -399,11 +399,11 @@
     "getEntry": {
       "location": {
         "start": {
-          "line": 393,
+          "line": 397,
           "column": 4
         },
         "end": {
-          "line": 395,
+          "line": 399,
           "column": 5
         }
       },
@@ -437,11 +437,11 @@
     "deleteEntry": {
       "location": {
         "start": {
-          "line": 402,
+          "line": 406,
           "column": 4
         },
         "end": {
-          "line": 406,
+          "line": 410,
           "column": 5
         }
       },
@@ -475,11 +475,11 @@
     "getOrCreateEntry": {
       "location": {
         "start": {
-          "line": 413,
+          "line": 417,
           "column": 4
         },
         "end": {
-          "line": 422,
+          "line": 426,
           "column": 5
         }
       },
@@ -513,11 +513,11 @@
     "getEntries": {
       "location": {
         "start": {
-          "line": 428,
+          "line": 432,
           "column": 4
         },
         "end": {
-          "line": 430,
+          "line": 434,
           "column": 5
         }
       },
@@ -543,11 +543,11 @@
     "getHeaders": {
       "location": {
         "start": {
-          "line": 436,
+          "line": 440,
           "column": 4
         },
         "end": {
-          "line": 438,
+          "line": 442,
           "column": 5
         }
       },

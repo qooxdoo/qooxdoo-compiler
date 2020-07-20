@@ -65,4 +65,4 @@
   qx.event.IEventDispatcher.$$dbClassInfo = $$dbClassInfo;
 })();
 
-//# sourceMappingURL=IEventDispatcher.js.map?dt=1593434369160
+//# sourceMappingURL=IEventDispatcher.js.map?dt=1595275889490
