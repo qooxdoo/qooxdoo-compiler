@@ -7,7 +7,7 @@ qx.Class.define("qx.compiler.CompilerApi", {
 
   members: {
     async load() {
-      this.addListener("changeCommand", () => {
+      this.addListener("changeCommand", function()  {
 
         const COMPILER_TEST_PATH = path.join("test", "compiler");
         
@@ -20,7 +20,7 @@ qx.Class.define("qx.compiler.CompilerApi", {
 
         let command = this.getCommand();
         if (command instanceof qx.tool.cli.commands.Test) {
-          command.addListener("writtenApplication", async (evt) => {
+          command.addListener("writtenApplication", async function(evt) {
             let app = evt.getData();
             if (app.getName() !== "compiler") {
               return;
@@ -34,7 +34,7 @@ require("${path.resolve(path.join(maker.getOutputDir(), "compiler"))}");
 `;
             await testUtils.safeDelete("test/qx");
             fs.writeFileSync("test/qx", cmd, { mode: 0o777 });
-          });
+          }, this);
           let files = fs.readdirSync(COMPILER_TEST_PATH);
           // node 8 compatible...
           files.forEach(file => {
@@ -43,7 +43,7 @@ require("${path.resolve(path.join(maker.getOutputDir(), "compiler"))}");
             }
           });
         }
-      });
+      }, this);
       return this.base(arguments);
     }
   }
