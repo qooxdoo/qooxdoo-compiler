@@ -19,9 +19,6 @@
  *      * John Spackman (john.spackman@zenesis.com, @johnspackman)
  *
  * *********************************************************************** */
-const path = require("path");
-const fs = require("fs");      
-
 /**
  * Provides an API for an individual library
  */

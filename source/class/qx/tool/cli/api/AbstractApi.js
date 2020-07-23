@@ -19,6 +19,8 @@
  *      * John Spackman (john.spackman@zenesis.com, @johnspackman)
  *
  * *********************************************************************** */
+const path = require("path");
+const fs = require("fs");      
 
 /**
  * Base class for the compiler API classes
