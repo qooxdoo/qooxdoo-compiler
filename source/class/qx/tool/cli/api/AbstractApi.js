@@ -38,8 +38,6 @@ qx.Class.define("qx.tool.cli.api.AbstractApi", {
   members: {
     /**
      * Loads the configuration data
-     * 
-     * @overridden
      */
     async load() {
       // Nothing
