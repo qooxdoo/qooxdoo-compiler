@@ -198,4 +198,4 @@
   qx.util.Wheel.$$dbClassInfo = $$dbClassInfo;
 })();
 
-//# sourceMappingURL=Wheel.js.map?dt=1595276586325
+//# sourceMappingURL=Wheel.js.map?dt=1595486314892
