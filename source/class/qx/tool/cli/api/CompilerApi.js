@@ -60,6 +60,8 @@ qx.Class.define("qx.tool.cli.api.CompilerApi", {
     
     /**
      * Loads the configuration data
+     * 
+     * @overridden
      */
     async load() {
       let compileJsonPath = path.join(this.getRootDir(), this.getConfigFilename());
@@ -68,7 +70,7 @@ qx.Class.define("qx.tool.cli.api.CompilerApi", {
         config = await qx.tool.utils.Json.loadJsonAsync(compileJsonPath);
       }
       this.setConfiguration(config);
-      return config;
+      return this.base(arguments);
     },
     
     /**

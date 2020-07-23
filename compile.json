@@ -67,14 +67,14 @@
       "theme": "qxl.apiviewer.Theme",
       "name": "apiviewer",
       "title": "Qooxdoo compiler API",
-			"bootPath": "source/boot",
+      "bootPath": "source/boot",
       "default": true,
       "environment": {
         "qx.icontheme": "Tango",
-        "buildApiForApp": "compiler",
-        "excludeFromAPIViewer": [
+        "qxl.apiviewer.applicationName": "compiler",
+        "qxl.apiviewer.exclude": [
         ],
-        "includeToAPIViewer": [
+        "qxl.apiviewer.include": [
         ]
       },
       "include": [
@@ -115,7 +115,7 @@
     {
       "class": "qxl.testnode.Application",
       "name": "testnode",
-      "title": "Qooxdoo Testnode",
+      "title": "Node Test",
       "type": "node",
       "environment": {
         "testnode.testNameSpace": "qx.test"
