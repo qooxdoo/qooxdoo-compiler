@@ -12,7 +12,7 @@ if (!qx.$$appRoot) {
   if (!bootScriptElement) {
     var scripts = document.getElementsByTagName('script');
     for (var i = 0; i < scripts.length; i++) {
-      if (scripts[i].src && scripts[i].src.match(/boot\.js/)) {
+      if (scripts[i].src && scripts[i].src.match(/index\.js/)) {
         bootScriptElement = scripts[i];
         break;
       }
