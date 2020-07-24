@@ -191,9 +191,9 @@ qx.Class.define("qx.tool.cli.commands.Deploy", {
             argv: argv,
             application: app
           };
-          this.fireDataEvent("afterDeploy", data);
+          await this.fireDataEventAsync("afterDeploy", data);
           if (this.getCompilerApi() && typeof this.getCompilerApi().afterDeploy == "function") {
-            this.getCompilerApi().afterDeploy(data);
+            await this.getCompilerApi().afterDeploy(data);
           }
         });
       });

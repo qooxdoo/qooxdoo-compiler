@@ -59,11 +59,11 @@ qx.Class.define("qx.tool.cli.api.CompilerApi", {
     __libraryApis: null,
     
     /**
-     * called before testing starts
-     * 
-     * @param cmd {qx.tool.cli.commands.Test} the current used command instance
+     * Register compiler tests
+     * @param  cmd: {qx.tool.cli.commands.Command} current command
+     * @return {Promise<void>}
      */
-    beforeTests: function(cmd) {
+    async beforeTests (cmd) {
       // Nothing
    },
 
@@ -75,8 +75,9 @@ qx.Class.define("qx.tool.cli.api.CompilerApi", {
      *           deployDir  : {String}  The output dir for the deployment
      *           argv       : {Object}  Arguments
      *           application: {Object}  application to build
+     * @return {Promise<void>}
      */
-    afterDeploy: function(data) {
+    async afterDeploy (data) {
        // Nothing
     },
     

@@ -177,7 +177,7 @@ qx.Class.define("qx.tool.cli.commands.Test", {
         qx.tool.compiler.Console.info(`Running unit tests`);
         await this.fireDataEventAsync("runTests", this);
         if (this.getCompilerApi() && typeof this.getCompilerApi().beforeTests == "function") {
-          this.getCompilerApi().beforeTests(this);
+          await this.getCompilerApi().beforeTests(this);
         }
         for (let test of this.__tests) {
           qx.tool.compiler.Console.info(`Running ${test.getName()}`);
