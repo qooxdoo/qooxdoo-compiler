@@ -171,22 +171,16 @@ qx.Class.define("qx.tool.cli.Cli", {
       await this.__notifyLibraries();
     },
 
-    /**
+   /**
      * This is to notify the commands after loading the full args.
      * The commands can overload special arg arguments here.
      * e.g. Deploy will will overload the target.
      */
     __notifyCommand: function() {
-      this._compilerApi.getCommand().processArgs(this.argv);
-    },
-
-    /**
-     * This is to notify the commands after loading the full args.
-     * The commands can overload special arg arguments here.
-     * e.g. Deploy will will overload the target.
-     */
-    __notifyCommand: function() {
-      this._compilerApi.getCommand().processArgs(this.argv);
+      let cmd = this._compilerApi.getCommand();
+      if (cmd) {
+         this._compilerApi.getCommand().processArgs(this.argv);
+      }
     },
 
     /**
