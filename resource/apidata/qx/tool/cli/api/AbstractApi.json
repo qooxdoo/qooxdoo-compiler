@@ -9,20 +9,16 @@
   "clazz": {
     "location": {
       "start": {
-        "line": 26,
+        "line": 28,
         "column": 0
       },
       "end": {
-        "line": 46,
+        "line": 86,
         "column": 3
       }
     },
     "jsdoc": {
       "@description": [
-        {
-          "name": "@description",
-          "body": "<pre><code>*****************************************************************\nqooxdoo-compiler - node.js based replacement for the Qooxdoo python\ntoolchain\nhttps://github.com/qooxdoo/qooxdoo-compiler\nCopyright:\n  2011-2019 Zenesis Limited, http://www.zenesis.com\nLicense:\n  MIT: https://opensource.org/licenses/MIT\n  This software is provided under the same licensing terms as Qooxdoo,\n  please see the LICENSE file in the Qooxdoo project's top-level directory\n  for details.\nAuthors:\n</code></pre>\n<ul>\n<li>John Spackman (john.spackman<code>zenesis.com, </code>johnspackman)\n<strong><em><em></em></strong><strong><em></em></em></strong><strong><em><em></em></strong><strong><em></em></em></strong><strong><em><em></em></strong><strong><em></em></em></strong><strong><em><em></em></strong><strong><em></em></em></strong><strong><em><em></em></strong></em>*</li>\n</ul>"
-        },
         {
           "name": "@description",
           "body": "<p>Base class for the compiler API classes</p>"
@@ -35,11 +31,11 @@
     "rootDir": {
       "location": {
         "start": {
-          "line": 30,
+          "line": 32,
           "column": 4
         },
         "end": {
-          "line": 33,
+          "line": 35,
           "column": 5
         }
       },
@@ -83,7 +79,7 @@
     }
   },
   "members": {
-    "initialize": {
+    "load": {
       "location": {
         "start": {
           "line": 42,
@@ -98,7 +94,91 @@
         "@description": [
           {
             "name": "@description",
+            "body": "<p>Loads the configuration data</p>"
+          }
+        ]
+      },
+      "type": "function",
+      "access": "public"
+    },
+    "initialize": {
+      "location": {
+        "start": {
+          "line": 51,
+          "column": 4
+        },
+        "end": {
+          "line": 53,
+          "column": 5
+        }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
             "body": "<p>Called by the compiler API during initialisation - this is an ideal\n place to install additional commands, because a command has not yet\n been selected</p>"
+          }
+        ]
+      },
+      "type": "function",
+      "access": "public"
+    },
+    "require": {
+      "location": {
+        "start": {
+          "line": 62,
+          "column": 4
+        },
+        "end": {
+          "line": 68,
+          "column": 5
+        }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>helper to load an npm module. Check if it can be loaded before\n If not install the module with 'npm install --no-save --no-package-lock' to the current library</p>"
+          }
+        ],
+        "@param": [
+          {
+            "name": "@param",
+            "body": "module {String} module to check",
+            "paramName": "module",
+            "description": " module to check",
+            "type": "String"
+          }
+        ]
+      },
+      "type": "function",
+      "access": "public"
+    },
+    "loadNpmModule": {
+      "location": {
+        "start": {
+          "line": 75,
+          "column": 4
+        },
+        "end": {
+          "line": 82,
+          "column": 5
+        }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>install an npm module with 'npm install --no-save --no-package-lock' to the current library</p>"
+          }
+        ],
+        "@param": [
+          {
+            "name": "@param",
+            "body": "module {String} module to load",
+            "paramName": "module",
+            "description": " module to load",
+            "type": "String"
           }
         ]
       },

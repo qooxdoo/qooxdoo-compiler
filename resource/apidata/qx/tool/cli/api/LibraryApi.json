@@ -9,16 +9,20 @@
   "clazz": {
     "location": {
       "start": {
-        "line": 28,
+        "line": 25,
         "column": 0
       },
       "end": {
-        "line": 85,
+        "line": 55,
         "column": 3
       }
     },
     "jsdoc": {
       "@description": [
+        {
+          "name": "@description",
+          "body": "<pre><code>*****************************************************************\nqooxdoo-compiler - node.js based replacement for the Qooxdoo python\ntoolchain\nhttps://github.com/qooxdoo/qooxdoo-compiler\nCopyright:\n  2011-2019 Zenesis Limited, http://www.zenesis.com\nLicense:\n  MIT: https://opensource.org/licenses/MIT\n  This software is provided under the same licensing terms as Qooxdoo,\n  please see the LICENSE file in the Qooxdoo project's top-level directory\n  for details.\nAuthors:\n</code></pre>\n<ul>\n<li>John Spackman (john.spackman<code>zenesis.com, </code>johnspackman)\n<strong><em><em></em></strong><strong><em></em></em></strong><strong><em><em></em></strong><strong><em></em></em></strong><strong><em><em></em></strong><strong><em></em></em></strong><strong><em><em></em></strong><strong><em></em></em></strong><strong><em><em></em></strong></em>*</li>\n</ul>"
+        },
         {
           "name": "@description",
           "body": "<p>Provides an API for an individual library</p>"
@@ -31,11 +35,11 @@
     "compilerApi": {
       "location": {
         "start": {
-          "line": 33,
+          "line": 30,
           "column": 4
         },
         "end": {
-          "line": 36,
+          "line": 33,
           "column": 5
         }
       },
@@ -58,11 +62,11 @@
     "load": {
       "location": {
         "start": {
-          "line": 43,
+          "line": 42,
           "column": 4
         },
         "end": {
-          "line": 45,
+          "line": 44,
           "column": 5
         }
       },
@@ -72,19 +76,29 @@
             "name": "@description",
             "body": "<p>Called to load any library-specific configuration and update the compilerConfig</p>"
           }
+        ],
+        "@overridden": [
+          {
+            "name": "@overridden",
+            "body": ""
+          }
         ]
       },
       "type": "function",
-      "access": "public"
+      "access": "public",
+      "overriddenFrom": "qx.tool.cli.api.AbstractApi",
+      "appearsIn": [
+        "qx.tool.cli.api.AbstractApi"
+      ]
     },
     "afterLibrariesLoaded": {
       "location": {
         "start": {
-          "line": 50,
+          "line": 49,
           "column": 4
         },
         "end": {
-          "line": 52,
+          "line": 51,
           "column": 5
         }
       },
@@ -93,68 +107,6 @@
           {
             "name": "@description",
             "body": "<p>Called after all libraries have been loaded and added to the compilation data</p>"
-          }
-        ]
-      },
-      "type": "function",
-      "access": "public"
-    },
-    "require": {
-      "location": {
-        "start": {
-          "line": 61,
-          "column": 4
-        },
-        "end": {
-          "line": 67,
-          "column": 5
-        }
-      },
-      "jsdoc": {
-        "@description": [
-          {
-            "name": "@description",
-            "body": "<p>helper to load an npm module. Check if it can be loaded before\n If not install the module with 'npm install --no-save --no-package-lock' to the current library</p>"
-          }
-        ],
-        "@param": [
-          {
-            "name": "@param",
-            "body": "module {String} module to check",
-            "paramName": "module",
-            "description": " module to check",
-            "type": "String"
-          }
-        ]
-      },
-      "type": "function",
-      "access": "public"
-    },
-    "loadNpmModule": {
-      "location": {
-        "start": {
-          "line": 74,
-          "column": 4
-        },
-        "end": {
-          "line": 81,
-          "column": 5
-        }
-      },
-      "jsdoc": {
-        "@description": [
-          {
-            "name": "@description",
-            "body": "<p>install an npm module with 'npm install --no-save --no-package-lock' to the current library</p>"
-          }
-        ],
-        "@param": [
-          {
-            "name": "@param",
-            "body": "module {String} module to load",
-            "paramName": "module",
-            "description": " module to load",
-            "type": "String"
           }
         ]
       },

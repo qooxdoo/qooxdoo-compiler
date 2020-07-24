@@ -1195,4 +1195,4 @@
   qx.Class.$$dbClassInfo = $$dbClassInfo;
 })();
 
-//# sourceMappingURL=Class.js.map?dt=1595576628492
+//# sourceMappingURL=Class.js.map?dt=1595592054498

@@ -69,4 +69,4 @@
   qx.ui.table.ICellEditorFactory.$$dbClassInfo = $$dbClassInfo;
 })();
 
-//# sourceMappingURL=ICellEditorFactory.js.map?dt=1595576668164
+//# sourceMappingURL=ICellEditorFactory.js.map?dt=1595592094076

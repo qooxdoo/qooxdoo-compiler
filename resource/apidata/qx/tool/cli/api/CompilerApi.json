@@ -13,7 +13,7 @@
         "column": 0
       },
       "end": {
-        "line": 102,
+        "line": 127,
         "column": 3
       }
     },
@@ -130,14 +130,92 @@
       "type": "variable",
       "access": "private"
     },
-    "load": {
+    "beforeTests": {
       "location": {
         "start": {
-          "line": 64,
+          "line": 66,
           "column": 4
         },
         "end": {
-          "line": 72,
+          "line": 68,
+          "column": 4
+        }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>Register compiler tests</p>"
+          }
+        ],
+        "@param": [
+          {
+            "name": "@param",
+            "body": "cmd: {qx.tool.cli.commands.Command} current command",
+            "paramName": "cmd:",
+            "description": " current command",
+            "type": "qx.tool.cli.commands.Command"
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "body": "{Promise<void>}",
+            "type": "Promise<void>",
+            "description": ""
+          }
+        ]
+      },
+      "type": "function",
+      "access": "public"
+    },
+    "afterDeploy": {
+      "location": {
+        "start": {
+          "line": 80,
+          "column": 4
+        },
+        "end": {
+          "line": 82,
+          "column": 5
+        }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>called after deployment happens</p>"
+          }
+        ],
+        "@param": [
+          {
+            "name": "@param",
+            "body": "data {Object}  contains deployment infos with the following properties:\n           targetDir  : {String}  The target dir of the build\n           deployDir  : {String}  The output dir for the deployment\n           argv       : {Object}  Arguments\n           application: {Object}  application to build",
+            "paramName": "data",
+            "description": "  contains deployment infos with the following properties:\n           targetDir  : {String}  The target dir of the build\n           deployDir  : {String}  The output dir for the deployment\n           argv       : {Object}  Arguments\n           application: {Object}  application to build",
+            "type": "Object"
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "body": "{Promise<void>}",
+            "type": "Promise<void>",
+            "description": ""
+          }
+        ]
+      },
+      "type": "function",
+      "access": "public"
+    },
+    "load": {
+      "location": {
+        "start": {
+          "line": 89,
+          "column": 4
+        },
+        "end": {
+          "line": 97,
           "column": 5
         }
       },
@@ -147,19 +225,29 @@
             "name": "@description",
             "body": "<p>Loads the configuration data</p>"
           }
+        ],
+        "@overridden": [
+          {
+            "name": "@overridden",
+            "body": ""
+          }
         ]
       },
       "type": "function",
-      "access": "public"
+      "access": "public",
+      "overriddenFrom": "qx.tool.cli.api.AbstractApi",
+      "appearsIn": [
+        "qx.tool.cli.api.AbstractApi"
+      ]
     },
     "afterLibrariesLoaded": {
       "location": {
         "start": {
-          "line": 77,
+          "line": 102,
           "column": 4
         },
         "end": {
-          "line": 81,
+          "line": 106,
           "column": 5
         }
       },
@@ -177,11 +265,11 @@
     "addLibraryApi": {
       "location": {
         "start": {
-          "line": 88,
+          "line": 113,
           "column": 4
         },
         "end": {
-          "line": 91,
+          "line": 116,
           "column": 5
         }
       },
@@ -208,11 +296,11 @@
     "getLibraryApis": {
       "location": {
         "start": {
-          "line": 98,
+          "line": 123,
           "column": 4
         },
         "end": {
-          "line": 100,
+          "line": 125,
           "column": 5
         }
       },
