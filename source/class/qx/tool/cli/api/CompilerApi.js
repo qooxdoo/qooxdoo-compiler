@@ -59,6 +59,28 @@ qx.Class.define("qx.tool.cli.api.CompilerApi", {
     __libraryApis: null,
     
     /**
+     * called before testing starts
+     * 
+     * @param cmd {qx.tool.cli.commands.Test} the current used command instance
+     */
+    beforeTests: function(cmd) {
+      // Nothing
+   },
+
+    /**
+     * called after deployment happens
+     * 
+     * @param data {Object}  contains deployment infos with the following properties:
+     *           targetDir  : {String}  The target dir of the build
+     *           deployDir  : {String}  The output dir for the deployment
+     *           argv       : {Object}  Arguments
+     *           application: {Object}  application to build
+     */
+    afterDeploy: function(data) {
+       // Nothing
+    },
+    
+    /**
      * Loads the configuration data
      * 
      * @overridden
