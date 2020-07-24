@@ -19,6 +19,7 @@ const path = require("upath");
 const fs = require("fs");
 const async = require("async");
 const {promisify} = require("util");
+const child_process = require("child_process");
 
 /**
  * Utility methods
@@ -169,7 +170,7 @@ qx.Class.define("qx.tool.utils.Utils", {
      * Creates the parent directory of a filename, if it does not already exist
      *
      * @param {string} filename the filename to create the parent directory of
-     * 
+     *
      * @return {Promise?} the value
      */
     makeParentDir: function (filename) {
@@ -181,7 +182,7 @@ qx.Class.define("qx.tool.utils.Utils", {
      * Creates a directory, if it does not exist, including all intermediate paths
      *
      * @param {string} filename the directory to create
-     * 
+     *
      * @return {Promise?} the value
      */
     makeDirs: function (filename) {
@@ -231,6 +232,47 @@ qx.Class.define("qx.tool.utils.Utils", {
 
       // Not an object
       return false;
+    },
+
+    /**
+     * Runs the given command and returns an object containing information on the
+     * `exitCode`, the `output`, potential `error`s, and additional `messages`.
+     * @param {String} cwd The current working directory
+     * @param {String} args One or more command line arguments, including the
+     * command itself
+     * @return {Promise<{exitCode: Number, output: String, error: *, messages: *}>}
+     */
+    async runCommand(cwd, ...args) {
+      return new Promise((resolve, reject) => {
+        let cmd = args.shift();
+        let proc = child_process.spawn(cmd, args, {
+          cwd: cwd,
+          shell: true
+        });
+        let result = {
+          exitCode: null,
+          output: "",
+          error: "",
+          messages: null
+        };
+        proc.stdout.on('data', (data) => {
+          data = data.toString().trim();
+          console.log(data);
+          result.output += data;
+        });
+        proc.stderr.on('data', (data) => {
+          data = data.toString().trim();
+          console.error(data);
+          result.error += data;
+        });
+        proc.on('close', code => {
+          result.exitCode = code;
+          resolve(result);
+        });
+        proc.on('error', err => {
+          reject(err);
+        });
+      });
     }
   },
 

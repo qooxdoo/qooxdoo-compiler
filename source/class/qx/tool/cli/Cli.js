@@ -170,7 +170,16 @@ qx.Class.define("qx.tool.cli.Cli", {
         .argv;
       await this.__notifyLibraries();
     },
-    
+
+    /**
+     * This is to notify the commands after loading the full args.
+     * The commands can overload special arg arguments here.
+     * e.g. Deploy will will overload the target.
+     */
+    __notifyCommand: function() {
+      this._compilerApi.getCommand().processArgs(this.argv);
+    },
+
     /**
      * This is to notify the commands after loading the full args.
      * The commands can overload special arg arguments here.
@@ -206,6 +215,7 @@ qx.Class.define("qx.tool.cli.Cli", {
      */
     async processCommand(command) {
       qx.tool.compiler.Console.getInstance().setVerbose(this.argv.verbose);
+      command.setCompilerApi(this._compilerApi);
       this._compilerApi.setCommand(command);
       await this.__notifyLibraries();
       try {
@@ -231,13 +241,13 @@ qx.Class.define("qx.tool.cli.Cli", {
      * if you provide a .js file the file must be a module which returns an object which
      * has any of these properties:
      *
-     *  CompilerConfig - the class (derived from qx.tool.cli.api.CompilerApi)
+     *  CompilerApi - the class (derived from qx.tool.cli.api.CompilerApi)
      *    for configuring the compiler
      *
      * Each library can also have a compile.js, and that is also a module which can
      * return an object with any of these properties:
      *
-     *  LibraryConfig - the class (derived from qx.tool.cli.api.LibraryApi)
+     *  LibraryApi - the class (derived from qx.tool.cli.api.LibraryApi)
      *    for configuring the library
      *
      */
@@ -254,7 +264,6 @@ qx.Class.define("qx.tool.cli.Cli", {
      */
     async __parseArgsImpl() {
       this.__bootstrapArgv();
-
 
       /*
        * Detect and load compile.json and compile.js
