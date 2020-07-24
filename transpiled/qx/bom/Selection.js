@@ -592,4 +592,4 @@
   qx.bom.Selection.$$dbClassInfo = $$dbClassInfo;
 })();
 
-//# sourceMappingURL=Selection.js.map?dt=1595486302611
+//# sourceMappingURL=Selection.js.map?dt=1595576644182
