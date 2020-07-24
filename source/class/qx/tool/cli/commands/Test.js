@@ -19,10 +19,19 @@ const process = require("process");
 
 /**
  * Compiles the project, serves it up as a web page (default, can be turned off),
- * and dispatches the "runTests" event. All tests that should be run need to
- * register themselfs by the test command. 
- * 
- * The runTests event is called with a {@link qx.even.type.Data}
+ * and dispatches the "runTests" event.
+ *
+ * All tests that should be run need to register themselves by the
+ * test command. This is usually done in a `compile.js` file by either
+ *
+ * - adding a listener for the "runTests" event fired on the command
+ * instance  in the `load()` method of the class extending {@link
+ * qx.tool.cli.api.CompilerApi} or {@link qx.tool.cli.api.CompilerApi}.
+ *
+ * - or by implementing a `beforeTests()` method in the class
+ * extending {@link qx.tool.cli.api.CompilerApi}
+ *
+ * The event and/or method is called with a {@link qx.event.type.Data}
  * containing the command instance.
  *
  */
@@ -69,9 +78,9 @@ qx.Class.define("qx.tool.cli.commands.Test", {
   events: {
     /**
      * Fired to start tests.
-     * 
+     *
      * The event data is the command instance:
-     *  cmd: {qx.tool.cli.commands.Test} 
+     *  cmd: {qx.tool.cli.commands.Test}
      */
     "runTests": "qx.event.type.Data"
   },
@@ -128,7 +137,7 @@ qx.Class.define("qx.tool.cli.commands.Test", {
         if (exitCode === 0) {
           if (test.getName() && !this.argv.quiet) {
             qx.tool.compiler.Console.info(`Test '${test.getName()}' passed.`);
-          }      
+          }
         } else if (test.getName()) {
           qx.tool.compiler.Console.error(`Test '${test.getName()}' failed with exit code ${exitCode}.`);
         }
@@ -154,28 +163,29 @@ qx.Class.define("qx.tool.cli.commands.Test", {
         this.argv.configFile = qx.tool.cli.commands.Test.CONFIG_FILENAME;
       }
       this.addListener("making", () => {
-        if (!this.hasListener("runTests") && (this.__tests.length === 0)) {
+        if (!this.hasListener("runTests") && (this.__tests.length === 0) &&
+          (!this.getCompilerApi() || typeof this.getCompilerApi().beforeTests != "function")) {
           qx.tool.compiler.Console.error(
-            `No tests are registered!
-               Please register a testrunner, e.g. testtapper with:
-               qx package install @qooxdoo/qxl.testtapper
-               See documentation at https://qooxdoo.org/docs/#/development/testing/
-              `
+            `No tests are registered! You need to either register tests, or install a testrunner.
+             See documentation at https://qooxdoo.org/docs/#/development/testing/`
           );
           process.exit(-1);
         }
       });
 
       this.addListener("afterStart", async () => {
-        qx.tool.compiler.Console.info(`running unit tests`);
+        qx.tool.compiler.Console.info(`Running unit tests`);
         await this.fireDataEventAsync("runTests", this);
+        if (this.getCompilerApi() && typeof this.getCompilerApi().beforeTests == "function") {
+          this.getCompilerApi().beforeTests(this);
+        }
         for (let test of this.__tests) {
-          qx.tool.compiler.Console.info(`run ${test.getName()}`);
-          await test.execute();          
+          qx.tool.compiler.Console.info(`Running ${test.getName()}`);
+          await test.execute();
         }
         process.exit(this.getExitCode());
       });
-      
+
       if (this.__needsServer()) {
         // start server
         await this.base(arguments);
