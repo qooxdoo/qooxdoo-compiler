@@ -64,7 +64,7 @@ qx.Class.define("qx.tool.cli.api.AbstractApi", {
       if (!exists) {
         this.loadNpmModule(module);
       }      
-      return require(module);
+      return require(path.join(process.cwd(), "node_modules", module));
     },
     /**
       * 
