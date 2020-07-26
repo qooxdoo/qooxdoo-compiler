@@ -44,7 +44,7 @@ qx.Class.define("qx.tool.cli.commands.Test", {
      * The name of the file containing the compile config for the testrunner
      * defaults to "compile-test.json"
      */
-    CONFIG_FILENAME : "compile-test.json",
+    CONFIG_FILENAME: "compile-test.json",
 
     YARGS_BUILDER: {
       "fail-fast": {
@@ -54,11 +54,11 @@ qx.Class.define("qx.tool.cli.commands.Test", {
       }
     },
 
-    getYargsCommand: function() {
+    getYargsCommand: function () {
       return {
-        command   : "test",
-        describe  : "run test for current project",
-        builder   : (() => {
+        command: "test",
+        describe: "run test for current project",
+        builder: (() => {
           let res = Object.assign({},
             qx.tool.cli.commands.Compile.YARGS_BUILDER,
             qx.tool.cli.commands.Serve.YARGS_BUILDER,
@@ -129,7 +129,7 @@ qx.Class.define("qx.tool.cli.commands.Test", {
      * add a test object and listens for the change of exitCode property
      * @param {qx.tool.cli.api.Test} test
      */
-    addTest: function(test) {
+    addTest: function (test) {
       qx.core.Assert.assertInstance(test, qx.tool.cli.api.Test);
       test.addListenerOnce("changeExitCode", evt => {
         let exitCode = evt.getData();
@@ -153,7 +153,7 @@ qx.Class.define("qx.tool.cli.commands.Test", {
     /**
      * @Override
      */
-    process: async function() {
+    process: async function () {
       this.argv.watch = false;
       this.argv["machine-readable"] = false;
       this.argv["feedback"] = false;
@@ -174,14 +174,24 @@ qx.Class.define("qx.tool.cli.commands.Test", {
       });
 
       this.addListener("afterStart", async () => {
-        qx.tool.compiler.Console.info(`Running unit tests`);
-        await this.fireDataEventAsync("runTests", this);
         if (this.getCompilerApi() && typeof this.getCompilerApi().beforeTests == "function") {
           await this.getCompilerApi().beforeTests(this);
         }
+        qx.tool.compiler.Console.info(`Running unit tests`);
+        try {
+          await this.fireDataEventAsync("runTests", this);
+        } catch (ex) {
+          qx.tool.compiler.Console.error(ex.Message);
+          this.setExitCode(-1);
+        }
         for (let test of this.__tests) {
           qx.tool.compiler.Console.info(`Running ${test.getName()}`);
-          await test.execute();
+          try {
+            await test.execute();
+          } catch (ex) {
+            qx.tool.compiler.Console.error(ex.Message);
+            this.setExitCode(-1);
+          }
         }
         process.exit(this.getExitCode());
       });
@@ -197,7 +207,7 @@ qx.Class.define("qx.tool.cli.commands.Test", {
       }
     },
 
-    __needsServer: function() {
+    __needsServer: function () {
       return this.getNeedsServer() || this.__tests.some(test => test.getNeedsServer());
     }
   }
