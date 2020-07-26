@@ -1,6 +1,22 @@
 (function(){ 
 
   var path = require("path");
+  var module = require("module").Module;
+
+  var appModulePaths = [];
+  var old_nodeModulePaths = module._nodeModulePaths;
+  module._nodeModulePaths = function(from) {
+    var paths = old_nodeModulePaths.call(this, from);
+    paths = paths.concat(appModulePaths);
+    return paths;
+  };
+
+  function addNodePath(dir) {
+    dir = path.normalize(dir);
+    if (appModulePaths.indexOf(dir) === -1) {
+        appModulePaths.push(dir);
+    }
+  }
   
   if (typeof window === "undefined") 
     window = this;
@@ -115,7 +131,7 @@
   qx.$$loader = {
       parts : %{Parts},
       packages : %{Packages},
-      urisBefore : %{UrisBefore},
+  urisBefore : %{UrisBefore},
       boot : %{Boot},
       closureParts : %{ClosureParts},
       delayDefer: false,
@@ -145,6 +161,7 @@
         var t = this;
 
         var allScripts = l.decodeUris(l.urisBefore, "resourceUri");
+        t.loadGobalPaths(allScripts);
         t.loadScriptList(allScripts);
     
         l.parts[l.boot].forEach(function(pkg) {
@@ -158,6 +175,12 @@
         l.signalStartup();
       },
 
+      loadGobalPaths: function(list) {
+        list.forEach(function(uri) {
+          addNodePath(path.dirname(uri));
+        });
+      },
+	  
       loadScriptList: function(list) {
         list.forEach(function(uri) {
           var f = loaderMethod(uri);
