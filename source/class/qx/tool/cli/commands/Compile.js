@@ -816,7 +816,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
           var app = appConfig.app = new qx.tool.compiler.app.Application(appConfig["class"]);
           app.setTemplatePath(t.getTemplateDir());
 
-          [ "type", "theme", "name", "environment", "outputPath", "bootPath", "loaderTemplate", "publish", "standalone"].forEach(name => {
+          [ "type", "theme", "name", "environment", "outputPath", "bootPath", "loaderTemplate", "publish", "deploy", "standalone"].forEach(name => {
             if (appConfig[name] !== undefined) {
               var fname = "set" + qx.lang.String.firstUp(name);
               app[fname](appConfig[name]);

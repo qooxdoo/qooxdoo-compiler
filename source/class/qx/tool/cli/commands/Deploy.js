@@ -140,7 +140,10 @@ qx.Class.define("qx.tool.cli.commands.Deploy", {
             if (appNames && !appNames[app.getName()]) {
               return;
             }
-            let deployDir = argv.out || ((typeof target.getDeployDir == "function") && target.getDeployDir());
+            if (app.getDeploy() === false) {
+              return;
+            }
+              let deployDir = argv.out || ((typeof target.getDeployDir == "function") && target.getDeployDir());
             if (deployDir) {
               await qx.tool.utils.files.Utils.deleteRecursive(deployDir);
             }
@@ -153,6 +156,9 @@ qx.Class.define("qx.tool.cli.commands.Deploy", {
 
         await qx.tool.utils.Promisify.eachOfSeries(maker.getApplications(), async app => {
           if (appNames && !appNames[app.getName()]) {
+            return;
+          }
+          if (app.getDeploy() === false) {
             return;
           }
           let deployDir = argv.out || ((typeof target.getDeployDir == "function") && target.getDeployDir());
