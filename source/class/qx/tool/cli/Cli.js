@@ -101,10 +101,15 @@ qx.Class.define("qx.tool.cli.Cli", {
      * Initialises this.argv with the bare minimum required to load the config files and begin
      * processing
      */
-    __bootstrapArgv() {
+    async __bootstrapArgv() {
       var title = "qooxdoo command line interface";
-      title = "\n" + title + "\n" + "=".repeat(title.length) + "\n";
-      title += `Versions: @qooxdoo/compiler v${qx.tool.compiler.Version.VERSION}\n\n`;
+      title = "\n" + title + "\n" + "=".repeat(title.length);
+      title += 
+`
+Versions: @qooxdoo/compiler    v${qx.tool.compiler.Version.VERSION}
+          @qooxdqxoo/framework v${await new qx.tool.cli.commands.Command({}).getUserQxVersion()}
+`;
+      title += "\n";
       title +=
       `Typical usage:
         qx <commands> [options]
@@ -257,7 +262,7 @@ qx.Class.define("qx.tool.cli.Cli", {
      * Does the work of parsing command line arguments and loading `compile.js[on]`
      */
     async __parseArgsImpl() {
-      this.__bootstrapArgv();
+      await this.__bootstrapArgv();
 
       /*
        * Detect and load compile.json and compile.js
