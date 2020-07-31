@@ -13,7 +13,7 @@
         "column": 0
       },
       "end": {
-        "line": 918,
+        "line": 927,
         "column": 3
       }
     }
@@ -329,7 +329,7 @@
       "check": "Boolean",
       "defaultValue": true
     },
-    "standalone": {
+    "deploy": {
       "location": {
         "start": {
           "line": 155,
@@ -337,6 +337,31 @@
         },
         "end": {
           "line": 158,
+          "column": 5
+        }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>Whether this app is to be deployed\n Default is true.</p>"
+          }
+        ]
+      },
+      "name": "deploy",
+      "propertyType": "new",
+      "init": true,
+      "check": "Boolean",
+      "defaultValue": true
+    },
+    "standalone": {
+      "location": {
+        "start": {
+          "line": 164,
+          "column": 4
+        },
+        "end": {
+          "line": 167,
           "column": 5
         }
       },
@@ -357,11 +382,11 @@
     "include": {
       "location": {
         "start": {
-          "line": 164,
+          "line": 173,
           "column": 4
         },
         "end": {
-          "line": 168,
+          "line": 177,
           "column": 5
         }
       },
@@ -382,11 +407,11 @@
     "exclude": {
       "location": {
         "start": {
-          "line": 173,
+          "line": 182,
           "column": 4
         },
         "end": {
-          "line": 177,
+          "line": 186,
           "column": 5
         }
       },
@@ -407,11 +432,11 @@
     "bundleInclude": {
       "location": {
         "start": {
-          "line": 182,
+          "line": 191,
           "column": 4
         },
         "end": {
-          "line": 187,
+          "line": 196,
           "column": 5
         }
       },
@@ -432,11 +457,11 @@
     "bundleExclude": {
       "location": {
         "start": {
-          "line": 192,
+          "line": 201,
           "column": 4
         },
         "end": {
-          "line": 197,
+          "line": 206,
           "column": 5
         }
       },
@@ -457,11 +482,11 @@
     "loaderTemplate": {
       "location": {
         "start": {
-          "line": 203,
+          "line": 212,
           "column": 4
         },
         "end": {
-          "line": 206,
+          "line": 215,
           "column": 5
         }
       },
@@ -482,11 +507,11 @@
     "writeIndexHtmlToRoot": {
       "location": {
         "start": {
-          "line": 211,
+          "line": 220,
           "column": 4
         },
         "end": {
-          "line": 214,
+          "line": 223,
           "column": 5
         }
       },
@@ -541,11 +566,11 @@
     "__loadDeps": {
       "location": {
         "start": {
-          "line": 218,
+          "line": 227,
           "column": 4
         },
         "end": {
-          "line": 218,
+          "line": 227,
           "column": 20
         }
       },
@@ -555,11 +580,11 @@
     "__parts": {
       "location": {
         "start": {
-          "line": 219,
+          "line": 228,
           "column": 4
         },
         "end": {
-          "line": 219,
+          "line": 228,
           "column": 17
         }
       },
@@ -569,11 +594,11 @@
     "__requiredLibs": {
       "location": {
         "start": {
-          "line": 220,
+          "line": 229,
           "column": 4
         },
         "end": {
-          "line": 220,
+          "line": 229,
           "column": 24
         }
       },
@@ -583,11 +608,11 @@
     "__fatalCompileErrors": {
       "location": {
         "start": {
-          "line": 221,
+          "line": 230,
           "column": 4
         },
         "end": {
-          "line": 221,
+          "line": 230,
           "column": 30
         }
       },
@@ -597,11 +622,11 @@
     "__classes": {
       "location": {
         "start": {
-          "line": 222,
+          "line": 231,
           "column": 4
         },
         "end": {
-          "line": 222,
+          "line": 231,
           "column": 19
         }
       },
@@ -611,11 +636,11 @@
     "__partsDeps": {
       "location": {
         "start": {
-          "line": 223,
+          "line": 232,
           "column": 4
         },
         "end": {
-          "line": 223,
+          "line": 232,
           "column": 21
         }
       },
@@ -625,11 +650,11 @@
     "isBrowserApp": {
       "location": {
         "start": {
-          "line": 230,
+          "line": 239,
           "column": 4
         },
         "end": {
-          "line": 232,
+          "line": 241,
           "column": 5
         }
       },
@@ -653,11 +678,11 @@
     "calcDependencies": {
       "location": {
         "start": {
-          "line": 239,
+          "line": 248,
           "column": 4
         },
         "end": {
-          "line": 565,
+          "line": 574,
           "column": 5
         }
       },
@@ -683,11 +708,11 @@
     "getFatalCompileErrors": {
       "location": {
         "start": {
-          "line": 572,
+          "line": 581,
           "column": 4
         },
         "end": {
-          "line": 574,
+          "line": 583,
           "column": 5
         }
       },
@@ -713,11 +738,11 @@
     "getUris": {
       "location": {
         "start": {
-          "line": 581,
+          "line": 590,
           "column": 4
         },
         "end": {
-          "line": 592,
+          "line": 601,
           "column": 5
         }
       },
@@ -743,11 +768,11 @@
     "getDependencies": {
       "location": {
         "start": {
-          "line": 599,
+          "line": 608,
           "column": 4
         },
         "end": {
-          "line": 601,
+          "line": 610,
           "column": 5
         }
       },
@@ -773,11 +798,11 @@
     "getPartsDependencies": {
       "location": {
         "start": {
-          "line": 608,
+          "line": 617,
           "column": 4
         },
         "end": {
-          "line": 610,
+          "line": 619,
           "column": 5
         }
       },
@@ -803,11 +828,11 @@
     "getRequiredLibraries": {
       "location": {
         "start": {
-          "line": 617,
+          "line": 626,
           "column": 4
         },
         "end": {
-          "line": 619,
+          "line": 628,
           "column": 5
         }
       },
@@ -833,11 +858,11 @@
     "getAssetUris": {
       "location": {
         "start": {
-          "line": 627,
+          "line": 636,
           "column": 4
         },
         "end": {
-          "line": 752,
+          "line": 761,
           "column": 5
         }
       },
@@ -878,11 +903,11 @@
     "getClassName": {
       "location": {
         "start": {
-          "line": 758,
+          "line": 767,
           "column": 4
         },
         "end": {
-          "line": 760,
+          "line": 769,
           "column": 5
         }
       },
@@ -908,11 +933,11 @@
     "getRequiredClasses": {
       "location": {
         "start": {
-          "line": 766,
+          "line": 775,
           "column": 4
         },
         "end": {
-          "line": 776,
+          "line": 785,
           "column": 5
         }
       },
@@ -938,11 +963,11 @@
     "addPart": {
       "location": {
         "start": {
-          "line": 782,
+          "line": 791,
           "column": 4
         },
         "end": {
-          "line": 787,
+          "line": 796,
           "column": 5
         }
       },
@@ -969,11 +994,11 @@
     "getParts": {
       "location": {
         "start": {
-          "line": 793,
+          "line": 802,
           "column": 4
         },
         "end": {
-          "line": 795,
+          "line": 804,
           "column": 5
         }
       },
@@ -999,11 +1024,11 @@
     "getCalculatedEnvironment": {
       "location": {
         "start": {
-          "line": 803,
+          "line": 812,
           "column": 4
         },
         "end": {
-          "line": 809,
+          "line": 818,
           "column": 5
         }
       },
@@ -1029,11 +1054,11 @@
     "__expandClassnames": {
       "location": {
         "start": {
-          "line": 817,
+          "line": 826,
           "column": 4
         },
         "end": {
-          "line": 852,
+          "line": 861,
           "column": 5
         }
       },
@@ -1063,11 +1088,11 @@
     "_applyType": {
       "location": {
         "start": {
-          "line": 857,
+          "line": 866,
           "column": 4
         },
         "end": {
-          "line": 860,
+          "line": 869,
           "column": 5
         }
       },
@@ -1089,11 +1114,11 @@
     "__transformArray": {
       "location": {
         "start": {
-          "line": 865,
+          "line": 874,
           "column": 4
         },
         "end": {
-          "line": 873,
+          "line": 882,
           "column": 5
         }
       },
@@ -5130,6 +5155,96 @@
         ]
       }
     },
+    "getDeploy": {
+      "type": "function",
+      "name": "getDeploy",
+      "abstract": false,
+      "mixin": false,
+      "inherited": false,
+      "access": "public",
+      "property": "get",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Gets the (computed) value of the property <code>deploy</code>.\n\nFor further details take a look at the property definition: {@link #deploy}."
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "type": "Boolean",
+            "desc": "Returns the value for deploy"
+          }
+        ]
+      }
+    },
+    "isDeploy": {
+      "type": "function",
+      "name": "isDeploy",
+      "abstract": false,
+      "mixin": false,
+      "inherited": false,
+      "access": "public",
+      "property": "is",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Gets the (computed) value of the property <code>deploy</code>.\n\nFor further details take a look at the property definition: {@link #deploy}."
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "type": "Boolean",
+            "desc": "Returns the value for deploy"
+          }
+        ]
+      }
+    },
+    "setDeploy": {
+      "type": "function",
+      "name": "setDeploy",
+      "abstract": false,
+      "mixin": false,
+      "inherited": false,
+      "access": "public",
+      "property": "set",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Sets the user value of the property <code>deploy</code>.\n\nFor further details take a look at the property definition: {@link #deploy}."
+          }
+        ],
+        "@param": [
+          {
+            "name": "@param",
+            "type": "Boolean",
+            "paramName": "value",
+            "desc": "Value for deploy"
+          }
+        ]
+      }
+    },
+    "resetDeploy": {
+      "type": "function",
+      "name": "resetDeploy",
+      "abstract": false,
+      "mixin": false,
+      "inherited": false,
+      "access": "public",
+      "property": "reset",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Resets the user value of the property <code>deploy</code>.\n\nThe computed value falls back to the next available value e.g. appearance, init or inheritance value depending on the property configuration and value availability.\n\nFor further details take a look at the property definition: {@link #deploy}."
+          }
+        ]
+      }
+    },
     "getStandalone": {
       "type": "function",
       "name": "getStandalone",
@@ -5645,11 +5760,11 @@
     "createWildcardMatchFunction": {
       "location": {
         "start": {
-          "line": 887,
+          "line": 896,
           "column": 4
         },
         "end": {
-          "line": 916,
+          "line": 925,
           "column": 5
         }
       },
