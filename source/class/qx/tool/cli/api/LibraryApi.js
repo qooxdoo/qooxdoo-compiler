@@ -48,7 +48,7 @@ qx.Class.define("qx.tool.cli.api.LibraryApi", {
      */
     async afterLibrariesLoaded() {
       // Nothing
-    },
+    }
     
     
   }

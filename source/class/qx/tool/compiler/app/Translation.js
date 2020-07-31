@@ -269,7 +269,7 @@ qx.Class.define("qx.tool.compiler.app.Translation", {
                 }
               });
 
-              if(entry) {
+              if (entry) {
                 saveEntry();
               }
 
