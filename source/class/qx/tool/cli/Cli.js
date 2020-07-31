@@ -171,7 +171,7 @@ qx.Class.define("qx.tool.cli.Cli", {
       await this.__notifyLibraries();
     },
 
-   /**
+    /**
      * This is to notify the commands after loading the full args.
      * The commands can overload special arg arguments here.
      * e.g. Deploy will will overload the target.
@@ -179,7 +179,7 @@ qx.Class.define("qx.tool.cli.Cli", {
     __notifyCommand: function() {
       let cmd = this._compilerApi.getCommand();
       if (cmd) {
-         this._compilerApi.getCommand().processArgs(this.argv);
+        this._compilerApi.getCommand().processArgs(this.argv);
       }
     },
 

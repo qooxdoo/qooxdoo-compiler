@@ -255,21 +255,21 @@ qx.Class.define("qx.tool.utils.Utils", {
           error: "",
           messages: null
         };
-        proc.stdout.on('data', (data) => {
+        proc.stdout.on("data", data => {
           data = data.toString().trim();
           console.log(data);
           result.output += data;
         });
-        proc.stderr.on('data', (data) => {
+        proc.stderr.on("data", data => {
           data = data.toString().trim();
           console.error(data);
           result.error += data;
         });
-        proc.on('close', code => {
+        proc.on("close", code => {
           result.exitCode = code;
           resolve(result);
         });
-        proc.on('error', err => {
+        proc.on("error", err => {
           reject(err);
         });
       });

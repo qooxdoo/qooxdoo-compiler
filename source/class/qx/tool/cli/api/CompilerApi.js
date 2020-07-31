@@ -65,7 +65,7 @@ qx.Class.define("qx.tool.cli.api.CompilerApi", {
      */
     async beforeTests (cmd) {
       // Nothing
-   },
+    },
 
     /**
      * called after deployment happens
@@ -78,7 +78,7 @@ qx.Class.define("qx.tool.cli.api.CompilerApi", {
      * @return {Promise<void>}
      */
     async afterDeploy (data) {
-       // Nothing
+      // Nothing
     },
     
     /**
