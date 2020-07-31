@@ -149,6 +149,15 @@ qx.Class.define("qx.tool.compiler.app.Application", {
     },
 
     /**
+     * Whether this app is to be deployed
+     * Default is true.
+     */
+    deploy: {
+      check: "Boolean",
+      init: true
+    },
+
+    /**
      * Whether this app can run on its own (true, default) or is part of another
      * application (false)
      */

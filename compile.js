@@ -6,6 +6,19 @@ qx.Class.define("qx.compiler.CompilerApi", {
   extend: qx.tool.cli.api.CompilerApi,
 
   members: {
+    load: async function () {
+      let package = require("./package.json") || {};
+      let cls = `
+qx.Class.define("qx.tool.compiler.Version", {
+  extend: qx.core.Object,
+  statics: {
+    VERSION: "${package.version}",
+  }
+});      
+`;
+      fs.writeFileSync("./source/class/qx/tool/compiler/Version.js", cls);
+      return this.base(arguments);
+    },
     /**
      * Register compiler tests
      * @param {qx.tool.cli.commands.Command} command
