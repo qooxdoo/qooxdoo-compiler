@@ -13,7 +13,7 @@
         "column": 0
       },
       "end": {
-        "line": 595,
+        "line": 600,
         "column": 3
       }
     },
@@ -305,7 +305,7 @@
           "column": 4
         },
         "end": {
-          "line": 116,
+          "line": 121,
           "column": 5
         }
       },
@@ -323,11 +323,11 @@
     "__fullArgv": {
       "location": {
         "start": {
-          "line": 121,
+          "line": 126,
           "column": 4
         },
         "end": {
-          "line": 172,
+          "line": 177,
           "column": 5
         }
       },
@@ -345,11 +345,11 @@
     "__notifyCommand": {
       "location": {
         "start": {
-          "line": 179,
+          "line": 184,
           "column": 4
         },
         "end": {
-          "line": 184,
+          "line": 189,
           "column": 5
         }
       },
@@ -367,11 +367,11 @@
     "__notifyLibraries": {
       "location": {
         "start": {
-          "line": 191,
+          "line": 196,
           "column": 4
         },
         "end": {
-          "line": 201,
+          "line": 206,
           "column": 5
         }
       },
@@ -389,11 +389,11 @@
     "processCommand": {
       "location": {
         "start": {
-          "line": 210,
+          "line": 215,
           "column": 4
         },
         "end": {
-          "line": 222,
+          "line": 227,
           "column": 5
         }
       },
@@ -420,11 +420,11 @@
     "getParsedArgs": {
       "location": {
         "start": {
-          "line": 229,
+          "line": 234,
           "column": 4
         },
         "end": {
-          "line": 231,
+          "line": 236,
           "column": 5
         }
       },
@@ -450,11 +450,11 @@
     "run": {
       "location": {
         "start": {
-          "line": 248,
+          "line": 253,
           "column": 4
         },
         "end": {
-          "line": 254,
+          "line": 259,
           "column": 5
         }
       },
@@ -472,11 +472,11 @@
     "__parseArgsImpl": {
       "location": {
         "start": {
-          "line": 259,
+          "line": 264,
           "column": 4
         },
         "end": {
-          "line": 477,
+          "line": 482,
           "column": 5
         }
       },
@@ -494,11 +494,11 @@
     "__loadJs": {
       "location": {
         "start": {
-          "line": 485,
+          "line": 490,
           "column": 4
         },
         "end": {
-          "line": 504,
+          "line": 509,
           "column": 5
         }
       },
@@ -533,11 +533,11 @@
     "getCompilerApi": {
       "location": {
         "start": {
-          "line": 511,
+          "line": 516,
           "column": 4
         },
         "end": {
-          "line": 513,
+          "line": 518,
           "column": 5
         }
       },
@@ -563,11 +563,11 @@
     "getCompileJsFilename": {
       "location": {
         "start": {
-          "line": 520,
+          "line": 525,
           "column": 4
         },
         "end": {
-          "line": 522,
+          "line": 527,
           "column": 5
         }
       },
@@ -593,11 +593,11 @@
     "getCompileJsonFilename": {
       "location": {
         "start": {
-          "line": 529,
+          "line": 534,
           "column": 4
         },
         "end": {
-          "line": 531,
+          "line": 536,
           "column": 5
         }
       },
@@ -623,11 +623,11 @@
     "isExplicitArg": {
       "location": {
         "start": {
-          "line": 541,
+          "line": 546,
           "column": 4
         },
         "end": {
-          "line": 546,
+          "line": 551,
           "column": 5
         }
       },
@@ -3936,11 +3936,11 @@
     "compileJsFilename": {
       "location": {
         "start": {
-          "line": 550,
+          "line": 555,
           "column": 4
         },
         "end": {
-          "line": 550,
+          "line": 555,
           "column": 35
         }
       },
@@ -3950,11 +3950,11 @@
     "__instance": {
       "location": {
         "start": {
-          "line": 553,
+          "line": 558,
           "column": 4
         },
         "end": {
-          "line": 553,
+          "line": 558,
           "column": 20
         }
       },
@@ -3972,11 +3972,11 @@
     "getInstance": {
       "location": {
         "start": {
-          "line": 560,
+          "line": 565,
           "column": 4
         },
         "end": {
-          "line": 565,
+          "line": 570,
           "column": 5
         }
       },
@@ -4002,11 +4002,11 @@
     "addYargsCommands": {
       "location": {
         "start": {
-          "line": 574,
+          "line": 579,
           "column": 4
         },
         "end": {
-          "line": 593,
+          "line": 598,
           "column": 5
         }
       },
