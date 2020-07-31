@@ -69,6 +69,7 @@
       "title": "Qooxdoo compiler API",
       "bootPath": "source/boot",
       "default": true,
+      "deploy": true,
       "environment": {
         "qx.icontheme": "Tango",
         "qxl.apiviewer.applicationName": "compiler",
@@ -88,6 +89,7 @@
       "name": "compiler",
       "title": "Qooxdoo Compiler",
       "type": "node",
+      "deploy": true,
       "include": [
         "qx.core.BaseInit",
         "qx.tool.*"
@@ -117,6 +119,7 @@
       "name": "testnode",
       "title": "Node Test",
       "type": "node",
+      "deploy": false,
       "environment": {
         "testnode.testNameSpace": "qx.test"
       },
