@@ -321,4 +321,4 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   qx.event.type.dom.Pointer.$$dbClassInfo = $$dbClassInfo;
 })();
 
-//# sourceMappingURL=Pointer.js.map?dt=1595592085321
+//# sourceMappingURL=Pointer.js.map?dt=1596197927571

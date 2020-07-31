@@ -53,4 +53,4 @@
   qxl.apiviewer.ui.panels.MethodPanel.$$dbClassInfo = $$dbClassInfo;
 })();
 
-//# sourceMappingURL=MethodPanel.js.map?dt=1595592090330
+//# sourceMappingURL=MethodPanel.js.map?dt=1596197932868

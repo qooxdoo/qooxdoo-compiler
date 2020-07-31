@@ -185,4 +185,4 @@
   qx.ui.form.HoverButton.$$dbClassInfo = $$dbClassInfo;
 })();
 
-//# sourceMappingURL=HoverButton.js.map?dt=1595592084296
+//# sourceMappingURL=HoverButton.js.map?dt=1596197926447

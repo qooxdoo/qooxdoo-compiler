@@ -300,4 +300,4 @@
   qx.event.type.Touch.$$dbClassInfo = $$dbClassInfo;
 })();
 
-//# sourceMappingURL=Touch.js.map?dt=1595592086932
+//# sourceMappingURL=Touch.js.map?dt=1596197929183

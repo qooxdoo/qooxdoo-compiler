@@ -83,4 +83,4 @@
   qx.ui.window.IWindowManager.$$dbClassInfo = $$dbClassInfo;
 })();
 
-//# sourceMappingURL=IWindowManager.js.map?dt=1595592094123
+//# sourceMappingURL=IWindowManager.js.map?dt=1596197935680

@@ -111,4 +111,4 @@
   qx.event.type.Swipe.$$dbClassInfo = $$dbClassInfo;
 })();
 
-//# sourceMappingURL=Swipe.js.map?dt=1595592078324
+//# sourceMappingURL=Swipe.js.map?dt=1596197920686

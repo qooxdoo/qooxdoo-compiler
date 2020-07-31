@@ -83,4 +83,4 @@
   qx.ui.window.IDesktop.$$dbClassInfo = $$dbClassInfo;
 })();
 
-//# sourceMappingURL=IDesktop.js.map?dt=1595592094097
+//# sourceMappingURL=IDesktop.js.map?dt=1596197935651
