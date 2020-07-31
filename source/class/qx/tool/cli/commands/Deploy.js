@@ -91,7 +91,7 @@ qx.Class.define("qx.tool.cli.commands.Deploy", {
      * argv       : {Object}  Arguments
      * application: {Object}  application to build
      */
-    "afterDeploy" : "qx.event.type.Data",
+    "afterDeploy" : "qx.event.type.Data"
   },
 
   members: {
@@ -116,13 +116,12 @@ qx.Class.define("qx.tool.cli.commands.Deploy", {
         deploying: true
       };
       qx.lang.Object.mergeWith(argv, compileArgv);
-   },
+    },
 
     /*
      * @Override
      */
     process: async function() {
-
       await this.base(arguments);
 
       let argv = this.argv;
