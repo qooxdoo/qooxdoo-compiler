@@ -35,6 +35,7 @@ qx.Class.define("qx.tool.cli.api.AbstractApi", {
     },
     /** Configuration data for the compiler */
     configuration: {
+      init: {}
     }
   },
   
