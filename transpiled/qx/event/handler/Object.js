@@ -99,4 +99,4 @@
   qx.event.handler.Object.$$dbClassInfo = $$dbClassInfo;
 })();
 
-//# sourceMappingURL=Object.js.map?dt=1596230088810
+//# sourceMappingURL=Object.js.map?dt=1596460213210

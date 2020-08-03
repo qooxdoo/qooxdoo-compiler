@@ -176,13 +176,13 @@
       "qx/tool/website/src/assets/bluebird.min.js": {
         "resourcePath": "resourcePath"
       },
-      "qx/tool/website/src/assets/bootstrap.css": {
-        "resourcePath": "resourcePath"
-      },
       "qx/tool/website/src/assets/bootstrap.min.css": {
         "resourcePath": "resourcePath"
       },
       "qx/tool/website/src/assets/bootstrap.min.css.map": {
+        "resourcePath": "resourcePath"
+      },
+      "qx/tool/website/src/assets/bootstrap.css": {
         "resourcePath": "resourcePath"
       },
       "qx/tool/website/src/assets/buttons.js": {
@@ -251,6 +251,18 @@
       "qx/tool/cli/templates/skeleton/desktop/readme.tmpl.md": {
         "resourcePath": "resourcePath"
       },
+      "qx/tool/cli/templates/skeleton/mobile/.gitignore.tmpl": {
+        "resourcePath": "resourcePath"
+      },
+      "qx/tool/cli/templates/skeleton/mobile/Manifest.tmpl.json": {
+        "resourcePath": "resourcePath"
+      },
+      "qx/tool/cli/templates/skeleton/mobile/compile.tmpl.json": {
+        "resourcePath": "resourcePath"
+      },
+      "qx/tool/cli/templates/skeleton/mobile/readme.tmpl.md": {
+        "resourcePath": "resourcePath"
+      },
       "qx/tool/cli/templates/skeleton/package/.gitignore.tmpl": {
         "resourcePath": "resourcePath"
       },
@@ -275,18 +287,6 @@
       "qx/tool/cli/templates/skeleton/server/readme.tmpl.txt": {
         "resourcePath": "resourcePath"
       },
-      "qx/tool/cli/templates/skeleton/mobile/.gitignore.tmpl": {
-        "resourcePath": "resourcePath"
-      },
-      "qx/tool/cli/templates/skeleton/mobile/Manifest.tmpl.json": {
-        "resourcePath": "resourcePath"
-      },
-      "qx/tool/cli/templates/skeleton/mobile/compile.tmpl.json": {
-        "resourcePath": "resourcePath"
-      },
-      "qx/tool/cli/templates/skeleton/mobile/readme.tmpl.md": {
-        "resourcePath": "resourcePath"
-      },
       "qx/tool/cli/templates/skeleton/desktop/source/boot/index.tmpl.html": {
         "resourcePath": "resourcePath"
       },
@@ -296,12 +296,6 @@
       "qx/tool/cli/templates/skeleton/desktop/source/translation/readme.txt": {
         "resourcePath": "resourcePath"
       },
-      "qx/tool/cli/templates/skeleton/package/source/translation/readme.txt": {
-        "resourcePath": "resourcePath"
-      },
-      "qx/tool/cli/templates/skeleton/server/source/translation/readme.txt": {
-        "resourcePath": "resourcePath"
-      },
       "qx/tool/cli/templates/skeleton/mobile/source/boot/index.tmpl.html": {
         "resourcePath": "resourcePath"
       },
@@ -309,6 +303,12 @@
         "resourcePath": "resourcePath"
       },
       "qx/tool/cli/templates/skeleton/mobile/source/translation/readme.txt": {
+        "resourcePath": "resourcePath"
+      },
+      "qx/tool/cli/templates/skeleton/package/source/translation/readme.txt": {
+        "resourcePath": "resourcePath"
+      },
+      "qx/tool/cli/templates/skeleton/server/source/translation/readme.txt": {
         "resourcePath": "resourcePath"
       },
       "qx/tool/cli/templates/skeleton/desktop/source/class/custom/Application.tmpl.js": {
@@ -337,26 +337,6 @@
         "width": 32,
         "height": 32
       },
-      "qx/tool/cli/templates/skeleton/package/source/class/custom/Button.tmpl.js": {
-        "resourcePath": "resourcePath"
-      },
-      "qx/tool/cli/templates/skeleton/package/source/class/custom/__init__.tmpl.js": {
-        "resourcePath": "resourcePath"
-      },
-      "qx/tool/cli/templates/skeleton/package/source/resource/custom/test.png": {
-        "resourcePath": "resourcePath",
-        "width": 32,
-        "height": 32
-      },
-      "qx/tool/cli/templates/skeleton/server/source/class/custom/Application.tmpl.js": {
-        "resourcePath": "resourcePath"
-      },
-      "qx/tool/cli/templates/skeleton/server/source/class/custom/__init__.tmpl.js": {
-        "resourcePath": "resourcePath"
-      },
-      "qx/tool/cli/templates/skeleton/server/source/resource/custom/.gitignore.tmpl": {
-        "resourcePath": "resourcePath"
-      },
       "qx/tool/cli/templates/skeleton/mobile/source/class/custom/Application.tmpl.js": {
         "resourcePath": "resourcePath"
       },
@@ -378,6 +358,26 @@
         "width": 256,
         "height": 256
       },
+      "qx/tool/cli/templates/skeleton/package/source/class/custom/Button.tmpl.js": {
+        "resourcePath": "resourcePath"
+      },
+      "qx/tool/cli/templates/skeleton/package/source/class/custom/__init__.tmpl.js": {
+        "resourcePath": "resourcePath"
+      },
+      "qx/tool/cli/templates/skeleton/package/source/resource/custom/test.png": {
+        "resourcePath": "resourcePath",
+        "width": 32,
+        "height": 32
+      },
+      "qx/tool/cli/templates/skeleton/server/source/class/custom/Application.tmpl.js": {
+        "resourcePath": "resourcePath"
+      },
+      "qx/tool/cli/templates/skeleton/server/source/class/custom/__init__.tmpl.js": {
+        "resourcePath": "resourcePath"
+      },
+      "qx/tool/cli/templates/skeleton/server/source/resource/custom/.gitignore.tmpl": {
+        "resourcePath": "resourcePath"
+      },
       "qx/tool/cli/templates/skeleton/desktop/source/class/custom/test/DemoTest.tmpl.js": {
         "resourcePath": "resourcePath"
       },
@@ -394,6 +394,24 @@
         "resourcePath": "resourcePath"
       },
       "qx/tool/cli/templates/skeleton/desktop/source/class/custom/theme/Theme.tmpl.js": {
+        "resourcePath": "resourcePath"
+      },
+      "qx/tool/cli/templates/skeleton/mobile/source/class/custom/page/Login.tmpl.js": {
+        "resourcePath": "resourcePath"
+      },
+      "qx/tool/cli/templates/skeleton/mobile/source/class/custom/page/Overview.tmpl.js": {
+        "resourcePath": "resourcePath"
+      },
+      "qx/tool/cli/templates/skeleton/mobile/source/class/custom/page/__init__.tmpl.js": {
+        "resourcePath": "resourcePath"
+      },
+      "qx/tool/cli/templates/skeleton/mobile/source/resource/custom/css/.gitignore.tmpl": {
+        "resourcePath": "resourcePath"
+      },
+      "qx/tool/cli/templates/skeleton/mobile/source/theme/custom/scss/_styles.scss": {
+        "resourcePath": "resourcePath"
+      },
+      "qx/tool/cli/templates/skeleton/mobile/source/theme/custom/scss/custom.scss": {
         "resourcePath": "resourcePath"
       },
       "qx/tool/cli/templates/skeleton/package/source/class/custom/demo/Application.tmpl.js": {
@@ -418,24 +436,6 @@
         "resourcePath": "resourcePath"
       },
       "qx/tool/cli/templates/skeleton/server/source/class/custom/test/DemoTest.tmpl.js": {
-        "resourcePath": "resourcePath"
-      },
-      "qx/tool/cli/templates/skeleton/mobile/source/class/custom/page/Login.tmpl.js": {
-        "resourcePath": "resourcePath"
-      },
-      "qx/tool/cli/templates/skeleton/mobile/source/class/custom/page/Overview.tmpl.js": {
-        "resourcePath": "resourcePath"
-      },
-      "qx/tool/cli/templates/skeleton/mobile/source/class/custom/page/__init__.tmpl.js": {
-        "resourcePath": "resourcePath"
-      },
-      "qx/tool/cli/templates/skeleton/mobile/source/resource/custom/css/.gitignore.tmpl": {
-        "resourcePath": "resourcePath"
-      },
-      "qx/tool/cli/templates/skeleton/mobile/source/theme/custom/scss/_styles.scss": {
-        "resourcePath": "resourcePath"
-      },
-      "qx/tool/cli/templates/skeleton/mobile/source/theme/custom/scss/custom.scss": {
         "resourcePath": "resourcePath"
       },
       "qx/tool/cli/templates/skeleton/package/source/class/custom/resource/custom/test.png": {
@@ -7190,6 +7190,11 @@
         "width": 4,
         "height": 4
       },
+      "qx/decoration/Modern/groupbox/groupbox-c.png": {
+        "resourcePath": "resourcePath",
+        "width": 40,
+        "height": 51
+      },
       "qx/decoration/Modern/groupbox/groupbox-l.png": {
         "resourcePath": "resourcePath",
         "width": 4,
@@ -7204,11 +7209,6 @@
         "resourcePath": "resourcePath",
         "width": 4,
         "height": 4
-      },
-      "qx/decoration/Modern/groupbox/groupbox-c.png": {
-        "resourcePath": "resourcePath",
-        "width": 40,
-        "height": 51
       },
       "qx/decoration/Modern/groupbox/groupbox-tl.png": {
         "resourcePath": "resourcePath",
@@ -8830,17 +8830,17 @@
         "width": 128,
         "height": 128
       },
+      "qx/icon/Oxygen/128/actions/format-text-italic.png": {
+        "resourcePath": "resourcePath",
+        "width": 128,
+        "height": 128
+      },
       "qx/icon/Oxygen/128/actions/format-text-strikethrough.png": {
         "resourcePath": "resourcePath",
         "width": 128,
         "height": 128
       },
       "qx/icon/Oxygen/128/actions/format-text-underline.png": {
-        "resourcePath": "resourcePath",
-        "width": 128,
-        "height": 128
-      },
-      "qx/icon/Oxygen/128/actions/format-text-italic.png": {
         "resourcePath": "resourcePath",
         "width": 128,
         "height": 128
@@ -11790,17 +11790,17 @@
         "width": 22,
         "height": 22
       },
+      "qx/icon/Oxygen/22/emotes/face-angel.png": {
+        "resourcePath": "resourcePath",
+        "width": 22,
+        "height": 22
+      },
       "qx/icon/Oxygen/22/emotes/face-embarrassed.png": {
         "resourcePath": "resourcePath",
         "width": 22,
         "height": 22
       },
       "qx/icon/Oxygen/22/emotes/face-kiss.png": {
-        "resourcePath": "resourcePath",
-        "width": 22,
-        "height": 22
-      },
-      "qx/icon/Oxygen/22/emotes/face-angel.png": {
         "resourcePath": "resourcePath",
         "width": 22,
         "height": 22
@@ -11905,17 +11905,17 @@
         "width": 22,
         "height": 22
       },
+      "qx/icon/Oxygen/22/places/folder-open.png": {
+        "resourcePath": "resourcePath",
+        "width": 22,
+        "height": 22
+      },
       "qx/icon/Oxygen/22/places/folder-remote.png": {
         "resourcePath": "resourcePath",
         "width": 22,
         "height": 22
       },
       "qx/icon/Oxygen/22/places/folder.png": {
-        "resourcePath": "resourcePath",
-        "width": 22,
-        "height": 22
-      },
-      "qx/icon/Oxygen/22/places/folder-open.png": {
         "resourcePath": "resourcePath",
         "width": 22,
         "height": 22
@@ -12485,17 +12485,17 @@
         "width": 32,
         "height": 32
       },
+      "qx/icon/Oxygen/32/actions/zoom-in.png": {
+        "resourcePath": "resourcePath",
+        "width": 32,
+        "height": 32
+      },
       "qx/icon/Oxygen/32/actions/zoom-original.png": {
         "resourcePath": "resourcePath",
         "width": 32,
         "height": 32
       },
       "qx/icon/Oxygen/32/actions/zoom-out.png": {
-        "resourcePath": "resourcePath",
-        "width": 32,
-        "height": 32
-      },
-      "qx/icon/Oxygen/32/actions/zoom-in.png": {
         "resourcePath": "resourcePath",
         "width": 32,
         "height": 32
@@ -12915,6 +12915,11 @@
         "width": 32,
         "height": 32
       },
+      "qx/icon/Oxygen/32/emotes/face-angel.png": {
+        "resourcePath": "resourcePath",
+        "width": 32,
+        "height": 32
+      },
       "qx/icon/Oxygen/32/emotes/face-embarrassed.png": {
         "resourcePath": "resourcePath",
         "width": 32,
@@ -12926,11 +12931,6 @@
         "height": 32
       },
       "qx/icon/Oxygen/32/emotes/face-laugh.png": {
-        "resourcePath": "resourcePath",
-        "width": 32,
-        "height": 32
-      },
-      "qx/icon/Oxygen/32/emotes/face-angel.png": {
         "resourcePath": "resourcePath",
         "width": 32,
         "height": 32

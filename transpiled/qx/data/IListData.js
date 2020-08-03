@@ -110,4 +110,4 @@
   qx.data.IListData.$$dbClassInfo = $$dbClassInfo;
 })();
 
-//# sourceMappingURL=IListData.js.map?dt=1596230073630
+//# sourceMappingURL=IListData.js.map?dt=1596460199880
