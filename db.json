@@ -1,9 +1,9 @@
 {
   "libraries": {
     "qxcompiler": "1.0.0-beta",
-    "qxl.testnode": "1.0.5",
-    "qxl.versionlabel": "1.0.1",
     "qxl.apiviewer": "1.0.9",
+    "qxl.versionlabel": "1.0.1",
+    "qxl.testnode": "1.0.5",
     "qx": "6.0.0-beta-20200609-0430"
   },
   "environmentHash": "d4e77bc8d4f79af1f3cf0a0c0c52ed4a6ad6cb59",
