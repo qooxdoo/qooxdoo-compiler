@@ -91,7 +91,7 @@ qx.Class.define("qx.tool.cli.commands.Deploy", {
      * argv       : {Object}  Arguments
      * application: {Object}  application to build
      */
-    "afterDeploy" : "qx.event.type.Data",
+    "afterDeploy" : "qx.event.type.Data"
   },
 
   members: {
@@ -116,13 +116,12 @@ qx.Class.define("qx.tool.cli.commands.Deploy", {
         deploying: true
       };
       qx.lang.Object.mergeWith(argv, compileArgv);
-   },
+    },
 
     /*
      * @Override
      */
     process: async function() {
-
       await this.base(arguments);
 
       let argv = this.argv;
@@ -140,7 +139,10 @@ qx.Class.define("qx.tool.cli.commands.Deploy", {
             if (appNames && !appNames[app.getName()]) {
               return;
             }
-            let deployDir = argv.out || ((typeof target.getDeployDir == "function") && target.getDeployDir());
+            if (app.getDeploy() === false) {
+              return;
+            }
+              let deployDir = argv.out || ((typeof target.getDeployDir == "function") && target.getDeployDir());
             if (deployDir) {
               await qx.tool.utils.files.Utils.deleteRecursive(deployDir);
             }
@@ -153,6 +155,9 @@ qx.Class.define("qx.tool.cli.commands.Deploy", {
 
         await qx.tool.utils.Promisify.eachOfSeries(maker.getApplications(), async app => {
           if (appNames && !appNames[app.getName()]) {
+            return;
+          }
+          if (app.getDeploy() === false) {
             return;
           }
           let deployDir = argv.out || ((typeof target.getDeployDir == "function") && target.getDeployDir());

@@ -81,19 +81,7 @@ qx.Class.define("qx.tool.cli.commands.Command", {
      *
      */
     processArgs: function(argv) {
-       // Nothing
-    },
-
-    /**
-     * This is to notify the commands after loading the full args.
-     * The commands can overload special arg arguments here.
-     * e.g. Deploy will will overload the target.
-     *
-     * @param {*} argv : args to procvess
-     *
-     */
-    processArgs: function(argv) {
-       // Nothing
+      // Nothing
     },
 
     /**
