@@ -154,4 +154,4 @@
   qx.ui.decoration.MBorderRadius.$$dbClassInfo = $$dbClassInfo;
 })();
 
-//# sourceMappingURL=MBorderRadius.js.map?dt=1596460214128
+//# sourceMappingURL=MBorderRadius.js.map?dt=1596460815086

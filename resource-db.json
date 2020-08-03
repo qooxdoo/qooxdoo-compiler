@@ -25,6 +25,9 @@
       "qx/tool/cli/templates/template_vars.js": {
         "resourcePath": "resourcePath"
       },
+      "qx/tool/website/layouts/default.dot": {
+        "resourcePath": "resourcePath"
+      },
       "qx/tool/website/build/404.html": {
         "resourcePath": "resourcePath"
       },
@@ -35,9 +38,6 @@
         "resourcePath": "resourcePath"
       },
       "qx/tool/website/build/qooxdoo.css": {
-        "resourcePath": "resourcePath"
-      },
-      "qx/tool/website/layouts/default.dot": {
         "resourcePath": "resourcePath"
       },
       "qx/tool/website/partials/footer.html": {
@@ -77,13 +77,13 @@
       "qx/tool/website/src/index.html": {
         "resourcePath": "resourcePath"
       },
-      "qx/tool/cli/templates/class/default.tmpl.js": {
-        "resourcePath": "resourcePath"
-      },
       "qx/tool/cli/templates/class/header.tmpl.js": {
         "resourcePath": "resourcePath"
       },
       "qx/tool/cli/templates/class/interface.tmpl.js": {
+        "resourcePath": "resourcePath"
+      },
+      "qx/tool/cli/templates/class/default.tmpl.js": {
         "resourcePath": "resourcePath"
       },
       "qx/tool/cli/templates/class/mixin.tmpl.js": {
@@ -176,13 +176,13 @@
       "qx/tool/website/src/assets/bluebird.min.js": {
         "resourcePath": "resourcePath"
       },
+      "qx/tool/website/src/assets/bootstrap.css": {
+        "resourcePath": "resourcePath"
+      },
       "qx/tool/website/src/assets/bootstrap.min.css": {
         "resourcePath": "resourcePath"
       },
       "qx/tool/website/src/assets/bootstrap.min.css.map": {
-        "resourcePath": "resourcePath"
-      },
-      "qx/tool/website/src/assets/bootstrap.css": {
         "resourcePath": "resourcePath"
       },
       "qx/tool/website/src/assets/buttons.js": {
@@ -193,10 +193,10 @@
         "width": 32,
         "height": 32
       },
-      "qx/tool/website/src/assets/fontawesome-all.js": {
+      "qx/tool/website/src/assets/jquery.js": {
         "resourcePath": "resourcePath"
       },
-      "qx/tool/website/src/assets/jquery.js": {
+      "qx/tool/website/src/assets/fontawesome-all.js": {
         "resourcePath": "resourcePath"
       },
       "qx/tool/website/src/assets/logo.svg": {
@@ -204,20 +204,20 @@
         "width": 511,
         "height": 145
       },
-      "qx/tool/website/src/assets/qx-api.png": {
+      "qx/tool/website/src/assets/qx-oo.png": {
         "resourcePath": "resourcePath",
-        "width": 1144,
-        "height": 640
+        "width": 870,
+        "height": 502
       },
       "qx/tool/website/src/assets/qx-ide.png": {
         "resourcePath": "resourcePath",
         "width": 3183,
         "height": 1752
       },
-      "qx/tool/website/src/assets/qx-oo.png": {
+      "qx/tool/website/src/assets/qx-api.png": {
         "resourcePath": "resourcePath",
-        "width": 870,
-        "height": 502
+        "width": 1144,
+        "height": 640
       },
       "qx/tool/website/src/assets/qx-white.svg": {
         "resourcePath": "resourcePath",
@@ -237,18 +237,6 @@
         "resourcePath": "resourcePath"
       },
       "qx/tool/website/src/scripts/serve.js": {
-        "resourcePath": "resourcePath"
-      },
-      "qx/tool/cli/templates/skeleton/desktop/.gitignore.tmpl": {
-        "resourcePath": "resourcePath"
-      },
-      "qx/tool/cli/templates/skeleton/desktop/Manifest.tmpl.json": {
-        "resourcePath": "resourcePath"
-      },
-      "qx/tool/cli/templates/skeleton/desktop/compile.tmpl.json": {
-        "resourcePath": "resourcePath"
-      },
-      "qx/tool/cli/templates/skeleton/desktop/readme.tmpl.md": {
         "resourcePath": "resourcePath"
       },
       "qx/tool/cli/templates/skeleton/mobile/.gitignore.tmpl": {
@@ -287,13 +275,16 @@
       "qx/tool/cli/templates/skeleton/server/readme.tmpl.txt": {
         "resourcePath": "resourcePath"
       },
-      "qx/tool/cli/templates/skeleton/desktop/source/boot/index.tmpl.html": {
+      "qx/tool/cli/templates/skeleton/desktop/.gitignore.tmpl": {
         "resourcePath": "resourcePath"
       },
-      "qx/tool/cli/templates/skeleton/desktop/source/boot/nojs.tmpl.html": {
+      "qx/tool/cli/templates/skeleton/desktop/Manifest.tmpl.json": {
         "resourcePath": "resourcePath"
       },
-      "qx/tool/cli/templates/skeleton/desktop/source/translation/readme.txt": {
+      "qx/tool/cli/templates/skeleton/desktop/compile.tmpl.json": {
+        "resourcePath": "resourcePath"
+      },
+      "qx/tool/cli/templates/skeleton/desktop/readme.tmpl.md": {
         "resourcePath": "resourcePath"
       },
       "qx/tool/cli/templates/skeleton/mobile/source/boot/index.tmpl.html": {
@@ -311,31 +302,14 @@
       "qx/tool/cli/templates/skeleton/server/source/translation/readme.txt": {
         "resourcePath": "resourcePath"
       },
-      "qx/tool/cli/templates/skeleton/desktop/source/class/custom/Application.tmpl.js": {
+      "qx/tool/cli/templates/skeleton/desktop/source/boot/index.tmpl.html": {
         "resourcePath": "resourcePath"
       },
-      "qx/tool/cli/templates/skeleton/desktop/source/class/custom/__init__.tmpl.js": {
+      "qx/tool/cli/templates/skeleton/desktop/source/boot/nojs.tmpl.html": {
         "resourcePath": "resourcePath"
       },
-      "qx/tool/cli/templates/skeleton/desktop/source/resource/custom/app.png": {
-        "resourcePath": "resourcePath",
-        "width": 180,
-        "height": 180
-      },
-      "qx/tool/cli/templates/skeleton/desktop/source/resource/custom/favicon.png": {
-        "resourcePath": "resourcePath",
-        "width": 32,
-        "height": 32
-      },
-      "qx/tool/cli/templates/skeleton/desktop/source/resource/custom/js_256x256.png": {
-        "resourcePath": "resourcePath",
-        "width": 256,
-        "height": 256
-      },
-      "qx/tool/cli/templates/skeleton/desktop/source/resource/custom/test.png": {
-        "resourcePath": "resourcePath",
-        "width": 32,
-        "height": 32
+      "qx/tool/cli/templates/skeleton/desktop/source/translation/readme.txt": {
+        "resourcePath": "resourcePath"
       },
       "qx/tool/cli/templates/skeleton/mobile/source/class/custom/Application.tmpl.js": {
         "resourcePath": "resourcePath"
@@ -378,23 +352,31 @@
       "qx/tool/cli/templates/skeleton/server/source/resource/custom/.gitignore.tmpl": {
         "resourcePath": "resourcePath"
       },
-      "qx/tool/cli/templates/skeleton/desktop/source/class/custom/test/DemoTest.tmpl.js": {
+      "qx/tool/cli/templates/skeleton/desktop/source/class/custom/Application.tmpl.js": {
         "resourcePath": "resourcePath"
       },
-      "qx/tool/cli/templates/skeleton/desktop/source/class/custom/theme/Appearance.tmpl.js": {
+      "qx/tool/cli/templates/skeleton/desktop/source/class/custom/__init__.tmpl.js": {
         "resourcePath": "resourcePath"
       },
-      "qx/tool/cli/templates/skeleton/desktop/source/class/custom/theme/Color.tmpl.js": {
-        "resourcePath": "resourcePath"
+      "qx/tool/cli/templates/skeleton/desktop/source/resource/custom/app.png": {
+        "resourcePath": "resourcePath",
+        "width": 180,
+        "height": 180
       },
-      "qx/tool/cli/templates/skeleton/desktop/source/class/custom/theme/Decoration.tmpl.js": {
-        "resourcePath": "resourcePath"
+      "qx/tool/cli/templates/skeleton/desktop/source/resource/custom/favicon.png": {
+        "resourcePath": "resourcePath",
+        "width": 32,
+        "height": 32
       },
-      "qx/tool/cli/templates/skeleton/desktop/source/class/custom/theme/Font.tmpl.js": {
-        "resourcePath": "resourcePath"
+      "qx/tool/cli/templates/skeleton/desktop/source/resource/custom/js_256x256.png": {
+        "resourcePath": "resourcePath",
+        "width": 256,
+        "height": 256
       },
-      "qx/tool/cli/templates/skeleton/desktop/source/class/custom/theme/Theme.tmpl.js": {
-        "resourcePath": "resourcePath"
+      "qx/tool/cli/templates/skeleton/desktop/source/resource/custom/test.png": {
+        "resourcePath": "resourcePath",
+        "width": 32,
+        "height": 32
       },
       "qx/tool/cli/templates/skeleton/mobile/source/class/custom/page/Login.tmpl.js": {
         "resourcePath": "resourcePath"
@@ -438,10 +420,41 @@
       "qx/tool/cli/templates/skeleton/server/source/class/custom/test/DemoTest.tmpl.js": {
         "resourcePath": "resourcePath"
       },
+      "qx/tool/cli/templates/skeleton/desktop/source/class/custom/test/DemoTest.tmpl.js": {
+        "resourcePath": "resourcePath"
+      },
+      "qx/tool/cli/templates/skeleton/desktop/source/class/custom/theme/Appearance.tmpl.js": {
+        "resourcePath": "resourcePath"
+      },
+      "qx/tool/cli/templates/skeleton/desktop/source/class/custom/theme/Color.tmpl.js": {
+        "resourcePath": "resourcePath"
+      },
+      "qx/tool/cli/templates/skeleton/desktop/source/class/custom/theme/Decoration.tmpl.js": {
+        "resourcePath": "resourcePath"
+      },
+      "qx/tool/cli/templates/skeleton/desktop/source/class/custom/theme/Font.tmpl.js": {
+        "resourcePath": "resourcePath"
+      },
+      "qx/tool/cli/templates/skeleton/desktop/source/class/custom/theme/Theme.tmpl.js": {
+        "resourcePath": "resourcePath"
+      },
       "qx/tool/cli/templates/skeleton/package/source/class/custom/resource/custom/test.png": {
         "resourcePath": "resourcePath",
         "width": 32,
         "height": 32
+      }
+    },
+    "qxl.testnode": {
+      "qxl/testnode/.gitignore": {
+        "resourcePath": "resourcePath"
+      },
+      "qxl/testnode/minimist.js": {
+        "resourcePath": "resourcePath"
+      }
+    },
+    "qxl.versionlabel": {
+      "dummy.txt": {
+        "resourcePath": "resourcePath"
       }
     },
     "qxl.apiviewer": {
@@ -987,19 +1000,6 @@
             -396
           ]
         }
-      }
-    },
-    "qxl.versionlabel": {
-      "dummy.txt": {
-        "resourcePath": "resourcePath"
-      }
-    },
-    "qxl.testnode": {
-      "qxl/testnode/.gitignore": {
-        "resourcePath": "resourcePath"
-      },
-      "qxl/testnode/minimist.js": {
-        "resourcePath": "resourcePath"
       }
     },
     "qx": {
@@ -6420,6 +6420,56 @@
         "width": 20,
         "height": 20
       },
+      "qx/decoration/Modern/groupbox/groupbox-b.png": {
+        "resourcePath": "resourcePath",
+        "width": 4,
+        "height": 4
+      },
+      "qx/decoration/Modern/groupbox/groupbox-bl.png": {
+        "resourcePath": "resourcePath",
+        "width": 4,
+        "height": 4
+      },
+      "qx/decoration/Modern/groupbox/groupbox-br.png": {
+        "resourcePath": "resourcePath",
+        "width": 4,
+        "height": 4
+      },
+      "qx/decoration/Modern/groupbox/groupbox-c.png": {
+        "resourcePath": "resourcePath",
+        "width": 40,
+        "height": 51
+      },
+      "qx/decoration/Modern/groupbox/groupbox-l.png": {
+        "resourcePath": "resourcePath",
+        "width": 4,
+        "height": 51
+      },
+      "qx/decoration/Modern/groupbox/groupbox-r.png": {
+        "resourcePath": "resourcePath",
+        "width": 4,
+        "height": 51
+      },
+      "qx/decoration/Modern/groupbox/groupbox-t.png": {
+        "resourcePath": "resourcePath",
+        "width": 4,
+        "height": 4
+      },
+      "qx/decoration/Modern/groupbox/groupbox-tl.png": {
+        "resourcePath": "resourcePath",
+        "width": 4,
+        "height": 4
+      },
+      "qx/decoration/Modern/groupbox/groupbox-tr.png": {
+        "resourcePath": "resourcePath",
+        "width": 4,
+        "height": 4
+      },
+      "qx/decoration/Modern/groupbox/groupbox.png": {
+        "resourcePath": "resourcePath",
+        "width": 255,
+        "height": 59
+      },
       "qx/decoration/Modern/form/button-b.png": {
         "resourcePath": "resourcePath",
         "width": 4,
@@ -7174,56 +7224,6 @@
         "resourcePath": "resourcePath",
         "width": 6,
         "height": 2
-      },
-      "qx/decoration/Modern/groupbox/groupbox-b.png": {
-        "resourcePath": "resourcePath",
-        "width": 4,
-        "height": 4
-      },
-      "qx/decoration/Modern/groupbox/groupbox-bl.png": {
-        "resourcePath": "resourcePath",
-        "width": 4,
-        "height": 4
-      },
-      "qx/decoration/Modern/groupbox/groupbox-br.png": {
-        "resourcePath": "resourcePath",
-        "width": 4,
-        "height": 4
-      },
-      "qx/decoration/Modern/groupbox/groupbox-c.png": {
-        "resourcePath": "resourcePath",
-        "width": 40,
-        "height": 51
-      },
-      "qx/decoration/Modern/groupbox/groupbox-l.png": {
-        "resourcePath": "resourcePath",
-        "width": 4,
-        "height": 51
-      },
-      "qx/decoration/Modern/groupbox/groupbox-r.png": {
-        "resourcePath": "resourcePath",
-        "width": 4,
-        "height": 51
-      },
-      "qx/decoration/Modern/groupbox/groupbox-t.png": {
-        "resourcePath": "resourcePath",
-        "width": 4,
-        "height": 4
-      },
-      "qx/decoration/Modern/groupbox/groupbox-tl.png": {
-        "resourcePath": "resourcePath",
-        "width": 4,
-        "height": 4
-      },
-      "qx/decoration/Modern/groupbox/groupbox-tr.png": {
-        "resourcePath": "resourcePath",
-        "width": 4,
-        "height": 4
-      },
-      "qx/decoration/Modern/groupbox/groupbox.png": {
-        "resourcePath": "resourcePath",
-        "width": 255,
-        "height": 59
       },
       "qx/decoration/Modern/menu/background.png": {
         "resourcePath": "resourcePath",
@@ -7990,9 +7990,6 @@
         "width": 8,
         "height": 8
       },
-      "qx/decoration/Modern/treevirtual/.npmignore": {
-        "resourcePath": "resourcePath"
-      },
       "qx/decoration/Modern/window/captionbar-active-b.png": {
         "resourcePath": "resourcePath",
         "width": 6,
@@ -8203,6 +8200,9 @@
         "width": 369,
         "height": 15
       },
+      "qx/decoration/Modern/treevirtual/.npmignore": {
+        "resourcePath": "resourcePath"
+      },
       "qx/decoration/Simple/arrows/down-invert.gif": {
         "resourcePath": "resourcePath",
         "width": 7,
@@ -8323,6 +8323,16 @@
         "width": 20,
         "height": 20
       },
+      "qx/decoration/Simple/splitpane/knob-horizontal.png": {
+        "resourcePath": "resourcePath",
+        "width": 1,
+        "height": 8
+      },
+      "qx/decoration/Simple/splitpane/knob-vertical.png": {
+        "resourcePath": "resourcePath",
+        "width": 8,
+        "height": 1
+      },
       "qx/decoration/Simple/menu/checkbox-invert.gif": {
         "resourcePath": "resourcePath",
         "width": 16,
@@ -8342,16 +8352,6 @@
         "resourcePath": "resourcePath",
         "width": 16,
         "height": 5
-      },
-      "qx/decoration/Simple/splitpane/knob-horizontal.png": {
-        "resourcePath": "resourcePath",
-        "width": 1,
-        "height": 8
-      },
-      "qx/decoration/Simple/splitpane/knob-vertical.png": {
-        "resourcePath": "resourcePath",
-        "width": 8,
-        "height": 1
       },
       "qx/decoration/Simple/table/ascending-invert.png": {
         "resourcePath": "resourcePath",
@@ -8402,6 +8402,46 @@
         "resourcePath": "resourcePath",
         "width": 19,
         "height": 16
+      },
+      "qx/decoration/Simple/window/close-white.gif": {
+        "resourcePath": "resourcePath",
+        "width": 10,
+        "height": 9
+      },
+      "qx/decoration/Simple/window/close.gif": {
+        "resourcePath": "resourcePath",
+        "width": 10,
+        "height": 9
+      },
+      "qx/decoration/Simple/window/maximize-white.gif": {
+        "resourcePath": "resourcePath",
+        "width": 9,
+        "height": 9
+      },
+      "qx/decoration/Simple/window/maximize.gif": {
+        "resourcePath": "resourcePath",
+        "width": 9,
+        "height": 9
+      },
+      "qx/decoration/Simple/window/minimize-white.gif": {
+        "resourcePath": "resourcePath",
+        "width": 9,
+        "height": 9
+      },
+      "qx/decoration/Simple/window/minimize.gif": {
+        "resourcePath": "resourcePath",
+        "width": 9,
+        "height": 9
+      },
+      "qx/decoration/Simple/window/restore-white.gif": {
+        "resourcePath": "resourcePath",
+        "width": 8,
+        "height": 9
+      },
+      "qx/decoration/Simple/window/restore.gif": {
+        "resourcePath": "resourcePath",
+        "width": 8,
+        "height": 9
       },
       "qx/decoration/Simple/treevirtual/cross.gif": {
         "resourcePath": "resourcePath",
@@ -8462,46 +8502,6 @@
         "resourcePath": "resourcePath",
         "width": 19,
         "height": 16
-      },
-      "qx/decoration/Simple/window/close-white.gif": {
-        "resourcePath": "resourcePath",
-        "width": 10,
-        "height": 9
-      },
-      "qx/decoration/Simple/window/close.gif": {
-        "resourcePath": "resourcePath",
-        "width": 10,
-        "height": 9
-      },
-      "qx/decoration/Simple/window/maximize-white.gif": {
-        "resourcePath": "resourcePath",
-        "width": 9,
-        "height": 9
-      },
-      "qx/decoration/Simple/window/maximize.gif": {
-        "resourcePath": "resourcePath",
-        "width": 9,
-        "height": 9
-      },
-      "qx/decoration/Simple/window/minimize-white.gif": {
-        "resourcePath": "resourcePath",
-        "width": 9,
-        "height": 9
-      },
-      "qx/decoration/Simple/window/minimize.gif": {
-        "resourcePath": "resourcePath",
-        "width": 9,
-        "height": 9
-      },
-      "qx/decoration/Simple/window/restore-white.gif": {
-        "resourcePath": "resourcePath",
-        "width": 8,
-        "height": 9
-      },
-      "qx/decoration/Simple/window/restore.gif": {
-        "resourcePath": "resourcePath",
-        "width": 8,
-        "height": 9
       },
       "qx/mobile/scss/common/_all.scss": {
         "resourcePath": "resourcePath"
@@ -9670,17 +9670,17 @@
         "width": 128,
         "height": 128
       },
-      "qx/icon/Oxygen/128/places/network-server.png": {
-        "resourcePath": "resourcePath",
-        "width": 128,
-        "height": 128
-      },
       "qx/icon/Oxygen/128/places/network-workgroup.png": {
         "resourcePath": "resourcePath",
         "width": 128,
         "height": 128
       },
       "qx/icon/Oxygen/128/places/user-desktop.png": {
+        "resourcePath": "resourcePath",
+        "width": 128,
+        "height": 128
+      },
+      "qx/icon/Oxygen/128/places/network-server.png": {
         "resourcePath": "resourcePath",
         "width": 128,
         "height": 128
@@ -17630,11 +17630,6 @@
         "width": 16,
         "height": 16
       },
-      "qx/icon/Tango/22/actions/address-book-new.png": {
-        "resourcePath": "resourcePath",
-        "width": 22,
-        "height": 22
-      },
       "qx/icon/Tango/22/actions/application-exit.png": {
         "resourcePath": "resourcePath",
         "width": 22,
@@ -18521,6 +18516,11 @@
         "height": 22
       },
       "qx/icon/Tango/22/devices/scanner.png": {
+        "resourcePath": "resourcePath",
+        "width": 22,
+        "height": 22
+      },
+      "qx/icon/Tango/22/actions/address-book-new.png": {
         "resourcePath": "resourcePath",
         "width": 22,
         "height": 22
