@@ -35,7 +35,7 @@ qx.Class.define("qx.tool.cli.api.AbstractApi", {
     },
     /** Configuration data for the compiler */
     configuration: {
-    },
+    }
   },
   
   members: {
@@ -89,4 +89,3 @@ qx.Class.define("qx.tool.cli.api.AbstractApi", {
 
   }
 });
-
