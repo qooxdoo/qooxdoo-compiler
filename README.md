@@ -89,7 +89,7 @@ with your application before using it to build any production code. If you find 
 something is broken, please [create an issue](https://github.com/qooxdoo/qooxdoo-compiler/issues/new/choose).
 
 You can always revert to a previous release by picking a version 
-[on the NPM website](https://github.com/qooxdoo/qooxdoo-compiler/issues/new/choose)
+[on the NPM website](https://www.npmjs.com/package/@qooxdoo/compiler?activeTab=versions)
 and executing 
 
 ```bash
