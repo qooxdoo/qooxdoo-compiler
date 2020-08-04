@@ -42,10 +42,6 @@ qx.Class.define("qx.tool.cli.api.CompilerApi", {
       nullable: false
     },
     
-    /** Configuration data for the compiler */
-    configuration: {
-    },
-    
     /** The current command */
     command: {
       init: null,

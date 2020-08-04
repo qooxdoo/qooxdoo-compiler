@@ -267,7 +267,12 @@ Versions: @qooxdoo/compiler    v${qx.tool.compiler.Version.VERSION}
       /*
        * Detect and load compile.json and compile.js
        */
-      let defaultConfigFilename = this.argv.configFile || qx.tool.config.Compile.config.fileName;
+      let defaultConfigFilename = qx.tool.config.Compile.config.fileName;
+      if (this.argv.configFile) {
+        process.chdir(path.dirname(this.argv.configFile));
+        this.argv.configFile = path.basename(this.argv.configFile);
+        defaultConfigFilename = this.argv.configFile;
+      }
 
       var lockfileContent = {
         version: qx.tool.config.Lockfile.getInstance().getVersion()
