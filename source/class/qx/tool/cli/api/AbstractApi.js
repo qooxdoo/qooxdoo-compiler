@@ -32,15 +32,21 @@ qx.Class.define("qx.tool.cli.api.AbstractApi", {
     rootDir: {
       check: "String",
       nullable: false
+    },
+    /** Configuration data for the compiler */
+    configuration: {
+      init: {}
     }
   },
   
   members: {
     /**
-     * Loads the configuration data
+     * Loads the configuration
+     *
+     * @return {Map} configuration data
      */
     async load() {
-      // Nothing
+      return this.getConfiguration();
     },
     
     /**
@@ -84,4 +90,3 @@ qx.Class.define("qx.tool.cli.api.AbstractApi", {
 
   }
 });
-
