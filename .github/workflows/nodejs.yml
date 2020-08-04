@@ -11,7 +11,7 @@ jobs:
   test:
     name: Run tests
     runs-on: ${{ matrix.os }}
-#    if: github.ref != 'refs/heads/master'
+    if: github.ref != 'refs/heads/master'
     strategy:
       matrix:
         os: [ubuntu-latest]
@@ -50,3 +50,10 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./html
+      - name: dispatch to deploy
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.ACTION_TOKEN }}
+          repository: qooxdoo/deployment
+          event-type: deploy
+          
