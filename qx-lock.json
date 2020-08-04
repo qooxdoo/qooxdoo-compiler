@@ -2,11 +2,11 @@
   "libraries": [
     {
       "library_name": "Qooxdoo API Viewer",
-      "library_version": "1.0.9",
-      "path": "qx_packages/qooxdoo_qxl_apiviewer_v1_0_9",
+      "library_version": "1.0.11",
+      "path": "qx_packages/qooxdoo_qxl_apiviewer_v1_0_11",
       "uri": "qooxdoo/qxl.apiviewer",
       "repo_name": "qooxdoo/qxl.apiviewer",
-      "repo_tag": "v1.0.9"
+      "repo_tag": "v1.0.11"
     },
     {
       "library_name": "versionlabel",
@@ -18,11 +18,11 @@
     },
     {
       "library_name": "qxl.testnode",
-      "library_version": "1.0.5",
-      "path": "qx_packages/qooxdoo_qxl_testnode_v1_0_5",
+      "library_version": "1.0.6",
+      "path": "qx_packages/qooxdoo_qxl_testnode_v1_0_6",
       "uri": "qooxdoo/qxl.testnode",
       "repo_name": "qooxdoo/qxl.testnode",
-      "repo_tag": "v1.0.5"
+      "repo_tag": "v1.0.6"
     }
   ],
   "version": "2.1.0"
