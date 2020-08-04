@@ -74,8 +74,12 @@
         "qx.icontheme": "Tango",
         "qxl.apiviewer.applicationName": "compiler",
         "qxl.apiviewer.exclude": [
+           "qx.*",
+           "qxl.*",
+           "qxWeb"		   
         ],
         "qxl.apiviewer.include": [
+           "qx.tool.*"
         ]
       },
       "include": [

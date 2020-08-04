@@ -173,7 +173,7 @@ qx.Class.define("qx.tool.cli.commands.package.Migrate", {
               .transform("info.version", version => {
                 let coerced = semver.coerce(version);
                 if (coerced === null) {
-                  qx.tool.compiler.Console.warn(`*** Version string '${version}' could not be interpretted as semver, changing to 1.0.0`);
+                  qx.tool.compiler.Console.warn(`*** Version string '${version}' could not be interpreted as semver, changing to 1.0.0`);
                   return "1.0.0";
                 }
                 return String(coerced);
@@ -221,8 +221,8 @@ qx.Class.define("qx.tool.cli.commands.package.Migrate", {
         let compileJsonFilename = path.join(process.cwd(), "compile.json");
         let replaceInFiles = [{
           files: compileJsonFilename,
-          from: "qx/browser",
-          to: "@qooxdoo/qx/browser"
+          from: "\"qx/browser\"",
+          to: "\"@qooxdoo/qx/browser\""
         }];
         await this.migrate([compileJsonFilename], replaceInFiles);
       }
