@@ -32,6 +32,7 @@ the [qooxdoo Manual](https://qooxdoo.org/documentation/#/development/compiler/).
 
 Beta. The API has mostly stabilized, we will provide a migration path for any
 backward-incompatible changes.
+Api reference of the compiler can be found here: https://qooxdoo.org/qooxdoo-compiler/#
 
 ## Prerequisites
 
