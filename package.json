@@ -96,7 +96,7 @@
     "uglify-es": "^3.3.9",
     "unset-value": "^1.0.0",
     "upath": "^1.2.0",
-    "update-notifier": "^2.5.0",
+    "update-notifier": "^4.1.1",
     "xml2js": "^0.4.23",
     "yargs": "^15.3.1"
   },
