@@ -589,13 +589,14 @@ qx.Class.define("qx.tool.compiler.Analyser", {
               let propertyMeta = meta.properties[propertyName];
               let upname = qx.lang.String.firstUp(propertyName);
               let type = propertyMeta.check || "any";
-
-              let msg = "Gets the (computed) value of the property <code>" + propertyName + "</code>.\n" +
-                "\n" +
-                "For further details take a look at the property definition: {@link #" + propertyName + "}.";
-              addPropertyAccessor(propertyMeta, "get" + upname, "get", type, null, msg);
-              if (type == "Boolean") {
-                addPropertyAccessor(propertyMeta, "is" + upname, "is", type, null, msg);
+              if (!propertyMeta.group) {
+                let msg = "Gets the (computed) value of the property <code>" + propertyName + "</code>.\n" +
+                  "\n" +
+                  "For further details take a look at the property definition: {@link #" + propertyName + "}.";
+                addPropertyAccessor(propertyMeta, "get" + upname, "get", type, null, msg);
+                if (type == "Boolean") {
+                  addPropertyAccessor(propertyMeta, "is" + upname, "is", type, null, msg);
+                }
               }
 
               addPropertyAccessor(propertyMeta, "set" + upname, "set", null, type,
