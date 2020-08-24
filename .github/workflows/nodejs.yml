@@ -11,7 +11,7 @@ jobs:
   test:
     name: Run tests
     runs-on: ${{ matrix.os }}
-#    if: github.ref != 'refs/heads/master'
+    if: github.ref != 'refs/heads/master'
     strategy:
       matrix:
         os: [ubuntu-latest]
@@ -27,7 +27,7 @@ jobs:
               npm ci
       - name: compile the compiler
         run:  |
-              npx qx deploy --target=build 
+              npx qx deploy 
       - name: Run qx test for built-in compiler tests
         run:  ./bin/qx test --output-path-prefix=tmp
         env:
@@ -44,9 +44,16 @@ jobs:
         run:  |
               npm ci
       - name: Build API Viewer
-        run:  npx qx compile --target=build -v --clean
+        run:  npx qx deploy app-name="apiviewer" 
       - name: Deploy API Viewer
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./compiled/browser/build
+          publish_dir: ./html
+      - name: dispatch to deploy
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.ACTION_TOKEN }}
+          repository: qooxdoo/deployment
+          event-type: deploy
+          

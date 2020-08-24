@@ -6,11 +6,11 @@ qx.Class.define("qxl.compilertests.testlib.CompilerApi", {
   
   members: {
     async load() {
-      let data = await this.base(arguments);
+      await this.base(arguments);
+      let data = this.getConfiguration();
       if (!data.environment)
         data.environment = {};
       data.environment.testlibCompilerApi = "two";
-      return data;
     }
   }
 });

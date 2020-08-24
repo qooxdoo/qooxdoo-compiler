@@ -20,6 +20,8 @@ node_modules/
 /compiled/
 /qx_packages/
 # test apps
-/foo*
-/myapp
-/test/qx
+foo*
+myapp
+test/qx
+tmp
+source/class/qx/tool/compiler/Version.js

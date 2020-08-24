@@ -42,10 +42,6 @@ qx.Class.define("qx.tool.cli.api.CompilerApi", {
       nullable: false
     },
     
-    /** Configuration data for the compiler */
-    configuration: {
-    },
-    
     /** The current command */
     command: {
       init: null,
@@ -59,7 +55,32 @@ qx.Class.define("qx.tool.cli.api.CompilerApi", {
     __libraryApis: null,
     
     /**
+     * Register compiler tests
+     * @param  cmd: {qx.tool.cli.commands.Command} current command
+     * @return {Promise<void>}
+     */
+    async beforeTests (cmd) {
+      // Nothing
+    },
+
+    /**
+     * called after deployment happens
+     * 
+     * @param data {Object}  contains deployment infos with the following properties:
+     *           targetDir  : {String}  The target dir of the build
+     *           deployDir  : {String}  The output dir for the deployment
+     *           argv       : {Object}  Arguments
+     *           application: {Object}  application to build
+     * @return {Promise<void>}
+     */
+    async afterDeploy (data) {
+      // Nothing
+    },
+    
+    /**
      * Loads the configuration data
+     * 
+     * @overridden
      */
     async load() {
       let compileJsonPath = path.join(this.getRootDir(), this.getConfigFilename());
@@ -68,7 +89,7 @@ qx.Class.define("qx.tool.cli.api.CompilerApi", {
         config = await qx.tool.utils.Json.loadJsonAsync(compileJsonPath);
       }
       this.setConfiguration(config);
-      return config;
+      return this.base(arguments);
     },
     
     /**

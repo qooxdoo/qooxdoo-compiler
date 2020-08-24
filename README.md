@@ -3,7 +3,9 @@
 [![Gitter][gitter-image]][gitter-url]
 [![Travis Status][travis-image]][travis-url]
 
-Qooxdoo-Compiler is the new compiler and command line interface for Qooxdoo (http://qooxdoo.org) applications, written in 100% Node.JS Javascript it adds these key improvements over the standard python generator:
+Qooxdoo-Compiler is the new compiler and command line interface for Qooxdoo 
+(http://qooxdoo.org) applications, written in 100% Node.JS Javascript it adds 
+these key improvements over the standard python generator:
 
 * Includes Babel for adding ES6 to all Qooxdoo applications 
 * Fast (up to 24x faster) and low resource usage (tiny cache, low CPU usage)
@@ -21,10 +23,16 @@ The included command line utility allows you create, build and manage
 [qooxdoo](http://www.qooxdoo.org) applications (note that Qooxdoo-Compiler now
 incorporates the Qooxdoo-CLI project, which used to be a separate repo).
 
+## Documentation
+
+Detailed documentation on the compiler is available in the dedicated chapter of
+the [qooxdoo Manual](https://qooxdoo.org/documentation/#/development/compiler/).
+
 ## Development status
 
 Beta. The API has mostly stabilized, we will provide a migration path for any
 backward-incompatible changes.
+Api reference of the compiler can be found here: https://qooxdoo.org/qooxdoo-compiler/#
 
 ## Prerequisites
 
@@ -74,6 +82,21 @@ Qooxdoo Compiler is a BETA RELEASE and of course, you use at your own risk.
 However, it is in use in several major production applications maintained by the
 qooxdoo core developers and therefore you can be fairly confident that we cherish
 stability and every major bug that comes up will be fixed ASAP. 
+
+Because of its beta status, you should upgrade to the newest NPM version with caution.
+A new version is released on each commit to the master branch. The integrity of the
+code is tested before a release. However, you should always test a new release thoroughly
+with your application before using it to build any production code. If you find that
+something is broken, please [create an issue](https://github.com/qooxdoo/qooxdoo-compiler/issues/new/choose).
+
+You can always revert to a previous release by picking a version 
+[on the NPM website](https://www.npmjs.com/package/@qooxdoo/compiler?activeTab=versions)
+and executing 
+
+```bash
+npm install @qooxdoo/compiler@1.0.0-beta.XXXXXX-YYYY
+```
+(replace XXXXX-YYYY by the date string).
 
 ### Gotchas
 
