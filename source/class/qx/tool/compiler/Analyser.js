@@ -460,11 +460,12 @@ qx.Class.define("qx.tool.compiler.Analyser", {
         fixupEntry(meta.defer);
       }
 
-      async function updateMetaData(classname, meta) {
-        var classEntities = {
-          members: {},
-          properties: {}
-        };
+        async function updateMetaData(classname, meta) {
+          var classEntities = {
+            members: {},
+            properties: {},
+            events: {}
+          };
 
         async function analyseClassEntities(meta, first) {
           if (typeof meta == "string") {
@@ -474,40 +475,46 @@ qx.Class.define("qx.tool.compiler.Analyser", {
             return;
           }
 
-          [ "members", "properties" ].forEach(entityTypeName => {
-            if (!meta[entityTypeName]) {
-              return;
-            }
+            ["members", "properties", "events"].forEach(entityTypeName => {
+              if (!meta[entityTypeName]) {
+                return;
+              }
 
-            for (let entityName in meta[entityTypeName]) {
-              let entityMeta = meta[entityTypeName][entityName];
-              if (entityMeta.type === "function" || entityTypeName === "properties") {
-                var entityInfo = classEntities[entityTypeName][entityName];
-                if (!entityInfo) {
-                  entityInfo = classEntities[entityTypeName][entityName] = {
-                    appearsIn: {},
-                    overriddenFrom: null,
-                    jsdoc: null,
-                    abstract: meta.type === "interface",
-                    mixin: (meta.type === "mixin") && !first,
-                    inherited: !first,
-                    access: entityName.startsWith("__") ? "private" : entityName.startsWith("_") ? "protected" : "public"
-                  };
-                }
-                if (entityMeta.event) {
-                  entityInfo.event = entityMeta.event;
-                }
-                if (entityMeta.property) {
-                  entityInfo.property = entityMeta.property;
-                }
-                if (meta.type === "mixin" && entityInfo.abstract) {
-                  entityInfo.mixin = true;
-                }
-                if (meta.type !== "interface") {
-                  entityInfo.abstract = false;
-                } else {
-                  entityInfo["interface"] = true;
-                }
+              for (let entityName in meta[entityTypeName]) {
+                let entityMeta = meta[entityTypeName][entityName];
+
+                if (entityMeta.type === "function" || entityTypeName === "properties" || entityTypeName === "events") {
+                  var entityInfo = classEntities[entityTypeName][entityName];
+
+                  if (!entityInfo) {
+                    entityInfo = classEntities[entityTypeName][entityName] = {
+                      appearsIn: {},
+                      overriddenFrom: null,
+                      jsdoc: null,
+                      abstract: meta.type === "interface",
+                      mixin: meta.type === "mixin" && !first,
+                      inherited: !first,
+                      access: entityName.startsWith("__") ? "private" : entityName.startsWith("_") ? "protected" : "public"
+                    };
+                  }
+
+                  if (entityMeta.event) {
+                    entityInfo.event = entityMeta.event;
+                  }
+
+                  if (entityMeta.property) {
+                    entityInfo.property = entityMeta.property;
+                  }
+
+                  if (meta.type === "mixin" && entityInfo.abstract) {
+                    entityInfo.mixin = true;
+                  }
+
+                  if (meta.type !== "interface") {
+                    entityInfo.abstract = false;
+                  } else {
+                    entityInfo["interface"] = true;
+                  }
 
                 if (!first) {
                   entityInfo.appearsIn[meta.className] = meta.type;
@@ -657,18 +664,48 @@ qx.Class.define("qx.tool.compiler.Analyser", {
 
         await analyseClassEntities(meta, true);
 
-        if (meta.properties) {
-          for (let propertyName in meta.properties) {
-            let propertyMeta = meta.properties[propertyName];
-            if (propertyMeta.refine) {
-              let result = classEntities.properties[propertyName];
-              if (result) {
-                propertyMeta.overriddenFrom = result.overriddenFrom;
-                propertyMeta.appearsIn = result.appearsIn;
-                mergeSignature(result.jsdoc, propertyMeta);
+          for (let eventName in classEntities.events) {
+            if (!meta.events) {
+              meta.events = {};
+            }
+            let eventInfo = classEntities.events[eventName];
+            if ((eventInfo.abstract || eventInfo.mixin) && !meta.events[eventInfo]) {
+              let eventMeta = meta.events[eventName] = {
+                type: "event",
+                name: eventName,
+                abstract: Boolean(eventInfo.abstract),
+                mixin: Boolean(eventInfo.mixin),
+                access: eventInfo.access,
+                overriddenFrom: eventInfo.overriddenFrom,
+              };
+              if (eventInfo.appearsIn.length) {
+                eventMeta.appearsIn = Object.keys(eventInfo.appearsIn);
+              }
+
+              if (eventInfo.jsdoc) {
+                eventMeta.jsdoc = eventInfo.jsdoc;
+              }
+
+              if (eventInfo.overriddenFrom) {
+                eventMeta.overriddenFrom = eventInfo.overriddenFrom;
               }
             }
-          }
+          }  
+
+          if (meta.properties) {
+            for (let propertyName in meta.properties) {
+              let propertyMeta = meta.properties[propertyName];
+
+              if (propertyMeta.refine) {
+                let result = classEntities.properties[propertyName];
+
+                if (result) {
+                  propertyMeta.overriddenFrom = result.overriddenFrom;
+                  propertyMeta.appearsIn = result.appearsIn;
+                  mergeSignature(result.jsdoc, propertyMeta);
+                }
+              }
+            }
 
           for (let propertyName in classEntities.properties) {
             let propertyInfo = classEntities.properties[propertyName];
