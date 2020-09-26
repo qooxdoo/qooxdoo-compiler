@@ -130,6 +130,7 @@
       "include": [
         "qx.core.BaseInit",
         "qx.test.tool.*",
+        "qx.test.compiler.*",
         "qx.tool.*",
         "qx.dev.*"
       ],
