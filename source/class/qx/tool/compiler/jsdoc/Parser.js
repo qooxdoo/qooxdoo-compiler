@@ -34,6 +34,15 @@ qx.Class.define("qx.tool.compiler.jsdoc.Parser", {
      * consist of the name, the body of the JSDoc entry, and optional, key-specific parsed data (where supported)
      */
     parseComment: function(comment) {
+      /* 
+         JSDoc starts with /**
+         babel parses this to * - the comment starting end ending is striped
+         So whe have to test for valid JSDoc comment.
+      */
+      comment = comment.trim();
+      if (!(comment.startsWith("* ") || comment.startsWith("*\n"))) {
+        return {};
+      }
       var current = { name: "@description", body: "" };
       var cmds = [ current ];
 
