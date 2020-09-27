@@ -665,6 +665,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
           t.addDeclaration(idNode.name);
         }
         t.pushScope(idNode ? idNode.name : null, node, isClassMember);
+        
         function addDecl(param) {
           if (param.type == "AssignmentPattern") {
             addDecl(param.left);
@@ -673,9 +674,9 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
           } else if (param.type == "Identifier") {
             t.addDeclaration(param.name);
           } else if (param.type == "ArrayPattern") {
-            param.elements.forEach(elem => t.addDeclaration(elem.name));
+            param.elements.forEach(elem => addDecl(elem));
           } else if (param.type == "ObjectPattern") {
-            param.properties.forEach(prop => t.addDeclaration(prop.value.name));
+            param.properties.forEach(prop => addDecl(prop.value));
           } else {
             t.addMarker("testForFunctionParameterType", node.loc, param.type);
           }
