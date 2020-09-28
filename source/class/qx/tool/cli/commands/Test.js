@@ -51,6 +51,11 @@ qx.Class.define("qx.tool.cli.commands.Test", {
         describe: "Exit on first failing test",
         default: true,
         type: "boolean"
+      },
+      "disable-webserver": {
+        describe: "Disables the start of the webserver",
+        default: false,
+        type: "boolean"
       }
     },
 
@@ -198,7 +203,7 @@ qx.Class.define("qx.tool.cli.commands.Test", {
     },
 
     __needsServer: function() {
-      return this.getNeedsServer() || this.__tests.some(test => test.getNeedsServer());
+      return !this.argv.disableWebserver && (this.getNeedsServer() || this.__tests.some(test => test.getNeedsServer()));
     }
   }
 });
