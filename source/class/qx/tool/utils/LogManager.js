@@ -18,10 +18,13 @@
  *    Authors:
  *      * John Spackman (john.spackman@zenesis.com, @johnspackman)
  *
- * @require( qx.tool.utils.Logger)
  * 
  * *********************************************************************** */
-var LEVELS = [ "trace", "debug", "info", "warn", "error", "fatal" ];
+/**
+ * @require(qx.tool.utils.Logger)
+*/
+
+ var LEVELS = [ "trace", "debug", "info", "warn", "error", "fatal" ];
 
 function zeropad2(val) {
   if (val < 10) {
