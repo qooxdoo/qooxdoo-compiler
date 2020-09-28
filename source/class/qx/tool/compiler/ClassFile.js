@@ -665,20 +665,24 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
           t.addDeclaration(idNode.name);
         }
         t.pushScope(idNode ? idNode.name : null, node, isClassMember);
-        node.params.forEach(param => {
+        
+        function addDecl(param) {
           if (param.type == "AssignmentPattern") {
-            t.addDeclaration(param.left.name);
+            addDecl(param.left);
           } else if (param.type == "RestElement") {
             t.addDeclaration(param.argument.name);
           } else if (param.type == "Identifier") {
             t.addDeclaration(param.name);
           } else if (param.type == "ArrayPattern") {
-            param.elements.forEach(elem => t.addDeclaration(elem.name));
+            param.elements.forEach(elem => addDecl(elem));
           } else if (param.type == "ObjectPattern") {
-            param.properties.forEach(prop => t.addDeclaration(prop.value.name));
+            param.properties.forEach(prop => addDecl(prop.value));
           } else {
             t.addMarker("testForFunctionParameterType", node.loc, param.type);
           }
+        }
+        node.params.forEach(param => {
+          addDecl(param);
         });
         checkNodeJsDocDirectives(node);
       }
@@ -1742,6 +1746,8 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
                   if (prop) {
                     if (prop.type == "AssignmentPattern") {
                       t.addDeclaration(prop.left.name);
+                    } else if (prop.type == "RestElement") {
+                      t.addDeclaration(prop.argument.name);
                     } else {
                       t.addDeclaration(prop.name);
                     }

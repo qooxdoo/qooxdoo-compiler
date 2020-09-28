@@ -8,7 +8,7 @@
   "scripts": {
     "devtools": "node source/resource/qx/tool/bin/build-devtools",
     "website": "node source/resource/qx/tool/bin/build-website",
-    "pretest": "npx qx deploy --target=build",
+    "pretest": "npx qx deploy --target=build --clean",
     "test": "node bin/qx test --target=build --output-path-prefix=tmp",
     "prepack": "npx qx deploy --target=build --clean"
   },
