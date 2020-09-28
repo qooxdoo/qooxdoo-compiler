@@ -40,7 +40,7 @@ qx.Class.define("qx.tool.compiler.jsdoc.Parser", {
          So whe have to test for valid JSDoc comment.
       */
       comment = comment.trim();
-      if (!(comment.startsWith("* ") || comment.startsWith("*\n"))) {
+      if (!(comment.startsWith("* ") || comment.startsWith("*\n") || comment.startsWith("*\r"))) {
         return {};
       }
       var current = { name: "@description", body: "" };
