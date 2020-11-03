@@ -24,7 +24,7 @@ test("Issue553 Node", async assert => {
     assert.ok(!fs.existsSync("test-issues/issue553_node/compiled/source/index.js"));
     assert.ok(fs.existsSync("test-issues/issue553_node/compiled/source/issue553one/index.js"));
     let index = await fsPromises.readFile("test-issues/issue553_node/compiled/source/issue553one/index.js", "utf8");
-    assert.ok(!!index.match(/require(/m));
+    assert.ok(!!index.match(/require\(/m));
     assert.ok(!fs.existsSync("test-issues/issue553_node/compiled/source/issue553one/index.html"));
     assert.ok(fs.existsSync("test-issues/issue553_node/compiled/source/issue553two/index.js"));
     assert.ok(!fs.existsSync("test-issues/issue553_node/compiled/source/issue553two/index.html"));
