@@ -884,7 +884,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         }
         maker.getAnalyser().setGlobalSymbols(globalSymbols);
 
-        if (targetConfig.defaultAppConfig && (targetConfig.defaultAppConfig.type === "browser")) {
+        if (targetConfig.defaultAppConfig && ((targetConfig.defaultAppConfig.type || "browser") === "browser")) {
           targetConfig.defaultAppConfig.app.setWriteIndexHtmlToRoot(true);
         } else {
           qx.tool.utils.files.Utils.safeUnlink(target.getOutputDir() + "index.html");
