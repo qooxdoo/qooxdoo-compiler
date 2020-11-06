@@ -13,7 +13,7 @@
         "column": 0
       },
       "end": {
-        "line": 39,
+        "line": 44,
         "column": 3
       }
     },
@@ -42,11 +42,11 @@
       "location": {
         "start": {
           "line": 32,
-          "column": 6
+          "column": 4
         },
         "end": {
-          "line": 34,
-          "column": 7
+          "line": 39,
+          "column": 5
         }
       },
       "jsdoc": {
@@ -3341,11 +3341,11 @@
   "defer": {
     "location": {
       "start": {
-        "line": 36,
+        "line": 41,
         "column": 9
       },
       "end": {
-        "line": 38,
+        "line": 43,
         "column": 3
       }
     },
