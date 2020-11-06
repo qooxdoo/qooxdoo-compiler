@@ -24,16 +24,21 @@
 qx.Class.define("qx.tool.cli.Application", {
   extend: qx.application.Basic,
   members:
-    {
-      /**
-       * This method contains the initial application code and gets called
-       * during startup of the application
-       */
-      main: async function () {
+  {
+    /**
+     * This method contains the initial application code and gets called
+     * during startup of the application
+     */
+    main: async function () {
+      try {
         await (new qx.tool.cli.Cli()).run();
+      } catch (e) {
+        qx.tool.compiler.Console.error("Error: " + (e.stack || e.message));
+        process.exit(1);
       }
-    },
-  defer: function(statics) {
+    }
+  },
+  defer: function (statics) {
     qx.log.Logger.setLevel("error");
   }
 });
