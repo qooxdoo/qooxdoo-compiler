@@ -1342,7 +1342,8 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
             DoWhileStatement: 1,
             ForOfStatement: 1,
             TaggedTemplateExpression: 1,
-            ClassExpression: 1
+            ClassExpression: 1,
+            OptionalCallExpression: 1
           };
           let root = path;
           while (root) {
