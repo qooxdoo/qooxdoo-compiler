@@ -343,7 +343,7 @@ qx.Class.define("qx.tool.cli.commands.package.Publish", {
       const topic = "qooxdoo-package";
       if (!topics.includes(topic)) {
         topics.push(topic);
-        await octokit.repos.replaceTopics({owner,
+        await octokit.repos.replaceAllTopics({owner,
           repo,
           names:topics});
         if (!argv.quiet) {
