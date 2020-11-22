@@ -425,7 +425,7 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
 
         const loadFont = async font => {
           try {
-            // check if font is assert somewhere
+            // check if font is asset somewhere
             let res = font.getResources().filter(res => {
               let s = library.getNamespace() + ":" + res;
               return assets[s];
