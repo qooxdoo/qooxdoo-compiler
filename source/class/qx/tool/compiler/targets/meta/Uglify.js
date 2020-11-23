@@ -32,6 +32,9 @@ qx.Class.define("qx.tool.compiler.targets.meta.Uglify", {
       var uglifyOpts = {
         compress: {
           sequences: false
+        },
+        output: {
+          comments: "some"
         }
       };
       switch (this._appMeta.getTarget().getMinify()) {
@@ -44,9 +47,7 @@ qx.Class.define("qx.tool.compiler.targets.meta.Uglify", {
 
         case "beautify":
           uglifyOpts.mangle = false;
-          uglifyOpts.output = {
-            beautify: true
-          };
+          uglifyOpts.output.beautify = true;
           break;
 
         case "mangle":
@@ -91,7 +92,7 @@ qx.Class.define("qx.tool.compiler.targets.meta.Uglify", {
         if (err.name == "SyntaxError") {
           qx.tool.compiler.Console.print("qx.tool.compiler.build.uglifyParseError", err.line, err.col, err.message, baseJsFilename);
         }
-        throw new Error("UglifyJS failed to minimise");
+        throw new Error("UglifyJS failed to minimise: " + (err.message||err));
       }
       await fs.writeFileAsync(outJsFilename, result.code, { encoding: "utf8" });
       if (!this._appMeta.getTarget().isSaveUnminified()) {

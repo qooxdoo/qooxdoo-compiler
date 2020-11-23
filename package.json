@@ -60,7 +60,7 @@
     "async": "^2.6.3",
     "babel-eslint": "^10.1.0",
     "better-ajv-errors": "^0.6.7",
-    "chokidar": "^2.1.8",
+    "chokidar": "^3.4.3",
     "cldr": "^5.5.4",
     "columnify": "^1.5.4",
     "console-control-strings": "^1.1.0",

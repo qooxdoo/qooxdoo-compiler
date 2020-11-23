@@ -97,6 +97,10 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         type: "boolean",
         alias: "w"
       },
+      "watch-debug": {
+        describe: "enables debug messages for watching",
+        type: "boolean"
+      },
       "machine-readable": {
         alias: "M",
         describe: "output compiler messages in machine-readable format",
@@ -148,6 +152,11 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
       "warn-as-error": {
         alias: "E",
         describe: "Handle compiler warnings as error",
+        type: "boolean",
+        default: false
+      },
+      "write-compile-info": {
+        describe: "Write compiler information to the target",
         type: "boolean",
         default: false
       },
@@ -475,6 +484,9 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
 
         // Continuous make
         let watch = new qx.tool.cli.Watch(maker);
+        if (this.argv["watch-debug"]) {
+          watch.setDebug(true);
+        }
 
         watch.addListener("making", () => {
           countMaking++;
@@ -494,7 +506,15 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         });
         let arr = [ this._compileJsFilename, this._compileJsonFilename ].filter(str => Boolean(str));
         watch.setConfigFilenames(arr);
-
+        
+        process.on('disconnect', function() {
+          qx.tool.compiler.Console.print("Parent process has terminated, exiting compiler");
+          watch.stop();
+        });
+        process.stdout.on('end', function() {
+          qx.tool.compiler.Console.print("Parent process has terminated, exiting compiler");
+          watch.stop();
+        });
         return p.then(() => watch.start());
       }));
     },
@@ -704,7 +724,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         if (targetConfig.uri) {
           qx.tool.compiler.Console.print("qx.tool.cli.compile.deprecatedUri", "target.uri", targetConfig.uri);
         }
-        if (targetConfig.writeCompileInfo) {
+        if (targetConfig.writeCompileInfo || this.argv.writeCompileInfo) {
           target.setWriteCompileInfo(true);
         }
         if (data.i18nAsParts) {
@@ -885,7 +905,10 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         maker.getAnalyser().setGlobalSymbols(globalSymbols);
 
         if (targetConfig.defaultAppConfig) {
-          targetConfig.defaultAppConfig.app.setWriteIndexHtmlToRoot(true);
+          // Sometimes the app is null, if the app is not going to be compiled this time (eg due to app-name filter)
+          if (targetConfig.defaultAppConfig.app) {
+            targetConfig.defaultAppConfig.app.setWriteIndexHtmlToRoot(true);
+          }
         } else {
           qx.tool.utils.files.Utils.safeUnlink(target.getOutputDir() + "index.html");
         }
