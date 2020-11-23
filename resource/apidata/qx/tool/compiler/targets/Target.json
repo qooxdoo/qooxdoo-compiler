@@ -13,7 +13,7 @@
         "column": 0
       },
       "end": {
-        "line": 802,
+        "line": 813,
         "column": 3
       }
     },
@@ -761,8 +761,8 @@
           "column": 4
         },
         "end": {
-          "line": 445,
-          "column": 5
+          "line": 456,
+          "column": 3
         }
       },
       "jsdoc": {
@@ -789,11 +789,11 @@
     "_writeTranslations": {
       "location": {
         "start": {
-          "line": 452,
+          "line": 463,
           "column": 4
         },
         "end": {
-          "line": 469,
+          "line": 480,
           "column": 5
         }
       },
@@ -820,11 +820,11 @@
     "_transformLocales": {
       "location": {
         "start": {
-          "line": 478,
+          "line": 489,
           "column": 4
         },
         "end": {
-          "line": 490,
+          "line": 501,
           "column": 5
         }
       },
@@ -859,11 +859,11 @@
     "_writeLocales": {
       "location": {
         "start": {
-          "line": 502,
+          "line": 513,
           "column": 4
         },
         "end": {
-          "line": 541,
+          "line": 552,
           "column": 5
         }
       },
@@ -890,11 +890,11 @@
     "_writeAllTranslations": {
       "location": {
         "start": {
-          "line": 548,
+          "line": 559,
           "column": 4
         },
         "end": {
-          "line": 581,
+          "line": 592,
           "column": 5
         }
       },
@@ -921,11 +921,11 @@
     "_writeRequiredTranslations": {
       "location": {
         "start": {
-          "line": 588,
+          "line": 599,
           "column": 4
         },
         "end": {
-          "line": 644,
+          "line": 655,
           "column": 5
         }
       },
@@ -952,11 +952,11 @@
     "_writeApplication": {
       "location": {
         "start": {
-          "line": 654,
+          "line": 665,
           "column": 4
         },
         "end": {
-          "line": 701,
+          "line": 712,
           "column": 5
         }
       },
@@ -983,11 +983,11 @@
     "_writeIndexHtml": {
       "location": {
         "start": {
-          "line": 706,
+          "line": 717,
           "column": 4
         },
         "end": {
-          "line": 800,
+          "line": 811,
           "column": 5
         }
       },
