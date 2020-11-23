@@ -16,6 +16,36 @@ test("Issue553", async assert => {
   }
 });
 
+test("Issue553 single app", async assert => {
+  try {
+    await testUtils.deleteRecursive("test-issues/issue553/compiled");
+    await testUtils.runCompiler("test-issues/issue553", "--app-name=issue553two");
+    assert.ok(!fs.existsSync("test-issues/issue553/compiled/source/index.html"));
+    assert.ok(fs.existsSync("test-issues/issue553/compiled/source/issue553two/index.html"));
+    assert.end();
+  }catch(ex) {
+    assert.end(ex);
+  }
+});
+
+test("Issue553 Node", async assert => {
+  try {
+    await testUtils.deleteRecursive("test-issues/issue553_node/compiled");
+    await testUtils.runCompiler("test-issues/issue553_node");
+    assert.ok(!fs.existsSync("test-issues/issue553_node/compiled/source/index.html"));
+    assert.ok(!fs.existsSync("test-issues/issue553_node/compiled/source/index.js"));
+    assert.ok(fs.existsSync("test-issues/issue553_node/compiled/source/issue553one/index.js"));
+    let index = await fsPromises.readFile("test-issues/issue553_node/compiled/source/issue553one/index.js", "utf8");
+    assert.ok(!!index.match(/require\(/m));
+    assert.ok(!fs.existsSync("test-issues/issue553_node/compiled/source/issue553one/index.html"));
+    assert.ok(fs.existsSync("test-issues/issue553_node/compiled/source/issue553two/index.js"));
+    assert.ok(!fs.existsSync("test-issues/issue553_node/compiled/source/issue553two/index.html"));
+    assert.end();
+  }catch(ex) {
+    assert.end(ex);
+  }
+});
+
 test("Dynamic commands", async assert => {
   try {
     await testUtils.deleteRecursive("test-issues/testdynamic/compiled");

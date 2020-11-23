@@ -1,23 +1,41 @@
 /* ************************************************************************
 
-   Copyright: 2019 undefined
+   Copyright: 2020 
 
    License: MIT license
 
-   Authors: undefined
+   Authors: 
 
 ************************************************************************ */
 
 /**
- * This is the main application class of "issue440"
+ * This is the main application class of "testMixin"
  *
- * @asset(issue440/*)
+ * @asset(testMixin/*)
  */
-qx.Class.define("issue440.Application",
+qx.Class.define("testMixin.Application",
 {
   extend : qx.application.Standalone,
+  include: [
+      testMixin.Mixin
+  ],
 
 
+  events: {
+     /**
+      * main event
+      */
+     mainEvent: "qx.event.type.Event"
+  },
+
+  properties :
+  {
+    /**
+     * mainProperty
+     */
+    mainProperty : {
+    }
+  },
 
   /*
   *****************************************************************************
@@ -33,13 +51,12 @@ qx.Class.define("issue440.Application",
      * 
      * @lint ignoreDeprecated(alert)
      */
+    /* no jsdoc comment */
     main : function()
     {
       // Call super class
       this.base(arguments);
-      
-new abc.ClassNoDef(); //This is an error
-      
+
       // Enable logging in debug variant
       if (qx.core.Environment.get("qx.debug"))
       {
@@ -56,7 +73,7 @@ new abc.ClassNoDef(); //This is an error
       */
 
       // Create a button
-      var button1 = new qx.ui.form.Button("Click me", "issue440/test.png");
+      var button1 = new qx.ui.form.Button("Click me", "testMixin/test.png");
 
       // Document is the application root
       var doc = this.getRoot();
@@ -69,6 +86,22 @@ new abc.ClassNoDef(); //This is an error
         /* eslint no-alert: "off" */
         alert("Hello World!");
       });
+    },
+    test_1: function () {
+      let test = "class:1:2";
+      let [t_0, t_1] = test.split(":");
+      console.log(t_0, t_1);
+      let [testClass, ...testName] = test.split(":");
+      console.log(testClass, testName);
+    },
+    test_2: function (param1 = {}) {
+      console.log(param1);
+    },
+    test_3: function ({param1, param2} = {}) {
+      console.log(param1, param2);
+    },
+    test_4: function ({param1 = 1, param2 = 2} = {}) {
+      console.log(param1, param2);
     }
   }
 });
