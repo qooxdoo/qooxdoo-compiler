@@ -401,12 +401,20 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
         });
       });
       
+      var assetUris = application.getAssetUris(t, rm, appMeta.getEnvironment()); // Save any changes that getAssets collected
+      await rm.saveDatabase();
+      var assets = {};
+      rm.getAssetsForPaths(assetUris).forEach(asset => {
+        bootPackage.addAsset(asset);
+        assets[asset] = true;
+      });
+
       var promises = [
         analyser.getCldr("en")
           .then(cldr => bootPackage.addLocale("C", cldr)),
         t._writeTranslations(appMeta)
-      ];
-
+      ];      
+      
       var fontCntr = 0;
       requiredLibs.forEach(libnamespace => {
         var library = analyser.findLibrary(libnamespace);
@@ -414,8 +422,19 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
         if (!fonts) {
           return;
         }
+
         const loadFont = async font => {
           try {
+            // check if font is asset somewhere
+            let res = font.getResources().filter(res => {
+              let s = library.getNamespace() + ":" + res;
+              return assets[s];
+            });
+            if (res.length === 0) {
+              return;
+            }
+            font.setResources(res);
+         
             var p = await font.generateForTarget(t);
             let resources = await font.generateForApplication(t, application);
             for (var key in resources) {
@@ -432,17 +451,9 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
         };
         fonts.forEach(font => promises.push(loadFont(font)));
       });
-
       await qx.Promise.all(promises);
-      
-      var assetUris = application.getAssetUris(t, rm, appMeta.getEnvironment());
-
-      // Save any changes that getAssets collected
-      await rm.saveDatabase();
-      rm.getAssetsForPaths(assetUris).forEach(asset => bootPackage.addAsset(asset));
-      
       await t._writeApplication(appMeta);
-    },
+  },
 
     /**
      * Handles the output of translations and locales
