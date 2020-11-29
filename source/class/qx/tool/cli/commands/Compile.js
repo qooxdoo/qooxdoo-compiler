@@ -704,7 +704,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         if (targetConfig.uri) {
           qx.tool.compiler.Console.print("qx.tool.cli.compile.deprecatedUri", "target.uri", targetConfig.uri);
         }
-        if (targetConfig.writeCompileInfo) {
+        if (targetConfig.writeCompileInfo || this.argv.writeCompileInfo) {
           target.setWriteCompileInfo(true);
         }
         if (data.i18nAsParts) {
