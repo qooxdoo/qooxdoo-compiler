@@ -334,6 +334,9 @@ qx.Class.define("qx.tool.cli.commands.Command", {
      * @return {Boolean}
      */
     isExplicitArg(option) {
+      /**
+       * @param option
+       */
       function searchForOption(option) {
         return process.argv.indexOf(option) > -1;
       }

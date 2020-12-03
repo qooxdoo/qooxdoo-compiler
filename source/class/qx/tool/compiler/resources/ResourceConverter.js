@@ -31,6 +31,7 @@ qx.Class.define("qx.tool.compiler.resources.ResourceConverter", {
   members: {
     /**
      * Allows the converter to decide to not copy the resource at all
+     * @param filename
      */
     isDoNotCopy(filename) {
       return false;
@@ -66,11 +67,11 @@ qx.Class.define("qx.tool.compiler.resources.ResourceConverter", {
     /**
      * Allows a file to be recompiled/coverted/analysed/ etc; must return a Promise which resolves
      * when complete.  Data can be stored in the resource database by modifying the fileInfo
-     * 
      * @param target {Target} the target
      * @param asset {Asset} the asset to copy
      * @param srcFilename {String} full path to the file
      * @param destFilename {String} full path to the destination file
+     * @param isThemeFile
      * @return {String[]?} list of filenames that are required for the compilation (dependencies)
      */
     async compile(target, asset, srcFilename, destFilename, isThemeFile) {

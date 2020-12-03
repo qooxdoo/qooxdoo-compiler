@@ -207,7 +207,8 @@ qx.Class.define("qx.tool.utils.Website", {
      * If the metadata has a `sites.pages`, then it is expected to be an array of URLs which indicates
      * the ordering to be applied; `sites.pages` is replaced with an array of objects, one per page,
      * that contains `url` and `title` properties.
-     *
+     * @param files
+     * @param metalsmith
      */
     async getPages(files, metalsmith) {
       var metadata = metalsmith.metadata();
@@ -219,6 +220,10 @@ qx.Class.define("qx.tool.utils.Website", {
       }
       var unorderedPages = [];
 
+      /**
+       * @param url
+       * @param title
+       */
       function addPage(url, title) {
         var page = {
           url: url,
@@ -249,7 +254,8 @@ qx.Class.define("qx.tool.utils.Website", {
      * Metalsmith plugin that loads partials and adding them to the metadata.partials map.  Each file
      * is added with its filename, and if it is a .html filename is also added without the .html
      * extension.
-     *
+     * @param files
+     * @param metalsmith
      */
     async loadPartials(files, metalsmith) {
       const metadata = metalsmith.metadata();

@@ -39,6 +39,9 @@ var log = qx.tool.utils.LogManager.createLog("analyser");
  */
 function collapseMemberExpression(node) {
   var done = false;
+  /**
+   * @param node
+   */
   function doCollapse(node) {
     if (node.type == "ThisExpression") {
       return "this";
@@ -86,6 +89,9 @@ function collapseMemberExpression(node) {
   return doCollapse(node);
 }
 
+/**
+ * @param node
+ */
 function isCollapsibleLiteral(node) {
   let nodeType = node.type;
   return nodeType === "Literal" || 
@@ -109,6 +115,9 @@ function expandMemberExpression(str) {
   return expr;
 }
 
+/**
+ * @param value
+ */
 function literalValueToExpression(value) {
   if (value === null || value === undefined) {
     return types.nullLiteral();
@@ -151,6 +160,9 @@ function literalValueToExpression(value) {
   return types.objectExpression(properties);
 }
 
+/**
+ * @param value
+ */
 function formatValueAsCode(value) {
   if (value === undefined) {
     return "undefined";
@@ -462,6 +474,9 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         }
       }
 
+      /**
+       * @param section
+       */
       function fixAnnos(section) {
         if (!section) {
           return;
@@ -608,11 +623,17 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
     _babelClassPlugins: function() {
       var t = this;
 
+      /**
+       * @param key
+       */
       function getKeyName(key) {
         var keyName = key.type == "StringLiteral" ? key.value : key.name;
         return keyName;
       }
       
+      /**
+       * @param node
+       */
       function checkNodeJsDocDirectives(node) {
         var jsdoc = getJsDoc(node.leadingComments);
         if (jsdoc) {
@@ -621,6 +642,10 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         return jsdoc;
       }
 
+      /**
+       * @param jsdoc
+       * @param loc
+       */
       function checkJsDocDirectives(jsdoc, loc) {
         if (!jsdoc) {
           return jsdoc;
@@ -653,6 +678,11 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         return jsdoc;
       }
 
+      /**
+       * @param path
+       * @param node
+       * @param idNode
+       */
       function enterFunction(path, node, idNode) {
         node = node || path.node;
         idNode = idNode || node.id || null;
@@ -666,6 +696,9 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         }
         t.pushScope(idNode ? idNode.name : null, node, isClassMember);
         
+        /**
+         * @param param
+         */
         function addDecl(param) {
           if (param.type == "AssignmentPattern") {
             addDecl(param.left);
@@ -687,6 +720,10 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         checkNodeJsDocDirectives(node);
       }
 
+      /**
+       * @param path
+       * @param node
+       */
       function exitFunction(path, node) {
         node = node||path.node;
         t.popScope(node);
@@ -697,6 +734,9 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         exit: path => exitFunction(path)
       };
 
+      /**
+       * @param comment
+       */
       function getJsDoc(comment) {
         if (!comment) {
           return null;
@@ -720,6 +760,11 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         return result;
       }
 
+      /**
+       * @param sectionName
+       * @param functionName
+       * @param node
+       */
       function makeMeta(sectionName, functionName, node) {
         var meta;
         if (functionName) {
@@ -896,6 +941,9 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         }
       };
 
+      /**
+       * @param node
+       */
       function collectJson(node) {
         var result;
         if (node.type == "ObjectExpression") {
@@ -1011,6 +1059,9 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         }
       };
 
+      /**
+       * @param prop
+       */
       function isValidExtendClause(prop) {
         if (prop.value.type == "MemberExpression" || prop.value.type == "Identifier" || prop.value.type == "NullLiteral") {
           return true;
@@ -1029,6 +1080,9 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         destruct: "$$destructor",
         defer: null
       };
+      /**
+       * @param path
+       */
       function checkValidTopLevel(path) {
         var prop = path.node;
         var keyName = getKeyName(prop.key);
@@ -1040,6 +1094,11 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
           t.addMarker("compiler.invalidClassDefinitionEntry", prop.loc, t.__classMeta.type, keyName);
         }
       }
+      /**
+       * @param path
+       * @param keyName
+       * @param functionNode
+       */
       function handleTopLevelMethods(path, keyName, functionNode) {
         if (keyName == "defer") {
           t.__hasDefer = true;
@@ -1371,6 +1430,9 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
 
         CallExpression: {
           enter: function(path) {
+            /**
+             * @param index
+             */
             function getStringArg(index) {
               if (index >= path.node.arguments.length) {
                 return null;
@@ -1382,6 +1444,9 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
               return null;
             }
 
+            /**
+             * @param entry
+             */
             function addTranslation(entry) {
               let lineNo = path.node.loc ? path.node.loc.start.line : 0;
               let cur = t.__translations[entry.msgid];
@@ -1815,6 +1880,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
 
     /**
      * Pops the current meta off the stack, optionally checking that the classname is correct
+     * @param className
      */
     __popMeta: function(className) {
       if (!this.__metaStack.length) {
@@ -1831,6 +1897,9 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
 
     /**
      * Pushes a new scope on the stack
+     * @param functionName
+     * @param node
+     * @param isClassMember
      */
     pushScope: function(functionName, node, isClassMember) {
       this.__scope = {
@@ -1845,6 +1914,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
 
     /**
      * Pops a scope from the stack
+     * @param node
      */
     popScope: function(node) {
       var old = this.__scope;
@@ -2093,9 +2163,9 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
 
     /**
      * Adds an environment check made by the class
-     *
      * @param name
      * @param opts {Object?} see _requireClass
+     * @param location
      */
     addEnvCheck: function(name, location) {
       var t = this;
@@ -2383,8 +2453,8 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
 
     /**
      * Returns the path to the rewritten class file
-     *
      * @param library  {qx.tool.compiler.app.Library}
+     * @param analyser
      * @param className {String}
      * @returns {String}
      */

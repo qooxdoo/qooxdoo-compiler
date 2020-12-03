@@ -29,6 +29,7 @@ qx.Class.define("qx.tool.compiler.app.Application", {
   /**
    * Constructor
    * @param classname[, classname...] {String|String[]}
+   * @param classname
    */
   construct: function(classname) {
     this.base(arguments);
@@ -301,6 +302,9 @@ qx.Class.define("qx.tool.compiler.app.Application", {
         parts.push(bootPart);
       }
 
+      /**
+       * @param classname
+       */
       function createClassData(classname) {
         if (classDataByClassname[classname]) {
           return classDataByClassname[classname];
@@ -376,11 +380,18 @@ qx.Class.define("qx.tool.compiler.app.Application", {
        *  @param classname {String}
        *  @param deps {String[]} array to modify
        */
+      /**
+       * @param classname
+       * @param deps
+       */
       function compileAllRemainingDeps(classname, deps) {
         var checked = {};
         var depNames = { };
         depNames[classname] = true;
 
+        /**
+         * @param classname
+         */
         function search(classname) {
           if (checked[classname]) {
             return;
@@ -408,6 +419,9 @@ qx.Class.define("qx.tool.compiler.app.Application", {
       }
 
       var addDepDepth = 0;
+      /**
+       * @param classname
+       */
       function addDep(classname) {
         if (exclude[classname]) {
           return;
@@ -501,6 +515,9 @@ qx.Class.define("qx.tool.compiler.app.Application", {
         // Calculate inter-part dependencies
         parts.forEach(part => {
           var checked = {};
+          /**
+           * @param classname
+           */
           function check(classname) {
             if (checked[classname]) {
               return;
@@ -521,6 +538,9 @@ qx.Class.define("qx.tool.compiler.app.Application", {
         // Check for recursive dependencies
         parts.forEach(part => {
           var checked = {};
+          /**
+           * @param partname
+           */
           function check(partname) {
             if (checked[partname]) {
               return false;
@@ -591,6 +611,9 @@ qx.Class.define("qx.tool.compiler.app.Application", {
       var uris = [];
       var db = this.getAnalyser().getDatabase();
 
+      /**
+       * @param classname
+       */
       function add(classname) {
         var def = db.classInfo[classname];
         uris.push(def.libraryName + ":" + classname.replace(/\./g, "/") + ".js");
@@ -640,6 +663,9 @@ qx.Class.define("qx.tool.compiler.app.Application", {
 
       // Compile theme resource aliases
       var aliases = {};
+      /**
+       * @param classname
+       */
       function getAliases(classname) {
         var tmp = db.classInfo[classname];
         if (tmp) {
@@ -688,6 +714,10 @@ qx.Class.define("qx.tool.compiler.app.Application", {
       }
 
       var rm = analyser.getResourceManager();
+      /**
+       * @param arr
+       * @param msgId
+       */
       function addExternalAssets(arr, msgId) {
         if (arr) {
           arr.forEach(filename => {
@@ -862,6 +892,8 @@ qx.Class.define("qx.tool.compiler.app.Application", {
 
     /**
      * Apply for `type` property
+     * @param value
+     * @param oldValue
      */
     _applyType: function(value, oldValue) {
       var loader = path.join(this.getTemplatePath(), "loader", "loader-" + this.getType() + ".tmpl.js");
@@ -870,6 +902,7 @@ qx.Class.define("qx.tool.compiler.app.Application", {
 
     /**
      * Transforms values to make sure that they are an array (and never null)
+     * @param value
      */
     __transformArray: function(value) {
       if (!value) {

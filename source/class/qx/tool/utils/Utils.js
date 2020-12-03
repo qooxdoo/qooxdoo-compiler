@@ -153,6 +153,8 @@ qx.Class.define("qx.tool.utils.Utils", {
 
     /**
      * Creates the parent directory of a filename, if it does not already exist
+     * @param dir
+     * @param cb
      */
     mkParentPath: function mkParentPath(dir, cb) {
       var segs = dir.split(/[\\\/]/);

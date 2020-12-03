@@ -181,6 +181,7 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
 
     /**
      * Returns the root for applications
+     * @param application
      */
     getApplicationRoot: function(application) {
       return path.join(this.getOutputDir(), this.getProjectDir(application)) + "/";
@@ -188,7 +189,7 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
 
     /**
      * Returns the project dir
-     *
+     * @param application
      * @returns String
      */
     getProjectDir: function (application) {
@@ -197,6 +198,7 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
     
     /**
      * Returns the URI for the root of the output, relative to the application
+     * @param application
      */
     _getOutputRootUri: function(application) {
       var dir = this.getApplicationRoot(application);
@@ -277,9 +279,10 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
 
     /**
      * Generates the application
-     *
      * @param {Application} app
      * @param {Maker} maker
+     * @param application
+     * @param environment
      */
     async generateApplication(application, environment) {
       var t = this;
@@ -453,7 +456,7 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
       });
       await qx.Promise.all(promises);
       await t._writeApplication(appMeta);
-  },
+    },
 
     /**
      * Handles the output of translations and locales
@@ -515,9 +518,15 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
       var analyser = appMeta.getAnalyser();
       let bootPackage = appMeta.getPackages()[0];
 
+      /**
+       * @param localeId
+       */
       function loadLocaleData(localeId) {
         var combinedCldr = null;
 
+        /**
+         * @param localeId
+         */
         function accumulateCldr(localeId) {
           return analyser.getCldr(localeId)
             .then(cldr => {
@@ -564,6 +573,10 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
       var promises = [];
       t.getLocales().forEach(localeId => {
         let pkg = this.isI18nAsParts() ? appMeta.getLocalePackage(localeId) : bootPackage;
+        /**
+         * @param library
+         * @param localeId
+         */
         function addTrans(library, localeId) {
           return analyser.getTranslation(library, localeId)
             .then(translation => {
@@ -656,11 +669,11 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
     
     /**
      * Writes the application
-     * 
      * @param assets {Object[]} list of assets, where each asset is (see @link(qx.tool.compiler.resources.Manager) for details)
-     *  - libraryName {String}
-     *  - filename {String}
-     *  - fileInfo {String)
+     * - libraryName {String}
+     * - filename {String}
+     * - fileInfo {String)
+     * @param appMeta
      */
     async _writeApplication(appMeta) {
       var t = this;
@@ -713,6 +726,7 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
 
     /**
      * Called to generate index.html
+     * @param appMeta
      */
     async _writeIndexHtml(appMeta) {
       var t = this;
@@ -737,6 +751,9 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
         "appTitle": (application.getTitle()||"Qooxdoo Application")
       };
 
+      /**
+       * @param code
+       */
       function replaceVars(code) {
         for (let varName in TEMPLATE_VARS) {
           code = code.replace(new RegExp(`\\$\{${varName}\}`, "g"), TEMPLATE_VARS[varName]);

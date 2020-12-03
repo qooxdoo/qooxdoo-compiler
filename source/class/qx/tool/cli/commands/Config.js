@@ -30,6 +30,10 @@ qx.Class.define("qx.tool.cli.commands.Config", {
   statics: {
 
     getYargsCommand: function() {
+      /**
+       * @param argv
+       * @param name
+       */
       function run(argv, name) {
         var cmd = new qx.tool.cli.commands.Config(argv);
         return cmd[name](argv)
@@ -183,6 +187,10 @@ qx.Class.define("qx.tool.cli.commands.Config", {
       let cfg = await qx.tool.cli.ConfigDb.getInstance();
 
       let keys = {};
+      /**
+       * @param obj
+       * @param parentKey
+       */
       function scan(obj, parentKey) {
         for (let key in obj) {
           let value = obj[key];

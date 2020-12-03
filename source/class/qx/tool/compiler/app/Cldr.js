@@ -40,6 +40,7 @@ qx.Class.define("qx.tool.compiler.app.Cldr", {
   statics: {
     /**
      * Returns the parent locale for a given locale
+     * @param locale
      */
     getParentLocale: function(locale) {
       return CLDR.resolveParentLocaleId(locale.toLowerCase());
@@ -66,6 +67,12 @@ qx.Class.define("qx.tool.compiler.app.Cldr", {
       return readFile(path.join(cldrPath, data_path, locale + ".xml"), {encoding: "utf-8"})
         .then(data => qx.tool.utils.Utils.promisifyThis(parser.parseString, parser, data))
         .then(src => {
+          /**
+           * @param arr
+           * @param name
+           * @param value
+           * @param cb
+           */
           function find(arr, name, value, cb) {
             if (!arr) {
               return null;
@@ -82,6 +89,10 @@ qx.Class.define("qx.tool.compiler.app.Cldr", {
             return null;
           }
 
+          /**
+           * @param path
+           * @param node
+           */
           function get(path, node) {
             if (node === undefined) {
               node = src;
@@ -113,6 +124,10 @@ qx.Class.define("qx.tool.compiler.app.Cldr", {
             return node;
           }
 
+          /**
+           * @param path
+           * @param node
+           */
           function getValue(path, node) {
             let result = get(path, node);
             if (result && typeof result != "string" && result["_"] !== undefined) {
@@ -129,6 +144,9 @@ qx.Class.define("qx.tool.compiler.app.Cldr", {
           cldr.quotationEnd = get("ldml.delimiters[0].quotationEnd[0]");
           cldr.quotationStart = get("ldml.delimiters[0].quotationStart[0]");
 
+          /**
+           * @param row
+           */
           function getText(row) {
             if (typeof row == "string") {
               return row; 
@@ -139,6 +157,9 @@ qx.Class.define("qx.tool.compiler.app.Cldr", {
             return "";
           }
 
+          /**
+           * @param row
+           */
           function getDateFormatPattern(row) {
             return row.dateFormat[0].pattern[0];
           }
@@ -235,6 +256,9 @@ qx.Class.define("qx.tool.compiler.app.Cldr", {
               }
             });
 
+            /**
+             * @param row
+             */
             function getTimeFormatPattern(row) {
               return row.timeFormat.pattern;
             }
@@ -260,6 +284,9 @@ qx.Class.define("qx.tool.compiler.app.Cldr", {
           
           cldr.cldr_number_percent_format = getValue("ldml.numbers[0].percentFormats[0].percentFormatLength[0].percentFormat[0].pattern[0]");// "#,##0%";
 
+          /**
+           * @param row
+           */
           function getDisplayName(row) {
             if (qx.lang.Type.isArray(row.displayName)) {
               return row.displayName.map(elem => getText(elem)); 

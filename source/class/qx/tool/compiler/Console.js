@@ -120,6 +120,7 @@ qx.Class.define("qx.tool.compiler.Console", {
     
     /**
      * console.log equivalent, with colorization
+     * @param {...any} args
      */
     log(...args) {
       console.log(this.getColorOn() + args.join(" "));
@@ -127,6 +128,7 @@ qx.Class.define("qx.tool.compiler.Console", {
     
     /**
      * console.debug equivalent, with colorization
+     * @param {...any} args
      */
     debug(...args) {
       console.debug(this.getColorOn() + args.join(" "));
@@ -134,6 +136,7 @@ qx.Class.define("qx.tool.compiler.Console", {
     
     /**
      * console.info equivalent, with colorization
+     * @param {...any} args
      */
     info(...args) {
       console.info(this.getColorOn() + args.join(" "));
@@ -141,6 +144,7 @@ qx.Class.define("qx.tool.compiler.Console", {
     
     /**
      * console.warn equivalent, with colorization
+     * @param {...any} args
      */
     warn(...args) {
       console.warn(this.getColorOn() + args.join(" "));
@@ -148,6 +152,7 @@ qx.Class.define("qx.tool.compiler.Console", {
     
     /**
      * console.error equivalent, with colorization
+     * @param {...any} args
      */
     error(...args) {
       console.error(this.getColorOn() + args.join(" "));
@@ -248,6 +253,7 @@ qx.Class.define("qx.tool.compiler.Console", {
     
     /**
      * console.log equivalent, with colorization
+     * @param {...any} args
      */
     log(...args) {
       return this.getInstance().log(...args);
@@ -255,6 +261,7 @@ qx.Class.define("qx.tool.compiler.Console", {
 
     /**
      * console.debug equivalent, with colorization
+     * @param {...any} args
      */
     debug(...args) {
       return this.getInstance().debug(...args);
@@ -262,6 +269,7 @@ qx.Class.define("qx.tool.compiler.Console", {
 
     /**
      * console.info equivalent, with colorization
+     * @param {...any} args
      */
     info(...args) {
       return this.getInstance().info(...args);
@@ -269,6 +277,7 @@ qx.Class.define("qx.tool.compiler.Console", {
 
     /**
      * console.warn equivalent, with colorization
+     * @param {...any} args
      */
     warn(...args) {
       return this.getInstance().warn(...args);
@@ -276,6 +285,7 @@ qx.Class.define("qx.tool.compiler.Console", {
 
     /**
      * console.error equivalent, with colorization
+     * @param {...any} args
      */
     error(...args) {
       return this.getInstance().error(...args);

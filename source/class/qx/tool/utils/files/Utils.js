@@ -67,6 +67,10 @@ qx.Class.define("qx.tool.utils.files.Utils", {
     sync: function(from, to, filter) {
       var t = this;
 
+      /**
+       * @param statFrom
+       * @param statTo
+       */
       function copy(statFrom, statTo) {
         if (statFrom.isDirectory()) {
           var p;
@@ -234,8 +238,8 @@ qx.Class.define("qx.tool.utils.files.Utils", {
 
     /**
      * Normalises the path and corrects the case of the path to match what is actually on the filing system
-     *
      * @param fsPath {String} the filename to normalise
+     * @param dir
      * @returns {String} the new path
      * @async
      */
@@ -261,6 +265,9 @@ qx.Class.define("qx.tool.utils.files.Utils", {
         index = 1;
       }
 
+      /**
+       * @param nextSeg
+       */
       function bumpToNext(nextSeg) {
         index++;
         if (currentDir.length && currentDir !== "/") {
@@ -270,6 +277,9 @@ qx.Class.define("qx.tool.utils.files.Utils", {
         return next();
       }
 
+      /**
+       *
+       */
       function next() {
         if (index == segs.length) {
           if (process.platform === "win32") {

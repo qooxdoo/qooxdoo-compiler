@@ -31,12 +31,14 @@ qx.Class.define("qx.tool.utils.json.Stringify", {
   statics: {
     /**
      * Pretty prints an AST tree
+     * @param ast
      */
     prettyPrint(ast) {
       var writer = new qx.tool.utils.json.Writer();
 
       /**
        * Writes a node, used recursively
+       * @param node
        */
       function writeNode(node) {
         switch (node.type) {
@@ -127,6 +129,9 @@ qx.Class.define("qx.tool.utils.json.Stringify", {
       /*
        * Pretty prints any old POJO or native value
        */
+      /**
+       * @param obj
+       */
       function prettyPojo(obj) {
         if (typeof obj == "string") {
           writer.write("\"" + obj + "\""); 
@@ -163,6 +168,10 @@ qx.Class.define("qx.tool.utils.json.Stringify", {
       /*
        * Pretty prints a key:value pair
        */
+      /**
+       * @param key
+       * @param value
+       */
       function prettyPojoProperty(key, value) {
         writer.write("\"" + key + "\": ");
         prettyPojo(value);
@@ -172,6 +181,9 @@ qx.Class.define("qx.tool.utils.json.Stringify", {
        * Writes tokens which underly the AST, up to a given index
        */
       var startTokenIndex = 0;
+      /**
+       * @param index
+       */
       function writeTokensUntil(index) {
         if (startTokenIndex > -1) {
           while (startTokenIndex < index) {
@@ -185,9 +197,16 @@ qx.Class.define("qx.tool.utils.json.Stringify", {
       /*
        * Writes an object, comparing it with the AST node.  Used recursively 
        */
+      /**
+       * @param object
+       * @param node
+       */
       function writeNode(object, node) {
         /*
          * Pretty prints a node to the writer
+         */
+        /**
+         * @param node
          */
         function pretty(node) {
           var str = qx.tool.utils.json.Stringify.prettyPrint(node);
@@ -200,6 +219,10 @@ qx.Class.define("qx.tool.utils.json.Stringify", {
          * 
          * @param endToken {Number} current largest endToken, or -1 for none
          * @param node {AST Node}
+         */
+        /**
+         * @param endToken
+         * @param node
          */
         function maxEndToken(endToken, node) {
           var index;
@@ -374,9 +397,14 @@ qx.Class.define("qx.tool.utils.json.Stringify", {
     },
 
     /**
-     * Converts an AST into an ordinary POJO 
+     * Converts an AST into an ordinary POJO
+     * @param ast
+     * @param settings
      */
     astToObject(ast, settings) {
+      /**
+       * @param node
+       */
       function writeNode(node) {
         var result;
         
@@ -410,8 +438,8 @@ qx.Class.define("qx.tool.utils.json.Stringify", {
 
     /**
      * Detects whether the value is a native object
-     * 
      * @param value {Object}
+     * @param obj
      * @returns boolean
      */
     isPlainObject(obj) {
@@ -425,8 +453,8 @@ qx.Class.define("qx.tool.utils.json.Stringify", {
 
     /**
      * Detects whether the value is a literal value
-     * 
      * @param value {Object}
+     * @param obj
      * @returns boolean
      */
     isLiteral(obj) {
@@ -438,6 +466,8 @@ qx.Class.define("qx.tool.utils.json.Stringify", {
 
     /**
      * Compares a node to see if it is the same as a literal value
+     * @param node
+     * @param object
      */
     isSameLiteral(node, object) {
       if (node.rawValue === null && object === null) {

@@ -44,6 +44,8 @@ qx.Class.define("qx.tool.cli.ConfigDb", {
 
     /**
      * Apply for path property
+     * @param value
+     * @param oldValue
      * @returns
      */
     _applyPath: async function(value, oldValue) {
@@ -67,6 +69,8 @@ qx.Class.define("qx.tool.cli.ConfigDb", {
     
     /**
      * Sets a temporary override
+     * @param key
+     * @param value
      */
     setOverride(key, value) {
       if (value === undefined) {
@@ -149,7 +153,8 @@ qx.Class.define("qx.tool.cli.ConfigDb", {
 
     /**
      * Wrapper for non-static version of db
-     *
+     * @param path
+     * @param defaultValue
      * @see qx.tool.cli.ConfigDb.db
      */
     db: function(path, defaultValue) {

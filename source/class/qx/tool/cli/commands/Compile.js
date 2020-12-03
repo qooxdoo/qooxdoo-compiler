@@ -782,6 +782,10 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
           }
         }
 
+        /**
+         * @param dest
+         * @param {...any} srcs
+         */
         function mergeArray(dest, ...srcs) {
           srcs.forEach(function(src) {
             if (src) {

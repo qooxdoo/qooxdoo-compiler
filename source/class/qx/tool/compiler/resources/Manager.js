@@ -35,9 +35,9 @@ qx.Class.define("qx.tool.compiler.resources.Manager", {
 
   /**
    * Constructor
-   *
-   * @param dbFilename
-   *          {String?} database filename, default is "resource-db.json"
+   * @param dbFilename 
+   * {String?} database filename, default is "resource-db.json"
+   * @param analyser
    */
   construct: function(analyser) {
     this.base(arguments);

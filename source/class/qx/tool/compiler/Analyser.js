@@ -359,6 +359,9 @@ qx.Class.define("qx.tool.compiler.Analyser", {
         var classIndex = 0;
         var classes = t.__classes = t.__initialClassesToScan.toArray();
 
+        /**
+         * @param className
+         */
         function getConstructDependencies(className) {
           var deps = [];
           var info = t.__db.classInfo[className];
@@ -372,6 +375,9 @@ qx.Class.define("qx.tool.compiler.Analyser", {
           return deps;
         }
 
+        /**
+         * @param className
+         */
         function getIndirectLoadDependencies(className) {
           var deps = [];
           var info = t.__db.classInfo[className];
@@ -435,12 +441,22 @@ qx.Class.define("qx.tool.compiler.Analyser", {
         );
       });
 
+      /**
+       * @param classname
+       * @param meta
+       */
       function fixupMetaData(classname, meta) {
+        /**
+         * @param obj
+         */
         function fixupEntry(obj) {
           if (obj && obj.jsdoc) {
             qx.tool.compiler.jsdoc.Parser.parseJsDoc(obj.jsdoc, classname, t);
           }
         }
+        /**
+         * @param sectionName
+         */
         function fixupSection(sectionName) {
           var section = meta[sectionName];
           if (section) {
@@ -460,13 +476,21 @@ qx.Class.define("qx.tool.compiler.Analyser", {
         fixupEntry(meta.defer);
       }
 
-        async function updateMetaData(classname, meta) {
-          var classEntities = {
-            members: {},
-            properties: {},
-            events: {}
-          };
+      /**
+       * @param classname
+       * @param meta
+       */
+      async function updateMetaData(classname, meta) {
+        var classEntities = {
+          members: {},
+          properties: {},
+          events: {}
+        };
 
+        /**
+         * @param meta
+         * @param first
+         */
         async function analyseClassEntities(meta, first) {
           if (typeof meta == "string") {
             meta = await loadMetaData(meta);
@@ -475,46 +499,46 @@ qx.Class.define("qx.tool.compiler.Analyser", {
             return;
           }
 
-            ["members", "properties", "events"].forEach(entityTypeName => {
-              if (!meta[entityTypeName]) {
-                return;
-              }
+          ["members", "properties", "events"].forEach(entityTypeName => {
+            if (!meta[entityTypeName]) {
+              return;
+            }
 
-              for (let entityName in meta[entityTypeName]) {
-                let entityMeta = meta[entityTypeName][entityName];
+            for (let entityName in meta[entityTypeName]) {
+              let entityMeta = meta[entityTypeName][entityName];
 
-                if (entityMeta.type === "function" || entityTypeName === "properties" || entityTypeName === "events") {
-                  var entityInfo = classEntities[entityTypeName][entityName];
+              if (entityMeta.type === "function" || entityTypeName === "properties" || entityTypeName === "events") {
+                var entityInfo = classEntities[entityTypeName][entityName];
 
-                  if (!entityInfo) {
-                    entityInfo = classEntities[entityTypeName][entityName] = {
-                      appearsIn: {},
-                      overriddenFrom: null,
-                      jsdoc: null,
-                      abstract: meta.type === "interface",
-                      mixin: meta.type === "mixin" && !first,
-                      inherited: !first,
-                      access: entityName.startsWith("__") ? "private" : entityName.startsWith("_") ? "protected" : "public"
-                    };
-                  }
+                if (!entityInfo) {
+                  entityInfo = classEntities[entityTypeName][entityName] = {
+                    appearsIn: {},
+                    overriddenFrom: null,
+                    jsdoc: null,
+                    abstract: meta.type === "interface",
+                    mixin: meta.type === "mixin" && !first,
+                    inherited: !first,
+                    access: entityName.startsWith("__") ? "private" : entityName.startsWith("_") ? "protected" : "public"
+                  };
+                }
 
-                  if (entityMeta.event) {
-                    entityInfo.event = entityMeta.event;
-                  }
+                if (entityMeta.event) {
+                  entityInfo.event = entityMeta.event;
+                }
 
-                  if (entityMeta.property) {
-                    entityInfo.property = entityMeta.property;
-                  }
+                if (entityMeta.property) {
+                  entityInfo.property = entityMeta.property;
+                }
 
-                  if (meta.type === "mixin" && entityInfo.abstract) {
-                    entityInfo.mixin = true;
-                  }
+                if (meta.type === "mixin" && entityInfo.abstract) {
+                  entityInfo.mixin = true;
+                }
 
-                  if (meta.type !== "interface") {
-                    entityInfo.abstract = false;
-                  } else {
-                    entityInfo["interface"] = true;
-                  }
+                if (meta.type !== "interface") {
+                  entityInfo.abstract = false;
+                } else {
+                  entityInfo["interface"] = true;
+                }
 
                 if (!first) {
                   entityInfo.appearsIn[meta.className] = meta.type;
@@ -552,6 +576,14 @@ qx.Class.define("qx.tool.compiler.Analyser", {
           }
 
           if (meta.properties) {
+            /**
+             * @param propertyMeta
+             * @param methodName
+             * @param accessorType
+             * @param returnType
+             * @param valueType
+             * @param desc
+             */
             function addPropertyAccessor(propertyMeta, methodName, accessorType, returnType, valueType, desc) {
               var entityInfo = classEntities.members[methodName];
               if (!entityInfo || entityInfo.abstract) {
@@ -637,12 +669,19 @@ qx.Class.define("qx.tool.compiler.Analyser", {
           }
         }
 
+        /**
+         * @param jsdoc
+         */
         function hasSignature(jsdoc) {
           return jsdoc &&
             ((jsdoc["@param"] && jsdoc["@param"].length) ||
             (jsdoc["@return"] && jsdoc["@return"].length));
         }
 
+        /**
+         * @param src
+         * @param meta
+         */
         function mergeSignature(src, meta) {
           if (!src) {
             return;
@@ -664,48 +703,48 @@ qx.Class.define("qx.tool.compiler.Analyser", {
 
         await analyseClassEntities(meta, true);
 
-          for (let eventName in classEntities.events) {
-            if (!meta.events) {
-              meta.events = {};
+        for (let eventName in classEntities.events) {
+          if (!meta.events) {
+            meta.events = {};
+          }
+          let eventInfo = classEntities.events[eventName];
+          if ((eventInfo.abstract || eventInfo.mixin) && !meta.events[eventInfo]) {
+            let eventMeta = meta.events[eventName] = {
+              type: "event",
+              name: eventName,
+              abstract: Boolean(eventInfo.abstract),
+              mixin: Boolean(eventInfo.mixin),
+              access: eventInfo.access,
+              overriddenFrom: eventInfo.overriddenFrom
+            };
+            if (eventInfo.appearsIn.length) {
+              eventMeta.appearsIn = Object.keys(eventInfo.appearsIn);
             }
-            let eventInfo = classEntities.events[eventName];
-            if ((eventInfo.abstract || eventInfo.mixin) && !meta.events[eventInfo]) {
-              let eventMeta = meta.events[eventName] = {
-                type: "event",
-                name: eventName,
-                abstract: Boolean(eventInfo.abstract),
-                mixin: Boolean(eventInfo.mixin),
-                access: eventInfo.access,
-                overriddenFrom: eventInfo.overriddenFrom,
-              };
-              if (eventInfo.appearsIn.length) {
-                eventMeta.appearsIn = Object.keys(eventInfo.appearsIn);
-              }
 
-              if (eventInfo.jsdoc) {
-                eventMeta.jsdoc = eventInfo.jsdoc;
-              }
+            if (eventInfo.jsdoc) {
+              eventMeta.jsdoc = eventInfo.jsdoc;
+            }
 
-              if (eventInfo.overriddenFrom) {
-                eventMeta.overriddenFrom = eventInfo.overriddenFrom;
+            if (eventInfo.overriddenFrom) {
+              eventMeta.overriddenFrom = eventInfo.overriddenFrom;
+            }
+          }
+        }  
+
+        if (meta.properties) {
+          for (let propertyName in meta.properties) {
+            let propertyMeta = meta.properties[propertyName];
+
+            if (propertyMeta.refine) {
+              let result = classEntities.properties[propertyName];
+
+              if (result) {
+                propertyMeta.overriddenFrom = result.overriddenFrom;
+                propertyMeta.appearsIn = result.appearsIn;
+                mergeSignature(result.jsdoc, propertyMeta);
               }
             }
-          }  
-
-          if (meta.properties) {
-            for (let propertyName in meta.properties) {
-              let propertyMeta = meta.properties[propertyName];
-
-              if (propertyMeta.refine) {
-                let result = classEntities.properties[propertyName];
-
-                if (result) {
-                  propertyMeta.overriddenFrom = result.overriddenFrom;
-                  propertyMeta.appearsIn = result.appearsIn;
-                  mergeSignature(result.jsdoc, propertyMeta);
-                }
-              }
-            }
+          }
 
           for (let propertyName in classEntities.properties) {
             let propertyInfo = classEntities.properties[propertyName];
@@ -801,6 +840,10 @@ qx.Class.define("qx.tool.compiler.Analyser", {
 
       var cachedMeta = {};
 
+      /**
+       * @param classname
+       * @param meta
+       */
       async function saveMetaData(classname, meta) {
         if (metaWrittenLog[classname]) {
           qx.tool.compiler.Console.log(" *** ERROR *** Writing " + classname + " more than once");
@@ -811,6 +854,9 @@ qx.Class.define("qx.tool.compiler.Analyser", {
         return writeFile(filename, JSON.stringify(meta, null, 2), {encoding: "utf-8"});
       }
 
+      /**
+       * @param classname
+       */
       async function loadMetaData(classname) {
         if (classname == "Object" || classname == "Array" || classname == "Error") {
           return Promise.resolve(null);
@@ -827,6 +873,10 @@ qx.Class.define("qx.tool.compiler.Analyser", {
           });
       }
 
+      /**
+       * @param classname
+       * @param meta
+       */
       function calcDescendants(classname, meta) {
         meta.descendants = [];
         for (var name in db.classInfo) {
@@ -837,6 +887,9 @@ qx.Class.define("qx.tool.compiler.Analyser", {
         }
       }
 
+      /**
+       *
+       */
       async function analyzeMeta() {
         var toSave = {};
         for (let classname in compiledClasses) {
@@ -903,6 +956,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
 
     /**
      * Returns cached class info - returns null if not loaded or not in the database
+     * @param className
      * @returb DbClassInfo
      */
     getCachedClassInfo: function(className) {
@@ -914,6 +968,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
      * @param className {String} the name of the class
      * @param forceScan {Boolean?} true if the class is to be compiled whether it needs it or not (default false)
      * @param cb(err, DbClassInfo)
+     * @param cb
      */
     getClassInfo: function(className, forceScan, cb) {
       var t = this;
@@ -1030,6 +1085,8 @@ qx.Class.define("qx.tool.compiler.Analyser", {
      * @param appLibrary the library to update
      * @param locales
      * @param cb
+     * @param libraries
+     * @param copyAllMsgs
      */
     async updateTranslations(appLibrary, locales, libraries, copyAllMsgs) {
       if (!libraries) {
@@ -1066,6 +1123,9 @@ qx.Class.define("qx.tool.compiler.Analyser", {
             return;
           }
           
+          /**
+           * @param entry
+           */
           function isEmpty(entry) {
             if (!entry) {
               return true;
@@ -1160,6 +1220,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
 
     /**
      * Finds the library with a name(space)
+     * @param name
      */
     findLibrary: function(name) {
       var lib = this.__librariesByNamespace[name];
@@ -1196,6 +1257,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
     /**
      * Removes a class from the list of required classes to analyse
      * @param className
+     * @param classname
      */
     removeClass: function(classname) {
       this.__initialClassesToScan.remove(classname);

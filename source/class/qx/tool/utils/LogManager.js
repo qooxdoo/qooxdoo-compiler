@@ -24,14 +24,20 @@
  * @require(qx.tool.utils.Logger)
 */
 
- var LEVELS = [ "trace", "debug", "info", "warn", "error", "fatal" ];
+var LEVELS = [ "trace", "debug", "info", "warn", "error", "fatal" ];
 
+/**
+ * @param val
+ */
 function zeropad2(val) {
   if (val < 10) {
     return "0" + val;
   }
   return String(val);
 }
+/**
+ * @param val
+ */
 function zeropad3(val) {
   if (val < 10) {
     return "00" + val;
@@ -42,12 +48,19 @@ function zeropad3(val) {
   return String(val);
 }
 var PADDING = "";
+/**
+ * @param minLen
+ */
 function padding(minLen) {
   while (PADDING.length < minLen) {
     PADDING += "     ";
   }
   return PADDING;
 }
+/**
+ * @param str
+ * @param len
+ */
 function rpad(str, len) {
   str = String(str);
   if (str.length < len) {

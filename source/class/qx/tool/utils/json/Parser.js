@@ -515,6 +515,11 @@ qx.Class.define("qx.tool.utils.json.Parser", {
     },
     
     error(message, source, line, column) {
+      /**
+       * @param source
+       * @param linePosition
+       * @param columnPosition
+       */
       function showCodeFragment(source, linePosition, columnPosition) {
         const lines = source.split(/\n|\r\n?|\f/);
         const line = lines[linePosition - 1];

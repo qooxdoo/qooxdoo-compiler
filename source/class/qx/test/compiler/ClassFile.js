@@ -29,7 +29,9 @@ qx.Class.define("qx.test.compiler.ClassFile", {
   {
     "test issue 633": async function () {
       var classFile = new qx.tool.compiler.ClassFile(this.__analyser, "classIssue633", this.__lib);
-      await qx.tool.utils.Promisify.call(cb => { classFile.load(cb) });
+      await qx.tool.utils.Promisify.call(cb => {
+        classFile.load(cb); 
+      });
       var dbClassInfo = {};
       classFile.writeDbInfo(dbClassInfo);
       this.assert(!dbClassInfo.unresolved);
@@ -37,7 +39,9 @@ qx.Class.define("qx.test.compiler.ClassFile", {
 
     "test issue 519": async function () {
       var classFile = new qx.tool.compiler.ClassFile(this.__analyser, "classIssue519", this.__lib);
-      await qx.tool.utils.Promisify.call(cb => { classFile.load(cb) });
+      await qx.tool.utils.Promisify.call(cb => {
+        classFile.load(cb); 
+      });
       var dbClassInfo = {};
       classFile.writeDbInfo(dbClassInfo);
       this.assert(!dbClassInfo.unresolved);
@@ -45,7 +49,9 @@ qx.Class.define("qx.test.compiler.ClassFile", {
 
     "test issue 524": async function () {
       var classFile = new qx.tool.compiler.ClassFile(this.__analyser, "classIssue524", this.__lib);
-      await qx.tool.utils.Promisify.call(cb => { classFile.load(cb) });
+      await qx.tool.utils.Promisify.call(cb => {
+        classFile.load(cb); 
+      });
       var dbClassInfo = {};
       classFile.writeDbInfo(dbClassInfo);
       this.assert(!dbClassInfo.unresolved);
@@ -53,7 +59,9 @@ qx.Class.define("qx.test.compiler.ClassFile", {
 
     "test issue 726": async function () {
       var classFile = new qx.tool.compiler.ClassFile(this.__analyser, "classIssue726", this.__lib);
-      await qx.tool.utils.Promisify.call(cb => { classFile.load(cb) });
+      await qx.tool.utils.Promisify.call(cb => {
+        classFile.load(cb); 
+      });
       var dbClassInfo = {};
       classFile.writeDbInfo(dbClassInfo);
       this.assert(!dbClassInfo.unresolved);

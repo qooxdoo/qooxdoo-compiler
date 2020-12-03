@@ -138,6 +138,7 @@ qx.Class.define("qx.tool.compiler.app.Library", {
      * properties
      * @param rootDir
      * @param cb
+     * @param loadFromDir
      */
     loadManifest: function(loadFromDir) {
       if (this.__promiseLoadManifest) {
@@ -161,6 +162,9 @@ qx.Class.define("qx.tool.compiler.app.Library", {
           t.setNamespace(data.provides.namespace);
           t.setVersion(data.info.version);
 
+          /**
+           * @param dir
+           */
           function fixLibraryPath(dir) {
             let d = path.resolve(rootDir, dir);
             if (!fs.existsSync(d)) {
@@ -229,10 +233,16 @@ qx.Class.define("qx.tool.compiler.app.Library", {
      * where the class name does not comply with the namespace, this method is used to find those
      * files and also to prepopulate the known symbols list
      * @param cb(err, classes) returns an array of class names
+     * @param cb
      */
     scanForClasses: function(cb) {
       var t = this;
       var classes = [];
+      /**
+       * @param folder
+       * @param packageName
+       * @param cb
+       */
       function scanDir(folder, packageName, cb) {
         fs.readdir(folder, function(err, filenames) {
           if (err) {

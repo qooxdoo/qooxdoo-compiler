@@ -178,7 +178,7 @@ qx.Class.define("qx.tool.utils.IndexedArray", {
 
     /**
      * Returns the indexed item of the array
-     *
+     * @param index
      * @returns {String}
      */
     getItem: function(index) {

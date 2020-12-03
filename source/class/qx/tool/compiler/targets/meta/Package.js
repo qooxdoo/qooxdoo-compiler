@@ -9,6 +9,8 @@ qx.Class.define("qx.tool.compiler.targets.meta.Package", {
   
   /**
    * Constructor
+   * @param appMeta
+   * @param packageIndex
    */
   construct(appMeta, packageIndex) {
     this.base(arguments);
@@ -251,6 +253,7 @@ qx.Class.define("qx.tool.compiler.targets.meta.Package", {
     
     /**
      * Apply for needsWriteToDisk property
+     * @param value
      */
     _applyNeedsWriteToDisk(value) {
       this.__javascript.setNeedsWriteToDisk(value);

@@ -32,6 +32,7 @@ qx.Class.define("qx.tool.compiler.jsdoc.Parser", {
      * Parses a JSDoc comment, returns an object where the keys are the name of the JSDoc (eg "@description")
      * and the value are an array of objects, one for each entry that was found.  The individual entries
      * consist of the name, the body of the JSDoc entry, and optional, key-specific parsed data (where supported)
+     * @param comment
      */
     parseComment: function(comment) {
       /* 

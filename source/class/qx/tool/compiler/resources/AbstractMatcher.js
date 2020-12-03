@@ -29,9 +29,9 @@ qx.Class.define("qx.tool.compiler.resources.AbstractMatcher", {
   
   /**
    * Constructor
-   * 
-   * @param matchEx {Array[String]|String|RegEx?} the reg ex to match filenames, or the extension, 
+   * @param matchEx {Array[String]|String|RegEx?} the reg ex to match filenames, or the extension,
    * or an array of extensions
+   * @param match
    */
   construct: function(match) {
     this.base(arguments);
@@ -61,6 +61,7 @@ qx.Class.define("qx.tool.compiler.resources.AbstractMatcher", {
     /**
      * Called to determine whether this handler is appropriate for the given filename;
      * default implementation is to check the RegEx passed to the constructor
+     * @param filename
      */
     matches: function(filename) {
       return this.__match !== null && this.__match(filename);

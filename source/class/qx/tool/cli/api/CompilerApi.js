@@ -56,7 +56,8 @@ qx.Class.define("qx.tool.cli.api.CompilerApi", {
     
     /**
      * Register compiler tests
-     * @param  cmd: {qx.tool.cli.commands.Command} current command
+     * @param cmd: {qx.tool.cli.commands.Command} current command
+     * @param cmd
      * @return {Promise<void>}
      */
     async beforeTests (cmd) {

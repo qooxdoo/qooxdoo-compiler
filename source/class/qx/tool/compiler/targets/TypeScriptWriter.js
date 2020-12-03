@@ -132,6 +132,7 @@ qx.Class.define("qx.tool.compiler.targets.TypeScriptWriter", {
 
     /**
      * Write a piece of code to the declaration file
+     * @param msg
      */
     write: function(msg) {
       this.__outputStream.write(msg);
@@ -139,6 +140,7 @@ qx.Class.define("qx.tool.compiler.targets.TypeScriptWriter", {
 
     /**
      * Load a single API file
+     * @param classname
      * @async
      */
     loadAPIFile: function(classname) {
@@ -165,6 +167,7 @@ qx.Class.define("qx.tool.compiler.targets.TypeScriptWriter", {
 
     /**
      * Do the mapping of types from Qooxdoo to TypeScript
+     * @param t
      */
     getType: function(t) {
       var defaultType = "any";
@@ -192,6 +195,7 @@ qx.Class.define("qx.tool.compiler.targets.TypeScriptWriter", {
 
     /**
      * Write a constructor
+     * @param methodMeta
      */
     writeConstructor: function(methodMeta) {
       this.write(this.__indent + "constructor (" + this.serializeParameters(methodMeta, true) + ");\n");
@@ -199,6 +203,9 @@ qx.Class.define("qx.tool.compiler.targets.TypeScriptWriter", {
 
     /**
      * Write all the methods of a type
+     * @param methods
+     * @param classMeta
+     * @param isStatic
      */
     writeMethods: function(methods, classMeta, isStatic = false) {
       if (!methods || !Object.keys(methods).length) {
@@ -285,7 +292,8 @@ qx.Class.define("qx.tool.compiler.targets.TypeScriptWriter", {
     /**
      * Serializes all the arguments of a method. Once one parameter is optional,
      * the remaining ones are also optional (is a TypeScript requirement)
-     *
+     * @param methodMeta
+     * @param optional
      * @return {String}
      */
     serializeParameters: function(methodMeta, optional = false) {
@@ -334,6 +342,7 @@ qx.Class.define("qx.tool.compiler.targets.TypeScriptWriter", {
 
     /**
      * Write the class or interface declaration
+     * @param meta
      */
     writeClass: async function(meta) {
       this.__currentClass = meta;
@@ -384,6 +393,7 @@ qx.Class.define("qx.tool.compiler.targets.TypeScriptWriter", {
 
     /**
      * Write the module declaration if any.
+     * @param meta
      */
     writeModule: async function(meta) {
       var moduleName = meta.packageName;

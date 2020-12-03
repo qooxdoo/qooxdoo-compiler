@@ -131,6 +131,9 @@ qx.Class.define("qx.tool.compiler.app.Translation", {
               var entry = null;
               var lastKey = null;
 
+              /**
+               *
+               */
               function saveEntry() {
                 if (entry) {
                   var key;
@@ -145,6 +148,11 @@ qx.Class.define("qx.tool.compiler.app.Translation", {
                 lastKey = null;
               }
 
+              /**
+               * @param key
+               * @param value
+               * @param append
+               */
               function set(key, value, append) {
                 var index = null;
                 var m = key.match(/^([^[]+)\[([0-9]+)\]$/);
@@ -289,11 +297,16 @@ qx.Class.define("qx.tool.compiler.app.Translation", {
     /**
      * Writes the .po file to a specific filename
      * @param filename {String}
+     * @param cb
      */
     writeTo: function(filename, cb) {
       var t = this;
       var lines = [];
 
+      /**
+       * @param key
+       * @param value
+       */
       function write(key, value) {
         if (value === undefined || value === null) {
           return;

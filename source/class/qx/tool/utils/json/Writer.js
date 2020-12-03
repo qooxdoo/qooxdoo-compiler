@@ -38,6 +38,7 @@ qx.Class.define("qx.tool.utils.json.Writer", {
     /**
      * Writes a string/number.  Multiple lines are rewritten with indentation at the
      * start of each line
+     * @param str
      */
     write(str) {
       if (str === null) {
@@ -72,6 +73,7 @@ qx.Class.define("qx.tool.utils.json.Writer", {
 
     /**
      * Outputs comments
+     * @param comments
      */
     comments(comments) {
       var t = this;

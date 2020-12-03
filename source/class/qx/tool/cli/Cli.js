@@ -549,6 +549,9 @@ Versions: @qooxdoo/compiler    v${qx.tool.compiler.Version.VERSION}
      * @return {Boolean}
      */
     isExplicitArg(option) {
+      /**
+       * @param option
+       */
       function searchForOption(option) {
         return process.argv.indexOf(option) > -1;
       }

@@ -238,6 +238,10 @@ qx.Class.define("qx.tool.cli.commands.Create", {
       }
 
       // copy template, replacing template vars
+      /**
+       * @param sourceDir
+       * @param targetDir
+       */
       function traverseFileSystem(sourceDir, targetDir) {
         let files = fs.readdirSync(sourceDir);
         for (let part of files) {

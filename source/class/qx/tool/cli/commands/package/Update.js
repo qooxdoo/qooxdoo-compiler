@@ -134,6 +134,9 @@ qx.Class.define("qx.tool.cli.commands.package.Update", {
         await this.exportCache(argv.file);
       }
 
+      /**
+       *
+       */
       async function updateFromRepository() {
         if (!argv.quiet) {
           qx.tool.compiler.Console.log("Downloading cache from GitHub ...");
@@ -148,6 +151,9 @@ qx.Class.define("qx.tool.cli.commands.package.Update", {
         }
       }
 
+      /**
+       *
+       */
       async function updateFromGitHubAPI() {
         const auth = {
           token: github.token

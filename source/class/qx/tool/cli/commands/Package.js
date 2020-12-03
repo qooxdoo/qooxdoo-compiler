@@ -206,6 +206,7 @@ qx.Class.define("qx.tool.cli.commands.Package", {
 
     /**
      * Returns the cache object, retrieving it from a local file if necessary
+     * @param readFromFile
      * @return {Object}
      * @todo use config model API for cache file
      */

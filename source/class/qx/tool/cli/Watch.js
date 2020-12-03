@@ -149,6 +149,9 @@ qx.Class.define("qx.tool.cli.Watch", {
       var t = this;
       var Console = qx.tool.compiler.Console;
 
+      /**
+       *
+       */
       function make() {
         Console.print("qx.tool.cli.watch.makingApplications");
         var startTime = new Date().getTime();

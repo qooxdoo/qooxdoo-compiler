@@ -59,6 +59,10 @@ qx.Class.define("qx.tool.compiler.resources.ScssConverter", {
     /**
      * The traditional SASS compilation; it does not use the newer advanced SASS compiler and so
      * does not support relative `url()` paths and automatically has Qooxdoo SASS built in.
+     * @param target
+     * @param asset
+     * @param srcFilename
+     * @param destFilename
      */
     async legacyMobileSassConvert(target, asset, srcFilename, destFilename) {
       let qooxdooPath = target.getAnalyser().getQooxdooPath();

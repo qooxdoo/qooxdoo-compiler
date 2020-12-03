@@ -10,6 +10,8 @@ qx.Class.define("qx.tool.compiler.targets.meta.PackageJavascript", {
   
   /**
    * Constructor
+   * @param appMeta
+   * @param pkg
    */
   construct(appMeta, pkg) {
     this.base(arguments, appMeta, `${appMeta.getApplicationRoot()}package-${pkg.getPackageIndex()}.js`);
