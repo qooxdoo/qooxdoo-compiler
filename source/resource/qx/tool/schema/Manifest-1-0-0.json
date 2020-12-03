@@ -139,6 +139,10 @@
           "default": "source/translation",
           "description": "Path to the library's translation files relative to the Manifest.json file"
         },
+        "environmentChecks": {
+          "type": "object",
+          "description": "Maps environment check IDs to classes"
+        },
         "webfonts": {
           "type":"array",
           "description": "A list of webfont definitions",

@@ -61,6 +61,10 @@
             "description": "The class name of the main application class (it typically inherits from `qx.application.Standalone` for web applications)",
             "type": "string"
           },
+          "workerClass" : {
+            "description": "EXPERIMENTAL: The class name of the worker application class, if there is one (it typically inherits from `qx.application.Basic`)",
+            "type": "string"
+          },
           "theme": {
             "description": "The theme class for the application",
             "type": "string"
