@@ -58,16 +58,6 @@ qx.Class.define("qx.tool.compiler.app.Application", {
     },
     
     /**
-     * Name of the Worker application class
-     */
-    workerClassName: {
-      init: null,
-      nullable: true,
-      check: "String",
-      apply: "_applyWorkerClassName"
-    },
-
-    /**
      * Environment property map
      */
     environment: {
@@ -776,14 +766,6 @@ qx.Class.define("qx.tool.compiler.app.Application", {
      */
     getClassName: function() {
       return this.__classes[0];
-    },
-    
-    /**
-     * Apply method for `workerClassName`
-     */
-    _applyWorkerClassName(value) {
-      if (this.__classes.indexOf(value) < 0)
-        this.__classes.push(value);
     },
     
     /**
