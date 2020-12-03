@@ -39,11 +39,12 @@ qx.Class.define("qx.tool.compiler.targets.SourceTarget", {
     /*
      * @Override
      */
-    _writeApplication: async function(appMeta) {
+    async _writeApplication() {
       if (this.getCopyResources()) {
+        let appMeta = this.getAppMeta();
         await appMeta.syncAssets();
       }
-      return await this.base(arguments, appMeta);
+      return await this.base(arguments);
     },
 
     /*

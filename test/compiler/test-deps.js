@@ -138,7 +138,10 @@ test("Checks dependencies and environment settings", assert => {
       /*
        * Test manual include and exclude
        */
-      .then(() => {
+      .then(() => createMaker())
+      .then(_maker => {
+        maker = _maker;
+        app = maker.getApplications()[0];
         app.setExclude(["qx.ui.layout.*"]);
         app.setInclude(["qx.util.format.NumberFormat"]);
         return maker.make();
@@ -149,7 +152,10 @@ test("Checks dependencies and environment settings", assert => {
         assert.ok(hasClassDependency(compileInfo, "qx.util.format.NumberFormat"), "qx.util.format.NumberFormat is not included");
       })
       // Undo the exclude/include
-      .then(() => {
+      .then(() => createMaker())
+      .then(_maker => {
+        maker = _maker;
+        app = maker.getApplications()[0];
         app.setExclude([]);
         app.setInclude([]);
         return maker.make();

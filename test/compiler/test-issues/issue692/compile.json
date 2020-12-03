@@ -4,29 +4,30 @@
     {
       "type": "source",
       "outputPath": "compiled/source",
-      "bundle": {
-        "include": "qx.*"
+      "application-types": [ "node" ],
+      "babelOptions" : {
+        "targets":"node >= 11"
       }
     },
     {
       "type": "build",
-      "outputPath": "compiled/build"
+      "outputPath": "compiled/build",
+      "application-types": [ "node" ],
+      "babelOptions" : {
+        "targets":"node >= 11"
+      }
     }
   ],
   "defaultTarget": "source",
   "locales": ["en"],
   "environment": {
-      "qx.icontheme": "Tango"
+    "qx.icontheme": "Tango"
   },
   "applications": [
     {
-      "class": "testLegalSCSS.Application",
-      "theme": "qx.theme.Indigo",
-      "name": "testLegalSCSS"
+      "class": "issue692.Application",
+      "name": "issue692",
+      "type": "node"
     }
-  ],
-  "sass": {
-    "compiler": "legacy",
-    "copyOriginal": true
-  }
+  ]
 }

@@ -154,16 +154,33 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
 
   events: {
     /**
-     * Fired after all enviroment data is collected
+     * Fired after all enviroment data is collected, but before compilation begins; this
+     * is an  opportunity to adjust the environment for the target.  The event data contains:
      *  application {qx.tool.compiler.app.Application} the app
      *  enviroment: {Object} enviroment data
      */
-    "checkEnvironment": "qx.event.type.Data"
+    "checkEnvironment": "qx.event.type.Data",
+    
+    /** 
+     * Fired when an application is about to be serialized to disk; the appMeta is fully
+     * populated, and this is an opportunity to amend the meta data before it is serialized
+     * into files on disk 
+     */
+    "writingApplication": "qx.event.type.Event",
+    
+    /** 
+     * Fired when an application has been serialized to disk
+     */
+    "writtenApplication": "qx.event.type.Event"
   },
 
 
   members: {
+    /** @type {Map} maps filenames to uris */
     __pathMappings: null,
+    
+    /** @type {qx.tool.compiler.targets.meta.ApplicationMeta} for the current application */
+    __appMeta: null,
 
     /**
      * Initialises the target, creating directories etc
@@ -294,7 +311,7 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
       var analyser = application.getAnalyser();
       var rm = analyser.getResourceManager();
 
-      let appMeta = new qx.tool.compiler.targets.meta.ApplicationMeta(this, application);
+      let appMeta = this.__appMeta = new qx.tool.compiler.targets.meta.ApplicationMeta(this, application);
       /*      
       if (!appMeta.getAppLibrary()) {
         qx.tool.compiler.Console.print("qx.tool.compiler.target.missingAppLibrary", application.getClassName());
@@ -428,7 +445,7 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
       var promises = [
         analyser.getCldr("en")
           .then(cldr => bootPackage.addLocale("C", cldr)),
-        t._writeTranslations(appMeta)
+        t._writeTranslations()
       ];      
       
       var fontCntr = 0;
@@ -468,15 +485,15 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
         fonts.forEach(font => promises.push(loadFont(font)));
       });
       await qx.Promise.all(promises);
-      await t._writeApplication(appMeta);
+      await t._writeApplication();
+      this.__appMeta = null;
     },
 
     /**
      * Handles the output of translations and locales
-     *
-     * @param appMeta {ApplicationMeta} compile data
      */
-    async _writeTranslations(appMeta) {
+    async _writeTranslations() {
+      let appMeta = this.getAppMeta();
       const analyser = appMeta.getAnalyser();
       if (this.isUpdatePoFiles()) {
         let policy = this.getLibraryPoPolicy();
@@ -487,11 +504,11 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
         }
       }
 
-      await this._writeLocales(appMeta);
+      await this._writeLocales();
       if (this.getWriteAllTranslations()) {
-        await this._writeAllTranslations(appMeta);
+        await this._writeAllTranslations();
       } else {
-        await this._writeRequiredTranslations(appMeta);
+        await this._writeRequiredTranslations();
       }
     },
 
@@ -523,11 +540,10 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
      * overrides settings from "en".  Qooxdoo client understands that if a setting is not provided in
      * "en_GB" it must look to "en", but it does not understand the "parent locale" inheritance, so this
      * method must flatten the "parent locale" inheritance.
-     *
-     * @param appMeta {ApplicationMeta} compile data
      */
-    async _writeLocales(appMeta) {
+    async _writeLocales() {
       var t = this;
+      let appMeta = this.getAppMeta();
       var analyser = appMeta.getAnalyser();
       let bootPackage = appMeta.getPackages()[0];
 
@@ -569,11 +585,10 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
 
     /**
      * Writes all translations
-     *
-     * @param appMeta {ApplicationMeta} compile data
      */
-    _writeAllTranslations: async function(appMeta) {
+    async _writeAllTranslations() {
       var t = this;
+      let appMeta = this.getAppMeta();
       var analyser = appMeta.getAnalyser();
       let bootPackage = appMeta.getPackages()[0];
       var translations = {};
@@ -609,11 +624,10 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
 
     /**
      * Writes only those translations which are actually required
-     *
-     * @param appMeta {ApplicationMeta} compile data
      */
-    async _writeRequiredTranslations(appMeta) {
+    async _writeRequiredTranslations() {
       var t = this;
+      let appMeta = this.getAppMeta();
       var analyser = appMeta.getAnalyser();
       var db = analyser.getDatabase();
       let bootPackage = appMeta.getPackages()[0];
@@ -672,11 +686,13 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
     
     /**
      * Writes the application
-     * 
-     * @param appMeta {qx.tool.compiler.targets.meta.ApplicationMeta}
      */
-    async _writeApplication(appMeta) {
+    async _writeApplication() {
       var t = this;
+      
+      await this.fireEventAsync("writingApplication");
+      
+      let appMeta = this.getAppMeta();
       var application = appMeta.getApplication();
       var appRootDir = appMeta.getApplicationRoot();
       
@@ -692,7 +708,7 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
       
       await appMeta.getBootMetaJs().unwrap().writeToDisk();
       
-      await this._writeIndexHtml(appMeta);
+      await this._writeIndexHtml();
 
       if (!t.isWriteCompileInfo()) {
         return;
@@ -722,13 +738,16 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
       await fs.writeFileAsync(appRootDir + "/compile-info.json",
         JSON.stringify(appSummary, null, 2) + "\n",
         { encoding: "utf8" });
+        
+      await this.fireEventAsync("writtenApplication");
     },
 
     /**
      * Called to generate index.html
      */
-    async _writeIndexHtml(appMeta) {
+    async _writeIndexHtml() {
       var t = this;
+      let appMeta = this.getAppMeta();
       var application = appMeta.getApplication();
 
       if (!application.isBrowserApp()) {
@@ -821,6 +840,10 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
         };
         await fs.writeFileAsync(t.getOutputDir() + "index.html", replaceVars(indexHtml), { encoding: "utf8" });
       }
+    },
+    
+    getAppMeta() {
+      return this.__appMeta;
     }
   }
 });

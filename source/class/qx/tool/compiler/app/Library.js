@@ -38,6 +38,7 @@ qx.Class.define("qx.tool.compiler.app.Library", {
     this.base(arguments);
     this.__knownSymbols = {};
     this.__sourceFileExtensions = {};
+    this.__environmentChecks = {};
   },
 
   properties: {
@@ -120,6 +121,7 @@ qx.Class.define("qx.tool.compiler.app.Library", {
     __knownSymbols: null,
     __sourceFileExtensions: null,
     __promiseLoadManifest: null,
+    __environmentChecks: null,
 
     /**
      * Transform for rootDir; converts it to an absolute path
@@ -159,6 +161,24 @@ qx.Class.define("qx.tool.compiler.app.Library", {
           }
           t.setNamespace(data.provides.namespace);
           t.setVersion(data.info.version);
+          if (data.provides.environmentChecks) {
+            for (var key in data.provides.environmentChecks) {
+              let check = data.provides.environmentChecks[key];
+              let pos = key.indexOf("*");
+              if (pos > -1) {
+                this.__environmentChecks[key] = {
+                  matchString: key.substring(0, pos),
+                  startsWith: true,
+                  className: check
+                };
+              } else {
+                this.__environmentChecks[key] = {
+                  matchString: key,
+                  className: check
+                };
+              }
+            } 
+          }
 
           function fixLibraryPath(dir) {
             let d = path.resolve(rootDir, dir);
@@ -318,7 +338,8 @@ qx.Class.define("qx.tool.compiler.app.Library", {
     },
 
     /**
-     * Detects the type of a symbol, "class", "resource", "package", or null if not found
+     * Detects the type of a symbol, "class", "resource", "package", "environment", or null if not found
+     *
      * @param {String} name
      * @return {{symbolType,name,className}?}
      */
@@ -331,7 +352,43 @@ qx.Class.define("qx.tool.compiler.app.Library", {
       var type = this.__knownSymbols[name];
 
       if (type) {
-        return { symbolType: t.__knownSymbols[name], className: type == "class" ? name : null, name: name };
+        return { 
+            symbolType: t.__knownSymbols[name], 
+            className: type == "class" ? name : null, 
+            name: name 
+          };
+      }
+      
+      function testEnvironment(check) {
+        if (!check) {
+          return null;
+        }
+        let match = false;
+        if (check.startsWith) {
+          match = name.startsWith(check.matchString);
+        } else {
+          match = name == check.matchString;
+        }
+        if (match) {
+          return {
+            symbolType: "environment",
+            className: check.className,
+            name: name 
+          };
+        }
+      }
+      
+      let result = testEnvironment(this.__environmentChecks[name]);
+      if (result) {
+        return result;
+      }
+      for (let key in this.__environmentChecks) {
+        let check = this.__environmentChecks[key];
+        if (check.startsWith) {
+          result = testEnvironment(check);
+          if (result != null)
+            return result;
+        }
       }
 
       var tmp = name;

@@ -205,15 +205,15 @@ qx.Class.define("qx.tool.utils.json.Tokenizer", {
     },
 
     escapes: {
-      "\"": 0, // Quotation mask
-      "\\": 1, // Reverse solidus
-      "/": 2, // Solidus
-      "b": 3, // Backspace
-      "f": 4, // Form feed
-      "n": 5, // New line
-      "r": 6, // Carriage return
-      "t": 7, // Horizontal tab
-      "u": 8 // 4 hexadecimal digits
+      "\"": "\"", // Quotation mask
+      "\\": "\\", // Reverse solidus
+      "/": "/", // Solidus
+      "b": "\b", // Backspace
+      "f": "\f", // Form feed
+      "n": "\n", // New line
+      "r": "\r", // Carriage return
+      "t": "\t", // Horizontal tab
+      "u": "u" // 4 hexadecimal digits
     },
 
     numberStates: {
@@ -422,7 +422,6 @@ qx.Class.define("qx.tool.utils.json.Tokenizer", {
           case stringStates.START_QUOTE_OR_CHAR: {
             if (char === "\\") {
               state = stringStates.ESCAPE;
-              buffer += char;
               index++;
             } else if (char === "\"") {
               index++;
@@ -446,9 +445,8 @@ qx.Class.define("qx.tool.utils.json.Tokenizer", {
 
           case stringStates.ESCAPE: {
             if (char in escapes) {
-              buffer += char;
-              index++;
               if (char === "u") {
+                index++;
                 for (let i = 0; i < 4; i++) {
                   const curChar = input.charAt(index);
                   if (curChar && qx.tool.utils.json.Tokenizer.isHex(curChar)) {
@@ -458,6 +456,9 @@ qx.Class.define("qx.tool.utils.json.Tokenizer", {
                     return null;
                   }
                 }
+              } else {
+                buffer += escapes[char];
+                index++;
               }
               state = stringStates.START_QUOTE_OR_CHAR;
             } else {

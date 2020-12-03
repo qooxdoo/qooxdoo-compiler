@@ -92,7 +92,8 @@ qx.Class.define("qx.tool.compiler.targets.BuildTarget", {
     /*
      * @Override
      */
-    async _writeApplication(appMeta) {
+    async _writeApplication() {
+      let appMeta = this.getAppMeta();
       appMeta.setSourceUri(".");
       
       await appMeta.syncAssets();
@@ -115,7 +116,7 @@ qx.Class.define("qx.tool.compiler.targets.BuildTarget", {
         appMeta.getBootMetaJs().wrap(new qx.tool.compiler.targets.meta.Uglify(appMeta, bootMeta));
       }
       
-      return await this.base(arguments, appMeta);
+      return await this.base(arguments);
     },
 
     /*
