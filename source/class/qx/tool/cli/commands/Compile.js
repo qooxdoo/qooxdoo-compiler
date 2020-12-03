@@ -814,6 +814,8 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         let allApplicationTypes = {};
         appConfigs.forEach(appConfig => {
           var app = appConfig.app = new qx.tool.compiler.app.Application(appConfig["class"]);
+          if (appConfig["workerClass"])
+            app.setWorkerClassName(appConfig["workerClass"]);
           app.setTemplatePath(t.getTemplateDir());
 
           [ "type", "theme", "name", "environment", "outputPath", "bootPath", "loaderTemplate", "publish", "deploy", "standalone"].forEach(name => {

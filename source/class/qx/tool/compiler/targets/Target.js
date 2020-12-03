@@ -307,6 +307,7 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
 
       appMeta.setEnvironment({
         "qx.application": application.getClassName(),
+        "qx.workerApplication": application.getWorkerClassName(),
         "qx.revision": "",
         "qx.theme": application.getTheme(),
         "qx.version": analyser.getQooxdooVersion()

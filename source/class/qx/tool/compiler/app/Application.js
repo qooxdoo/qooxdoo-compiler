@@ -56,6 +56,16 @@ qx.Class.define("qx.tool.compiler.app.Application", {
       check: [ "browser", "rhino", "node" ],
       apply: "_applyType"
     },
+    
+    /**
+     * Name of the Worker application class
+     */
+    workerClassName: {
+      init: null,
+      nullable: true,
+      check: "String",
+      apply: "_applyWorkerClassName"
+    },
 
     /**
      * Environment property map
@@ -767,7 +777,15 @@ qx.Class.define("qx.tool.compiler.app.Application", {
     getClassName: function() {
       return this.__classes[0];
     },
-
+    
+    /**
+     * Apply method for `workerClassName`
+     */
+    _applyWorkerClassName(value) {
+      if (this.__classes.indexOf(value) < 0)
+        this.__classes.push(value);
+    },
+    
     /**
      * Returns the classes required for the application
      * @returns {String[]}
