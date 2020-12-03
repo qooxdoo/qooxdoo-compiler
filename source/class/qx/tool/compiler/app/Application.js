@@ -56,7 +56,7 @@ qx.Class.define("qx.tool.compiler.app.Application", {
       check: [ "browser", "rhino", "node" ],
       apply: "_applyType"
     },
-
+    
     /**
      * Environment property map
      */
@@ -775,7 +775,7 @@ qx.Class.define("qx.tool.compiler.app.Application", {
     getClassName: function() {
       return this.__classes[0];
     },
-
+    
     /**
      * Returns the classes required for the application
      * @returns {String[]}
