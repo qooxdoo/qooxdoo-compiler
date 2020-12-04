@@ -549,6 +549,7 @@ Versions: @qooxdoo/compiler    v${qx.tool.compiler.Version.VERSION}
      * @return {Boolean}
      */
     isExplicitArg(option) {
+      // eslint-disable-next-line jsdoc/require-jsdoc
       function searchForOption(option) {
         return process.argv.indexOf(option) > -1;
       }
