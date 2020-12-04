@@ -127,8 +127,9 @@ qx.Class.define("qx.tool.cli.commands.Command", {
     /**
      * Returns the path to the current library. If the current directory contains several libraries,
      * the first one found is returned.
+     * @return {String} A promise that resolves with the absolute path to the library
      * @throws {Error} Throws an error if no library can be found.
-     * @return {String} The absolute path to the library
+     * @async
      */
     getLibraryPath: async function() {
       let {libraries} = await this.getProjectData();
