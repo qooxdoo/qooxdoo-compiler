@@ -29,6 +29,14 @@ jobs:
       - name: run lint
         run:  npx qx lint --warnAsError
       
+      - name: Post message to Pull Request if linting fails
+        uses: unsplash/comment-on-pr@master
+        if: !success()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          msg: "Linting failed. Please run `qx lint --fix`; if problems remain,fix them manually."      
+      
       - name: compile the compiler
         run:  npx qx deploy 
       
