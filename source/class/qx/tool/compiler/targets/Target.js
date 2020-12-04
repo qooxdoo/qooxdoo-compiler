@@ -190,7 +190,7 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
     /**
      * Returns the project dir
      * @param application
-     * @returns String
+     * @return String
      */
     getProjectDir: function (application) {
       return application.getOutputPath() || application.getName();
@@ -279,8 +279,6 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
 
     /**
      * Generates the application
-     * @param {Application} app
-     * @param {Maker} maker
      * @param application
      * @param environment
      */
@@ -669,10 +667,6 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
     
     /**
      * Writes the application
-     * @param assets {Object[]} list of assets, where each asset is (see @link(qx.tool.compiler.resources.Manager) for details)
-     * - libraryName {String}
-     * - filename {String}
-     * - fileInfo {String)
      * @param appMeta
      */
     async _writeApplication(appMeta) {

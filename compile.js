@@ -12,7 +12,7 @@ qx.Class.define("qx.compiler.CompilerApi", {
 qx.Class.define("qx.tool.compiler.Version", {
   extend: qx.core.Object,
   statics: {
-    VERSION: "${package.version}",
+    VERSION: "${package.version}"
   }
 });      
 `;

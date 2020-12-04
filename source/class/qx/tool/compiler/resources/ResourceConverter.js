@@ -72,7 +72,7 @@ qx.Class.define("qx.tool.compiler.resources.ResourceConverter", {
      * @param srcFilename {String} full path to the file
      * @param destFilename {String} full path to the destination file
      * @param isThemeFile
-     * @return {String[]?} list of filenames that are required for the compilation (dependencies)
+     * @return {String[]} list of filenames that are required for the compilation (dependencies)
      */
     async compile(target, asset, srcFilename, destFilename, isThemeFile) {
       throw new Error("No implementation for " + this.classname + ".convert");

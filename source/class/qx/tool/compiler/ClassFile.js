@@ -2128,7 +2128,6 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
     /**
      * Tests whether a symbol has already been marked as ignore
      * @param name {String} symbol name
-     * @param {Boolean} true if ignored
      */
     isIgnored: function(name) {
       for (var tmp = this.__scope; tmp; tmp = tmp.parent) {
@@ -2164,7 +2163,6 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
     /**
      * Adds an environment check made by the class
      * @param name
-     * @param opts {Object?} see _requireClass
      * @param location
      */
     addEnvCheck: function(name, location) {
@@ -2206,7 +2204,6 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
      * @param msgId {String} the marker message ID (@see qx.tool.compiler.Marker)
      * @param pos {Object||null} position map; may contain a Map containing
      *  {line,column?}, or a Map {start:{line,column}, end: {line,column}}.
-     * @param arguments? {Object...} variable argument list, specific to the msgId
      */
     addMarker: function(msgId, pos) {
       msgId = "qx.tool.compiler." + msgId;
@@ -2373,7 +2370,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
 
     /**
      * Returns the assets required by the class
-     * @returns
+     * @return
      */
     getAssets: function() {
       return this.__requiredAssets;
@@ -2385,7 +2382,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
      *
      * @param props
      * @param name
-     * @returns
+     * @return
      */
     __findProperty: function(props, name) {
       for (let i = 0; i < props.length; i++) {
@@ -2405,7 +2402,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
     /**
      * Returns the list of required classes (dependencies)
      *
-     * @returns
+     * @return
      */
     getRequiredClasses: function() {
       return this.__requiredClasses;
@@ -2414,7 +2411,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
     /**
      * Returns a list of unresolved symbols
      *
-     * @returns
+     * @return
      */
     getUnresolvedSymbols: function() {
       return this.__scope.unresolved;
@@ -2422,7 +2419,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
 
     /**
      * Returns the name of the class being compiled
-     * @returns {null}
+     * @return
      */
     getClassName: function() {
       return this.__className;
@@ -2445,7 +2442,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
      *
      * @param library  {qx.tool.compiler.app.Library}
      * @param className {String}
-     * @returns {String}
+     * @return {String}
      */
     getSourcePath: function(library, className) {
       return pathModule.join(library.getRootDir(), library.getSourcePath(), className.replace(/\./g, pathModule.sep) + library.getSourceFileExtension(className));
@@ -2453,10 +2450,9 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
 
     /**
      * Returns the path to the rewritten class file
-     * @param library  {qx.tool.compiler.app.Library}
      * @param analyser
      * @param className {String}
-     * @returns {String}
+     * @return {String}
      */
     getOutputPath: function(analyser, className) {
       var filename = pathModule.join(analyser.getOutputDir(), "transpiled", className.replace(/\./g, pathModule.sep) + ".js");
@@ -2466,7 +2462,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
     /**
      * Returns the root namespace from the classname, or null if it cannot be determined
      * @param className
-     * @returns {*|null}
+     * @return {*|null}
      */
     getNamespace: function(className) {
       var m = className.match(/^([^.]+)\./);

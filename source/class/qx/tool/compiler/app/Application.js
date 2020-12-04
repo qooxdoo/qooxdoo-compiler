@@ -28,8 +28,7 @@ qx.Class.define("qx.tool.compiler.app.Application", {
 
   /**
    * Constructor
-   * @param classname[, classname...] {String|String[]}
-   * @param classname
+   * @param {String|String[]} classname 
    */
   construct: function(classname) {
     this.base(arguments);
@@ -235,7 +234,7 @@ qx.Class.define("qx.tool.compiler.app.Application", {
     /**
      * Checks if the application is for browser
      *
-     * @returns boolean
+     * @return boolean
      */
     isBrowserApp: function () {
       return this.getType() === "browser";
@@ -244,7 +243,6 @@ qx.Class.define("qx.tool.compiler.app.Application", {
     /**
      * Calculates the dependencies of the classes to create a load order
      *
-     * @param classes
      */
     calcDependencies: function() {
       var t = this;

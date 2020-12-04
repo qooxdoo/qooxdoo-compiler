@@ -136,8 +136,6 @@ qx.Class.define("qx.tool.compiler.app.Library", {
     /**
      * Loads the Manifest.json from the directory and uses it to configure
      * properties
-     * @param rootDir
-     * @param cb
      * @param loadFromDir
      */
     loadManifest: function(loadFromDir) {
@@ -232,8 +230,7 @@ qx.Class.define("qx.tool.compiler.app.Library", {
      * Scans the filing system looking for classes; there are occasions (ie Qooxdoo's qxWeb module)
      * where the class name does not comply with the namespace, this method is used to find those
      * files and also to prepopulate the known symbols list
-     * @param cb(err, classes) returns an array of class names
-     * @param cb
+     * @param {function} cb  callback function with (err, classes) returns an array of class names
      */
     scanForClasses: function(cb) {
       var t = this;
@@ -331,7 +328,7 @@ qx.Class.define("qx.tool.compiler.app.Library", {
     /**
      * Detects the type of a symbol, "class", "resource", "package", or null if not found
      * @param {String} name
-     * @return {{symbolType,name,className?}}
+     * @return {Object} {symbolType,name,className?}
      */
     getSymbolType: function(name) {
       if (!name.length) {

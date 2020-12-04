@@ -438,9 +438,8 @@ qx.Class.define("qx.tool.utils.json.Stringify", {
 
     /**
      * Detects whether the value is a native object
-     * @param value {Object}
-     * @param obj
-     * @returns boolean
+     * @param {*} obj
+     * @return boolean
      */
     isPlainObject(obj) {
       if (typeof obj === "object" && obj !== null) {
@@ -453,9 +452,8 @@ qx.Class.define("qx.tool.utils.json.Stringify", {
 
     /**
      * Detects whether the value is a literal value
-     * @param value {Object}
-     * @param obj
-     * @returns boolean
+     * @param {*} obj
+     * @return boolean
      */
     isLiteral(obj) {
       if (obj === null || typeof obj === "string" || typeof obj === "number" || typeof obj === "boolean") {

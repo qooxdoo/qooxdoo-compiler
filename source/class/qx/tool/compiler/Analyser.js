@@ -301,7 +301,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
     /**
      * Returns the loaded database
      *
-     * @returns
+     * @return
      */
     getDatabase: function() {
       return this.__db;
@@ -967,8 +967,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
      * Loads a class
      * @param className {String} the name of the class
      * @param forceScan {Boolean?} true if the class is to be compiled whether it needs it or not (default false)
-     * @param cb(err, DbClassInfo)
-     * @param cb
+     * @param cb {function} callback function (err, DbClassInfo)
      */
     getClassInfo: function(className, forceScan, cb) {
       var t = this;
@@ -1050,7 +1049,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
     /**
      * Returns the CLDR data for a given locale
      * @param locale {String} the locale string
-     * @returns Promise({cldr})
+     * @return Promise({cldr})
      */
     getCldr: async function(locale) {
       var t = this;
@@ -1066,7 +1065,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
      * Gets the translation for the locale and library, caching the result.
      * @param library
      * @param locale
-     * @returns {Promise(translation)}
+     * @return {Promise} (translation)
      */
     getTranslation: async function(library, locale) {
       var t = this;
@@ -1084,7 +1083,6 @@ qx.Class.define("qx.tool.compiler.Analyser", {
      * Updates all translations to include all msgids found in code
      * @param appLibrary the library to update
      * @param locales
-     * @param cb
      * @param libraries
      * @param copyAllMsgs
      */
@@ -1208,7 +1206,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
     /**
      * Returns the path to the qooxdoo library
      *
-     * @returns
+     * @return {String}
      */
     getQooxdooPath: function() {
       var lib = this.findLibrary("qx");
@@ -1256,7 +1254,6 @@ qx.Class.define("qx.tool.compiler.Analyser", {
 
     /**
      * Removes a class from the list of required classes to analyse
-     * @param className
      * @param classname
      */
     removeClass: function(classname) {
@@ -1266,7 +1263,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
     /**
      * Detects the symbol type, ie class, package, member, etc
      * @param name
-     * @returns {{symbolType,name,clasName?}}
+     * @return {Object}  {symbolType,name,clasName?}
      */
     getSymbolType: function(name) {
       var t = this;
@@ -1340,7 +1337,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
      * Tests whether an environment value is checked for
      *
      * @param key
-     * @returns
+     * @return {Object}
      */
     getEnvironmentCheck: function(key) {
       return this.__environmentChecks[key];

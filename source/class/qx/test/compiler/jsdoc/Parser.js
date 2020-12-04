@@ -49,7 +49,7 @@ qx.Class.define("qx.test.compiler.jsdoc.Parser", {
         let text = `*
         // [Constructor]
         `;  
-        var test = qx.tool.compiler.jsdoc.Parser.parseComment(text);
+        let test = qx.tool.compiler.jsdoc.Parser.parseComment(text);
         console.log(test["@description"][0].body);
         this.assert(test["@description"][0].body === "");
       }
@@ -63,7 +63,7 @@ qx.Class.define("qx.test.compiler.jsdoc.Parser", {
          * @return {Object}
          *
         `;  
-        var test = qx.tool.compiler.jsdoc.Parser.parseComment(text);
+        let test = qx.tool.compiler.jsdoc.Parser.parseComment(text);
         console.log(test["@description"][0].body);
         this.assert(test["@description"][0].body !== "");
       }
