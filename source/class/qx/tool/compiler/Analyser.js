@@ -652,7 +652,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
                   "For further details take a look at the property definition: {@link #" + propertyName + "}.");
 
               if (propertyMeta.async) {
-                msg = "Returns a {@link qx.Promise} which resolves to the (computed) value of the property <code>" + propertyName + "</code>." +
+                let msg = "Returns a {@link qx.Promise} which resolves to the (computed) value of the property <code>" + propertyName + "</code>." +
                 "\n" +
                 "For further details take a look at the property definition: {@link #" + propertyName + "}.";
                 addPropertyAccessor(propertyMeta, "get" + upname + "Async", "getAsync", "Promise", null, msg);
