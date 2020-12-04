@@ -2402,7 +2402,6 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
     /**
      * Returns the list of required classes (dependencies)
      *
-     * @return
      */
     getRequiredClasses: function() {
       return this.__requiredClasses;
