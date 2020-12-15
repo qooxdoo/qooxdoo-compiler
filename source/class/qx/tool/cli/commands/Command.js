@@ -335,9 +335,7 @@ qx.Class.define("qx.tool.cli.commands.Command", {
      * @return {Boolean}
      */
     isExplicitArg(option) {
-      /**
-       * @param option
-       */
+      // eslint-disable-next-line jsdoc/require-jsdoc
       function searchForOption(option) {
         return process.argv.indexOf(option) > -1;
       }
