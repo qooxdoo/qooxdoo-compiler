@@ -142,7 +142,7 @@ qx.Class.define("qx.tool.cli.commands.Deploy", {
             if (app.getDeploy() === false) {
               return;
             }
-              let deployDir = argv.out || ((typeof target.getDeployDir == "function") && target.getDeployDir());
+            let deployDir = argv.out || ((typeof target.getDeployDir == "function") && target.getDeployDir());
             if (deployDir) {
               await qx.tool.utils.files.Utils.deleteRecursive(deployDir);
             }

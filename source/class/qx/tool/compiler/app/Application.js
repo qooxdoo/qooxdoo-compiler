@@ -462,8 +462,9 @@ qx.Class.define("qx.tool.compiler.app.Application", {
               part.externals = [];
             }
             info.externals.forEach(external => {
-              if (part.externals.indexOf(external) < 0)
+              if (part.externals.indexOf(external) < 0) {
                 part.externals.push(external);
+              }
             });
           }
         }

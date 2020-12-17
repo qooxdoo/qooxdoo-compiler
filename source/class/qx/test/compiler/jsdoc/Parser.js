@@ -63,7 +63,7 @@ qx.Class.define("qx.test.compiler.jsdoc.Parser", {
          * @return {Object}
          *
         `;  
-        var test = qx.tool.compiler.jsdoc.Parser.parseComment(text);
+        test = qx.tool.compiler.jsdoc.Parser.parseComment(text);
         console.log(test["@description"][0].body);
         this.assert(test["@description"][0].body !== "");
       }

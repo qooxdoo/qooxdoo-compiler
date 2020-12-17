@@ -324,8 +324,9 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
       const addExternal = (arr, type) => {
         if (arr) {
           arr.forEach(filename => {
-            if (externals[filename.toLowerCase()])
+            if (externals[filename.toLowerCase()]) {
               return;
+            }
             externals[filename.toLowerCase()] = true;
             let actualType = type || (filename.endsWith(".js") ? "urisBefore" : "cssBefore");
             if (filename.match(/^https?:/)) {
@@ -468,7 +469,7 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
       });
       await qx.Promise.all(promises);
       await t._writeApplication(appMeta);
-  },
+    },
 
     /**
      * Handles the output of translations and locales

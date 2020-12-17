@@ -104,7 +104,7 @@ qx.Class.define("qx.tool.compiler.targets.meta.BootJs", {
       });
       this.__sourceMapOffsets = [];
 
-      var data = await fs.readFileAsync(application.getLoaderTemplate(), { encoding: "utf-8" });
+      data = await fs.readFileAsync(application.getLoaderTemplate(), { encoding: "utf-8" });
       var lines = data.split("\n");
       for (let i = 0; i < lines.length; i++) {
         var line = lines[i];

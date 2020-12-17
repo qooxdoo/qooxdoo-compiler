@@ -20,11 +20,12 @@
  *
  * 
  * *********************************************************************** */
+ 
 /**
  * @require(qx.tool.utils.Logger)
-*/
+ */
 
- var LEVELS = [ "trace", "debug", "info", "warn", "error", "fatal" ];
+var LEVELS = [ "trace", "debug", "info", "warn", "error", "fatal" ];
 
 function zeropad2(val) {
   if (val < 10) {

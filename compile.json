@@ -167,6 +167,7 @@
     },
     "rules": {
       "@qooxdoo/qx/no-illegal-private-usage": "error",
+      "require-jsdoc": "off",
       "indent": [
         "error",
         2,
