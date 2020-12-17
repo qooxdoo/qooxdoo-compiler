@@ -88,6 +88,14 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
     analyser: {
       nullable: false
     },
+    
+    /**
+     * Whether to inline external scripts
+     */
+    inlineExternalScripts: {
+      init: false,
+      check: "Boolean"
+    },
 
     /** Locales being generated */
     locales: {
@@ -312,17 +320,22 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
         "qx.version": analyser.getQooxdooVersion()
       });
       
+      let externals = {};
       const addExternal = (arr, type) => {
         if (arr) {
           arr.forEach(filename => {
+            if (externals[filename.toLowerCase()])
+              return;
+            externals[filename.toLowerCase()] = true;
+            let actualType = type || (filename.endsWith(".js") ? "urisBefore" : "cssBefore");
             if (filename.match(/^https?:/)) {
-              appMeta.addExternal(type, filename);
+              appMeta.addExternal(actualType, filename);
             } else {
               let asset = rm.getAsset(filename);
               if (asset) {
                 let str = asset.getDestFilename(t);
                 str = path.relative(appRootDir, str);
-                appMeta.addPreload(type, str);
+                appMeta.addPreload(actualType, str);
               }
             }
           });
@@ -394,7 +407,9 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
             }
             partMeta.addPackage(pkg);
           }
-          
+          if (dbClassInfo.externals) {
+            addExternal(dbClassInfo.externals);
+          }
           pkg.addJavascriptMeta(jsMeta);
           pkg.addClassname(classname);
           lastPackage = pkg;

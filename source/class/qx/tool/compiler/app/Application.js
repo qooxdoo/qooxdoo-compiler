@@ -457,6 +457,15 @@ qx.Class.define("qx.tool.compiler.app.Application", {
           var part = classData.best||bootPart;
           part.classes.push(classname);
           classData.actual = part;
+          if (info.externals) {
+            if (part.externals === undefined) {
+              part.externals = [];
+            }
+            info.externals.forEach(external => {
+              if (part.externals.indexOf(external) < 0)
+                part.externals.push(external);
+            });
+          }
         }
         allDeps.push(classname);
         deferDeps.forEach(function(depName) {

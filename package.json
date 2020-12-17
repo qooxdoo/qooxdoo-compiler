@@ -12,6 +12,13 @@
     "test": "node bin/qx test --target=build --output-path-prefix=tmp",
     "prepack": "npx qx deploy --target=build --clean"
   },
+  "cross-os": {
+    "test.os": {
+      "win32": "test\\test.win32.cmd",
+      "linux": "test/test.linux.sh",
+      "darwin": "test/test.linux.sh"
+    }
+  },
   "author": "John Spackman (johnspackman), Christian Boulanger (cboulanger), Henner Kollmann (hkollmann), and others",
   "version": "1.0.0-beta",
   "keywords": [

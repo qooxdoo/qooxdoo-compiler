@@ -13,7 +13,7 @@ const fsPromises = {
 };
 
 function getCompiler() {
-  return path.join(__dirname, "qx");
+  return path.join(__dirname, "..", "bin-src", "qx");
 }
 
 async function runCompiler(dir, ...cmd) {

@@ -209,6 +209,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
       vars: {},
       unresolved: {}
     };
+    this.__externals = [];
 
     this.__taskQueueDrains = [];
     this.__taskQueue = async.queue(function(task, cb) {
@@ -264,6 +265,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
     __taskQueueDrain: null,
     __globalSymbols: null,
     __privates: null,
+    __externals: null,
 	
     _onTaskQueueDrain: function() {
       var cbs = this.__taskQueueDrain;
@@ -570,6 +572,9 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
           }
         }
       }
+      if (this.__externals.length) {
+        dbClassInfo.externals = this.__externals;
+      }
 
       // Translation
       if (this.__translations.length) {
@@ -643,6 +648,12 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         if (jsdoc["@ignore"]) {
           jsdoc["@ignore"].forEach(function(elem) {
             t.addIgnore(elem.body);
+          });
+        }
+        if (jsdoc["@external"]) {
+          jsdoc["@external"].forEach(function(elem) {
+            t.addExternal(elem.body);
+            t._requireAsset(elem.body);
           });
         }
         if (jsdoc["@asset"]) {
@@ -2031,6 +2042,17 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
       }
     },
 
+    /**
+     * Adds an external resource which needs to be loaded early
+     *
+     * @param name {String} name of the symbol
+     */
+    addExternal: function(name) {
+      if (this.__externals.indexOf(name) < 0) {
+        this.__externals.push(name);
+      }
+    },
+    
     /**
      * Adds an ignored symbol
      * @param name {String} name of the symbol

@@ -45,7 +45,30 @@ qx.Class.define("qx.tool.compiler.targets.meta.BootJs", {
       let appMeta = this._appMeta;
       let application = appMeta.getApplication();
       let target = appMeta.getTarget();
-      var appRootDir = appMeta.getApplicationRoot();
+      let appRootDir = appMeta.getApplicationRoot();
+      let urisBefore = [];
+      if (!target.isInlineExternalScripts()) {
+        urisBefore = appMeta.getPreloads().urisBefore;
+      } else {
+        let inlines = [];
+        urisBefore = appMeta.getPreloads().urisBefore.filter(uri => {
+          // This is a http url, we cannot inline it
+          if (uri.startsWith("__external__:")) {
+            return true;
+          }
+          
+          inlines.push(uri);
+          return false;
+        });
+        for (let i = 0; i < inlines.length; i++) {
+          let uri = inlines[i];
+          
+          let filename = path.join(target.getOutputDir(), "resources", uri);
+          var data = await fs.readFileAsync(filename, { encoding: "utf-8" });
+          ws.write(data);
+          ws.write("\n");
+        }
+      }
       
       var MAP = {
         EnvSettings: appMeta.getEnvironment(),
@@ -57,7 +80,7 @@ qx.Class.define("qx.tool.compiler.targets.meta.BootJs", {
         Locales: {"C": null},
         Parts: {},
         Packages: {},
-        UrisBefore: appMeta.getPreloads().urisBefore,
+        UrisBefore: urisBefore,
         CssBefore: appMeta.getPreloads().cssBefore,
         Boot: "boot",
         ClosureParts: {},
