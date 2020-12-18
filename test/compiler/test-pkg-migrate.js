@@ -10,6 +10,12 @@ const appNamespace = "testMigrateApp";
 (async () => {
   try {
     console.info("Running migration tests...");
+    
+    if (await fs.existsAsync("test-pkg-migrate"))
+      rimraf.sync("test-pkg-migrate");
+    await fs.mkdirAsync("test-pkg-migrate");
+    process.chdir("test-pkg-migrate");
+    
     // delete existing app
     if (await fs.existsAsync(appNamespace) && await fs.statAsync(appNamespace)) {
       rimraf.sync(appNamespace);

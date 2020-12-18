@@ -240,14 +240,42 @@ qx.Class.define("qx.tool.utils.Utils", {
      * @param {String} cwd The current working directory
      * @param {String} args One or more command line arguments, including the
      * command itself
-     * @return {Promise<{exitCode: Number, output: String, error: *, messages: *}>}
+     * @return {{exitCode: Number, output: String, error: *, messages: *}}
      */
     async runCommand(cwd, ...args) {
+      
+      let options = {
+        
+      };
+      
+      if (typeof cwd == "object")
+        options = cwd;
+      else {      
+        args = args.filter(value => {
+          if (typeof value == "string")
+            return true;
+          if (!options)
+            options = value;
+          return false;
+        });
+        if (!options.cwd)
+          options.cwd = cwd;
+        if (!options.cmd)
+          options.cmd = args.shift();
+        if (!options.args)
+          options.args = args;
+      }
       return new Promise((resolve, reject) => {
-        let cmd = args.shift();
-        let proc = child_process.spawn(cmd, args, {
-          cwd: cwd,
-          shell: true
+        let env = process.env;
+        if (options.env) {
+          env = Object.assign({}, env);
+          Object.assign(env, options.env);
+        }
+        let shell = options.shell === undefined ? true : options.shell;
+        let proc = child_process.spawn(options.cmd, options.args, {
+          cwd: options.cwd,
+          shell: true,
+          env: env 
         });
         let result = {
           exitCode: null,

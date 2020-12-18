@@ -64,9 +64,14 @@ qx.Class.define("qx.tool.compiler.targets.meta.BootJs", {
           let uri = inlines[i];
           
           let filename = path.join(target.getOutputDir(), "resources", uri);
-          var data = await fs.readFileAsync(filename, { encoding: "utf-8" });
-          ws.write(data);
-          ws.write("\n");
+          try {
+            var data = await fs.readFileAsync(filename, { encoding: "utf-8" });
+            ws.write(data);
+            ws.write("\n");
+          } catch(ex) {
+            if (ex.code != "ENOENT")
+              throw ex;
+          }
         }
       }
       

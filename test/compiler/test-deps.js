@@ -16,7 +16,7 @@ async function createMaker() {
   // Makers use an Analyser to figure out what the Target should write
   var maker = new qx.tool.compiler.makers.AppMaker().set({
     // Targets know how to output an application
-    target: new qx.tool.compiler.targets.SourceTarget("unit-tests-output").set({
+    target: new qx.tool.compiler.targets.SourceTarget("test-deps").set({
       writeCompileInfo: true,
       updatePoFiles: true,
       environment: {
@@ -94,11 +94,11 @@ test("Checks dependencies and environment settings", assert => {
   }
 
   function readCompileInfo() {
-    return readJson("unit-tests-output/appone/compile-info.json");
+    return readJson("test-deps/appone/compile-info.json");
   }
 
   function readDbJson() {
-    return readJson("unit-tests-output/db.json");
+    return readJson("test-deps/db.json");
   }
 
   function hasClassDependency(compileInfo, classname) {
@@ -114,7 +114,7 @@ test("Checks dependencies and environment settings", assert => {
   var compileInfo;
   var db;
   var meta;
-  deleteRecursive("unit-tests-output")
+  deleteRecursive("test-deps")
       .then(() => createMaker())
       .then(_maker => {
         maker = _maker;
@@ -156,7 +156,7 @@ test("Checks dependencies and environment settings", assert => {
       })
       .then(() => readCompileInfo().then(tmp => compileInfo = tmp))
       .then(() => readDbJson().then(tmp => db = tmp))
-      .then(() => readJson("unit-tests-output/transpiled/testapp/Application.json").then(tmp => meta = tmp))
+      .then(() => readJson("test-deps/transpiled/testapp/Application.json").then(tmp => meta = tmp))
       
       /**
        * Text translation
@@ -227,7 +227,7 @@ test("Checks dependencies and environment settings", assert => {
       /*
        * Test Issue500
        */
-      .then(() => readFile("unit-tests-output/transpiled/testapp/Issue500.js", "utf8"))
+      .then(() => readFile("test-deps/transpiled/testapp/Issue500.js", "utf8"))
       .then(src => {
         assert.ok(src.match(/Unable to launch monitor/), "Template Literals");
         assert.ok(src.match(/abcdef/), "Template Literals", "Ordinary Literals");
@@ -256,7 +256,7 @@ test("Checks dependencies and environment settings", assert => {
       /*
        * Test JSX
        */
-      .then(() => readFile("unit-tests-output/transpiled/testapp/Application.js", "utf8"))
+      .then(() => readFile("test-deps/transpiled/testapp/Application.js", "utf8"))
       .then(src => {
         assert.ok(!!src.match(/jsx.dom\("div", null, "Hello World"\)/), "JSX");
       })
@@ -265,7 +265,7 @@ test("Checks dependencies and environment settings", assert => {
       /*
        * Test environment settings
        */
-      .then(() => readFile("unit-tests-output/transpiled/testapp/Application.js", "utf8")
+      .then(() => readFile("test-deps/transpiled/testapp/Application.js", "utf8")
       .then(src => {
         assert.ok(!src.match(/ELIMINATION_FAILED/), "Code elimination");
         assert.ok(src.match(/TEST_OVERRIDDEN_1/), "Overridden environment vars #1");
@@ -287,18 +287,18 @@ test("Checks dependencies and environment settings", assert => {
         assert.ok(src.match(/qx.core.Environment.get\("qx.promise"\)/), "override default env setting");
       }))
       
-      .then(() => readFile("unit-tests-output/transpiled/testapp/MMyMixin.js", "utf8")
+      .then(() => readFile("test-deps/transpiled/testapp/MMyMixin.js", "utf8")
       .then(src => {
         assert.ok(src.match(/mixedInIsTrue/), "Conditional Mixin part 1");
         assert.ok(!src.match(/mixedInIsFalse/), "Conditional Mixin part 2");
       }))
       
-      .then(() => readFile("unit-tests-output/transpiled/testapp/TestThat1.js", "utf8")
+      .then(() => readFile("test-deps/transpiled/testapp/TestThat1.js", "utf8")
       .then(src => {
         assert.ok(src.match(/testapp\.TestThat1\.prototype\.toHashCode\.base\.call\(other\)/), "Aliased this");
       }))
       
-      .then(() => readFile("unit-tests-output/transpiled/testapp/TestThat2.js", "utf8")
+      .then(() => readFile("test-deps/transpiled/testapp/TestThat2.js", "utf8")
       .then(src => {
         assert.ok(src.match(/testapp\.TestThat2\.prototype\.toHashCode\.base\.call\(other\)/), "Aliased this");
       }))
@@ -307,7 +307,7 @@ test("Checks dependencies and environment settings", assert => {
        * Test index.html generation
        */
       .then(async () => {
-        let src = await readFile("unit-tests-output/index.html", "utf8");
+        let src = await readFile("test-deps/index.html", "utf8");
         assert.ok(src.match(/src="appone\/index.js"/), "Default application");
       })
 
@@ -315,7 +315,7 @@ test("Checks dependencies and environment settings", assert => {
        * Test SCSS generation
        */
       .then(async () => {
-        src = await readFile("unit-tests-output/resource/testapp/scss/root.css", "utf8");
+        src = await readFile("test-deps/resource/testapp/scss/root.css", "utf8");
         assert.ok(src.match(/url\(\"sub5\/image.png\"\)/), "Resource SCSS");
       })
 

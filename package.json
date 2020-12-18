@@ -3,20 +3,14 @@
   "description": "node.js based replacement for the Qooxdoo python toolchain",
   "main": "index.js",
   "bin": {
-    "qx": "bin/qx"
+    "qx": "bin/deploy/qx"
   },
   "scripts": {
     "devtools": "node source/resource/qx/tool/bin/build-devtools",
     "website": "node source/resource/qx/tool/bin/build-website",
-    "test": "cross-os test.os",
+    "pretest": "node bootstrap-compiler.js",
+    "test": "./bin/build/qx test",
     "prepack": "npx qx deploy --target=build --clean"
-  },
-  "cross-os": {
-    "test.os": {
-      "win32": "test\\test.win32.cmd",
-      "linux": "test/test.linux.sh",
-      "darwin": "test/test.linux.sh"
-    }
   },
   "author": "John Spackman (johnspackman), Christian Boulanger (cboulanger), Henner Kollmann (hkollmann), and others",
   "version": "1.0.0-beta",
@@ -40,7 +34,7 @@
     "Manifest.json",
     "lib/compiler",
     "lib/resource",
-    "bin"
+    "bin/deploy"
   ],
   "dependencies": {
     "@babel/core": "^7.11.6",
@@ -110,7 +104,6 @@
   },
   "devDependencies": {
     "@qooxdoo/compiler": "^1.0.0-beta",
-    "cross-os": "^1.3.0",
     "source-map-support": "^0.5.19",
     "tape": "^5.0.1"
   },

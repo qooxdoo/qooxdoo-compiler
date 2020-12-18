@@ -11,6 +11,8 @@ const appNamespace = "testCommandsApp";
   try {
     console.info("Running command tests...");
 	
+    process.chdir("test-commands");
+
     try {
       throw new qx.tool.utils.Utils.UserError("test");
     } catch (e) {
@@ -22,11 +24,13 @@ const appNamespace = "testCommandsApp";
     if (await fs.existsAsync(appNamespace) && await fs.statAsync(appNamespace)) {
       await rimraf(appNamespace, {maxBusyTries: 10});
     }
+    
     // create a test app
     const commands = qx.tool.cli.commands;
     const appConfig = {noninteractive:true, namespace:appNamespace, theme: "Indigo", icontheme: "Tango"};
     await (new commands.Create(appConfig)).process();
     process.chdir(appNamespace);
+
     // run tests
     let actual; 
     let expected;
@@ -34,7 +38,7 @@ const appNamespace = "testCommandsApp";
 
     // qx add script --rename=test-commands-renamed-to.js test/testdata/test-commands-rename.js
     let filename = "test-commands-rename.js";
-    let scriptpath = path.join(qx.tool.$$rootDir, "test/testdata", filename);
+    let scriptpath = path.join("..", filename);
     let resourcedir = "js";
     let args = {verbose:true, noninteractive:true, scriptpath, resourcedir, rename:"test-commands-renamed-to.js"};
     await (new commands.add.Script(args)).process();
