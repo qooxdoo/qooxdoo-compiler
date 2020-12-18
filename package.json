@@ -8,8 +8,7 @@
   "scripts": {
     "devtools": "node source/resource/qx/tool/bin/build-devtools",
     "website": "node source/resource/qx/tool/bin/build-website",
-    "pretest": "npx qx deploy --target=build --clean",
-    "test": "node bin/qx test --target=build --output-path-prefix=tmp",
+    "test": "cross-os test.os",
     "prepack": "npx qx deploy --target=build --clean"
   },
   "cross-os": {
@@ -111,6 +110,7 @@
   },
   "devDependencies": {
     "@qooxdoo/compiler": "^1.0.0-beta",
+    "cross-os": "^1.3.0",
     "source-map-support": "^0.5.19",
     "tape": "^5.0.1"
   },
@@ -120,7 +120,23 @@
     },
     "extends": [
       "@qooxdoo/qx"
-    ]
+    ],
+    "parserOptions": {
+      "ecmaVersion": 2017
+    },
+    "rules": {
+      "@qooxdoo/qx/no-illegal-private-usage": "off",
+      "jsdoc/require-jsdoc": "off",
+      "jsdoc/require-param": "off",
+      "jsdoc/require-returns-type": "off",
+      "indent": [
+        "error",
+        2,
+        {
+          "SwitchCase": 1
+        }
+      ]
+    }
   },
   "engine": "node >= 8"
 }

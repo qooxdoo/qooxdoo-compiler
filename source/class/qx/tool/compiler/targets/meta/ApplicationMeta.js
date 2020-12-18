@@ -200,8 +200,8 @@ qx.Class.define("qx.tool.compiler.targets.meta.ApplicationMeta", {
      * @param type {String} either "urisBefore" or "cssBefore"
      * @param uri {String} uri to load
      */
-    addPreload(type, filename) {
-      this.__preload[type].push(filename);
+    addPreload(type, uri) {
+      this.__preload[type].push(uri);
     },
     
     /**

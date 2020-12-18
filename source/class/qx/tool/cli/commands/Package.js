@@ -131,8 +131,7 @@ qx.Class.define("qx.tool.cli.commands.Package", {
 
     /**
      * Convenience method to return all config file models as an array
-     * @return {Promise<[{qx.tool.config.Manifest}, {qx.tool.config.Lockfile}, {qx.tool.config.Compile}]>}
-     * @private
+     * @return {Array} containing [{qx.tool.config.Manifest}, {qx.tool.config.Lockfile}, {qx.tool.config.Compile}]
      */
     async _getConfigData() {
       return [

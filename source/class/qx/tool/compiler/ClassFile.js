@@ -2080,7 +2080,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
     /**
      * Tests whether a symbol has already been marked as ignore
      * @param name {String} symbol name
-     * @param {Boolean} true if ignored
+     * @return {Boolean} true if ignored
      */
     isIgnored: function(name) {
       for (var tmp = this.__scope; tmp; tmp = tmp.parent) {
@@ -2117,7 +2117,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
      * Adds an environment check made by the class
      *
      * @param name
-     * @param opts {Object?} see _requireClass
+     * @param location {Object?} see _requireClass
      */
     addEnvCheck: function(name, location) {
       var t = this;
@@ -2158,7 +2158,6 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
      * @param msgId {String} the marker message ID (@see qx.tool.compiler.Marker)
      * @param pos {Object||null} position map; may contain a Map containing
      *  {line,column?}, or a Map {start:{line,column}, end: {line,column}}.
-     * @param arguments? {Object...} variable argument list, specific to the msgId
      */
     addMarker: function(msgId, pos) {
       msgId = "qx.tool.compiler." + msgId;
@@ -2406,7 +2405,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
     /**
      * Returns the path to the rewritten class file
      *
-     * @param library  {qx.tool.compiler.app.Library}
+     * @param analyser {qx.tool.compiler.Analyser}
      * @param className {String}
      * @returns {String}
      */

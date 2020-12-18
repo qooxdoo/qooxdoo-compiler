@@ -30,7 +30,7 @@ qx.Class.define("qx.tool.compiler.resources.AbstractMatcher", {
   /**
    * Constructor
    * 
-   * @param matchEx {Array[String]|String|RegEx?} the reg ex to match filenames, or the extension, 
+   * @param match {Array[String]|String|RegEx?} the reg ex to match filenames, or the extension, 
    * or an array of extensions
    */
   construct: function(match) {

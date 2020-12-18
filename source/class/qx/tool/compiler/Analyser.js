@@ -706,34 +706,34 @@ qx.Class.define("qx.tool.compiler.Analyser", {
               }
             }
           }
-        }
-
-        for (let propertyName in classEntities.properties) {
-          let propertyInfo = classEntities.properties[propertyName];
-          if ((propertyInfo.abstract || propertyInfo.mixin) && !meta.properties[propertyInfo]) {
-            let propertyMeta = meta.properties[propertyName] = {
-              type: "property",
-              name: propertyName,
-              abstract: Boolean(propertyInfo.abstract),
-              mixin: Boolean(propertyInfo.mixin),
-              access: propertyInfo.access,
-              overriddenFrom: propertyInfo.overriddenFrom,
-              event: propertyInfo.event
-            };
-            if (propertyInfo.appearsIn.length) {
-              propertyMeta.appearsIn = Object.keys(propertyInfo.appearsIn);
-            }
-            if (propertyMeta.appearsIn && !propertyMeta.appearsIn.length) {
-              delete propertyMeta.appearsIn;
-            }
-            if (propertyInfo.jsdoc) {
-              propertyMeta.jsdoc = propertyInfo.jsdoc;
-            }
-            if (propertyInfo.overriddenFrom) {
-              propertyMeta.overriddenFrom = propertyInfo.overriddenFrom;
-            }
-            if (!propertyMeta.overriddenFrom) {
-              delete propertyMeta.overriddenFrom;
+  
+          for (let propertyName in classEntities.properties) {
+            let propertyInfo = classEntities.properties[propertyName];
+            if ((propertyInfo.abstract || propertyInfo.mixin) && !meta.properties[propertyName]) {
+              let propertyMeta = meta.properties[propertyName] = {
+                type: "property",
+                name: propertyName,
+                abstract: Boolean(propertyInfo.abstract),
+                mixin: Boolean(propertyInfo.mixin),
+                access: propertyInfo.access,
+                overriddenFrom: propertyInfo.overriddenFrom,
+                event: propertyInfo.event
+              };
+              if (propertyInfo.appearsIn.length) {
+                propertyMeta.appearsIn = Object.keys(propertyInfo.appearsIn);
+              }
+              if (propertyMeta.appearsIn && !propertyMeta.appearsIn.length) {
+                delete propertyMeta.appearsIn;
+              }
+              if (propertyInfo.jsdoc) {
+                propertyMeta.jsdoc = propertyInfo.jsdoc;
+              }
+              if (propertyInfo.overriddenFrom) {
+                propertyMeta.overriddenFrom = propertyInfo.overriddenFrom;
+              }
+              if (!propertyMeta.overriddenFrom) {
+                delete propertyMeta.overriddenFrom;
+              }
             }
           }
         }
@@ -913,7 +913,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
      * Loads a class
      * @param className {String} the name of the class
      * @param forceScan {Boolean?} true if the class is to be compiled whether it needs it or not (default false)
-     * @param cb(err, DbClassInfo)
+     * @param cb {Function} (err, DbClassInfo)
      */
     getClassInfo: function(className, forceScan, cb) {
       var t = this;
@@ -1011,7 +1011,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
      * Gets the translation for the locale and library, caching the result.
      * @param library
      * @param locale
-     * @returns {Promise(translation)}
+     * @returns {translation}
      */
     getTranslation: async function(library, locale) {
       var t = this;
@@ -1027,9 +1027,10 @@ qx.Class.define("qx.tool.compiler.Analyser", {
 
     /**
      * Updates all translations to include all msgids found in code
-     * @param appLibrary the library to update
-     * @param locales
-     * @param cb
+     * @param appLibrary {qx.tool.compiler.app.Library} the library to update
+     * @param locales {String[]} locales
+     * @param libraries {qx.tool.compiler.app.Library[]} all libraries
+     * @param copyAllMsgs {Boolean} whether to copy everything, or just those that are required
      */
     async updateTranslations(appLibrary, locales, libraries, copyAllMsgs) {
       if (!libraries) {
@@ -1195,7 +1196,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
 
     /**
      * Removes a class from the list of required classes to analyse
-     * @param className
+     * @param classname {String}
      */
     removeClass: function(classname) {
       this.__initialClassesToScan.remove(classname);
@@ -1204,7 +1205,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
     /**
      * Detects the symbol type, ie class, package, member, etc
      * @param name
-     * @returns {{symbolType,name,clasName?}}
+     * @returns {{symbolType,name,className}?}
      */
     getSymbolType: function(name) {
       var t = this;

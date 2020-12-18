@@ -128,7 +128,7 @@ qx.Class.define("qx.tool.cli.commands.Command", {
      * Returns the path to the current library. If the current directory contains several libraries,
      * the first one found is returned.
      * @throws {Error} Throws an error if no library can be found.
-     * @return {Promise<String>)} A promise that resolves with the absolute path to the library
+     * @return {String} A promise that resolves with the absolute path to the library
      */
     getLibraryPath: async function() {
       let {libraries} = await this.getProjectData();
@@ -358,12 +358,9 @@ qx.Class.define("qx.tool.cli.commands.Command", {
 
     /**
      * Migrate files/schemas or announces the migration.
-     * @param {[]} fileList
-     *    Array containing arrays of [new name, old name]
-     * @param {[]} replaceInFilesArr
-     *    Optional array containing objects compatible with https://github.com/adamreisnz/replace-in-file
-     * @param {Boolean} annouceOnly
-     *    If true, annouce the migration. If false (default), just apply it.
+     * @param {String[]} fileList Array containing arrays of [new name, old name]
+     * @param {String[]} replaceInFilesArr Optional array containing objects compatible with https://github.com/adamreisnz/replace-in-file
+     * @param {Boolean} annouceOnly If true, annouce the migration. If false (default), just apply it.
      * @private
      */
     async migrate(fileList, replaceInFilesArr=[], annouceOnly=false) {

@@ -6,7 +6,7 @@ const readFile = promisify(fs.readFile);
 require("../index");
 
 async function createMaker() {
-  var QOOXDOO_PATH = "../node_modules/@qooxdoo/framework";
+  var QOOXDOO_PATH = "../../node_modules/@qooxdoo/framework";
   
   qx.tool.compiler.ClassFile.JSX_OPTIONS = {
     "pragma": "jsx.dom",
@@ -56,7 +56,7 @@ async function createMaker() {
       "test.overridden2": false,
       "test.overridden5": "application"
     },
-    templatePath: "../source/resource/qx/tool/cli/templates",
+    templatePath: "../../source/resource/qx/tool/cli/templates",
     writeIndexHtmlToRoot: true
   }));
   
@@ -72,7 +72,7 @@ async function createMaker() {
       "test.overridden2": false,
       "test.overridden5": "application"
     },
-    templatePath: "../source/resource/qx/tool/cli/templates"
+    templatePath: "../../source/resource/qx/tool/cli/templates"
   }));
   
   let analyser = maker.getAnalyser();

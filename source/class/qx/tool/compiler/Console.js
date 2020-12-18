@@ -228,7 +228,6 @@ qx.Class.define("qx.tool.compiler.Console", {
     /**
      * Prints the message
      *
-     * @param msgId {String} translatable message ID
      * @param args {Object...} arguments
      */
     print: function(...args) {
@@ -238,7 +237,6 @@ qx.Class.define("qx.tool.compiler.Console", {
     /**
      * Decodes the message ID and arguments into a string to be presented in the output
      *
-     * @param msgId {String} translatable message ID
      * @param args {Object...} arguments
      * @return {String} complete message
      */

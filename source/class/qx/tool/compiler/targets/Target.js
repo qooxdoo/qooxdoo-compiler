@@ -286,8 +286,8 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
     /**
      * Generates the application
      *
-     * @param {Application} app
-     * @param {Maker} maker
+     * @param application {Application} the application
+     * @param environment {Object} the environment
      */
     async generateApplication(application, environment) {
       var t = this;
@@ -673,10 +673,7 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
     /**
      * Writes the application
      * 
-     * @param assets {Object[]} list of assets, where each asset is (see @link(qx.tool.compiler.resources.Manager) for details)
-     *  - libraryName {String}
-     *  - filename {String}
-     *  - fileInfo {String)
+     * @param appMeta {qx.tool.compiler.targets.meta.ApplicationMeta}
      */
     async _writeApplication(appMeta) {
       var t = this;

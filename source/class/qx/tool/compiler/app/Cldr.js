@@ -48,7 +48,6 @@ qx.Class.define("qx.tool.compiler.app.Cldr", {
     /**
      * Loads CLDR data from the Qx framework
      *
-     * @param qooxdooPath
      * @param locale
      * @async
      */
