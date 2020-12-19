@@ -6,19 +6,6 @@ qx.Class.define("qx.compiler.CompilerApi", {
   extend: qx.tool.cli.api.CompilerApi,
 
   members: {
-    load: async function () {
-      let package = require("./package.json") || {};
-      let cls = `
-qx.Class.define("qx.tool.compiler.Version", {
-  extend: qx.core.Object,
-  statics: {
-    VERSION: "${package.version}",
-  }
-});      
-`;
-      fs.writeFileSync("./source/class/qx/tool/compiler/Version.js", cls);
-      return this.base(arguments);
-    },
     /**
      * Register compiler tests
      * @param {qx.tool.cli.commands.Command} command
@@ -28,21 +15,31 @@ qx.Class.define("qx.tool.compiler.Version", {
       const COMPILER_TEST_PATH = path.join("test", "compiler");
       function addTest(test) {
         command.addTest(new qx.tool.cli.api.Test(test, async function() {
-          result = await qx.tool.utils.Utils.runCommand(COMPILER_TEST_PATH, "node", test + ".js");
+          console.log("****");
+          console.log("**** Running " + test);
+          console.log("****");
+          result = await qx.tool.utils.Utils.runCommand({
+            cwd: COMPILER_TEST_PATH, 
+            cmd: "node",
+            args: [ test + ".js" ],
+            shell: false,
+            env: {
+              QX_JS: require.main.filename
+            }
+          });
           this.setExitCode(result.exitCode);
         })).setNeedsServer(false);
       }
       try {
-        // add qx program with current build path to test directory.
-        // this command is used in the defined tests as compiler
-        let maker = command.getMakersForApp("compiler")[0];
-        let compilerPath = path.resolve(path.join(maker.getOutputDir(), "compiler"));
-        let cmd ="#!/usr/bin/env node\n" + `require("${compilerPath}");\n`;
-        fs.writeFileSync("test/qx", cmd, {mode: 0o777});
+        try {
+          fs.unlinkSync("test/qx");
+        }catch(ex) {
+          // Nothing
+        }
+        
         let files = fs.readdirSync(COMPILER_TEST_PATH);
         files.forEach(file => {
-          if (fs.statSync(path.join(COMPILER_TEST_PATH, file))
-            .isFile()) {
+          if (fs.statSync(path.join(COMPILER_TEST_PATH, file)).isFile() && file.endsWith(".js")) {
             addTest(path.changeExt(path.basename(file), ""));
           }
         });

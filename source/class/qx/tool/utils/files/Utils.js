@@ -117,7 +117,6 @@ qx.Class.define("qx.tool.utils.files.Utils", {
      * Copies a file
      * @param from {String} path to copy from
      * @param to {String} path to copy to
-     * @param cb(err) {Function}
      * @async
      */
     copyFile: function(from, to) {
@@ -235,7 +234,7 @@ qx.Class.define("qx.tool.utils.files.Utils", {
     /**
      * Normalises the path and corrects the case of the path to match what is actually on the filing system
      *
-     * @param fsPath {String} the filename to normalise
+     * @param dir {String} the filename to normalise
      * @returns {String} the new path
      * @async
      */

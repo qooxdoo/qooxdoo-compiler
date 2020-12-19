@@ -51,15 +51,37 @@ qx.Class.define("qx.tool.compiler.targets.meta.ApplicationMeta", {
   },
   
   members: {
+    /** {qx.tool.compiler.targets.Target} the target */
     __target: null,
+    
+    /** {qx.tool.compiler.app.Application} the application */
     __application: null,
+    
+    /** {qx.tool.compiler.app.Libary[]} the libraries */
     __libraries: null,
+    
+    /** {Map} uris and CSS to load */
     __preload: null,
+    
+    /** {String[]} code to run before boot */
     __preBootCode: null,
+    
+    /** {Map} list of resource paths, indexed by resource id */
     __resources: null,
+    
+    /** {Package[]} list of packages */
     __packages: null,
+    
+    /** {Part[]} list of parts */
     __parts: null,
     
+    
+    /**
+     * Sets an environment variable
+     *
+     * @param key {String} the name of the variable
+     * @param value {Object} the value 
+     */
     setEnvironmentValue(key, value) {
       let env = this.getEnvironment();
       if (value === undefined) {
@@ -69,6 +91,13 @@ qx.Class.define("qx.tool.compiler.targets.meta.ApplicationMeta", {
       }
     },
     
+    /**
+     * Returns an environment value
+     *
+     * @param key {String} the key to lookup
+     * @param defaultValue {Object?} optional default value to use if the key is not found
+     * @return {Object} the value, or undefined if not found
+     */
     getEnvironmentValue(key, defaultValue) {
       let env = this.getEnvironment();
       let value = env[key];
@@ -81,18 +110,38 @@ qx.Class.define("qx.tool.compiler.targets.meta.ApplicationMeta", {
       return value;
     },
     
+    /**
+     * Returns the application
+     *
+     * @return {qx.tool.compiler.app.Application} 
+     */
     getApplication() {
       return this.__application;
     },
     
+    /**
+     * Returns the target
+     *
+     * @return {qx.tool.compiler.targets.Target}
+     */
     getTarget() {
       return this.__target;
     },
     
+    /**
+     * Returns the application root
+     *
+     * @return {String} the folder
+     */
     getApplicationRoot() {
       return this.__target.getApplicationRoot(this.__application);
     },
     
+    /**
+     * Returns the Analyser
+     *
+     * @return {qx.tool.compiler.Analyser}
+     */
     getAnalyser() {
       return this.__application.getAnalyser();
     },
@@ -107,35 +156,77 @@ qx.Class.define("qx.tool.compiler.targets.meta.ApplicationMeta", {
       }
     },
 
+    /**
+     * Adds a library
+     *
+     * @param library {qx.tool.compiler.app.Library}
+     */
     addLibrary(library) {
       this.__libraries.push(library);
     },
     
+    /**
+     * Returns the library that contains the application class
+     *
+     * @return {qx.tool.compiler.app.Library}
+     */
     getAppLibrary() {
       let appLibrary = this.__application.getAnalyser().getLibraryFromClassname(this.__application.getClassName());
       return appLibrary;
     },
     
+    /**
+     * Returns the list of libraries
+     *
+     * @return {qx.tool.compiler.app.Library[]}
+     */
     getLibraries() {
       return this.__libraries;
     },
     
+    /**
+     * Adds an external resource (JS or CSS) to be loaded which is a http[s] URL
+     *
+     * @param type {String} either "urisBefore" or "cssBefore"
+     * @param uri {String} uri to load
+     */
     addExternal(type, uri) {
       this.__preload[type].push("__external__:" + uri);
     },
     
-    addPreload(type, filename) {
-      this.__preload[type].push(filename);
+    /**
+     * Adds an external resource (JS or CSS) to be loaded, which is a resource path
+     *
+     * @param type {String} either "urisBefore" or "cssBefore"
+     * @param uri {String} uri to load
+     */
+    addPreload(type, uri) {
+      this.__preload[type].push(uri);
     },
     
+    /**
+     * Returns the list of preloads, which is a map by type
+     * 
+     * @return {Map}
+     */
     getPreloads() {
       return this.__preload;
     },
     
+    /**
+     * Adds code to be run before the boot code is run
+     *
+     * @param code {String} the code to run
+     */
     addPreBootCode(code) {
       this.__preBootCode.push(code);
     },
     
+    /**
+     * Returns the code to be run before the boot code
+     *
+     * @return {String} the code
+     */
     getPreBootCode() {
       return this.__preBootCode.join("\n");
     },
