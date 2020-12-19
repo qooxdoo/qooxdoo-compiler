@@ -7,7 +7,7 @@ const fs = require("fs");
   console.log("pwd=" + process.cwd());
   let files = await fs.promises.readdir(".");
   console.log("files=" + files.join("\n  "));
-  await utils.bootstrapCompiler();
+  await utils.bootstrapCompiler(require("./package.json"));
   
   process.exit(0);
   

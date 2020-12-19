@@ -140,13 +140,12 @@ async function safeDelete(filename) {
   }
 }
 
-async function bootstrapCompiler() {
+async function bootstrapCompiler(package) {
   let result;
 
   console.log("Deleting previous temporary compiler");
   await deleteRecursive("tmp");
   
-  let package = require(require.main.path + "/package.json") || {};
   let cls = `
 /* ************************************************************************
 
