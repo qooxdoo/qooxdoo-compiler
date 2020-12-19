@@ -146,7 +146,7 @@ async function bootstrapCompiler() {
   console.log("Deleting previous temporary compiler");
   await deleteRecursive("tmp");
   
-  let package = require("./package.json") || {};
+  let package = require(require.main.path + "/package.json") || {};
   let cls = `
 /* ************************************************************************
 
@@ -225,5 +225,6 @@ module.exports = {
   bootstrapCompiler,
   deleteRecursive,
   safeDelete,
-  fsPromises
+  fsPromises,
+  promisify
 };
