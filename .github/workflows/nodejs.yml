@@ -25,8 +25,7 @@ jobs:
       - name: install
         run:  |
               npm ci
-      - name: Run qx test for built-in compiler tests
-        run:  npm test
+              npm test
         env:
           CI: true
 
