@@ -25,9 +25,6 @@ jobs:
       - name: install
         run:  |
               npm ci
-      - name: compile the compiler
-        run:  |
-              npx qx deploy 
       - name: Run qx test for built-in compiler tests
         run:  npm test
         env:
