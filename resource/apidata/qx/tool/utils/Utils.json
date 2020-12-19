@@ -13,7 +13,7 @@
         "column": 0
       },
       "end": {
-        "line": 358,
+        "line": 386,
         "column": 3
       }
     },
@@ -381,7 +381,7 @@
           "column": 4
         },
         "end": {
-          "line": 276,
+          "line": 304,
           "column": 5
         }
       },
@@ -411,9 +411,9 @@
         "@return": [
           {
             "name": "@return",
-            "body": "{Promise<{exitCode: Number, output: String, error: *, messages: *}>}",
-            "type": "Promise<{exitCode: Number, output: String, error: *, messages: *",
-            "description": ">}"
+            "body": "{{exitCode: Number, output: String, error: *, messages: *}}",
+            "type": "{exitCode: Number, output: String, error: *, messages: *",
+            "description": "}"
           }
         ]
       },
@@ -424,11 +424,11 @@
   "defer": {
     "location": {
       "start": {
-        "line": 279,
+        "line": 307,
         "column": 2
       },
       "end": {
-        "line": 357,
+        "line": 385,
         "column": 3
       }
     }

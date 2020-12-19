@@ -13,7 +13,7 @@
         "column": 0
       },
       "end": {
-        "line": 50,
+        "line": 51,
         "column": 3
       }
     },
@@ -30,11 +30,11 @@
   "construct": {
     "location": {
       "start": {
-        "line": 15,
+        "line": 16,
         "column": 2
       },
       "end": {
-        "line": 17,
+        "line": 18,
         "column": 3
       }
     },
@@ -46,6 +46,10 @@
         }
       ],
       "@param": [
+        {
+          "name": "@param",
+          "body": "appMeta {qx.tool.compiler.targets.meta.ApplicationMeta}"
+        },
         {
           "name": "@param",
           "body": "filename {String} the sourcefile",
@@ -68,11 +72,11 @@
     "compile": {
       "location": {
         "start": {
-          "line": 24,
+          "line": 25,
           "column": 4
         },
         "end": {
-          "line": 26,
+          "line": 27,
           "column": 5
         }
       },
@@ -96,11 +100,11 @@
     "writeSourceCodeToStream": {
       "location": {
         "start": {
-          "line": 31,
+          "line": 32,
           "column": 4
         },
         "end": {
-          "line": 38,
+          "line": 39,
           "column": 5
         }
       },
@@ -128,11 +132,11 @@
     "getSourceMap": {
       "location": {
         "start": {
-          "line": 43,
+          "line": 44,
           "column": 4
         },
         "end": {
-          "line": 48,
+          "line": 49,
           "column": 5
         }
       },

@@ -13,7 +13,7 @@
         "column": 0
       },
       "end": {
-        "line": 105,
+        "line": 106,
         "column": 3
       }
     }
@@ -22,11 +22,11 @@
   "construct": {
     "location": {
       "start": {
-        "line": 13,
+        "line": 14,
         "column": 2
       },
       "end": {
-        "line": 16,
+        "line": 17,
         "column": 3
       }
     },
@@ -38,6 +38,10 @@
         }
       ],
       "@param": [
+        {
+          "name": "@param",
+          "body": "appMeta {qx.tool.compiler.targets.meta.ApplicationMeta}"
+        },
         {
           "name": "@param",
           "body": "jsMeta {AbstractJavascriptMeta} the source",
@@ -52,11 +56,11 @@
     "needsWriteToDisk": {
       "location": {
         "start": {
-          "line": 19,
+          "line": 20,
           "column": 4
         },
         "end": {
-          "line": 22,
+          "line": 23,
           "column": 5
         }
       },
@@ -75,11 +79,11 @@
     "__jsMeta": {
       "location": {
         "start": {
-          "line": 26,
+          "line": 27,
           "column": 4
         },
         "end": {
-          "line": 26,
+          "line": 27,
           "column": 18
         }
       },
@@ -89,11 +93,11 @@
     "writeSourceCodeToStream": {
       "location": {
         "start": {
-          "line": 31,
+          "line": 32,
           "column": 4
         },
         "end": {
-          "line": 103,
+          "line": 104,
           "column": 5
         }
       },

@@ -1,41 +1,68 @@
 {
-  "className": "qx.tool.compiler.Version",
-  "packageName": "qx.tool.compiler",
-  "name": "Version",
-  "superClass": "qx.core.Object",
+  "className": "qx.tool.cli.LibraryApplication",
+  "packageName": "qx.tool.cli",
+  "name": "LibraryApplication",
+  "superClass": "qx.application.Basic",
   "interfaces": [],
   "mixins": [],
   "functionName": null,
   "clazz": {
     "location": {
       "start": {
-        "line": 2,
+        "line": 26,
         "column": 0
       },
       "end": {
-        "line": 7,
+        "line": 33,
         "column": 3
       }
+    },
+    "jsdoc": {
+      "@description": [
+        {
+          "name": "@description",
+          "body": "<pre><code>*****************************************************************\n</code></pre>\n<p>qooxdoo - the new era of web development\n   http://qooxdoo.org\n   Copyright:\n     2020 Henner Kollmann\n   License:\n     MIT: https://opensource.org/licenses/MIT\n     See the LICENSE file in the project's top-level directory for details.\n   Authors:\n Henner Kollmann (Henner.Kollmann<code>gmx.de, </code>hkollmann)\n    <strong><em><em></em></strong><strong><em></em></em></strong><strong><em><em></em></strong><strong><em></em></em></strong><strong><em><em></em></strong><strong><em></em></em></strong><strong><em><em></em></strong><strong><em></em></em></strong><strong><em><em></em></strong></em>*</p>"
+        },
+        {
+          "name": "@description",
+          "body": "<p>This is the main application class of the compiler; it does nothing\n during startup so that it can be used as a library</p>"
+        }
+      ],
+      "@asset": [
+        {
+          "name": "@asset",
+          "body": "qx/tool/*"
+        }
+      ],
+      "@use": [
+        {
+          "name": "@use",
+          "body": "qx.tool.cli.Cli"
+        }
+      ]
     }
   },
   "type": "class",
-  "statics": {
-    "VERSION": {
+  "members": {
+    "main": {
       "location": {
         "start": {
-          "line": 5,
+          "line": 29,
           "column": 4
         },
         "end": {
-          "line": 5,
-          "column": 25
+          "line": 31,
+          "column": 5
         }
       },
-      "type": "variable",
-      "access": "public"
-    }
-  },
-  "members": {
+      "type": "function",
+      "access": "public",
+      "overriddenFrom": "qx.application.Basic",
+      "appearsIn": [
+        "qx.application.Basic",
+        "qx.application.IApplication"
+      ]
+    },
     "bind": {
       "type": "function",
       "name": "bind",

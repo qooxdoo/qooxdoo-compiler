@@ -13,7 +13,7 @@
         "column": 0
       },
       "end": {
-        "line": 347,
+        "line": 345,
         "column": 3
       }
     },
@@ -3951,11 +3951,11 @@
     "print": {
       "location": {
         "start": {
-          "line": 234,
+          "line": 233,
           "column": 4
         },
         "end": {
-          "line": 236,
+          "line": 235,
           "column": 5
         }
       },
@@ -3967,13 +3967,6 @@
           }
         ],
         "@param": [
-          {
-            "name": "@param",
-            "body": "msgId {String} translatable message ID",
-            "paramName": "msgId",
-            "description": " translatable message ID",
-            "type": "String"
-          },
           {
             "name": "@param",
             "body": "args {Object...} arguments",
@@ -3989,11 +3982,11 @@
     "decode": {
       "location": {
         "start": {
-          "line": 245,
+          "line": 243,
           "column": 4
         },
         "end": {
-          "line": 247,
+          "line": 245,
           "column": 5
         }
       },
@@ -4005,13 +3998,6 @@
           }
         ],
         "@param": [
-          {
-            "name": "@param",
-            "body": "msgId {String} translatable message ID",
-            "paramName": "msgId",
-            "description": " translatable message ID",
-            "type": "String"
-          },
           {
             "name": "@param",
             "body": "args {Object...} arguments",
@@ -4035,11 +4021,11 @@
     "log": {
       "location": {
         "start": {
-          "line": 252,
+          "line": 250,
           "column": 4
         },
         "end": {
-          "line": 254,
+          "line": 252,
           "column": 5
         }
       },
@@ -4057,11 +4043,11 @@
     "debug": {
       "location": {
         "start": {
-          "line": 259,
+          "line": 257,
           "column": 4
         },
         "end": {
-          "line": 261,
+          "line": 259,
           "column": 5
         }
       },
@@ -4079,11 +4065,11 @@
     "info": {
       "location": {
         "start": {
-          "line": 266,
+          "line": 264,
           "column": 4
         },
         "end": {
-          "line": 268,
+          "line": 266,
           "column": 5
         }
       },
@@ -4101,11 +4087,11 @@
     "warn": {
       "location": {
         "start": {
-          "line": 273,
+          "line": 271,
           "column": 4
         },
         "end": {
-          "line": 275,
+          "line": 273,
           "column": 5
         }
       },
@@ -4123,11 +4109,11 @@
     "error": {
       "location": {
         "start": {
-          "line": 280,
+          "line": 278,
           "column": 4
         },
         "end": {
-          "line": 282,
+          "line": 280,
           "column": 5
         }
       },
@@ -4145,11 +4131,11 @@
     "MESSAGE_IDS": {
       "location": {
         "start": {
-          "line": 290,
+          "line": 288,
           "column": 4
         },
         "end": {
-          "line": 290,
+          "line": 288,
           "column": 19
         }
       },
@@ -4167,11 +4153,11 @@
     "addMessageIds": {
       "location": {
         "start": {
-          "line": 299,
+          "line": 297,
           "column": 4
         },
         "end": {
-          "line": 303,
+          "line": 301,
           "column": 5
         }
       },
@@ -4206,11 +4192,11 @@
     "decodeMarker": {
       "location": {
         "start": {
-          "line": 319,
+          "line": 317,
           "column": 4
         },
         "end": {
-          "line": 345,
+          "line": 343,
           "column": 5
         }
       },

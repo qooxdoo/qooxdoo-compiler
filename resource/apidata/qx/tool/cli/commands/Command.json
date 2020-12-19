@@ -13,7 +13,7 @@
         "column": 0
       },
       "end": {
-        "line": 416,
+        "line": 413,
         "column": 3
       }
     },
@@ -238,8 +238,8 @@
         "@return": [
           {
             "name": "@return",
-            "body": "{Promise<String>)} A promise that resolves with the absolute path to the library",
-            "type": "Promise<String>)",
+            "body": "{String} A promise that resolves with the absolute path to the library",
+            "type": "String",
             "description": " A promise that resolves with the absolute path to the library"
           }
         ]
@@ -670,11 +670,11 @@
     "migrate": {
       "location": {
         "start": {
-          "line": 369,
+          "line": 366,
           "column": 4
         },
         "end": {
-          "line": 414,
+          "line": 411,
           "column": 5
         }
       },
@@ -688,21 +688,21 @@
         "@param": [
           {
             "name": "@param",
-            "body": "{[]} fileList\n    Array containing arrays of [new name, old name]",
+            "body": "{String[]} fileList Array containing arrays of [new name, old name]",
             "paramName": "fileList",
             "description": "Array containing arrays of [new name, old name]",
-            "type": "[]"
+            "type": "String[]"
           },
           {
             "name": "@param",
-            "body": "{[]} replaceInFilesArr\n    Optional array containing objects compatible with https://github.com/adamreisnz/replace-in-file",
+            "body": "{String[]} replaceInFilesArr Optional array containing objects compatible with https://github.com/adamreisnz/replace-in-file",
             "paramName": "replaceInFilesArr",
             "description": "Optional array containing objects compatible with https://github.com/adamreisnz/replace-in-file",
-            "type": "[]"
+            "type": "String[]"
           },
           {
             "name": "@param",
-            "body": "{Boolean} annouceOnly\n    If true, annouce the migration. If false (default), just apply it.",
+            "body": "{Boolean} annouceOnly If true, annouce the migration. If false (default), just apply it.",
             "paramName": "annouceOnly",
             "description": "If true, annouce the migration. If false (default), just apply it.",
             "type": "Boolean"

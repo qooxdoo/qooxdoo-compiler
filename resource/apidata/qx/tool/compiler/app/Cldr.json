@@ -13,7 +13,7 @@
         "column": 0
       },
       "end": {
-        "line": 289,
+        "line": 288,
         "column": 3
       }
     }
@@ -45,11 +45,11 @@
     "loadCLDR": {
       "location": {
         "start": {
-          "line": 55,
+          "line": 54,
           "column": 4
         },
         "end": {
-          "line": 285,
+          "line": 284,
           "column": 5
         }
       },
@@ -61,12 +61,6 @@
           }
         ],
         "@param": [
-          {
-            "name": "@param",
-            "body": "qooxdooPath",
-            "paramName": "qooxdooPath",
-            "type": ""
-          },
           {
             "name": "@param",
             "body": "locale",

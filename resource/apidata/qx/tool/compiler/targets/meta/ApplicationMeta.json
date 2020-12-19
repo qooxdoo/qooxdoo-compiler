@@ -13,7 +13,7 @@
         "column": 0
       },
       "end": {
-        "line": 230,
+        "line": 321,
         "column": 3
       }
     },
@@ -159,13 +159,21 @@
     "__target": {
       "location": {
         "start": {
-          "line": 54,
+          "line": 55,
           "column": 4
         },
         "end": {
-          "line": 54,
+          "line": 55,
           "column": 18
         }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>{qx.tool.compiler.targets.Target} the target</p>"
+          }
+        ]
       },
       "type": "variable",
       "access": "private"
@@ -173,13 +181,21 @@
     "__application": {
       "location": {
         "start": {
-          "line": 55,
+          "line": 58,
           "column": 4
         },
         "end": {
-          "line": 55,
+          "line": 58,
           "column": 23
         }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>{qx.tool.compiler.app.Application} the application</p>"
+          }
+        ]
       },
       "type": "variable",
       "access": "private"
@@ -187,13 +203,21 @@
     "__libraries": {
       "location": {
         "start": {
-          "line": 56,
+          "line": 61,
           "column": 4
         },
         "end": {
-          "line": 56,
+          "line": 61,
           "column": 21
         }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>{qx.tool.compiler.app.Libary[]} the libraries</p>"
+          }
+        ]
       },
       "type": "variable",
       "access": "private"
@@ -201,13 +225,21 @@
     "__preload": {
       "location": {
         "start": {
-          "line": 57,
+          "line": 64,
           "column": 4
         },
         "end": {
-          "line": 57,
+          "line": 64,
           "column": 19
         }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>{Map} uris and CSS to load</p>"
+          }
+        ]
       },
       "type": "variable",
       "access": "private"
@@ -215,13 +247,21 @@
     "__preBootCode": {
       "location": {
         "start": {
-          "line": 58,
+          "line": 67,
           "column": 4
         },
         "end": {
-          "line": 58,
+          "line": 67,
           "column": 23
         }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>{String[]} code to run before boot</p>"
+          }
+        ]
       },
       "type": "variable",
       "access": "private"
@@ -229,13 +269,21 @@
     "__resources": {
       "location": {
         "start": {
-          "line": 59,
+          "line": 70,
           "column": 4
         },
         "end": {
-          "line": 59,
+          "line": 70,
           "column": 21
         }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>{Map} list of resource paths, indexed by resource id</p>"
+          }
+        ]
       },
       "type": "variable",
       "access": "private"
@@ -243,13 +291,21 @@
     "__packages": {
       "location": {
         "start": {
-          "line": 60,
+          "line": 73,
           "column": 4
         },
         "end": {
-          "line": 60,
+          "line": 73,
           "column": 20
         }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>{Package[]} list of packages</p>"
+          }
+        ]
       },
       "type": "variable",
       "access": "private"
@@ -257,13 +313,21 @@
     "__parts": {
       "location": {
         "start": {
-          "line": 61,
+          "line": 76,
           "column": 4
         },
         "end": {
-          "line": 61,
+          "line": 76,
           "column": 17
         }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>{Part[]} list of parts</p>"
+          }
+        ]
       },
       "type": "variable",
       "access": "private"
@@ -271,13 +335,37 @@
     "setEnvironmentValue": {
       "location": {
         "start": {
-          "line": 63,
+          "line": 85,
           "column": 4
         },
         "end": {
-          "line": 70,
+          "line": 92,
           "column": 5
         }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>Sets an environment variable</p>"
+          }
+        ],
+        "@param": [
+          {
+            "name": "@param",
+            "body": "key {String} the name of the variable",
+            "paramName": "key",
+            "description": " the name of the variable",
+            "type": "String"
+          },
+          {
+            "name": "@param",
+            "body": "value {Object} the value",
+            "paramName": "value",
+            "description": " the value",
+            "type": "Object"
+          }
+        ]
       },
       "type": "function",
       "access": "public"
@@ -285,13 +373,46 @@
     "getEnvironmentValue": {
       "location": {
         "start": {
-          "line": 72,
+          "line": 101,
           "column": 4
         },
         "end": {
-          "line": 82,
+          "line": 111,
           "column": 5
         }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>Returns an environment value</p>"
+          }
+        ],
+        "@param": [
+          {
+            "name": "@param",
+            "body": "key {String} the key to lookup",
+            "paramName": "key",
+            "description": " the key to lookup",
+            "type": "String"
+          },
+          {
+            "name": "@param",
+            "body": "defaultValue {Object?} optional default value to use if the key is not found",
+            "paramName": "defaultValue",
+            "description": " optional default value to use if the key is not found",
+            "optional": true,
+            "type": "Object"
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "body": "{Object} the value, or undefined if not found",
+            "type": "Object",
+            "description": " the value, or undefined if not found"
+          }
+        ]
       },
       "type": "function",
       "access": "public"
@@ -299,13 +420,29 @@
     "getApplication": {
       "location": {
         "start": {
-          "line": 84,
+          "line": 118,
           "column": 4
         },
         "end": {
-          "line": 86,
+          "line": 120,
           "column": 5
         }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>Returns the application</p>"
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "body": "{qx.tool.compiler.app.Application}",
+            "type": "qx.tool.compiler.app.Application",
+            "description": ""
+          }
+        ]
       },
       "type": "function",
       "access": "public"
@@ -313,13 +450,29 @@
     "getTarget": {
       "location": {
         "start": {
-          "line": 88,
+          "line": 127,
           "column": 4
         },
         "end": {
-          "line": 90,
+          "line": 129,
           "column": 5
         }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>Returns the target</p>"
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "body": "{qx.tool.compiler.targets.Target}",
+            "type": "qx.tool.compiler.targets.Target",
+            "description": ""
+          }
+        ]
       },
       "type": "function",
       "access": "public"
@@ -327,13 +480,29 @@
     "getApplicationRoot": {
       "location": {
         "start": {
-          "line": 92,
+          "line": 136,
           "column": 4
         },
         "end": {
-          "line": 94,
+          "line": 138,
           "column": 5
         }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>Returns the application root</p>"
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "body": "{String} the folder",
+            "type": "String",
+            "description": " the folder"
+          }
+        ]
       },
       "type": "function",
       "access": "public"
@@ -341,13 +510,29 @@
     "getAnalyser": {
       "location": {
         "start": {
-          "line": 96,
+          "line": 145,
           "column": 4
         },
         "end": {
-          "line": 98,
+          "line": 147,
           "column": 5
         }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>Returns the Analyser</p>"
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "body": "{qx.tool.compiler.Analyser}",
+            "type": "qx.tool.compiler.Analyser",
+            "description": ""
+          }
+        ]
       },
       "type": "function",
       "access": "public"
@@ -355,11 +540,11 @@
     "syncAssets": {
       "location": {
         "start": {
-          "line": 103,
+          "line": 152,
           "column": 4
         },
         "end": {
-          "line": 108,
+          "line": 157,
           "column": 5
         }
       },
@@ -377,13 +562,27 @@
     "addLibrary": {
       "location": {
         "start": {
-          "line": 110,
+          "line": 164,
           "column": 4
         },
         "end": {
-          "line": 112,
+          "line": 166,
           "column": 5
         }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>Adds a library</p>"
+          }
+        ],
+        "@param": [
+          {
+            "name": "@param",
+            "body": "library {qx.tool.compiler.app.Library}"
+          }
+        ]
       },
       "type": "function",
       "access": "public"
@@ -391,13 +590,29 @@
     "getAppLibrary": {
       "location": {
         "start": {
-          "line": 114,
+          "line": 173,
           "column": 4
         },
         "end": {
-          "line": 117,
+          "line": 176,
           "column": 5
         }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>Returns the library that contains the application class</p>"
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "body": "{qx.tool.compiler.app.Library}",
+            "type": "qx.tool.compiler.app.Library",
+            "description": ""
+          }
+        ]
       },
       "type": "function",
       "access": "public"
@@ -405,13 +620,29 @@
     "getLibraries": {
       "location": {
         "start": {
-          "line": 119,
+          "line": 183,
           "column": 4
         },
         "end": {
-          "line": 121,
+          "line": 185,
           "column": 5
         }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>Returns the list of libraries</p>"
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "body": "{qx.tool.compiler.app.Library[]}",
+            "type": "qx.tool.compiler.app.Library[]",
+            "description": ""
+          }
+        ]
       },
       "type": "function",
       "access": "public"
@@ -419,13 +650,37 @@
     "addExternal": {
       "location": {
         "start": {
-          "line": 123,
+          "line": 193,
           "column": 4
         },
         "end": {
-          "line": 125,
+          "line": 195,
           "column": 5
         }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>Adds an external resource (JS or CSS) to be loaded which is a http[s] URL</p>"
+          }
+        ],
+        "@param": [
+          {
+            "name": "@param",
+            "body": "type {String} either \"urisBefore\" or \"cssBefore\"",
+            "paramName": "type",
+            "description": " either \"urisBefore\" or \"cssBefore\"",
+            "type": "String"
+          },
+          {
+            "name": "@param",
+            "body": "uri {String} uri to load",
+            "paramName": "uri",
+            "description": " uri to load",
+            "type": "String"
+          }
+        ]
       },
       "type": "function",
       "access": "public"
@@ -433,13 +688,37 @@
     "addPreload": {
       "location": {
         "start": {
-          "line": 127,
+          "line": 203,
           "column": 4
         },
         "end": {
-          "line": 129,
+          "line": 205,
           "column": 5
         }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>Adds an external resource (JS or CSS) to be loaded, which is a resource path</p>"
+          }
+        ],
+        "@param": [
+          {
+            "name": "@param",
+            "body": "type {String} either \"urisBefore\" or \"cssBefore\"",
+            "paramName": "type",
+            "description": " either \"urisBefore\" or \"cssBefore\"",
+            "type": "String"
+          },
+          {
+            "name": "@param",
+            "body": "uri {String} uri to load",
+            "paramName": "uri",
+            "description": " uri to load",
+            "type": "String"
+          }
+        ]
       },
       "type": "function",
       "access": "public"
@@ -447,13 +726,29 @@
     "getPreloads": {
       "location": {
         "start": {
-          "line": 131,
+          "line": 212,
           "column": 4
         },
         "end": {
-          "line": 133,
+          "line": 214,
           "column": 5
         }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>Returns the list of preloads, which is a map by type</p>"
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "body": "{Map}",
+            "type": "Map",
+            "description": ""
+          }
+        ]
       },
       "type": "function",
       "access": "public"
@@ -461,13 +756,30 @@
     "addPreBootCode": {
       "location": {
         "start": {
-          "line": 135,
+          "line": 221,
           "column": 4
         },
         "end": {
-          "line": 137,
+          "line": 223,
           "column": 5
         }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>Adds code to be run before the boot code is run</p>"
+          }
+        ],
+        "@param": [
+          {
+            "name": "@param",
+            "body": "code {String} the code to run",
+            "paramName": "code",
+            "description": " the code to run",
+            "type": "String"
+          }
+        ]
       },
       "type": "function",
       "access": "public"
@@ -475,13 +787,29 @@
     "getPreBootCode": {
       "location": {
         "start": {
-          "line": 139,
+          "line": 230,
           "column": 4
         },
         "end": {
-          "line": 141,
+          "line": 232,
           "column": 5
         }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>Returns the code to be run before the boot code</p>"
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "body": "{String} the code",
+            "type": "String",
+            "description": " the code"
+          }
+        ]
       },
       "type": "function",
       "access": "public"
@@ -489,11 +817,11 @@
     "createPart": {
       "location": {
         "start": {
-          "line": 149,
+          "line": 240,
           "column": 4
         },
         "end": {
-          "line": 154,
+          "line": 245,
           "column": 5
         }
       },
@@ -528,11 +856,11 @@
     "getParts": {
       "location": {
         "start": {
-          "line": 161,
+          "line": 252,
           "column": 4
         },
         "end": {
-          "line": 163,
+          "line": 254,
           "column": 5
         }
       },
@@ -558,11 +886,11 @@
     "getPart": {
       "location": {
         "start": {
-          "line": 170,
+          "line": 261,
           "column": 4
         },
         "end": {
-          "line": 172,
+          "line": 263,
           "column": 5
         }
       },
@@ -589,11 +917,11 @@
     "getPackages": {
       "location": {
         "start": {
-          "line": 179,
+          "line": 270,
           "column": 4
         },
         "end": {
-          "line": 181,
+          "line": 272,
           "column": 5
         }
       },
@@ -619,11 +947,11 @@
     "createPackage": {
       "location": {
         "start": {
-          "line": 188,
+          "line": 279,
           "column": 4
         },
         "end": {
-          "line": 192,
+          "line": 283,
           "column": 5
         }
       },
@@ -649,11 +977,11 @@
     "getLocalePackage": {
       "location": {
         "start": {
-          "line": 201,
+          "line": 292,
           "column": 4
         },
         "end": {
-          "line": 209,
+          "line": 300,
           "column": 5
         }
       },
@@ -688,11 +1016,11 @@
     "addResource": {
       "location": {
         "start": {
-          "line": 217,
+          "line": 308,
           "column": 4
         },
         "end": {
-          "line": 219,
+          "line": 310,
           "column": 5
         }
       },
@@ -726,11 +1054,11 @@
     "getResources": {
       "location": {
         "start": {
-          "line": 226,
+          "line": 317,
           "column": 4
         },
         "end": {
-          "line": 228,
+          "line": 319,
           "column": 5
         }
       },

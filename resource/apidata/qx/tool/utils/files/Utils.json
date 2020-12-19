@@ -13,7 +13,7 @@
         "column": 0
       },
       "end": {
-        "line": 329,
+        "line": 328,
         "column": 3
       }
     }
@@ -89,11 +89,11 @@
     "copyFile": {
       "location": {
         "start": {
-          "line": 123,
+          "line": 122,
           "column": 4
         },
         "end": {
-          "line": 136,
+          "line": 135,
           "column": 5
         }
       },
@@ -118,10 +118,6 @@
             "paramName": "to",
             "description": " path to copy to",
             "type": "String"
-          },
-          {
-            "name": "@param",
-            "body": "cb(err) {Function}"
           }
         ],
         "@async": [
@@ -137,11 +133,11 @@
     "safeStat": {
       "location": {
         "start": {
-          "line": 145,
+          "line": 144,
           "column": 4
         },
         "end": {
-          "line": 155,
+          "line": 154,
           "column": 5
         }
       },
@@ -181,11 +177,11 @@
     "safeUnlink": {
       "location": {
         "start": {
-          "line": 163,
+          "line": 162,
           "column": 4
         },
         "end": {
-          "line": 173,
+          "line": 172,
           "column": 5
         }
       },
@@ -218,11 +214,11 @@
     "safeRename": {
       "location": {
         "start": {
-          "line": 182,
+          "line": 181,
           "column": 4
         },
         "end": {
-          "line": 192,
+          "line": 191,
           "column": 5
         }
       },
@@ -262,11 +258,11 @@
     "rotateUnique": {
       "location": {
         "start": {
-          "line": 202,
+          "line": 201,
           "column": 4
         },
         "end": {
-          "line": 216,
+          "line": 215,
           "column": 5
         }
       },
@@ -306,11 +302,11 @@
     "deleteRecursive": {
       "location": {
         "start": {
-          "line": 223,
+          "line": 222,
           "column": 4
         },
         "end": {
-          "line": 233,
+          "line": 232,
           "column": 5
         }
       },
@@ -343,11 +339,11 @@
     "correctCase": {
       "location": {
         "start": {
-          "line": 242,
+          "line": 241,
           "column": 4
         },
         "end": {
-          "line": 327,
+          "line": 326,
           "column": 5
         }
       },
@@ -361,8 +357,8 @@
         "@param": [
           {
             "name": "@param",
-            "body": "fsPath {String} the filename to normalise",
-            "paramName": "fsPath",
+            "body": "dir {String} the filename to normalise",
+            "paramName": "dir",
             "description": " the filename to normalise",
             "type": "String"
           }

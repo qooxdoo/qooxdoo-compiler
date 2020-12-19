@@ -13,7 +13,7 @@
         "column": 0
       },
       "end": {
-        "line": 927,
+        "line": 935,
         "column": 3
       }
     }
@@ -40,7 +40,16 @@
       "@param": [
         {
           "name": "@param",
-          "body": "classname[, classname...] {String|String[]}"
+          "body": "classname {String|String[]} [, classname...]",
+          "paramName": "classname",
+          "description": " [, classname...]",
+          "type": [
+            "String",
+            {
+              "type": "String",
+              "dimensions": 2
+            }
+          ]
         }
       ]
     }
@@ -678,11 +687,11 @@
     "calcDependencies": {
       "location": {
         "start": {
-          "line": 248,
+          "line": 246,
           "column": 4
         },
         "end": {
-          "line": 574,
+          "line": 582,
           "column": 5
         }
       },
@@ -692,14 +701,6 @@
             "name": "@description",
             "body": "<p>Calculates the dependencies of the classes to create a load order</p>"
           }
-        ],
-        "@param": [
-          {
-            "name": "@param",
-            "body": "classes",
-            "paramName": "classes",
-            "type": ""
-          }
         ]
       },
       "type": "function",
@@ -708,11 +709,11 @@
     "getFatalCompileErrors": {
       "location": {
         "start": {
-          "line": 581,
+          "line": 589,
           "column": 4
         },
         "end": {
-          "line": 583,
+          "line": 591,
           "column": 5
         }
       },
@@ -738,11 +739,11 @@
     "getUris": {
       "location": {
         "start": {
-          "line": 590,
+          "line": 598,
           "column": 4
         },
         "end": {
-          "line": 601,
+          "line": 609,
           "column": 5
         }
       },
@@ -768,11 +769,11 @@
     "getDependencies": {
       "location": {
         "start": {
-          "line": 608,
+          "line": 616,
           "column": 4
         },
         "end": {
-          "line": 610,
+          "line": 618,
           "column": 5
         }
       },
@@ -798,11 +799,11 @@
     "getPartsDependencies": {
       "location": {
         "start": {
-          "line": 617,
+          "line": 625,
           "column": 4
         },
         "end": {
-          "line": 619,
+          "line": 627,
           "column": 5
         }
       },
@@ -828,11 +829,11 @@
     "getRequiredLibraries": {
       "location": {
         "start": {
-          "line": 626,
+          "line": 634,
           "column": 4
         },
         "end": {
-          "line": 628,
+          "line": 636,
           "column": 5
         }
       },
@@ -858,11 +859,11 @@
     "getAssetUris": {
       "location": {
         "start": {
-          "line": 636,
+          "line": 644,
           "column": 4
         },
         "end": {
-          "line": 761,
+          "line": 769,
           "column": 5
         }
       },
@@ -903,11 +904,11 @@
     "getClassName": {
       "location": {
         "start": {
-          "line": 767,
+          "line": 775,
           "column": 4
         },
         "end": {
-          "line": 769,
+          "line": 777,
           "column": 5
         }
       },
@@ -933,11 +934,11 @@
     "getRequiredClasses": {
       "location": {
         "start": {
-          "line": 775,
+          "line": 783,
           "column": 4
         },
         "end": {
-          "line": 785,
+          "line": 793,
           "column": 5
         }
       },
@@ -963,11 +964,11 @@
     "addPart": {
       "location": {
         "start": {
-          "line": 791,
+          "line": 799,
           "column": 4
         },
         "end": {
-          "line": 796,
+          "line": 804,
           "column": 5
         }
       },
@@ -994,11 +995,11 @@
     "getParts": {
       "location": {
         "start": {
-          "line": 802,
+          "line": 810,
           "column": 4
         },
         "end": {
-          "line": 804,
+          "line": 812,
           "column": 5
         }
       },
@@ -1024,11 +1025,11 @@
     "getCalculatedEnvironment": {
       "location": {
         "start": {
-          "line": 812,
+          "line": 820,
           "column": 4
         },
         "end": {
-          "line": 818,
+          "line": 826,
           "column": 5
         }
       },
@@ -1054,11 +1055,11 @@
     "__expandClassnames": {
       "location": {
         "start": {
-          "line": 826,
+          "line": 834,
           "column": 4
         },
         "end": {
-          "line": 861,
+          "line": 869,
           "column": 5
         }
       },
@@ -1088,11 +1089,11 @@
     "_applyType": {
       "location": {
         "start": {
-          "line": 866,
+          "line": 874,
           "column": 4
         },
         "end": {
-          "line": 869,
+          "line": 877,
           "column": 5
         }
       },
@@ -1114,11 +1115,11 @@
     "__transformArray": {
       "location": {
         "start": {
-          "line": 874,
+          "line": 882,
           "column": 4
         },
         "end": {
-          "line": 882,
+          "line": 890,
           "column": 5
         }
       },
@@ -5760,11 +5761,11 @@
     "createWildcardMatchFunction": {
       "location": {
         "start": {
-          "line": 896,
+          "line": 904,
           "column": 4
         },
         "end": {
-          "line": 925,
+          "line": 933,
           "column": 5
         }
       },

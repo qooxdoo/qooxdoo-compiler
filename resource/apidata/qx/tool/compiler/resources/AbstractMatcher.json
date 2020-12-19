@@ -55,8 +55,8 @@
       "@param": [
         {
           "name": "@param",
-          "body": "matchEx {Array[String]|String|RegEx?} the reg ex to match filenames, or the extension,\n or an array of extensions",
-          "paramName": "matchEx",
+          "body": "match {Array[String]|String|RegEx?} the reg ex to match filenames, or the extension,\n or an array of extensions",
+          "paramName": "match",
           "description": " the reg ex to match filenames, or the extension,\n or an array of extensions",
           "optional": true,
           "type": [

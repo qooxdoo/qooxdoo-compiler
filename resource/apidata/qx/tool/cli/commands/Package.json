@@ -13,7 +13,7 @@
         "column": 0
       },
       "end": {
-        "line": 275,
+        "line": 274,
         "column": 3
       }
     },
@@ -373,11 +373,11 @@
     "_getConfigData": {
       "location": {
         "start": {
-          "line": 137,
+          "line": 136,
           "column": 4
         },
         "end": {
-          "line": 142,
+          "line": 141,
           "column": 5
         }
       },
@@ -391,15 +391,9 @@
         "@return": [
           {
             "name": "@return",
-            "body": "{Promise<[{qx.tool.config.Manifest}, {qx.tool.config.Lockfile}, {qx.tool.config.Compile}]>}",
-            "type": "Promise<[{qx.tool.config.Manifest",
-            "description": ", {qx.tool.config.Lockfile}, {qx.tool.config.Compile}]>}"
-          }
-        ],
-        "@private": [
-          {
-            "name": "@private",
-            "body": ""
+            "body": "{Array} containing [{qx.tool.config.Manifest}, {qx.tool.config.Lockfile}, {qx.tool.config.Compile}]",
+            "type": "Array",
+            "description": " containing [{qx.tool.config.Manifest}, {qx.tool.config.Lockfile}, {qx.tool.config.Compile}]"
           }
         ]
       },
@@ -409,11 +403,11 @@
     "_saveConfigData": {
       "location": {
         "start": {
-          "line": 149,
+          "line": 148,
           "column": 4
         },
         "end": {
-          "line": 163,
+          "line": 162,
           "column": 5
         }
       },
@@ -445,11 +439,11 @@
     "getInstalledLibraryTag": {
       "location": {
         "start": {
-          "line": 172,
+          "line": 171,
           "column": 4
         },
         "end": {
-          "line": 177,
+          "line": 176,
           "column": 5
         }
       },
@@ -485,11 +479,11 @@
     "getInstalledLibraryData": {
       "location": {
         "start": {
-          "line": 185,
+          "line": 184,
           "column": 4
         },
         "end": {
-          "line": 189,
+          "line": 188,
           "column": 5
         }
       },
@@ -521,11 +515,11 @@
     "getCachePath": {
       "location": {
         "start": {
-          "line": 195,
+          "line": 194,
           "column": 4
         },
         "end": {
-          "line": 197,
+          "line": 196,
           "column": 5
         }
       },
@@ -551,11 +545,11 @@
     "getRepositoryCacheUrl": {
       "location": {
         "start": {
-          "line": 203,
+          "line": 202,
           "column": 4
         },
         "end": {
-          "line": 205,
+          "line": 204,
           "column": 5
         }
       },
@@ -581,11 +575,11 @@
     "getCache": {
       "location": {
         "start": {
-          "line": 212,
+          "line": 211,
           "column": 4
         },
         "end": {
-          "line": 228,
+          "line": 227,
           "column": 5
         }
       },
@@ -617,11 +611,11 @@
     "setCache": {
       "location": {
         "start": {
-          "line": 235,
+          "line": 234,
           "column": 4
         },
         "end": {
-          "line": 237,
+          "line": 236,
           "column": 5
         }
       },
@@ -653,11 +647,11 @@
     "saveCache": {
       "location": {
         "start": {
-          "line": 243,
+          "line": 242,
           "column": 4
         },
         "end": {
-          "line": 246,
+          "line": 245,
           "column": 5
         }
       },
@@ -683,11 +677,11 @@
     "exportCache": {
       "location": {
         "start": {
-          "line": 254,
+          "line": 253,
           "column": 4
         },
         "end": {
-          "line": 263,
+          "line": 262,
           "column": 5
         }
       },
@@ -719,11 +713,11 @@
     "clearCache": {
       "location": {
         "start": {
-          "line": 268,
+          "line": 267,
           "column": 4
         },
         "end": {
-          "line": 273,
+          "line": 272,
           "column": 5
         }
       },

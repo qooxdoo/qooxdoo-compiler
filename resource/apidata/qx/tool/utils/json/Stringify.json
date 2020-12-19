@@ -141,7 +141,7 @@
         "@param": [
           {
             "name": "@param",
-            "body": "value {Object}"
+            "body": "obj {Object}"
           }
         ],
         "@return": [
@@ -175,7 +175,7 @@
         "@param": [
           {
             "name": "@param",
-            "body": "value {Object}"
+            "body": "obj {Object}"
           }
         ],
         "@return": [

@@ -13,7 +13,7 @@
         "column": 0
       },
       "end": {
-        "line": 123,
+        "line": 122,
         "column": 3
       }
     },
@@ -111,11 +111,11 @@
     "beforeTests": {
       "location": {
         "start": {
-          "line": 62,
+          "line": 61,
           "column": 4
         },
         "end": {
-          "line": 64,
+          "line": 63,
           "column": 5
         }
       },
@@ -129,18 +129,10 @@
         "@param": [
           {
             "name": "@param",
-            "body": "cmd: {qx.tool.cli.commands.Command} current command",
-            "paramName": "cmd:",
+            "body": "cmd {qx.tool.cli.commands.Command} current command",
+            "paramName": "cmd",
             "description": " current command",
             "type": "qx.tool.cli.commands.Command"
-          }
-        ],
-        "@return": [
-          {
-            "name": "@return",
-            "body": "{Promise<void>}",
-            "type": "Promise<void>",
-            "description": ""
           }
         ]
       },
@@ -150,11 +142,11 @@
     "afterDeploy": {
       "location": {
         "start": {
-          "line": 76,
+          "line": 75,
           "column": 4
         },
         "end": {
-          "line": 78,
+          "line": 77,
           "column": 5
         }
       },
@@ -189,11 +181,11 @@
     "load": {
       "location": {
         "start": {
-          "line": 85,
+          "line": 84,
           "column": 4
         },
         "end": {
-          "line": 93,
+          "line": 92,
           "column": 5
         }
       },
@@ -221,11 +213,11 @@
     "afterLibrariesLoaded": {
       "location": {
         "start": {
-          "line": 98,
+          "line": 97,
           "column": 4
         },
         "end": {
-          "line": 102,
+          "line": 101,
           "column": 5
         }
       },
@@ -243,11 +235,11 @@
     "addLibraryApi": {
       "location": {
         "start": {
-          "line": 109,
+          "line": 108,
           "column": 4
         },
         "end": {
-          "line": 112,
+          "line": 111,
           "column": 5
         }
       },
@@ -274,11 +266,11 @@
     "getLibraryApis": {
       "location": {
         "start": {
-          "line": 119,
+          "line": 118,
           "column": 4
         },
         "end": {
-          "line": 121,
+          "line": 120,
           "column": 5
         }
       },
