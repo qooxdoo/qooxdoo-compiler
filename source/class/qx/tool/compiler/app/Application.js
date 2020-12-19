@@ -28,7 +28,7 @@ qx.Class.define("qx.tool.compiler.app.Application", {
 
   /**
    * Constructor
-   * @param classname[, classname...] {String|String[]}
+   * @param classname {String|String[]} [, classname...]
    */
   construct: function(classname) {
     this.base(arguments);
@@ -242,8 +242,6 @@ qx.Class.define("qx.tool.compiler.app.Application", {
 
     /**
      * Calculates the dependencies of the classes to create a load order
-     *
-     * @param classes
      */
     calcDependencies: function() {
       var t = this;
@@ -457,6 +455,16 @@ qx.Class.define("qx.tool.compiler.app.Application", {
           var part = classData.best||bootPart;
           part.classes.push(classname);
           classData.actual = part;
+          if (info.externals) {
+            if (part.externals === undefined) {
+              part.externals = [];
+            }
+            info.externals.forEach(external => {
+              if (part.externals.indexOf(external) < 0) {
+                part.externals.push(external);
+              }
+            });
+          }
         }
         allDeps.push(classname);
         deferDeps.forEach(function(depName) {

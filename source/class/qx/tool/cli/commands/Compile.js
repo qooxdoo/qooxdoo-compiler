@@ -119,6 +119,10 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         type: "boolean",
         default: false
       },
+      "inline-external-scripts": {
+        describe: "Inlines external Javascript",
+        type: "boolean"
+      },
       "erase": {
         alias: "e",
         describe: "Enabled automatic deletion of the output directory when compiler version or environment variables change",
@@ -156,6 +160,11 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         describe: "Write library information to the script, for reflection",
         type: "boolean",
         default: true
+      },
+      "write-compile-info": {
+        describe: "Write application summary information to the script, used mostly for unit tests",
+        type: "boolean",
+        default: false
       },
       "bundling": {
         alias: "b",
@@ -704,7 +713,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         if (targetConfig.uri) {
           qx.tool.compiler.Console.print("qx.tool.cli.compile.deprecatedUri", "target.uri", targetConfig.uri);
         }
-        if (targetConfig.writeCompileInfo) {
+        if (targetConfig.writeCompileInfo || this.argv.writeCompileInfo) {
           target.setWriteCompileInfo(true);
         }
         if (data.i18nAsParts) {
@@ -729,16 +738,30 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         if (typeof target.setMinify == "function") {
           target.setMinify(minify);
         }
+        
+        function chooseValue(...args) {
+          for (let i = 0; i < args.length; i++)
+            if (args[i] !== undefined)
+              return args[i];
+          return undefined;
+        }
 
         // Take the command line for `saveSourceInMap` as most precedent only if provided
-        var saveSourceInMap = targetConfig["save-source-in-map"] || t.argv["saveSourceInMap"];
+        var saveSourceInMap = chooseValue(targetConfig["save-source-in-map"], t.argv["saveSourceInMap"]);
         if ((typeof saveSourceInMap == "boolean") && (typeof target.setSaveSourceInMap == "function")) {
           target.setSaveSourceInMap(saveSourceInMap);
         }
 
-        var saveUnminified = targetConfig["save-unminified"] || t.argv["save-unminified"];
+        var saveUnminified = chooseValue(targetConfig["save-unminified"], t.argv["save-unminified"]);
         if (typeof saveUnminified == "boolean" && typeof target.setSaveUnminified == "function") {
           target.setSaveUnminified(saveUnminified);
+        }
+        
+        var inlineExternal = chooseValue(targetConfig["inline-external-scripts"],  t.argv["inline-external-scripts"]);
+        if (typeof inlineExternal == "boolean") {
+          target.setInlineExternalScripts(inlineExternal);
+        } else if (target instanceof qx.tool.compiler.targets.BuildTarget) {
+          target.setInlineExternalScripts(true);
         }
 
         var deployDir = targetConfig["deployPath"];

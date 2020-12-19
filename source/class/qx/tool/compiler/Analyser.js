@@ -460,12 +460,12 @@ qx.Class.define("qx.tool.compiler.Analyser", {
         fixupEntry(meta.defer);
       }
 
-        async function updateMetaData(classname, meta) {
-          var classEntities = {
-            members: {},
-            properties: {},
-            events: {}
-          };
+      async function updateMetaData(classname, meta) {
+        var classEntities = {
+          members: {},
+          properties: {},
+          events: {}
+        };
 
         async function analyseClassEntities(meta, first) {
           if (typeof meta == "string") {
@@ -475,46 +475,46 @@ qx.Class.define("qx.tool.compiler.Analyser", {
             return;
           }
 
-            ["members", "properties", "events"].forEach(entityTypeName => {
-              if (!meta[entityTypeName]) {
-                return;
-              }
+          ["members", "properties", "events"].forEach(entityTypeName => {
+            if (!meta[entityTypeName]) {
+              return;
+            }
 
-              for (let entityName in meta[entityTypeName]) {
-                let entityMeta = meta[entityTypeName][entityName];
+            for (let entityName in meta[entityTypeName]) {
+              let entityMeta = meta[entityTypeName][entityName];
 
-                if (entityMeta.type === "function" || entityTypeName === "properties" || entityTypeName === "events") {
-                  var entityInfo = classEntities[entityTypeName][entityName];
+              if (entityMeta.type === "function" || entityTypeName === "properties" || entityTypeName === "events") {
+                var entityInfo = classEntities[entityTypeName][entityName];
 
-                  if (!entityInfo) {
-                    entityInfo = classEntities[entityTypeName][entityName] = {
-                      appearsIn: {},
-                      overriddenFrom: null,
-                      jsdoc: null,
-                      abstract: meta.type === "interface",
-                      mixin: meta.type === "mixin" && !first,
-                      inherited: !first,
-                      access: entityName.startsWith("__") ? "private" : entityName.startsWith("_") ? "protected" : "public"
-                    };
-                  }
+                if (!entityInfo) {
+                  entityInfo = classEntities[entityTypeName][entityName] = {
+                    appearsIn: {},
+                    overriddenFrom: null,
+                    jsdoc: null,
+                    abstract: meta.type === "interface",
+                    mixin: meta.type === "mixin" && !first,
+                    inherited: !first,
+                    access: entityName.startsWith("__") ? "private" : entityName.startsWith("_") ? "protected" : "public"
+                  };
+                }
 
-                  if (entityMeta.event) {
-                    entityInfo.event = entityMeta.event;
-                  }
+                if (entityMeta.event) {
+                  entityInfo.event = entityMeta.event;
+                }
 
-                  if (entityMeta.property) {
-                    entityInfo.property = entityMeta.property;
-                  }
+                if (entityMeta.property) {
+                  entityInfo.property = entityMeta.property;
+                }
 
-                  if (meta.type === "mixin" && entityInfo.abstract) {
-                    entityInfo.mixin = true;
-                  }
+                if (meta.type === "mixin" && entityInfo.abstract) {
+                  entityInfo.mixin = true;
+                }
 
-                  if (meta.type !== "interface") {
-                    entityInfo.abstract = false;
-                  } else {
-                    entityInfo["interface"] = true;
-                  }
+                if (meta.type !== "interface") {
+                  entityInfo.abstract = false;
+                } else {
+                  entityInfo["interface"] = true;
+                }
 
                 if (!first) {
                   entityInfo.appearsIn[meta.className] = meta.type;
@@ -620,7 +620,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
                   "For further details take a look at the property definition: {@link #" + propertyName + "}.");
 
               if (propertyMeta.async) {
-                msg = "Returns a {@link qx.Promise} which resolves to the (computed) value of the property <code>" + propertyName + "</code>." +
+                var msg = "Returns a {@link qx.Promise} which resolves to the (computed) value of the property <code>" + propertyName + "</code>." +
                 "\n" +
                 "For further details take a look at the property definition: {@link #" + propertyName + "}.";
                 addPropertyAccessor(propertyMeta, "get" + upname + "Async", "getAsync", "Promise", null, msg);
@@ -664,52 +664,52 @@ qx.Class.define("qx.tool.compiler.Analyser", {
 
         await analyseClassEntities(meta, true);
 
-          for (let eventName in classEntities.events) {
-            if (!meta.events) {
-              meta.events = {};
-            }
-            let eventInfo = classEntities.events[eventName];
-            if ((eventInfo.abstract || eventInfo.mixin) && !meta.events[eventInfo]) {
-              let eventMeta = meta.events[eventName] = {
-                type: "event",
-                name: eventName,
-                abstract: Boolean(eventInfo.abstract),
-                mixin: Boolean(eventInfo.mixin),
-                access: eventInfo.access,
-                overriddenFrom: eventInfo.overriddenFrom,
-              };
-              if (eventInfo.appearsIn.length) {
-                eventMeta.appearsIn = Object.keys(eventInfo.appearsIn);
-              }
-
-              if (eventInfo.jsdoc) {
-                eventMeta.jsdoc = eventInfo.jsdoc;
-              }
-
-              if (eventInfo.overriddenFrom) {
-                eventMeta.overriddenFrom = eventInfo.overriddenFrom;
-              }
-            }
-          }  
-
-          if (meta.properties) {
-            for (let propertyName in meta.properties) {
-              let propertyMeta = meta.properties[propertyName];
-
-              if (propertyMeta.refine) {
-                let result = classEntities.properties[propertyName];
-
-                if (result) {
-                  propertyMeta.overriddenFrom = result.overriddenFrom;
-                  propertyMeta.appearsIn = result.appearsIn;
-                  mergeSignature(result.jsdoc, propertyMeta);
-                }
-              }
+        for (let eventName in classEntities.events) {
+          if (!meta.events) {
+            meta.events = {};
+          }
+          let eventInfo = classEntities.events[eventName];
+          if ((eventInfo.abstract || eventInfo.mixin) && !meta.events[eventInfo]) {
+            let eventMeta = meta.events[eventName] = {
+              type: "event",
+              name: eventName,
+              abstract: Boolean(eventInfo.abstract),
+              mixin: Boolean(eventInfo.mixin),
+              access: eventInfo.access,
+              overriddenFrom: eventInfo.overriddenFrom
+            };
+            if (eventInfo.appearsIn.length) {
+              eventMeta.appearsIn = Object.keys(eventInfo.appearsIn);
             }
 
+            if (eventInfo.jsdoc) {
+              eventMeta.jsdoc = eventInfo.jsdoc;
+            }
+
+            if (eventInfo.overriddenFrom) {
+              eventMeta.overriddenFrom = eventInfo.overriddenFrom;
+            }
+          }
+        }  
+
+        if (meta.properties) {
+          for (let propertyName in meta.properties) {
+            let propertyMeta = meta.properties[propertyName];
+
+            if (propertyMeta.refine) {
+              let result = classEntities.properties[propertyName];
+
+              if (result) {
+                propertyMeta.overriddenFrom = result.overriddenFrom;
+                propertyMeta.appearsIn = result.appearsIn;
+                mergeSignature(result.jsdoc, propertyMeta);
+              }
+            }
+          }
+  
           for (let propertyName in classEntities.properties) {
             let propertyInfo = classEntities.properties[propertyName];
-            if ((propertyInfo.abstract || propertyInfo.mixin) && !meta.properties[propertyInfo]) {
+            if ((propertyInfo.abstract || propertyInfo.mixin) && !meta.properties[propertyName]) {
               let propertyMeta = meta.properties[propertyName] = {
                 type: "property",
                 name: propertyName,
@@ -913,7 +913,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
      * Loads a class
      * @param className {String} the name of the class
      * @param forceScan {Boolean?} true if the class is to be compiled whether it needs it or not (default false)
-     * @param cb(err, DbClassInfo)
+     * @param cb {Function} (err, DbClassInfo)
      */
     getClassInfo: function(className, forceScan, cb) {
       var t = this;
@@ -1011,7 +1011,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
      * Gets the translation for the locale and library, caching the result.
      * @param library
      * @param locale
-     * @returns {Promise(translation)}
+     * @returns {translation}
      */
     getTranslation: async function(library, locale) {
       var t = this;
@@ -1027,9 +1027,10 @@ qx.Class.define("qx.tool.compiler.Analyser", {
 
     /**
      * Updates all translations to include all msgids found in code
-     * @param appLibrary the library to update
-     * @param locales
-     * @param cb
+     * @param appLibrary {qx.tool.compiler.app.Library} the library to update
+     * @param locales {String[]} locales
+     * @param libraries {qx.tool.compiler.app.Library[]} all libraries
+     * @param copyAllMsgs {Boolean} whether to copy everything, or just those that are required
      */
     async updateTranslations(appLibrary, locales, libraries, copyAllMsgs) {
       if (!libraries) {
@@ -1195,7 +1196,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
 
     /**
      * Removes a class from the list of required classes to analyse
-     * @param className
+     * @param classname {String}
      */
     removeClass: function(classname) {
       this.__initialClassesToScan.remove(classname);
@@ -1204,7 +1205,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
     /**
      * Detects the symbol type, ie class, package, member, etc
      * @param name
-     * @returns {{symbolType,name,clasName?}}
+     * @returns {{symbolType,name,className}?}
      */
     getSymbolType: function(name) {
       var t = this;
