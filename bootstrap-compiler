@@ -7,9 +7,12 @@ const fs = require("fs");
   console.log("pwd=" + process.cwd());
   let files = await fs.promises.readdir(".");
   console.log("files=\n  " + files.join("\n  "));
-  await utils.bootstrapCompiler(require("./package.json"));
-  
+  let version = process.argv[2];  
+  if (!version) {
+     version = require("./package.json").version;
+  }
+  console.log(`version=${version}`);
+  await utils.bootstrapCompiler(version);
   process.exit(0);
-  
 })();
 
