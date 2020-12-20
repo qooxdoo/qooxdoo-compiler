@@ -38,7 +38,7 @@ qx.Class.define("issue440.Application",
       // Call super class
       this.base(arguments);
       
-new abc.ClassNoDef(); //This is an error
+//This is an error
       
       // Enable logging in debug variant
       if (qx.core.Environment.get("qx.debug"))

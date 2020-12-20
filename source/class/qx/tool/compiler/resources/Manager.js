@@ -36,8 +36,7 @@ qx.Class.define("qx.tool.compiler.resources.Manager", {
   /**
    * Constructor
    *
-   * @param dbFilename
-   *          {String?} database filename, default is "resource-db.json"
+   * @param analyser {qx.tool.compiler.Analyser}
    */
   construct: function(analyser) {
     this.base(arguments);
@@ -215,8 +214,6 @@ qx.Class.define("qx.tool.compiler.resources.Manager", {
     /**
      * Scans all libraries looking for resources; this does not analyse the
      * files, simply compiles the list
-     *
-     * @param callback
      */
     async findAllResources() {
       var t = this;

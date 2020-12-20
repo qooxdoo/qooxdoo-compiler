@@ -9,6 +9,7 @@ qx.Class.define("qx.tool.compiler.targets.meta.Javascript", {
   /**
    * Constructor
    * 
+   * @param appMeta {qx.tool.compiler.targets.meta.ApplicationMeta}
    * @param filename {String} the sourcefile
    * @param originalSourceFile {String?} the URI to give to the source map
    */

@@ -209,6 +209,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
       vars: {},
       unresolved: {}
     };
+    this.__externals = [];
 
     this.__taskQueueDrains = [];
     this.__taskQueue = async.queue(function(task, cb) {
@@ -264,6 +265,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
     __taskQueueDrain: null,
     __globalSymbols: null,
     __privates: null,
+    __externals: null,
 	
     _onTaskQueueDrain: function() {
       var cbs = this.__taskQueueDrain;
@@ -570,6 +572,9 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
           }
         }
       }
+      if (this.__externals.length) {
+        dbClassInfo.externals = this.__externals;
+      }
 
       // Translation
       if (this.__translations.length) {
@@ -643,6 +648,12 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         if (jsdoc["@ignore"]) {
           jsdoc["@ignore"].forEach(function(elem) {
             t.addIgnore(elem.body);
+          });
+        }
+        if (jsdoc["@external"]) {
+          jsdoc["@external"].forEach(function(elem) {
+            t.addExternal(elem.body);
+            t._requireAsset(elem.body);
           });
         }
         if (jsdoc["@asset"]) {
@@ -2039,6 +2050,17 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
     },
 
     /**
+     * Adds an external resource which needs to be loaded early
+     *
+     * @param name {String} name of the symbol
+     */
+    addExternal: function(name) {
+      if (this.__externals.indexOf(name) < 0) {
+        this.__externals.push(name);
+      }
+    },
+    
+    /**
      * Adds an ignored symbol
      * @param name {String} name of the symbol
      */
@@ -2065,7 +2087,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
     /**
      * Tests whether a symbol has already been marked as ignore
      * @param name {String} symbol name
-     * @param {Boolean} true if ignored
+     * @return {Boolean} true if ignored
      */
     isIgnored: function(name) {
       for (var tmp = this.__scope; tmp; tmp = tmp.parent) {
@@ -2102,7 +2124,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
      * Adds an environment check made by the class
      *
      * @param name
-     * @param opts {Object?} see _requireClass
+     * @param location {Object?} see _requireClass
      */
     addEnvCheck: function(name, location) {
       var t = this;
@@ -2154,7 +2176,6 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
      * @param msgId {String} the marker message ID (@see qx.tool.compiler.Marker)
      * @param pos {Object||null} position map; may contain a Map containing
      *  {line,column?}, or a Map {start:{line,column}, end: {line,column}}.
-     * @param arguments? {Object...} variable argument list, specific to the msgId
      */
     addMarker: function(msgId, pos) {
       msgId = "qx.tool.compiler." + msgId;
@@ -2402,7 +2423,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
     /**
      * Returns the path to the rewritten class file
      *
-     * @param library  {qx.tool.compiler.app.Library}
+     * @param analyser {qx.tool.compiler.Analyser}
      * @param className {String}
      * @returns {String}
      */

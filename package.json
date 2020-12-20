@@ -3,13 +3,13 @@
   "description": "node.js based replacement for the Qooxdoo python toolchain",
   "main": "index.js",
   "bin": {
-    "qx": "bin/qx"
+    "qx": "bin/deploy/qx"
   },
   "scripts": {
     "devtools": "node source/resource/qx/tool/bin/build-devtools",
     "website": "node source/resource/qx/tool/bin/build-website",
-    "pretest": "npx qx deploy --target=build --clean",
-    "test": "node bin/qx test --target=build --output-path-prefix=tmp",
+    "pretest": "node bootstrap-compiler.js",
+    "test": "./bin/build/qx test",
     "prepack": "npx qx deploy --target=build --clean"
   },
   "author": "John Spackman (johnspackman), Christian Boulanger (cboulanger), Henner Kollmann (hkollmann), and others",
@@ -34,7 +34,7 @@
     "Manifest.json",
     "lib/compiler",
     "lib/resource",
-    "bin"
+    "bin/deploy"
   ],
   "dependencies": {
     "@babel/core": "^7.11.6",
@@ -113,7 +113,23 @@
     },
     "extends": [
       "@qooxdoo/qx"
-    ]
+    ],
+    "parserOptions": {
+      "ecmaVersion": 2017
+    },
+    "rules": {
+      "@qooxdoo/qx/no-illegal-private-usage": "off",
+      "jsdoc/require-jsdoc": "off",
+      "jsdoc/require-param": "off",
+      "jsdoc/require-returns-type": "off",
+      "indent": [
+        "error",
+        2,
+        {
+          "SwitchCase": 1
+        }
+      ]
+    }
   },
   "engine": "node >= 8"
 }

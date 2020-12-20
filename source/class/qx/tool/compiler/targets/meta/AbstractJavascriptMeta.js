@@ -15,6 +15,7 @@ qx.Class.define("qx.tool.compiler.targets.meta.AbstractJavascriptMeta", {
   /**
    * Constructor
    * 
+   * @param appMeta {qx.tool.compiler.targets.meta.ApplicationMeta}
    * @param filename {String} the sourcefile
    * @param originalSourceFile {String?} the URI to give to the source map
    */
@@ -96,7 +97,7 @@ qx.Class.define("qx.tool.compiler.targets.meta.AbstractJavascriptMeta", {
      * Writes the source code as a stream, merging source files etc
      * as necessary
      * 
-     * @param {WriteStream} the stream to write to
+     * @param ws {WriteStream} the stream to write to
      */
     async writeSourceCodeToStream(ws) {
       throw new Error(`No implementation for ${this.classname}.writeSourceCodeToStream`);
@@ -104,8 +105,6 @@ qx.Class.define("qx.tool.compiler.targets.meta.AbstractJavascriptMeta", {
     
     /**
      * Reads the source map as a string
-     * 
-     * @param {String?} the map, or null if there isn't one 
      */
     async getSourceMap() {
       return null;
