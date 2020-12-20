@@ -199,13 +199,13 @@ fs.copyFileSync("bin/build/qx.cmd", "tmp/qx.cmd");
   if (result.exitCode) {
     process.exit(result.exitCode);
   }
-  
-  console.log("Compiling and deploy build version");
-  result = await runCommand(".", "node", "./tmp/qx", "deploy", "--target=build", "--clean", "-M");
+
+  console.log("Compiling build version");
+  result = await runCommand(".", "node", "./tmp/qx", "compile", "--target=build", "--clean", "-M");
   if (result.exitCode) {
     process.exit(result.exitCode);
   }
-  
+
   console.log("Compiler successfully bootstrapped");
 }
 
