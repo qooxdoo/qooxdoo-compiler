@@ -39,6 +39,7 @@ jobs:
       - name: install
         run:  |
               npm ci
+              ./bootstrap-compiler
       - name: Build API Viewer
         run:  npx qx deploy app-name="apiviewer" 
       - name: Deploy API Viewer
