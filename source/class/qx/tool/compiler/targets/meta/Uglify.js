@@ -57,8 +57,6 @@ qx.Class.define("qx.tool.compiler.targets.meta.Uglify", {
 
       var application = this._appMeta.getApplication();
       
-      // TODO !compileInfo.build.parts[pkgId].modified
-      
       var outJsFilename = this.__jsMeta.getFilename();
       let baseJsFilename = path.basename(outJsFilename);
       
