@@ -216,5 +216,6 @@ module.exports = {
   bootstrapCompiler,
   deleteRecursive,
   safeDelete,
-  fsPromises
+  fsPromises,
+  promisify
 };
