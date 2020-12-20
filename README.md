@@ -78,15 +78,19 @@ project. Local installation is described in the
 
 If always want to have the newest version of the compiler or you want help us in development you can install it directly from the GitHub repo:
 
+Using `npm link`:
+
 ```bash
 git clone https://github.com/qooxdoo/qooxdoo-compiler.git
 cd qooxdoo-compiler
 npm install
 ./bootstrap-compiler
+./tmp/qx deploy
 npm link
 ```
+or just run `bootstrap-compiler` and add either bin/source (or bin/build) onto your PATH and then they have the version of the compiler under development. 
 
-bootstrap-compiler will compile and deploy the compiler in the project dir.
+When working on the compiler itself, cd to the compile directory and `run ./tmp/qx compile --watch` (possibly with --target=build if you want to test the build version), that is the fastest way to get it running.
 
 ## Frequently Asked Questions
 
