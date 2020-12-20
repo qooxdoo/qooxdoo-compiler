@@ -200,7 +200,7 @@ fs.copyFileSync("bin/build/qx.cmd", "tmp/qx.cmd");
     process.exit(result.exitCode);
   }
   
-  console.log("Compiling build version");
+  console.log("Compiling and deploy build version");
   result = await runCommand(".", "node", "./tmp/qx", "deploy", "--target=build", "--clean", "-M");
   if (result.exitCode) {
     process.exit(result.exitCode);
