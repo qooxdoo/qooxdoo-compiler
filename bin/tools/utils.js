@@ -139,7 +139,7 @@ async function safeDelete(filename) {
   }
 }
 
-async function bootstrapCompiler(package) {
+async function bootstrapCompiler(version) {
   let result;
 
   console.log("Deleting previous temporary compiler");
@@ -163,7 +163,7 @@ async function bootstrapCompiler(package) {
 qx.Class.define("qx.tool.compiler.Version", {
   extend: qx.core.Object,
   statics: {
-    VERSION: "${package.version}"
+    VERSION: "${version}"
   }
 });      
 `;
