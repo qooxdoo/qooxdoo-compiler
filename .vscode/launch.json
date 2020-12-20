@@ -8,6 +8,16 @@
             "type": "node",
             "request": "launch",
             "console": "integratedTerminal",
+            "name": "bootstrap",
+            "program": "${workspaceRoot}/bootstrap-compiler",
+            "cwd": "${workspaceRoot}",
+            "args": [
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "console": "integratedTerminal",
             "name": "qx compile",
             "program": "${workspaceRoot}/compiled/node/source/compiler/index.js",
             "cwd": "${workspaceRoot}",

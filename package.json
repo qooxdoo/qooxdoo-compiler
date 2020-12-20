@@ -8,9 +8,8 @@
   "scripts": {
     "devtools": "node source/resource/qx/tool/bin/build-devtools",
     "website": "node source/resource/qx/tool/bin/build-website",
-    "pretest": "node bootstrap-compiler.js",
-    "test": "./bin/build/qx test",
-    "prepack": "npx qx deploy --target=build --clean"
+    "pretest": "node bootstrap-compiler",
+    "test": "node ./bin/build/qx test"
   },
   "author": "John Spackman (johnspackman), Christian Boulanger (cboulanger), Henner Kollmann (hkollmann), and others",
   "version": "1.0.0-beta",
