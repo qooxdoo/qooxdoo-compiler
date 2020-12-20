@@ -103,7 +103,7 @@
     "yargs": "^15.4.1"
   },
   "devDependencies": {
-    "@qooxdoo/compiler": "^1.0.0-beta",
+    "@qooxdoo/compiler": "^1.0.0-beta-20201203-1458",
     "source-map-support": "^0.5.19",
     "tape": "^5.0.1"
   },
