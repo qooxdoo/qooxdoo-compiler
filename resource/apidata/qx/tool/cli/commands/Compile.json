@@ -13,7 +13,7 @@
         "column": 0
       },
       "end": {
-        "line": 1165,
+        "line": 1167,
         "column": 3
       }
     },
@@ -463,7 +463,7 @@
           "column": 4
         },
         "end": {
-          "line": 941,
+          "line": 943,
           "column": 5
         }
       },
@@ -495,11 +495,11 @@
     "__checkDependencies": {
       "location": {
         "start": {
-          "line": 952,
+          "line": 954,
           "column": 4
         },
         "end": {
-          "line": 1052,
+          "line": 1054,
           "column": 5
         }
       },
@@ -550,11 +550,11 @@
     "resolveTargetClass": {
       "location": {
         "start": {
-          "line": 1060,
+          "line": 1062,
           "column": 4
         },
         "end": {
-          "line": 1086,
+          "line": 1088,
           "column": 5
         }
       },
@@ -586,11 +586,11 @@
     "getMakers": {
       "location": {
         "start": {
-          "line": 1093,
+          "line": 1095,
           "column": 4
         },
         "end": {
-          "line": 1095,
+          "line": 1097,
           "column": 5
         }
       },
@@ -616,11 +616,11 @@
     "getMaker": {
       "location": {
         "start": {
-          "line": 1106,
+          "line": 1108,
           "column": 4
         },
         "end": {
-          "line": 1111,
+          "line": 1113,
           "column": 5
         }
       },
@@ -652,11 +652,11 @@
     "getMakersForApp": {
       "location": {
         "start": {
-          "line": 1119,
+          "line": 1121,
           "column": 4
         },
         "end": {
-          "line": 1124,
+          "line": 1126,
           "column": 5
         }
       },
@@ -691,11 +691,11 @@
     "_getConfig": {
       "location": {
         "start": {
-          "line": 1129,
+          "line": 1131,
           "column": 4
         },
         "end": {
-          "line": 1131,
+          "line": 1133,
           "column": 5
         }
       },
@@ -713,11 +713,11 @@
     "getLibraries": {
       "location": {
         "start": {
-          "line": 1138,
+          "line": 1140,
           "column": 4
         },
         "end": {
-          "line": 1140,
+          "line": 1142,
           "column": 5
         }
       },
@@ -949,11 +949,11 @@
   "defer": {
     "location": {
       "start": {
-        "line": 1143,
+        "line": 1145,
         "column": 9
       },
       "end": {
-        "line": 1164,
+        "line": 1166,
         "column": 3
       }
     },
