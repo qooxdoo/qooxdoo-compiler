@@ -243,27 +243,31 @@ qx.Class.define("qx.tool.utils.Utils", {
      * @return {{exitCode: Number, output: String, error: *, messages: *}}
      */
     async runCommand(cwd, ...args) {
-      
       let options = {
         
       };
       
-      if (typeof cwd == "object")
-        options = cwd;
-      else {      
+      if (typeof cwd == "object") {
+        options = cwd; 
+      } else {      
         args = args.filter(value => {
-          if (typeof value == "string")
-            return true;
-          if (!options)
-            options = value;
+          if (typeof value == "string") {
+            return true; 
+          }
+          if (!options) {
+            options = value; 
+          }
           return false;
         });
-        if (!options.cwd)
-          options.cwd = cwd;
-        if (!options.cmd)
-          options.cmd = args.shift();
-        if (!options.args)
-          options.args = args;
+        if (!options.cwd) {
+          options.cwd = cwd; 
+        }
+        if (!options.cmd) {
+          options.cmd = args.shift(); 
+        }
+        if (!options.args) {
+          options.args = args; 
+        }
       }
       return new Promise((resolve, reject) => {
         let env = process.env;
@@ -271,7 +275,6 @@ qx.Class.define("qx.tool.utils.Utils", {
           env = Object.assign({}, env);
           Object.assign(env, options.env);
         }
-        let shell = options.shell === undefined ? true : options.shell;
         let proc = child_process.spawn(options.cmd, options.args, {
           cwd: options.cwd,
           shell: true,

@@ -740,9 +740,11 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         }
         
         function chooseValue(...args) {
-          for (let i = 0; i < args.length; i++)
-            if (args[i] !== undefined)
-              return args[i];
+          for (let i = 0; i < args.length; i++) {
+            if (args[i] !== undefined) {
+              return args[i]; 
+            } 
+          }
           return undefined;
         }
 
@@ -757,7 +759,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
           target.setSaveUnminified(saveUnminified);
         }
         
-        var inlineExternal = chooseValue(targetConfig["inline-external-scripts"],  t.argv["inline-external-scripts"]);
+        var inlineExternal = chooseValue(targetConfig["inline-external-scripts"], t.argv["inline-external-scripts"]);
         if (typeof inlineExternal == "boolean") {
           target.setInlineExternalScripts(inlineExternal);
         } else if (target instanceof qx.tool.compiler.targets.BuildTarget) {

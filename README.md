@@ -54,7 +54,7 @@ nvm use 8 # or 10
 ## Test drive
 
 For more detailed information about installation and use of the compiler, refer
-to the [documentation](https://www.qooxdoo.org/docs/#/cli/commands). 
+to the [documentation](https://qooxdoo.org/documentation/#/development/compiler/?id=installation-getting-started). 
 
 Here's how you can do a quick test drive:
 
@@ -72,7 +72,25 @@ then open that address in the browser.
 The above test drive uses a global installation of qooxdoo and its compiler. For 
 development of more than one project, you may want an installation of qooxdoo local to the
 project. Local installation is described in the
-[Getting Started documentation](http://www.qooxdoo.org/6.0.0-beta/docs/#/?id=local-installation).
+[Getting Started documentation](https://qooxdoo.org/documentation/#/development/compiler/?id=installing-locally).
+
+## Run GitHub Version
+
+If always want to have the newest version of the compiler or you want help us in development you can install it directly from the GitHub repo:
+
+Using `npm link`:
+
+```bash
+git clone https://github.com/qooxdoo/qooxdoo-compiler.git
+cd qooxdoo-compiler
+npm install
+./bootstrap-compiler
+./tmp/qx deploy
+npm link
+```
+or just run `bootstrap-compiler` and add either bin/source (or bin/build) onto your PATH and then they have the version of the compiler under development. 
+
+When working on the compiler itself, cd to the compile directory and `run ./tmp/qx compile --watch` (possibly with --target=build if you want to test the build version), that is the fastest way to get it running.
 
 ## Frequently Asked Questions
 

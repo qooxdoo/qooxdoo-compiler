@@ -1,0 +1,14 @@
+#!/usr/bin/env node
+
+const utils = require("./bin/tools/utils");
+const fs = require("fs");
+
+(async function() {
+  let version = process.argv[2];  
+  if (!version) {
+     version = require("./package.json").version;
+  }
+  await utils.bootstrapCompiler(version);
+  process.exit(0);
+})();
+
