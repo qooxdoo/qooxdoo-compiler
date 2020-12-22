@@ -172,7 +172,7 @@ qx.Class.define("qx.tool.compiler.Version", {
   
   // Use the compiler in node_modules to compile a temporary version  
   console.log("Creating temporary compiler with known-good one");
-  result = await runCommand(".", "npx", "qx", "compile", "--target=build", "--output-path-prefix=tmp", "--app-name=compiler", "-M");
+  result = await runCommand(".", "npx", "qx", "compile", "--target=build", "--output-path-prefix=tmp", "--app-name=compiler");
   if (result.exitCode) {
     process.exit(result.exitCode);
   }
@@ -195,13 +195,13 @@ fs.copyFileSync("bin/build/qx.cmd", "tmp/qx.cmd");
    *  it does not matter if they use source or build, just make sure it is up to date
    */
   console.log("Compiling source version");
-  result = await runCommand(".", "node", "./tmp/qx", "compile", "--clean", "-M");
+  result = await runCommand(".", "node", "./tmp/qx", "compile", "--clean");
   if (result.exitCode) {
     process.exit(result.exitCode);
   }
 
   console.log("Compiling build version");
-  result = await runCommand(".", "node", "./tmp/qx", "compile", "--target=build", "--clean", "-M");
+  result = await runCommand(".", "node", "./tmp/qx", "compile", "--target=build", "--clean");
   if (result.exitCode) {
     process.exit(result.exitCode);
   }
