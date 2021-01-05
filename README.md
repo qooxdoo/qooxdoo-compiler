@@ -54,7 +54,7 @@ nvm use 8 # or 10
 ## Test drive
 
 For more detailed information about installation and use of the compiler, refer
-to the [documentation](https://qooxdoo.org/documentation/#/development/compiler/?id=installation-getting-started). 
+to the [documentation](https://qooxdoo.org/documentation/#/development/compiler/). 
 
 Here's how you can do a quick test drive:
 
