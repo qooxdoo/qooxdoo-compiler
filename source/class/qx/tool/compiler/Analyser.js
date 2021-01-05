@@ -179,7 +179,6 @@ qx.Class.define("qx.tool.compiler.Analyser", {
     __librariesByNamespace: null,
 
     __classes: null,
-    __blockAddMoreClasses: false,
     __initialClassesToScan: null,
     __cldrs: null,
     __translations: null,
@@ -404,7 +403,6 @@ qx.Class.define("qx.tool.compiler.Analyser", {
         }
       }
 
-      t.__blockAddMoreClasses = true;
       classes.forEach(function(className) {
         var info = t.__db.classInfo[className];
         var deps = getIndirectLoadDependencies(className);
@@ -863,9 +861,6 @@ qx.Class.define("qx.tool.compiler.Analyser", {
      * @private
      */
     _addRequiredClass: function(className) {
-      if (this.__blockAddMoreClasses) {
-        throw new Error("Internal error: calling _addRequiredClass when no more are supposed to be added");
-      }
       let t = this;
 
       // __classes will be null if analyseClasses has not formally been called; this would be if the
