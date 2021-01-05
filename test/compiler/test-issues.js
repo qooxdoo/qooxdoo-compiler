@@ -116,7 +116,7 @@ test("testLegalSCSS", async assert => {
   }
 });
 
-test("Issue553", async assert => {
+test("Issue715", async assert => {
   try {
     await testUtils.deleteRecursive("test-issues/issue715/compiled");
     await testUtils.runCompiler("test-issues/issue715", "--target=build", "--minify=off");
@@ -124,6 +124,7 @@ test("Issue553", async assert => {
     let str = await fsPromises.readFile("test-issues/issue715/compiled/build/transpiled/issue715/Application.js", "utf8");
     assert.ok(!str.match(/__privateOne/m));
     assert.ok(!!str.match(/__privateTwo/m));
+    assert.ok(!str.match(/__applyMyProp/m));
     assert.ok(!str.match(/__privateStaticOne/m));
     assert.ok(!!str.match(/__privateStaticTwo/m));
     assert.end();

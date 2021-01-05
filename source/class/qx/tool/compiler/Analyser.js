@@ -293,7 +293,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
      */
     async saveDatabase() {
       log.debug("saving generator database");
-      this.fireDataEvent("saveDatabase", this.__db);
+      await this.fireDataEventAsync("saveDatabase", this.__db);
       await qx.tool.utils.Json.saveJsonAsync(this.getDbFilename(), this.__db)
         .then(() => this.__resManager && this.__resManager.saveDatabase());
     },
@@ -944,7 +944,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
             }
             if (dbMtime && dbMtime.getTime() == sourceStat.mtime.getTime()) {
               if (outputStat.mtime.getTime() >= sourceStat.mtime.getTime()) {
-                t.fireDataEvent("alreadyCompiledClass", { className: className, dbClassInfo: dbClassInfo });
+                await t.fireDataEventAsync ("alreadyCompiledClass", { className: className, dbClassInfo: dbClassInfo });
                 return dbClassInfo;
               }
             }
@@ -965,7 +965,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
 
         // Save it
         classFile.writeDbInfo(dbClassInfo);
-        t.fireDataEvent("compiledClass", { dbClassInfo: dbClassInfo, oldDbClassInfo: oldDbClassInfo, classFile: classFile });
+        await t.fireDataEventAsync("compiledClass", { dbClassInfo: dbClassInfo, oldDbClassInfo: oldDbClassInfo, classFile: classFile });
 
         // Next!
         return dbClassInfo;
@@ -1349,7 +1349,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
     /**
      * Sets the environment data in the __db.
      * The data beeing set are:
-     *  * a hash of the current environmet values
+     *  * a hash of the current environment values
      *  * the compiler version
      *  * a list of the libraries used
      *

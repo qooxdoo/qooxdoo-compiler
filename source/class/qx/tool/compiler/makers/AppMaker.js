@@ -70,7 +70,7 @@ qx.Class.define("qx.tool.compiler.makers.AppMaker", {
     async make() {
       var analyser = this.getAnalyser();
       
-      this.fireEvent("making");
+      await this.fireEventAsync("making");
       this.setSuccess(null);
       this.setHasWarnings(null);
       let success = true;
@@ -80,6 +80,7 @@ qx.Class.define("qx.tool.compiler.makers.AppMaker", {
       const compileEnv = qx.tool.utils.Values.merge({},
         qx.tool.compiler.ClassFile.ENVIRONMENT_CONSTANTS,
         {
+          "qx.compiler": true,
           "qx.compiler.version": qx.tool.compiler.Version.VERSION
         },
         this.getEnvironment(),
@@ -169,7 +170,7 @@ qx.Class.define("qx.tool.compiler.makers.AppMaker", {
       
       await analyser.saveDatabase();
       var target = this.getTarget();
-      this.fireEvent("writingApplications");
+      await this.fireEventAsync("writingApplications");
 
       // Detect which applications need to be recompiled by looking for classes recently compiled
       //  which is on the application's dependency list.  The first time `.make()` is called there

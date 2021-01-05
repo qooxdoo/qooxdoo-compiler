@@ -3,6 +3,13 @@
  */
 qx.Class.define("issue715.Application", {
   extend: qx.application.Basic,
+  properties: {
+    myProp: {
+      init: null,
+      nullable: true,
+      apply: "__applyMyProp"
+    }
+  },
   members: {
     __privateOne: 1,
     
@@ -13,6 +20,10 @@ qx.Class.define("issue715.Application", {
       this["__privateTwo"] = "two";
       this.__privateOne = "ONE";
       this.__privateTwo = "TWO";
+    },
+    
+    __applyMyProp() {
+      // Nothing
     }
   },
   statics: {

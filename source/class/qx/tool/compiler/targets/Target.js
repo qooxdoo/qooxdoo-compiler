@@ -334,8 +334,7 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
         "qx.application": application.getClassName(),
         "qx.revision": "",
         "qx.theme": application.getTheme(),
-        "qx.version": analyser.getQooxdooVersion(),
-        "qx.compiler": true
+        "qx.version": analyser.getQooxdooVersion()
       });
       
       let externals = {};
@@ -378,7 +377,7 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
       for (let name in environment) {
         appMeta.setEnvironmentValue(name, environment[name]);
       }
-      t.fireDataEvent("checkEnvironment", { application: application, environment: appMeta.getEnvironment() });
+      await t.fireDataEventAsync("checkEnvironment", { application: application, environment: appMeta.getEnvironment() });
 
       
       /*

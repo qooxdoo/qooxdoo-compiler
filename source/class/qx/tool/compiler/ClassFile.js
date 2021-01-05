@@ -1141,7 +1141,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
                 var data = collectJson(pdNode.value);
                 meta.name = propName;
                 meta.propertyType = "new";
-                [ "refine", "themeable", "event", "inheritable", "apply", "async", "group", "nullable", "init" ]
+                [ "refine", "themeable", "event", "inheritable", "apply", "async", "group", "nullable", "init", "transform" ]
                   .forEach(name => meta[name] = data[name]);
                 if (data.nullable !== undefined) {
                   meta.allowNull = data.nullable;
