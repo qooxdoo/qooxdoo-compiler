@@ -1532,8 +1532,14 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
                 //  OK in methods - but we have to refer to superclass.methodName directly.  For ordinary
                 //  classes, we need to use constructor.methodName.base.
                 if (t.__definingType == "Mixin") {
-                  expr = expandMemberExpression(t.__classMeta.className + ".$$members." + t.__classMeta.functionName + ".base.call");
-                  // expr = expandMemberExpression("this.constructor.superclass.prototype." + t.__classMeta.functionName + ".call");
+                  expr = types.callExpression(expandMemberExpression("qx.Mixin.baseClassMethod"), [
+                    expandMemberExpression("this.constructor"),
+                    types.identifier(t.__classMeta.className),
+                    types.stringLiteral(t.__classMeta.functionName)
+                  ]);
+                  expr = types.memberExpression(expr, types.identifier("call"));
+                  //expr = expandMemberExpression("qx.Mixin.baseClassMethod(this.constructor, " + t.__classMeta.className + ", \"" + t.__classMeta.functionName + "\").call");
+                  //expr = expandMemberExpression(t.__classMeta.className + ".$$members." + t.__classMeta.functionName + ".base.call");
                 } else if (t.__classMeta.functionName == "$$constructor") {
                   expr = expandMemberExpression(t.__classMeta.superClass + ".constructor.call");
                 } else {

@@ -97,6 +97,10 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         type: "boolean",
         alias: "w"
       },
+      "watch-debug": {
+        describe: "enables debug messages for watching",
+        type: "boolean"
+      },
       "machine-readable": {
         alias: "M",
         describe: "output compiler messages in machine-readable format",
@@ -157,6 +161,11 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
       "warn-as-error": {
         alias: "E",
         describe: "Handle compiler warnings as error",
+        type: "boolean",
+        default: false
+      },
+      "write-compile-info": {
+        describe: "Write compiler information to the target",
         type: "boolean",
         default: false
       },
@@ -529,6 +538,9 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
 
         // Continuous make
         let watch = new qx.tool.cli.Watch(maker);
+        if (this.argv["watch-debug"]) {
+          watch.setDebug(true);
+        }
 
         watch.addListener("making", () => {
           countMaking++;
@@ -548,7 +560,6 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         });
         let arr = [ this._compileJsFilename, this._compileJsonFilename ].filter(str => Boolean(str));
         watch.setConfigFilenames(arr);
-
         return await watch.start();
       }));
     },

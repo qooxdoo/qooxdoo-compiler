@@ -201,6 +201,7 @@ qx.Class.define("qx.tool.compiler.Console", {
      * Warnings
      */
     statics.addMessageIds({
+      "qx.tool.compiler.class.blockedMangle": "The mangling of private variable '%1' has been blocked because it is referenced as a string before it is declared",
       "qx.tool.compiler.translate.invalidMessageId": "Cannot interpret message ID %1",
       "qx.tool.compiler.translate.invalidMessageIds": "Cannot interpret message ID %1, %2",
       "qx.tool.compiler.translate.invalidMessageIds3": "Cannot interpret message ID %1, %2, %3",
