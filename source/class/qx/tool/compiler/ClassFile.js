@@ -935,7 +935,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         } else if (node.type == "ArrayExpression") {
           result = [];
           node.elements.forEach(function(elem) {
-            result.push(collectJson(elem));
+            result.push(collectJson(elem, isProperties));
           });
         } else if (node.type == "Identifier") {
           node.name = t.encodePrivate(node.name, true, node.loc);
@@ -946,12 +946,12 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
           result = collapseMemberExpression(node);
         } else if (node.type == "UnaryExpression") {
           if (node.operator == "-") {
-            let tmp = collectJson(node.argument);
+            let tmp = collectJson(node.argument, isProperties);
             if (typeof tmp == "number") {
               return tmp * -1;
             }
           } else if (node.operator == "!") {
-            let tmp = collectJson(node.argument);
+            let tmp = collectJson(node.argument, isProperties);
             if (typeof tmp == "boolean") {
               return !tmp;
             }
