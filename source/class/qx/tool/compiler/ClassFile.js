@@ -909,13 +909,15 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
         }
       };
 
-      function collectJson(node) {
+      function collectJson(node, isProperties, jsonPath) {
         var result;
+        
         if (node.type == "ObjectExpression") {
           result = {};
+          let nextJsonPath = jsonPath ? jsonPath + "." : "";
           node.properties.forEach(function(prop) {
             var key = prop.key.name;
-            var value = collectJson(prop.value);
+            var value = collectJson(prop.value, isProperties, nextJsonPath + key);
             result[key] = value;
           });
         } else if (node.type == "Literal" ||
@@ -924,7 +926,10 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
             node.type == "NumericLiteral" ||
             node.type == "NullLiteral") {
           if (typeof node.value == "string") {
-            node.value = t.encodePrivate(node.value, false, node.loc);
+            let isIdentifier = false;
+            if (isProperties && (jsonPath === "apply" || jsonPath === "transform"))
+              isIdentifier = true;
+            node.value = t.encodePrivate(node.value, isIdentifier, node.loc);
           }
           result = node.value;
         } else if (node.type == "ArrayExpression") {
@@ -1138,7 +1143,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
               prop.value.properties.forEach(function(pdNode) {
                 var propName = getKeyName(pdNode.key);
                 var meta = makeMeta("properties", propName, pdNode);
-                var data = collectJson(pdNode.value);
+                var data = collectJson(pdNode.value, true);
                 meta.name = propName;
                 meta.propertyType = "new";
                 [ "refine", "themeable", "event", "inheritable", "apply", "async", "group", "nullable", "init", "transform" ]
