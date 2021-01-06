@@ -138,7 +138,7 @@ test("install without manifest", async assert => {
 
 test("add class and add script", async assert => {
   try {
-    result = await testUtils.runCommand("test-cli/myapp", testUtils.getCompiler(), "add", "class", "myapp.Window", "--extend=qx.ui.window.Window");
+    result = await testUtils.runCommand("test-cli/myapp", testUtils.getCompiler(), "add", "class", "myapp.Window", "--extend=qx.core.Object");
     assert.ok(result.exitCode === 0);
     result = await testUtils.runCommand("test-cli/myapp", testUtils.getCompiler(), "add", "script", "../jszip.js", "--rename=zip.js");
     assert.ok(result.exitCode === 0);
