@@ -9,7 +9,7 @@
     "devtools": "node source/resource/qx/tool/bin/build-devtools",
     "website": "node source/resource/qx/tool/bin/build-website",
     "pretest": "node bootstrap-compiler",
-    "test": "node ./bin/build/qx test"
+    "test": "node ./bin/build/qx --block-global-framework test"
   },
   "author": "John Spackman (johnspackman), Christian Boulanger (cboulanger), Henner Kollmann (hkollmann), and others",
   "version": "1.0.0-beta",
@@ -102,7 +102,6 @@
     "yargs": "^15.4.1"
   },
   "devDependencies": {
-    "@qooxdoo/compiler": "^1.0.0-beta-20201203-1458",
     "source-map-support": "^0.5.19",
     "tape": "^5.0.1"
   },

@@ -322,6 +322,12 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
       if (this.argv["feedback"] === null) {
         this.argv["feedback"] = configDb.db("qx.default.feedback", true);
       }
+      
+      if (this.argv.verbose) {
+        console.log(`
+Compiler:  v${qx.tool.compiler.Version.VERSION} in ${require.main.filename}
+Framework: v${await this.getUserQxVersion()} in ${await this.getUserQxPath()}`);
+      }
 
       if (this.argv["machine-readable"]) {
         qx.tool.compiler.Console.getInstance().setMachineReadable(true);
@@ -378,21 +384,6 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
           qx.tool.compiler.Console.print("qx.tool.cli.compile.writingApplication", appInfo.appMeta.getApplication().getName());
         });
         this.addListener("minifyingApplication", evt => qx.tool.compiler.Console.print("qx.tool.cli.compile.minifyingApplication", evt.getData().application.getName(), evt.getData().filename));
-        if (this.argv.verbose) {
-          var startTimes = {};
-          this.addListener("compilingClass", evt => {
-            var classname = evt.getData().classFile.getClassName();
-            startTimes[classname] = new Date();
-            qx.tool.compiler.Console.print("qx.tool.cli.compile.compilingClass", classname);
-          });
-          this.addListener("compiledClass", evt => {
-            var classname = evt.getData().classFile.getClassName();
-            var startTime = startTimes[classname];
-            var endTime = new Date();
-            var diff = endTime.getTime() - startTime.getTime();
-            qx.tool.compiler.Console.print("qx.tool.cli.compile.compiledClass", classname, qx.tool.utils.Utils.formatTime(diff));
-          });
-        }
       }
 
       this.addListener("making", evt => {

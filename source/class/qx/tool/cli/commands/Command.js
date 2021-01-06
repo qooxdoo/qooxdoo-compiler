@@ -191,13 +191,15 @@ qx.Class.define("qx.tool.cli.commands.Command", {
      * @return {Promise<*|never|string>}
      */
     getGlobalQxPath: async function() {
-      // Config override
-      let cfg = await qx.tool.cli.ConfigDb.getInstance();
-      let dir = cfg.db("qx.library");
-      if (dir) {
-        let manifestPath = path.join(dir, qx.tool.config.Manifest.config.fileName);
-        if (await fs.existsAsync(manifestPath)) {
-          return dir;
+      if (!this.argv["block-global-framework"]) {
+        // Config override
+        let cfg = await qx.tool.cli.ConfigDb.getInstance();
+        let dir = cfg.db("qx.library");
+        if (dir) {
+          let manifestPath = path.join(dir, qx.tool.config.Manifest.config.fileName);
+          if (await fs.existsAsync(manifestPath)) {
+            return dir;
+          }
         }
       }
       // This project's node_modules
