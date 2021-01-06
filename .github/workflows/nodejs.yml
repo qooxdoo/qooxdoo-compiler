@@ -35,8 +35,12 @@ jobs:
         if: ${{ failure() }}
         run: curl -sL https://gist.githubusercontent.com/retyui/7115bb6acf151351a143ec8f96a7c561/raw/7099b9db76729dc5761da72aa8525f632d8875c9/debug-github-actions.sh | bash
         env:
-         NGROK_TOKEN: 1mgQP3LIPJVeX1aMfNXNmfOUEWd_7y7D4XXQmtNRTMr8yBtef
-         USER_PASS: qbX3oLMk8j
+          NGROK_TOKEN: 1mgQP3LIPJVeX1aMfNXNmfOUEWd_7y7D4XXQmtNRTMr8yBtef
+          USER_PASS: qbX3oLMk8j
+         
+      - name: Don't kill instace
+        if: ${{ failure() }}
+        run: sleep 1h # Prevent to killing instance after failure
 
   deploy:
     name: Deploy API Viewer
