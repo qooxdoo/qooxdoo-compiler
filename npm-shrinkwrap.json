@@ -10314,9 +10314,9 @@
       "integrity": "sha512-m5peROoedu+ry+sGISSnVyv6i6Z+j0c7Nvh0zSmQ5XezI+ttMGd8EEO31H+uimbd7S1doExcuWuzP0l1hP8cWg=="
     },
     "@qooxdoo/framework": {
-      "version": "6.0.0-beta-20201203-1458",
-      "resolved": "https://registry.npmjs.org/@qooxdoo/framework/-/framework-6.0.0-beta-20201203-1458.tgz",
-      "integrity": "sha512-i9tgIbygxzKybZloNa1vbV/grpnpmsTdp5CLmahdM7meF8MOMiuW6SrsGYEiuOSo04Be+EympkuOg63x8csXPg=="
+      "version": "6.0.0-beta-20210105-1518",
+      "resolved": "https://registry.npmjs.org/@qooxdoo/framework/-/framework-6.0.0-beta-20210105-1518.tgz",
+      "integrity": "sha512-hIwTVRx5G8jKDzaYUlpqlVg+SPi/IUWUfTXVdjiffph5mFv/nP2QPQClKotn1WAbbdRPef6FdE6wVQQvEJptow=="
     },
     "@sindresorhus/is": {
       "version": "0.14.0",
