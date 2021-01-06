@@ -375,7 +375,7 @@ Framework: v${await this.getUserQxVersion()} in ${await this.getUserQxPath()}`);
       if (this.__gauge) {
         this.addListener("writingApplications", () => this.__gauge.show("Writing Applications", 0));
         this.addListener("writtenApplications", () => this.__gauge.show("Writing Applications", 1));
-        this.addListener("writingApplication", evt => this.__gauge.pulse("Writing Application " + evt.getData().getName()));
+        this.addListener("writingApplication", evt => this.__gauge.pulse("Writing Application " + evt.getData().appMeta.getApplication().getName()));
         this.addListener("compilingClass", evt => this.__gauge.pulse("Compiling " + evt.getData().classFile.getClassName()));
         this.addListener("minifyingApplication", evt => this.__gauge.pulse("Minifying " + evt.getData().application.getName() + " " + evt.getData().filename));
       } else {
