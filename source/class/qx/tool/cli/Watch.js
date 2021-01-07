@@ -34,6 +34,13 @@ qx.Class.define("qx.tool.cli.Watch", {
     this.__configFilenames = [];
   },
   
+  properties: {
+    debug: {
+      init: false,
+      check: "Boolean"
+    }
+  },
+  
   events: {
     "making": "qx.event.type.Event",
     "remaking": "qx.event.type.Event",
@@ -50,7 +57,7 @@ qx.Class.define("qx.tool.cli.Watch", {
     __making: null,
     __stopping: false,
     __outOfDate: null,
-    __timerId: null,
+    __makeTimerId: null,
     __debounceChanges: null,
     __configFilenames: null,
     
@@ -62,7 +69,10 @@ qx.Class.define("qx.tool.cli.Watch", {
       }
     },
 
-    start: function() {
+    start() {
+      if (this.isDebug()) {
+        qx.tool.compiler.Console.debug("DEBUG: Starting watch");
+      }
       if (this.__runningPromise) {
         throw new Error("Cannot start watching more than once");
       }
@@ -96,6 +106,10 @@ qx.Class.define("qx.tool.cli.Watch", {
           dirs.push(dir);
         }
       });
+      if (this.isDebug()) {
+        qx.tool.compiler.Console.debug(`DEBUG: applications=${JSON.stringify(applications.map(d => d.application.getName()))}`);
+        qx.tool.compiler.Console.debug(`DEBUG: dirs=${JSON.stringify(dirs)}`);
+      }
       var confirmed = [];
       Promise.all(dirs.map(dir => new Promise((resolve, reject) => {
         dir = path.resolve(dir);
@@ -117,6 +131,8 @@ qx.Class.define("qx.tool.cli.Watch", {
           });
         });
       }))).then(() => {
+        qx.tool.compiler.Console.debug(`DEBUG: confirmed=${JSON.stringify(confirmed)}`);
+        
         var watcher = this._watcher = chokidar.watch(confirmed, {
           //ignored: /(^|[\/\\])\../
         });
@@ -141,8 +157,9 @@ qx.Class.define("qx.tool.cli.Watch", {
       }
     },
 
-    __make: function() {
+    __make() {
       if (this.__making) {
+        this.__makeNeedsRestart = true;
         return this.__making;
       }
       this.fireEvent("making");
@@ -204,23 +221,34 @@ qx.Class.define("qx.tool.cli.Watch", {
             t.fireEvent("made");
           });
       }
+      
+      const runIt = () => {
+        return make()
+          .then(() => {
+            if (this.__makeNeedsRestart) {
+              delete this.__makeNeedsRestart;
+              return runIt();
+            }
+          });
+      };
 
-      return this.__making = make();
+      return this.__making = runIt();
     },
 
-    __scheduleMake: function() {
-      var t = this;
-      if (!t.__making) {
-        if (t.__timerId) {
-          clearTimeout(t.__timerId);
-        }
-        t.__timerId = setTimeout(function() {
-          t.__make();
-        }, 500);
+    __scheduleMake() {
+      if (this.__making) {
+        this.__makeNeedsRestart = true;
+        return this.__making;
       }
+
+      if (this.__makeTimerId) {
+        clearTimeout(this.__makeTimerId);
+      }
+      this.__makeTimerId = setTimeout(() => this.__make());
     },
 
     __onFileChange(type, filename) {
+      const Console = qx.tool.compiler.Console;
       if (!this.__watcherReady) {
         return null;
       }
@@ -230,23 +258,35 @@ qx.Class.define("qx.tool.cli.Watch", {
         var outOfDate = false;
         
         if (this.__configFilenames.find(str => str == filename)) {
+          if (this.isDebug()) {
+            Console.debug(`DEBUG: onFileChange: configChanged`);
+          }
           this.fireEvent("configChanged");
           return;
         }
   
+        let outOfDateApps = {};
         this.__applications.forEach(data => {
           if (data.dependsOn[filename]) {
+            outOfDateApps[data.application.getName()] = data.application;
             outOfDate = true;
           } else {
             var boot = data.application.getBootPath();
             if (boot) {
               boot = path.resolve(boot);
               if (filename.startsWith(boot)) {
+                outOfDateApps[data.application.getName()] = true;
                 outOfDate = true;
               }
             }
           }
         });
+        let outOfDateAppNames = Object.keys(outOfDateApps);
+        if (this.isDebug()) {
+          if (outOfDateAppNames.length) {
+            Console.debug(`DEBUG: onFileChange: ${filename} impacted applications: ${JSON.stringify(outOfDateAppNames)}`);
+          }
+        }
         
         let analyser = this.__maker.getAnalyser();
         let fName = "";
@@ -268,6 +308,9 @@ qx.Class.define("qx.tool.cli.Watch", {
         if (isResource) {
           let rm = analyser.getResourceManager();
           let target = this.__maker.getTarget();
+          if (this.isDebug()) {
+            Console.debug(`DEBUG: onFileChange: ${filename} is a resource`);
+          }
           let asset = rm.getAsset(fName, type != "unlink");
           if (asset && type != "unlink") {
             await asset.sync(target);
@@ -275,7 +318,6 @@ qx.Class.define("qx.tool.cli.Watch", {
             if (dota) {
               await qx.Promise.all(dota.map(asset => asset.sync(target)));
             }
-            delete this.__debounceChanges[filename];
           }
         }
   
@@ -286,13 +328,11 @@ qx.Class.define("qx.tool.cli.Watch", {
       };
       
       const runIt = dbc => {
-        dbc.timerId = null;
-        dbc.promise = handleFileChange()
+        return handleFileChange()
           .then(() => {
             if (dbc.restart) {
-              runIt(dbc);
-            } else {
-              delete this.__debounceChanges[filename];
+              delete dbc.restart;
+              return runIt(dbc);
             }
           });
       };
@@ -306,6 +346,9 @@ qx.Class.define("qx.tool.cli.Watch", {
 
       dbc.types[type] = true;
       if (dbc.promise) {
+        if (this.isDebug()) {
+          Console.debug(`DEBUG: onFileChange: seen '${filename}', but restarting promise`);
+        }
         dbc.restart = 1;
         return dbc.promise;
       }
@@ -313,7 +356,14 @@ qx.Class.define("qx.tool.cli.Watch", {
         clearTimeout(dbc.timerId);
         dbc.timerId = null;
       }
-      dbc.timerId = setTimeout(() => runIt(dbc), 150);
+      
+      if (this.isDebug()) {
+        Console.debug(`DEBUG: onFileChange: seen '${filename}', queuing`);
+      }
+      dbc.timerId = setTimeout(() => {
+        dbc.promise = runIt(dbc)
+          .then(() => delete this.__debounceChanges[filename]);
+      }, 150);
       return null;
     },
 

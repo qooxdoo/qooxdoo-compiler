@@ -94,6 +94,11 @@ qx.Class.define("qx.tool.cli.Cli", {
           alias: "q",
           describe: "suppresses normal progress output to console",
           type: "boolean"
+        })
+        .option("block-global-framework", {
+          describe: "prevents use of global override of the framework (used for deployment)",
+          type: "boolean",
+          default: false
         });
     },
 
@@ -104,10 +109,13 @@ qx.Class.define("qx.tool.cli.Cli", {
     async __bootstrapArgv() {
       var title = "qooxdoo command line interface";
       title = "\n" + title + "\n" + "=".repeat(title.length);
+      
+      // NOTE:: We CANNOT get the framework version here because we will not know which framework
+      //  to load until we have parse the command line args
+      
       title += 
 `
 Versions: @qooxdoo/compiler    v${qx.tool.compiler.Version.VERSION}
-          @qooxdqxoo/framework v${await new qx.tool.cli.commands.Command({}).getUserQxVersion()}
 `;
       title += "\n";
       title +=
@@ -470,6 +478,9 @@ Versions: @qooxdoo/compiler    v${qx.tool.compiler.Version.VERSION}
         qx.tool.compiler.resources.ScssConverter.USE_V6_COMPILER = config.sass.compiler == "latest";
       } else {
         qx.tool.compiler.resources.ScssConverter.USE_V6_COMPILER = null;
+      }
+      if (config.sass && config.sass.copyOriginal) {
+        qx.tool.compiler.resources.ScssConverter.COPY_ORIGINAL_FILES = true;
       }
 
       if (!config.serve) {

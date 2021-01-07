@@ -42,6 +42,10 @@
           "description": "Which SASS compiler to use (default is deprecated \"legacy\" during v6, will default to \"latest\" in v7)",
           "type": "string",
           "pattern": "^(legacy|latest)$"
+        },
+        "copyOriginal": {
+          "description": "Whether to copy the original .scss files into the resources output",
+          "type": "boolean"
         }
       }
     },

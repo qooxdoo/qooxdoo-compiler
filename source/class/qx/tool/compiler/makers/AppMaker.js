@@ -67,10 +67,10 @@ qx.Class.define("qx.tool.compiler.makers.AppMaker", {
     /*
      * @Override
      */
-    make: function() {
+    async make() {
       var analyser = this.getAnalyser();
       
-      this.fireEvent("making");
+      await this.fireEventAsync("making");
       this.setSuccess(null);
       this.setHasWarnings(null);
       let success = true;
@@ -80,6 +80,7 @@ qx.Class.define("qx.tool.compiler.makers.AppMaker", {
       const compileEnv = qx.tool.utils.Values.merge({},
         qx.tool.compiler.ClassFile.ENVIRONMENT_CONSTANTS,
         {
+          "qx.compiler": true,
           "qx.compiler.version": qx.tool.compiler.Version.VERSION
         },
         this.getEnvironment(),
@@ -129,113 +130,114 @@ qx.Class.define("qx.tool.compiler.makers.AppMaker", {
         }
       });
 
-      return analyser.open()
-        .then(() => {
-          analyser.setEnvironment(compileEnv);
-          if (!this.isNoErase() && analyser.isContextChanged()) {
-            log.log("enviroment changed - delete output dir");
-            return this.eraseOutputDir()
-              .then(() => qx.tool.utils.Utils.makeParentDir(this.getOutputDir()))
-              .then(() => analyser.resetDatabase());
+      await analyser.open()
+      analyser.setEnvironment(compileEnv);
+      if (!this.isNoErase() && analyser.isContextChanged()) {
+        log.log("enviroment changed - delete output dir");
+        await this.eraseOutputDir();
+        await qx.tool.utils.Utils.makeParentDir(this.getOutputDir());
+        await analyser.resetDatabase();
+      }
+      
+      await qx.tool.utils.Utils.promisifyThis(analyser.initialScan, analyser);
+      await analyser.updateEnvironmentData();
+
+      this.getTarget().setAnalyser(analyser);
+      this.__applications.forEach(app => app.setAnalyser(analyser));
+      await this.getTarget().open();
+      
+      if (this.isOutputTypescript()) {
+        analyser.getLibraries().forEach(library => {
+          var symbols = library.getKnownSymbols();
+          for (var name in symbols) {
+            var type = symbols[name];
+            if (type === "class" && name !== "q" && name !== "qxWeb") {
+              analyser.addClass(name);
+            }
           }
-          return Promise.resolve();
-        })
-        .then(() => qx.tool.utils.Utils.promisifyThis(analyser.initialScan, analyser))
-        .then(() => analyser.updateEnvironmentData())
-        .then(() => {
-          this.getTarget().setAnalyser(analyser);
-          this.__applications.forEach(app => app.setAnalyser(analyser));
-          return this.getTarget().open();
-        })
-        .then(() => {
-          if (this.isOutputTypescript()) {
-            analyser.getLibraries().forEach(library => {
-              var symbols = library.getKnownSymbols();
-              for (var name in symbols) {
-                var type = symbols[name];
-                if (type === "class" && name !== "q" && name !== "qxWeb") {
-                  analyser.addClass(name);
-                }
-              }
-            });
-          }
-
-          this.__applications.forEach(function(app) {
-            app.getRequiredClasses().forEach(function(className) {
-              analyser.addClass(className);
-            });
-            if (app.getTheme()) {
-              analyser.addClass(app.getTheme());
-            }
-          });
-          return qx.tool.utils.Promisify.call(cb => analyser.analyseClasses(cb));
-        })
-        .then(() => analyser.saveDatabase())
-        .then(() => {
-          var target = this.getTarget();
-          this.fireEvent("writingApplications");
-
-          // Detect which applications need to be recompiled by looking for classes recently compiled
-          //  which is on the application's dependency list.  The first time `.make()` is called there
-          //  will be no dependencies so we just compile anyway, but `qx compile --watch` will call it
-          //  multiple times
-          let compiledClasses = this.getRecentlyCompiledClasses(true);
-          var appsThisTime = this.__applications.filter(app => {
-            let loadDeps = app.getDependencies();
-            if (!loadDeps || !loadDeps.length) {
-              return true; 
-            }
-            return loadDeps.some(name => Boolean(compiledClasses[name]));
-          });
-
-          let db = analyser.getDatabase();
-          var promises = appsThisTime.map(application => {
-            if (application.getType() != "browser" && !compileEnv["qx.headless"]) {
-              qx.tool.compiler.Console.print("qx.tool.compiler.maker.appNotHeadless", application.getName());
-            }
-            var appEnv = qx.tool.utils.Values.merge({}, compileEnv, appEnvironments[application.toHashCode()]);
-            application.calcDependencies();
-            if (application.getFatalCompileErrors()) {
-              qx.tool.compiler.Console.print("qx.tool.compiler.maker.appFatalError", application.getName());
-              success = false;
-              return undefined;
-            }
-            if (!hasWarnings) {
-              application.getDependencies().forEach(classname => {
-                if (!db.classInfo[classname] || !db.classInfo[classname].markers) {
-                  return;
-                }
-                db.classInfo[classname].markers.forEach(marker => {
-                  let type = qx.tool.compiler.Console.getInstance().getMessageType(marker.msgId);
-                  if (type == "warning") {
-                    hasWarnings = true;
-                  }
-                });
-              });
-            }
-
-            this.fireDataEvent("writingApplication", application);
-            return target.generateApplication(application, appEnv)
-              .then(() => this.fireDataEvent("writtenApplication", application));
-          });
-
-          return qx.Promise.all(promises)
-            .then(() => {
-              this.fireEvent("writtenApplications");
-              if (this.isOutputTypescript()) {
-                return new qx.tool.compiler.targets.TypeScriptWriter(target)
-                  .set({ outputTo: this.getOutputTypescriptTo() })
-                  .run();
-              }
-              return undefined;
-            });
-        })
-        .then(() => analyser.saveDatabase())
-        .then(() => {
-          this.fireEvent("made");
-          this.setSuccess(success);
-          this.setHasWarnings(hasWarnings);
         });
+      }
+
+      this.__applications.forEach(function(app) {
+        app.getRequiredClasses().forEach(function(className) {
+          analyser.addClass(className);
+        });
+        if (app.getTheme()) {
+          analyser.addClass(app.getTheme());
+        }
+      });
+      await analyser.analyseClasses();
+      
+      await analyser.saveDatabase();
+      var target = this.getTarget();
+      await this.fireEventAsync("writingApplications");
+
+      // Detect which applications need to be recompiled by looking for classes recently compiled
+      //  which is on the application's dependency list.  The first time `.make()` is called there
+      //  will be no dependencies so we just compile anyway, but `qx compile --watch` will call it
+      //  multiple times
+      let compiledClasses = this.getRecentlyCompiledClasses(true);
+      var appsThisTime = this.__applications.filter(app => {
+        let loadDeps = app.getDependencies();
+        if (!loadDeps || !loadDeps.length) {
+          return true; 
+        }
+        return loadDeps.some(name => Boolean(compiledClasses[name]));
+      });
+      
+      let allAppInfos = [];
+
+      let db = analyser.getDatabase();
+      for (let i = 0; i < appsThisTime.length; i++) {
+        let application = appsThisTime[i];
+        if (application.getType() != "browser" && !compileEnv["qx.headless"]) {
+          qx.tool.compiler.Console.print("qx.tool.compiler.maker.appNotHeadless", application.getName());
+        }
+        var appEnv = qx.tool.utils.Values.merge({}, compileEnv, appEnvironments[application.toHashCode()]);
+        application.calcDependencies();
+        if (application.getFatalCompileErrors()) {
+          qx.tool.compiler.Console.print("qx.tool.compiler.maker.appFatalError", application.getName());
+          success = false;
+          continue;
+        }
+        if (!hasWarnings) {
+          application.getDependencies().forEach(classname => {
+            if (!db.classInfo[classname] || !db.classInfo[classname].markers) {
+              return;
+            }
+            db.classInfo[classname].markers.forEach(marker => {
+              let type = qx.tool.compiler.Console.getInstance().getMessageType(marker.msgId);
+              if (type == "warning") {
+                hasWarnings = true;
+              }
+            });
+          });
+        }
+
+        let appInfo = {
+          application,
+          analyser,
+          maker: this
+        };
+        allAppInfos.push(appInfo);
+        await this.fireDataEventAsync("writingApplication", appInfo);
+        await target.generateApplication(application, appEnv);
+        await this.fireDataEventAsync("writtenApplication", appInfo);
+      }
+
+      await this.fireDataEventAsync("writtenApplications", allAppInfos);
+      if (this.isOutputTypescript()) {
+        await (
+            new qx.tool.compiler.targets.TypeScriptWriter(target)
+              .set({ outputTo: this.getOutputTypescriptTo() })
+              .run()
+          );
+      }
+      
+      await analyser.saveDatabase();
+      await this.fireEventAsync("made");
+      this.setSuccess(success);
+      this.setHasWarnings(hasWarnings);
     }
   }
 });

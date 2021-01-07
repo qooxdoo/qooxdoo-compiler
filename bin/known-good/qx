@@ -1,0 +1,18 @@
+#!/bin/bash
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+KNOWN_GOOD="$DIR/../../known-good"
+
+if [[ ! -f $KNOWN_GOOD/node_modules/.bin/qx ]] ; then
+  echo "Installing known-good version of compiler..."
+  pushd $KNOWN_GOOD
+  npm ci
+  popd
+fi
+
+if [[ ! -f $KNOWN_GOOD/node_modules/.bin/qx ]] ; then
+  echo "Failed to discover known-good version of the compiler!"
+  exit 1
+fi
+
+$KNOWN_GOOD/node_modules/.bin/qx "$@"

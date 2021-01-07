@@ -155,8 +155,12 @@ qx.Class.define("qx.tool.compiler.Console", {
   },
 
   defer: function(statics) {
+
+    /*
+     * Errors
+     */
     statics.addMessageIds({
-      // Compiler errors & warnings (@see {ClassFile})
+      // Compiler errors (@see {ClassFile})
       "qx.tool.compiler.class.invalidProperties": "Invalid 'properties' key in class definition",
       "qx.tool.compiler.compiler.missingClassDef": "FATAL Missing class definition - no call to qx.Class.define (or qx.Mixin.define etc)",
       "qx.tool.compiler.compiler.syntaxError": "FATAL Syntax error: %1",
@@ -164,7 +168,7 @@ qx.Class.define("qx.tool.compiler.Console", {
       "qx.tool.compiler.compiler.invalidClassDefinitionEntry": "Unexpected property %2 in %1 definition",
       "qx.tool.compiler.compiler.wrongClassName": "Wrong class name or filename - expected to find at least %1 but only found [%2]",
 
-      // Application errors & warnings (@see {Application})
+      // Application errors (@see {Application})
       "qx.tool.compiler.application.partRecursive": "Part %1 has recursive dependencies on other parts",
       "qx.tool.compiler.application.duplicatePartNames": "Duplicate parts named '%1'",
       "qx.tool.compiler.application.noBootPart": "Cannot find a boot part",
@@ -193,7 +197,11 @@ qx.Class.define("qx.tool.compiler.Console", {
       "qx.tool.compiler.maker.appFatalError": "Cannot write application '%1' because it has fatal errors"
     }, "error");
 
+    /*
+     * Warnings
+     */
     statics.addMessageIds({
+      "qx.tool.compiler.class.blockedMangle": "The mangling of private variable '%1' has been blocked because it is referenced as a string before it is declared",
       "qx.tool.compiler.translate.invalidMessageId": "Cannot interpret message ID %1",
       "qx.tool.compiler.translate.invalidMessageIds": "Cannot interpret message ID %1, %2",
       "qx.tool.compiler.translate.invalidMessageIds3": "Cannot interpret message ID %1, %2, %3",
@@ -202,6 +210,7 @@ qx.Class.define("qx.tool.compiler.Console", {
       "qx.tool.compiler.testForFunctionParameterType": "Unexpected type of function parameter, node type %1",
       "qx.tool.compiler.defer.unsafe": "Unsafe use of 'defer' method to access external class: %1",
       "qx.tool.compiler.symbol.unresolved": "Unresolved use of symbol %1",
+      "qx.tool.compiler.environment.unreachable": "Environment check '%1' may be indeterminable, add to Manifest/provides/environment or use class name prefix",
 
       "qx.tool.compiler.target.missingBootJs": "There is no reference to index.js script in the index.html copied from %1 (see https://git.io/fh7NI)",
       /* eslint-disable no-template-curly-in-string */

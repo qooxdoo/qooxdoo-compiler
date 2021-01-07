@@ -293,7 +293,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
      */
     async saveDatabase() {
       log.debug("saving generator database");
-      this.fireDataEvent("saveDatabase", this.__db);
+      await this.fireDataEventAsync("saveDatabase", this.__db);
       await qx.tool.utils.Json.saveJsonAsync(this.getDbFilename(), this.__db)
         .then(() => this.__resManager && this.__resManager.saveDatabase());
     },
@@ -310,10 +310,8 @@ qx.Class.define("qx.tool.compiler.Analyser", {
     /**
      * Parses all the source files recursively until all classes and all
      * dependent classes are loaded
-     *
-     * @param cb
      */
-    analyseClasses: function(cb) {
+    async analyseClasses() {
       var t = this;
       if (!this.__db) {
         this.__db = {};
@@ -349,91 +347,76 @@ qx.Class.define("qx.tool.compiler.Analyser", {
 
         compiledClasses[data.classFile.getClassName()] = data;
       });
-
+      
       // Note that it is important to pre-load the classes in all libraries - this is because
       //  Babel plugins MUST be synchronous (ie cannot afford an async lookup of files on disk
       //  in mid parse)
-      async.each(this.__libraries, function(library, cb) {
-        library.scanForClasses(cb);
-      }, function() {
-        var classIndex = 0;
-        var classes = t.__classes = t.__initialClassesToScan.toArray();
+      await qx.tool.utils.Promisify.map(this.__libraries, async library => 
+        qx.tool.utils.Promisify.call(cb => library.scanForClasses(cb))
+      );
 
-        function getConstructDependencies(className) {
-          var deps = [];
-          var info = t.__db.classInfo[className];
-          if (info.dependsOn) {
-            for (var depName in info.dependsOn) {
-              if (info.dependsOn[depName].construct) {
-                deps.push(depName);
-              }
+      var classes = t.__classes = t.__initialClassesToScan.toArray();
+
+      function getConstructDependencies(className) {
+        var deps = [];
+        var info = t.__db.classInfo[className];
+        if (info.dependsOn) {
+          for (var depName in info.dependsOn) {
+            if (info.dependsOn[depName].construct) {
+              deps.push(depName);
             }
           }
-          return deps;
         }
+        return deps;
+      }
 
-        function getIndirectLoadDependencies(className) {
-          var deps = [];
-          var info = t.__db.classInfo[className];
-          if (info && info.dependsOn) {
-            for (var depName in info.dependsOn) {
-              if (info.dependsOn[depName].load) {
-                getConstructDependencies(depName).forEach(function(className) {
-                  deps.push(className);
-                });
-              }
-            }
-          }
-          return deps;
-        }
-
-        async.whilst(
-          /* While */
-          function() {
-            return classIndex < classes.length;
-          },
-          /* Do */
-          function(cb) {
-            t.getClassInfo(classes[classIndex++], (err, dbClassInfo) => {
-              if (dbClassInfo) {
-                var deps = dbClassInfo.dependsOn;
-                for (var depName in deps) {
-                  t._addRequiredClass(depName);
-                }
-              }
-              if (err && err.code === "ENOCLASSFILE") {
-                qx.tool.compiler.Console.error(err.message);
-                err = null;
-              }
-              return cb(err);
-            });
-          },
-          /* Done */
-          function(err) {
-            if (err) {
-              cb && cb(err);
-              return;
-            }
-            classes.forEach(function(className) {
-              var info = t.__db.classInfo[className];
-              var deps = getIndirectLoadDependencies(className);
-              deps.forEach(function(depName) {
-                if (!info.dependsOn) {
-                  info.dependsOn = {};
-                }
-                if (!info.dependsOn[depName]) {
-                  info.dependsOn[depName] = {};
-                }
-                info.dependsOn[depName].load = true;
+      function getIndirectLoadDependencies(className) {
+        var deps = [];
+        var info = t.__db.classInfo[className];
+        if (info && info.dependsOn) {
+          for (var depName in info.dependsOn) {
+            if (info.dependsOn[depName].load) {
+              getConstructDependencies(depName).forEach(function(className) {
+                deps.push(className);
               });
-            });
-            t.removeListenerById(listenerId);
-            analyzeMeta()
-              .then(() => cb())
-              .catch(err => cb(err));
+            }
           }
-        );
+        }
+        return deps;
+      }
+      
+      for (var classIndex = 0; classIndex < classes.length; classIndex++) {
+        try {
+          let dbClassInfo = await qx.tool.utils.Promisify.call(cb => t.getClassInfo(classes[classIndex], cb));
+          if (dbClassInfo) {
+            var deps = dbClassInfo.dependsOn;
+            for (var depName in deps) {
+              t._addRequiredClass(depName);
+            }
+          }
+        } catch(err) {
+          if (err.code === "ENOCLASSFILE") {
+            qx.tool.compiler.Console.error(err.message);
+          } else {
+            throw err;
+          }
+        }
+      }
+
+      classes.forEach(function(className) {
+        var info = t.__db.classInfo[className];
+        var deps = getIndirectLoadDependencies(className);
+        deps.forEach(function(depName) {
+          if (!info.dependsOn) {
+            info.dependsOn = {};
+          }
+          if (!info.dependsOn[depName]) {
+            info.dependsOn[depName] = {};
+          }
+          info.dependsOn[depName].load = true;
+        });
       });
+      t.removeListenerById(listenerId);
 
       function fixupMetaData(classname, meta) {
         function fixupEntry(obj) {
@@ -856,21 +839,20 @@ qx.Class.define("qx.tool.compiler.Analyser", {
           }
         }
 
-        var p = Promise.resolve();
         for (let classname in metaFixupDescendants) {
           if (!compiledClasses[classname] && db.classInfo[classname]) {
-            p = p.then(() => loadMetaData(classname)
-              .then(meta => {
-                if (meta) {
-                  calcDescendants(classname, meta);
-                  toSave[classname] = meta;
-                }
-              }));
+            let meta = await loadMetaData(classname);
+            if (meta) {
+              calcDescendants(classname, meta);
+              toSave[classname] = meta;
+            }
           }
         }
 
-        await p.then(() => Promise.all(Object.keys(toSave).map(classname => saveMetaData(classname, toSave[classname]))));
+        await Promise.all(Object.keys(toSave).map(classname => saveMetaData(classname, toSave[classname])));
       }
+      
+      return await analyzeMeta();
     },
 
     /**
@@ -962,7 +944,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
             }
             if (dbMtime && dbMtime.getTime() == sourceStat.mtime.getTime()) {
               if (outputStat.mtime.getTime() >= sourceStat.mtime.getTime()) {
-                t.fireDataEvent("alreadyCompiledClass", { className: className, dbClassInfo: dbClassInfo });
+                await t.fireDataEventAsync ("alreadyCompiledClass", { className: className, dbClassInfo: dbClassInfo });
                 return dbClassInfo;
               }
             }
@@ -978,12 +960,12 @@ qx.Class.define("qx.tool.compiler.Analyser", {
 
         // Analyse it and collect unresolved symbols and dependencies
         var classFile = new qx.tool.compiler.ClassFile(t, className, library);
-        t.fireDataEvent("compilingClass", { dbClassInfo: dbClassInfo, oldDbClassInfo: oldDbClassInfo, classFile: classFile });
+        await t.fireDataEventAsync("compilingClass", { dbClassInfo: dbClassInfo, oldDbClassInfo: oldDbClassInfo, classFile: classFile });
         await qx.tool.utils.Promisify.call(cb => classFile.load(cb));
 
         // Save it
         classFile.writeDbInfo(dbClassInfo);
-        t.fireDataEvent("compiledClass", { dbClassInfo: dbClassInfo, oldDbClassInfo: oldDbClassInfo, classFile: classFile });
+        await t.fireDataEventAsync("compiledClass", { dbClassInfo: dbClassInfo, oldDbClassInfo: oldDbClassInfo, classFile: classFile });
 
         // Next!
         return dbClassInfo;
@@ -1367,7 +1349,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
     /**
      * Sets the environment data in the __db.
      * The data beeing set are:
-     *  * a hash of the current environmet values
+     *  * a hash of the current environment values
      *  * the compiler version
      *  * a list of the libraries used
      *

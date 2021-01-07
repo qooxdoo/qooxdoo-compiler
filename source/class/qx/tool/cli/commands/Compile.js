@@ -97,6 +97,10 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         type: "boolean",
         alias: "w"
       },
+      "watch-debug": {
+        describe: "enables debug messages for watching",
+        type: "boolean"
+      },
       "machine-readable": {
         alias: "M",
         describe: "output compiler messages in machine-readable format",
@@ -107,6 +111,11 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         describe: "disables minification (build targets only)",
         choices: [ "off", "minify", "mangle", "beautify" ],
         default: "mangle"
+      },
+      "mangle-privates": {
+        describe: "Whether to mangle private variables",
+        default: true,
+        type: "boolean"
       },
       "save-source-in-map": {
         describe: "Saves the source code in the map file (build target only)",
@@ -155,6 +164,11 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         type: "boolean",
         default: false
       },
+      "write-compile-info": {
+        describe: "Write compiler information to the target",
+        type: "boolean",
+        default: false
+      },
       "write-library-info": {
         alias: "I",
         describe: "Write library information to the script, for reflection",
@@ -186,23 +200,40 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
 
   events: {
 
-    /*** fired when application writing starts */
+    /**
+     * Fired when application writing starts 
+     */
     "writingApplications": "qx.event.type.Event",
 
-    /** fired when writing of single application starts
-     *  data: 
-     *   app {Application}
+    /** 
+     * Fired when writing of single application starts; data is an object containing:
+     *   maker {qx.tool.compiler.makers.Maker}
+     *   target {qx.tool.compiler.targets.Target}
+     *   appMeta {qx.tool.compiler.targets.meta.ApplicationMeta}
      */
     "writingApplication": "qx.event.type.Data",
 
-    /** fired when writing of single application is written
-     *  data: 
-     *   app {Application}
+    /** 
+     * Fired when writing of single application is complete; data is an object containing:
+     *   maker {qx.tool.compiler.makers.Maker}
+     *   target {qx.tool.compiler.targets.Target}
+     *   appMeta {qx.tool.compiler.targets.meta.ApplicationMeta}
+     *
+     * Note that target.getAppMeta() will return null after this event has been fired 
      */
     "writtenApplication": "qx.event.type.Data",
 
-    /*** fired after writing of all applications */
-    "writtenApplications" :"qx.event.type.Event",
+    /**
+     * Fired after writing of all applications; data is an object containing an array, 
+     * each of which has previously been passed with `writeApplication`:
+     
+     *   maker {qx.tool.compiler.makers.Maker}
+     *   target {qx.tool.compiler.targets.Target}
+     *   appMeta {qx.tool.compiler.targets.meta.ApplicationMeta}
+     *
+     * Note that target.getAppMeta() will return null after this event has been fired 
+     */
+    "writtenApplications" :"qx.event.type.Data",
 
     /**
      * Fired when a class is about to be compiled.
@@ -291,6 +322,12 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
       if (this.argv["feedback"] === null) {
         this.argv["feedback"] = configDb.db("qx.default.feedback", true);
       }
+      
+      if (this.argv.verbose) {
+        console.log(`
+Compiler:  v${qx.tool.compiler.Version.VERSION} in ${require.main.filename}
+Framework: v${await this.getUserQxVersion()} in ${await this.getUserQxPath()}`);
+      }
 
       if (this.argv["machine-readable"]) {
         qx.tool.compiler.Console.getInstance().setMachineReadable(true);
@@ -338,27 +375,15 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
       if (this.__gauge) {
         this.addListener("writingApplications", () => this.__gauge.show("Writing Applications", 0));
         this.addListener("writtenApplications", () => this.__gauge.show("Writing Applications", 1));
-        this.addListener("writingApplication", evt => this.__gauge.pulse("Writing Application " + evt.getData().getName()));
+        this.addListener("writingApplication", evt => this.__gauge.pulse("Writing Application " + evt.getData().appMeta.getApplication().getName()));
         this.addListener("compilingClass", evt => this.__gauge.pulse("Compiling " + evt.getData().classFile.getClassName()));
         this.addListener("minifyingApplication", evt => this.__gauge.pulse("Minifying " + evt.getData().application.getName() + " " + evt.getData().filename));
       } else {
-        this.addListener("writingApplication", evt => qx.tool.compiler.Console.print("qx.tool.cli.compile.writingApplication", evt.getData().getName()));
+        this.addListener("writingApplication", evt => {
+          let appInfo = evt.getData();
+          qx.tool.compiler.Console.print("qx.tool.cli.compile.writingApplication", appInfo.appMeta.getApplication().getName());
+        });
         this.addListener("minifyingApplication", evt => qx.tool.compiler.Console.print("qx.tool.cli.compile.minifyingApplication", evt.getData().application.getName(), evt.getData().filename));
-        if (this.argv.verbose) {
-          var startTimes = {};
-          this.addListener("compilingClass", evt => {
-            var classname = evt.getData().classFile.getClassName();
-            startTimes[classname] = new Date();
-            qx.tool.compiler.Console.print("qx.tool.cli.compile.compilingClass", classname);
-          });
-          this.addListener("compiledClass", evt => {
-            var classname = evt.getData().classFile.getClassName();
-            var startTime = startTimes[classname];
-            var endTime = new Date();
-            var diff = endTime.getTime() - startTime.getTime();
-            qx.tool.compiler.Console.print("qx.tool.cli.compile.compiledClass", classname, qx.tool.utils.Utils.formatTime(diff));
-          });
-        }
       }
 
       this.addListener("making", evt => {
@@ -448,21 +473,41 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         }
 
         var target = maker.getTarget();
-        maker.addListener("writingApplications", collateDispatchEvent);
-        maker.addListener("writtenApplications", collateDispatchEvent);
-        maker.addListener("writingApplication", e => this.dispatchEvent(e.clone()));
-        maker.addListener("writtenApplication", e => this.dispatchEvent(e.clone()));
         analyser.addListener("compilingClass", e => this.dispatchEvent(e.clone()));
         analyser.addListener("compiledClass", e => this.dispatchEvent(e.clone()));
         analyser.addListener("saveDatabase", e => this.dispatchEvent(e.clone()));
         target.addListener("checkEnvironment", e => this.dispatchEvent(e.clone()));
+        let appInfos = [];
+        target.addListener("writingApplication", async () => {
+          let appInfo = {
+            maker,
+            target,
+            appMeta: target.getAppMeta()
+          };
+          appInfos.push(appInfo);
+          await this.fireDataEventAsync("writingApplication", appInfo);
+        });
+        target.addListener("writtenApplication", async () => {
+          await this.fireDataEventAsync("writingApplication", {
+            maker,
+            target,
+            appMeta: target.getAppMeta()
+          });
+        });
+        maker.addListener("writingApplications", collateDispatchEvent);
+        maker.addListener("writtenApplications", async () => {
+          await this.fireDataEventAsync("writtenApplications", appInfos);
+        });
+        
         if (target instanceof qx.tool.compiler.targets.BuildTarget) {
           target.addListener("minifyingApplication", e => this.dispatchEvent(e.clone()));
           target.addListener("minifiedApplication", e => this.dispatchEvent(e.clone()));
         }
 
-        var p = qx.tool.utils.files.Utils.safeStat("source/index.html")
-          .then(stat => stat && qx.tool.compiler.Console.print("qx.tool.cli.compile.legacyFiles", "source/index.html"));
+        let stat = await qx.tool.utils.files.Utils.safeStat("source/index.html");
+        if (stat) {
+          qx.tool.compiler.Console.print("qx.tool.cli.compile.legacyFiles", "source/index.html");
+        }
 
         // Simple one of make
         if (!this.argv.watch) {
@@ -479,11 +524,14 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
             }
           });
 
-          return p.then(() => maker.make());
+          return await maker.make();
         }
 
         // Continuous make
         let watch = new qx.tool.cli.Watch(maker);
+        if (this.argv["watch-debug"]) {
+          watch.setDebug(true);
+        }
 
         watch.addListener("making", () => {
           countMaking++;
@@ -503,8 +551,7 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         });
         let arr = [ this._compileJsFilename, this._compileJsonFilename ].filter(str => Boolean(str));
         watch.setConfigFilenames(arr);
-
-        return p.then(() => watch.start());
+        return await watch.start();
       }));
     },
 
@@ -834,7 +881,11 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
           maker.getAnalyser().addLibrary(libraries[ns]);
         }
 
-        maker.getAnalyser().setManglePrivates(target instanceof qx.tool.compiler.targets.BuildTarget ? "unreadable" : "readable"); 
+        if (this.argv["mangle-privates"]) {
+          maker.getAnalyser().setManglePrivates(target instanceof qx.tool.compiler.targets.BuildTarget ? "unreadable" : "readable"); 
+        } else {
+          maker.getAnalyser().setManglePrivates("off");
+        }
 
         let allApplicationTypes = {};
         appConfigs.forEach(appConfig => {

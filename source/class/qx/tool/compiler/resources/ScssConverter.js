@@ -28,12 +28,13 @@ qx.Class.define("qx.tool.compiler.resources.ScssConverter", {
   extend: qx.tool.compiler.resources.ResourceConverter,
 
   construct: function() {
-    this.base(arguments, ".scss");
+    this.base(arguments);
   },
 
   members: {
-    isDoNotCopy(filename) {
-      return path.basename(filename)[0] === "_";
+    matches(filename) {
+      filename = path.basename(filename);
+      return filename[0] != '_' && filename.endsWith(".scss");
     },
     
     getDestFilename(target, asset) {
@@ -46,7 +47,12 @@ qx.Class.define("qx.tool.compiler.resources.ScssConverter", {
       return filename;
     },
     
-    convert(target, asset, srcFilename, destFilename, isThemeFile) {
+    async convert(target, asset, srcFilename, destFilename, isThemeFile) {
+      if (qx.tool.compiler.resources.ScssConverter.COPY_ORIGINAL_FILES) {
+        let copyFilename = path.join(target.getOutputDir(), "resource", asset.getFilename());
+        await qx.tool.utils.files.Utils.copyFile(srcFilename, copyFilename);
+      }
+      
       if (!qx.tool.compiler.resources.ScssConverter.isNewCompiler()) {
         return this.legacyMobileSassConvert(target, asset, srcFilename, destFilename);
       }
@@ -61,6 +67,11 @@ qx.Class.define("qx.tool.compiler.resources.ScssConverter", {
      * does not support relative `url()` paths and automatically has Qooxdoo SASS built in.
      */
     async legacyMobileSassConvert(target, asset, srcFilename, destFilename) {
+      if (qx.tool.compiler.resources.ScssConverter.COPY_ORIGINAL_FILES) {
+        let copyFilename = path.join(target.getOutputDir(), "resource", asset.getFilename());
+        await qx.tool.utils.files.Utils.copyFile(srcFilename, copyFilename);
+      }
+      
       let qooxdooPath = target.getAnalyser().getQooxdooPath();
       let data = await fs.readFileAsync(srcFilename, "utf8");
       if (!data || !data.trim()) {
@@ -92,7 +103,11 @@ qx.Class.define("qx.tool.compiler.resources.ScssConverter", {
   },
   
   statics:{
-    USE_V6_COMPILER: true, // Default is true for the API, the CLI will set this to null
+    /** @type {Boolean} Default is true for the API, the CLI will set this to null */
+    USE_V6_COMPILER: true, 
+    
+    /** @type {Boolean} Whether to copy .scss files */
+    COPY_ORIGINAL_FILES: false,
     
     isNewCompiler() {
       if (qx.tool.compiler.resources.ScssConverter.USE_V6_COMPILER === null) {
