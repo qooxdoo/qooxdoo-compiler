@@ -1,18 +1,21 @@
-#!/bin/bash
+#!/usr/bin/env node
+const path = require("path");
+const fs = require("fs");
+const utils = require("../tools/utils");
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-KNOWN_GOOD="$DIR/../../known-good"
-
-if [[ ! -f $KNOWN_GOOD/node_modules/.bin/qx ]] ; then
-  echo "Installing known-good version of compiler..."
-  pushd $KNOWN_GOOD
-  npm ci
-  popd
-fi
-
-if [[ ! -f $KNOWN_GOOD/node_modules/.bin/qx ]] ; then
-  echo "Failed to discover known-good version of the compiler!"
-  exit 1
-fi
-
-$KNOWN_GOOD/node_modules/.bin/qx "$@"
+async function main() {
+  let knownGood = path.join(__dirname, "..", "..", "known-good");
+  let qx = path.join(knownGood, "node_modules", ".bin", "qx");
+  if (!fs.existsSync(qx)) {
+    console.log("Compiling source version");
+    await utils.runCommand(knownGood, "npm", "ci");
+    if (!fs.existsSync(qx)) {
+      console.error("Failed to discover known-good version of the compiler!");
+      process.exit(1);
+    }
+  }
+  var myArgs = process.argv.slice(2);
+  console.log("run", qx, ...myArgs);
+  utils.runCommand(".", qx, ...myArgs);
+}
+main();
