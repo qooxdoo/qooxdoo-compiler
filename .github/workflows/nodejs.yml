@@ -43,7 +43,7 @@ jobs:
               npm ci
               ./bootstrap-compiler
       - name: Build API Viewer
-        run:  npx qx deploy app-name="apiviewer" 
+        run:  tmp/qx deploy app-name="apiviewer" 
       - name: Deploy API Viewer
         uses: peaceiris/actions-gh-pages@v3
         with:
