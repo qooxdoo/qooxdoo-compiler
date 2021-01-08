@@ -104,7 +104,7 @@
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__outputStream": {
       "location": {
@@ -118,7 +118,7 @@
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__classes": {
       "location": {
@@ -132,7 +132,7 @@
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__target": {
       "location": {
@@ -146,7 +146,7 @@
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__apiCache": {
       "location": {
@@ -160,7 +160,7 @@
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__dirname": {
       "location": {
@@ -174,7 +174,7 @@
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__currentClass": {
       "location": {
@@ -188,7 +188,7 @@
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "run": {
       "location": {
@@ -403,7 +403,7 @@
         ]
       },
       "type": "function",
-      "access": "private"
+      "access": "protected"
     },
     "serializeParameters": {
       "location": {
@@ -867,7 +867,7 @@
       "abstract": false,
       "mixin": true,
       "inherited": true,
-      "access": "private",
+      "access": "protected",
       "overriddenFrom": "qx.core.MLogging",
       "jsdoc": {
         "@description": [
@@ -1717,7 +1717,7 @@
       "abstract": false,
       "mixin": true,
       "inherited": true,
-      "access": "private",
+      "access": "protected",
       "overriddenFrom": "qx.core.MObjectId",
       "jsdoc": {
         "@description": [
@@ -1916,7 +1916,7 @@
       "abstract": false,
       "mixin": true,
       "inherited": true,
-      "access": "private",
+      "access": "protected",
       "overriddenFrom": "qx.core.MObjectId",
       "jsdoc": {
         "@description": [

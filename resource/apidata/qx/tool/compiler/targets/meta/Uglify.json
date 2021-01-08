@@ -13,7 +13,7 @@
         "column": 0
       },
       "end": {
-        "line": 104,
+        "line": 105,
         "column": 3
       }
     }
@@ -88,7 +88,7 @@
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "writeSourceCodeToStream": {
       "location": {
@@ -97,7 +97,7 @@
           "column": 4
         },
         "end": {
-          "line": 102,
+          "line": 103,
           "column": 5
         }
       },

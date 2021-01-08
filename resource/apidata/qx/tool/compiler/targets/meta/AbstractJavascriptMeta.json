@@ -154,7 +154,7 @@
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__originalSourceFile": {
       "location": {
@@ -168,7 +168,7 @@
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__wrapper": {
       "location": {
@@ -182,7 +182,7 @@
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "getAppMeta": {
       "location": {
@@ -771,7 +771,7 @@
       "abstract": false,
       "mixin": true,
       "inherited": true,
-      "access": "private",
+      "access": "protected",
       "overriddenFrom": "qx.core.MLogging",
       "jsdoc": {
         "@description": [
@@ -1621,7 +1621,7 @@
       "abstract": false,
       "mixin": true,
       "inherited": true,
-      "access": "private",
+      "access": "protected",
       "overriddenFrom": "qx.core.MObjectId",
       "jsdoc": {
         "@description": [
@@ -1820,7 +1820,7 @@
       "abstract": false,
       "mixin": true,
       "inherited": true,
-      "access": "private",
+      "access": "protected",
       "overriddenFrom": "qx.core.MObjectId",
       "jsdoc": {
         "@description": [

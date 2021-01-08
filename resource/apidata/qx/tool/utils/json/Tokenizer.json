@@ -13,7 +13,7 @@
         "column": 0
       },
       "end": {
-        "line": 597,
+        "line": 598,
         "column": 3
       }
     },
@@ -485,7 +485,7 @@
       "abstract": false,
       "mixin": true,
       "inherited": true,
-      "access": "private",
+      "access": "protected",
       "overriddenFrom": "qx.core.MLogging",
       "jsdoc": {
         "@description": [
@@ -1335,7 +1335,7 @@
       "abstract": false,
       "mixin": true,
       "inherited": true,
-      "access": "private",
+      "access": "protected",
       "overriddenFrom": "qx.core.MObjectId",
       "jsdoc": {
         "@description": [
@@ -1534,7 +1534,7 @@
       "abstract": false,
       "mixin": true,
       "inherited": true,
-      "access": "private",
+      "access": "protected",
       "overriddenFrom": "qx.core.MObjectId",
       "jsdoc": {
         "@description": [
@@ -3466,14 +3466,7 @@
           "column": 5
         }
       },
-      "jsdoc": {
-        "@description": [
-          {
-            "name": "@description",
-            "body": "<p>HELPERS</p>"
-          }
-        ]
-      },
+      "jsdoc": {},
       "type": "function",
       "access": "public"
     },
@@ -3530,14 +3523,7 @@
           "column": 5
         }
       },
-      "jsdoc": {
-        "@description": [
-          {
-            "name": "@description",
-            "body": "<p>ERRORS</p>"
-          }
-        ]
-      },
+      "jsdoc": {},
       "type": "function",
       "access": "public"
     },
@@ -3552,14 +3538,7 @@
           "column": 5
         }
       },
-      "jsdoc": {
-        "@description": [
-          {
-            "name": "@description",
-            "body": "<p>PARSERS</p>"
-          }
-        ]
-      },
+      "jsdoc": {},
       "type": "function",
       "access": "public"
     },
@@ -3612,7 +3591,7 @@
           "column": 4
         },
         "end": {
-          "line": 472,
+          "line": 473,
           "column": 5
         }
       },
@@ -3622,11 +3601,11 @@
     "parseNumber": {
       "location": {
         "start": {
-          "line": 474,
+          "line": 475,
           "column": 4
         },
         "end": {
-          "line": 594,
+          "line": 595,
           "column": 5
         }
       },

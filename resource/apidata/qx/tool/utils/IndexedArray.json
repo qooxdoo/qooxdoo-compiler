@@ -21,10 +21,6 @@
       "@description": [
         {
           "name": "@description",
-          "body": "<pre><code>*****************************************************************\nqooxdoo-compiler - node.js based replacement for the Qooxdoo python\ntoolchain\nhttps://github.com/qooxdoo/qooxdoo-compiler\nCopyright:\n  2011-2017 Zenesis Limited, http://www.zenesis.com\nLicense:\n  MIT: https://opensource.org/licenses/MIT\n  This software is provided under the same licensing terms as Qooxdoo,\n  please see the LICENSE file in the Qooxdoo project's top-level directory\n  for details.\nAuthors:\n</code></pre>\n<ul>\n<li>John Spackman (john.spackman<code>zenesis.com, </code>johnspackman)\n<strong><em><em></em></strong><strong><em></em></em></strong><strong><em><em></em></strong><strong><em></em></em></strong><strong><em><em></em></strong><strong><em></em></em></strong><strong><em><em></em></strong><strong><em></em></em></strong><strong><em><em></em></strong></em>*</li>\n</ul>"
-        },
-        {
-          "name": "@description",
           "body": "<p>Provides a simple, array like interface which uses a lookup to provide indexed\n access.  Each element must be a string</p>"
         }
       ]
@@ -110,7 +106,7 @@
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__array": {
       "location": {
@@ -124,7 +120,7 @@
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__lookup": {
       "location": {
@@ -138,7 +134,7 @@
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__removed": {
       "location": {
@@ -152,7 +148,7 @@
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "push": {
       "location": {
@@ -884,7 +880,7 @@
       "abstract": false,
       "mixin": true,
       "inherited": true,
-      "access": "private",
+      "access": "protected",
       "overriddenFrom": "qx.core.MLogging",
       "jsdoc": {
         "@description": [
@@ -1734,7 +1730,7 @@
       "abstract": false,
       "mixin": true,
       "inherited": true,
-      "access": "private",
+      "access": "protected",
       "overriddenFrom": "qx.core.MObjectId",
       "jsdoc": {
         "@description": [
@@ -1933,7 +1929,7 @@
       "abstract": false,
       "mixin": true,
       "inherited": true,
-      "access": "private",
+      "access": "protected",
       "overriddenFrom": "qx.core.MObjectId",
       "jsdoc": {
         "@description": [

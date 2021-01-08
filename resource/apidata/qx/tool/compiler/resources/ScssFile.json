@@ -128,7 +128,7 @@
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__filename": {
       "location": {
@@ -142,7 +142,7 @@
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__outputDir": {
       "location": {
@@ -156,7 +156,7 @@
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__absLocations": {
       "location": {
@@ -170,7 +170,7 @@
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__sourceFiles": {
       "location": {
@@ -184,7 +184,7 @@
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__importAs": {
       "location": {
@@ -198,7 +198,7 @@
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "compile": {
       "location": {
@@ -307,7 +307,7 @@
         }
       },
       "type": "function",
-      "access": "private"
+      "access": "protected"
     },
     "bind": {
       "type": "function",
@@ -697,7 +697,7 @@
       "abstract": false,
       "mixin": true,
       "inherited": true,
-      "access": "private",
+      "access": "protected",
       "overriddenFrom": "qx.core.MLogging",
       "jsdoc": {
         "@description": [
@@ -1547,7 +1547,7 @@
       "abstract": false,
       "mixin": true,
       "inherited": true,
-      "access": "private",
+      "access": "protected",
       "overriddenFrom": "qx.core.MObjectId",
       "jsdoc": {
         "@description": [
@@ -1746,7 +1746,7 @@
       "abstract": false,
       "mixin": true,
       "inherited": true,
-      "access": "private",
+      "access": "protected",
       "overriddenFrom": "qx.core.MObjectId",
       "jsdoc": {
         "@description": [

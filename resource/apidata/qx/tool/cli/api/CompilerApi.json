@@ -106,7 +106,7 @@
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "beforeTests": {
       "location": {

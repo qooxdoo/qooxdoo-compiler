@@ -13,7 +13,7 @@
         "column": 0
       },
       "end": {
-        "line": 1167,
+        "line": 1218,
         "column": 3
       }
     },
@@ -35,7 +35,7 @@
           "column": 4
         },
         "end": {
-          "line": 175,
+          "line": 189,
           "column": 5
         }
       },
@@ -45,11 +45,11 @@
     "getYargsCommand": {
       "location": {
         "start": {
-          "line": 177,
+          "line": 191,
           "column": 4
         },
         "end": {
-          "line": 183,
+          "line": 197,
           "column": 5
         }
       },
@@ -61,11 +61,11 @@
     "writingApplications": {
       "location": {
         "start": {
-          "line": 190,
+          "line": 206,
           "column": 4
         },
         "end": {
-          "line": 190,
+          "line": 206,
           "column": 48
         }
       },
@@ -73,7 +73,7 @@
         "@description": [
           {
             "name": "@description",
-            "body": "<ul>\n<li>fired when application writing starts</li>\n</ul>"
+            "body": "<p>Fired when application writing starts</p>"
           }
         ]
       },
@@ -83,11 +83,11 @@
     "writingApplication": {
       "location": {
         "start": {
-          "line": 196,
+          "line": 214,
           "column": 4
         },
         "end": {
-          "line": 196,
+          "line": 214,
           "column": 46
         }
       },
@@ -95,7 +95,7 @@
         "@description": [
           {
             "name": "@description",
-            "body": "<p>fired when writing of single application starts\n  data:\n   app {Application}</p>"
+            "body": "<p>Fired when writing of single application starts; data is an object containing:\n   maker {qx.tool.compiler.makers.Maker}\n   target {qx.tool.compiler.targets.Target}\n   appMeta {qx.tool.compiler.targets.meta.ApplicationMeta}</p>"
           }
         ]
       },
@@ -105,11 +105,11 @@
     "writtenApplication": {
       "location": {
         "start": {
-          "line": 202,
+          "line": 224,
           "column": 4
         },
         "end": {
-          "line": 202,
+          "line": 224,
           "column": 46
         }
       },
@@ -117,7 +117,7 @@
         "@description": [
           {
             "name": "@description",
-            "body": "<p>fired when writing of single application is written\n  data:\n   app {Application}</p>"
+            "body": "<p>Fired when writing of single application is complete; data is an object containing:\n   maker {qx.tool.compiler.makers.Maker}\n   target {qx.tool.compiler.targets.Target}\n   appMeta {qx.tool.compiler.targets.meta.ApplicationMeta}\n Note that target.getAppMeta() will return null after this event has been fired</p>"
           }
         ]
       },
@@ -127,33 +127,33 @@
     "writtenApplications": {
       "location": {
         "start": {
-          "line": 205,
+          "line": 236,
           "column": 4
         },
         "end": {
-          "line": 205,
-          "column": 48
+          "line": 236,
+          "column": 47
         }
       },
       "jsdoc": {
         "@description": [
           {
             "name": "@description",
-            "body": "<ul>\n<li>fired after writing of all applications</li>\n</ul>"
+            "body": "<p>Fired after writing of all applications; data is an object containing an array,\n each of which has previously been passed with <code>writeApplication</code>:\n   maker {qx.tool.compiler.makers.Maker}\n   target {qx.tool.compiler.targets.Target}\n   appMeta {qx.tool.compiler.targets.meta.ApplicationMeta}\n Note that target.getAppMeta() will return null after this event has been fired</p>"
           }
         ]
       },
       "name": "writtenApplications",
-      "type": "qx.event.type.Event"
+      "type": "qx.event.type.Data"
     },
     "compilingClass": {
       "location": {
         "start": {
-          "line": 216,
+          "line": 247,
           "column": 4
         },
         "end": {
-          "line": 216,
+          "line": 247,
           "column": 42
         }
       },
@@ -171,11 +171,11 @@
     "compiledClass": {
       "location": {
         "start": {
-          "line": 226,
+          "line": 257,
           "column": 4
         },
         "end": {
-          "line": 226,
+          "line": 257,
           "column": 41
         }
       },
@@ -193,11 +193,11 @@
     "saveDatabase": {
       "location": {
         "start": {
-          "line": 234,
+          "line": 265,
           "column": 4
         },
         "end": {
-          "line": 234,
+          "line": 265,
           "column": 40
         }
       },
@@ -215,11 +215,11 @@
     "checkEnvironment": {
       "location": {
         "start": {
-          "line": 243,
+          "line": 274,
           "column": 4
         },
         "end": {
-          "line": 243,
+          "line": 274,
           "column": 44
         }
       },
@@ -237,11 +237,11 @@
     "making": {
       "location": {
         "start": {
-          "line": 248,
+          "line": 279,
           "column": 4
         },
         "end": {
-          "line": 248,
+          "line": 279,
           "column": 35
         }
       },
@@ -259,11 +259,11 @@
     "made": {
       "location": {
         "start": {
-          "line": 253,
+          "line": 284,
           "column": 4
         },
         "end": {
-          "line": 253,
+          "line": 284,
           "column": 33
         }
       },
@@ -281,11 +281,11 @@
     "minifyingApplication": {
       "location": {
         "start": {
-          "line": 263,
+          "line": 294,
           "column": 4
         },
         "end": {
-          "line": 263,
+          "line": 294,
           "column": 48
         }
       },
@@ -303,11 +303,11 @@
     "minifiedApplication": {
       "location": {
         "start": {
-          "line": 273,
+          "line": 304,
           "column": 4
         },
         "end": {
-          "line": 273,
+          "line": 304,
           "column": 47
         }
       },
@@ -327,81 +327,81 @@
     "__gauge": {
       "location": {
         "start": {
-          "line": 278,
+          "line": 309,
           "column": 4
         },
         "end": {
-          "line": 278,
+          "line": 309,
           "column": 17
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__makers": {
       "location": {
         "start": {
-          "line": 279,
+          "line": 310,
           "column": 4
         },
         "end": {
-          "line": 279,
+          "line": 310,
           "column": 18
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__config": {
       "location": {
         "start": {
-          "line": 280,
+          "line": 311,
           "column": 4
         },
         "end": {
-          "line": 280,
+          "line": 311,
           "column": 18
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__libraries": {
       "location": {
         "start": {
-          "line": 281,
+          "line": 312,
           "column": 4
         },
         "end": {
-          "line": 281,
+          "line": 312,
           "column": 21
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__outputDirWasCreated": {
       "location": {
         "start": {
-          "line": 282,
+          "line": 313,
           "column": 4
         },
         "end": {
-          "line": 282,
+          "line": 313,
           "column": 32
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "process": {
       "location": {
         "start": {
-          "line": 287,
+          "line": 318,
           "column": 4
         },
         "end": {
-          "line": 409,
+          "line": 434,
           "column": 5
         }
       },
@@ -429,11 +429,11 @@
     "_loadConfigAndStartMaking": {
       "location": {
         "start": {
-          "line": 416,
+          "line": 441,
           "column": 4
         },
         "end": {
-          "line": 509,
+          "line": 556,
           "column": 5
         }
       },
@@ -459,11 +459,11 @@
     "createMakersFromConfig": {
       "location": {
         "start": {
-          "line": 518,
+          "line": 565,
           "column": 4
         },
         "end": {
-          "line": 943,
+          "line": 994,
           "column": 5
         }
       },
@@ -495,11 +495,11 @@
     "__checkDependencies": {
       "location": {
         "start": {
-          "line": 954,
+          "line": 1005,
           "column": 4
         },
         "end": {
-          "line": 1054,
+          "line": 1105,
           "column": 5
         }
       },
@@ -545,16 +545,16 @@
         ]
       },
       "type": "function",
-      "access": "private"
+      "access": "protected"
     },
     "resolveTargetClass": {
       "location": {
         "start": {
-          "line": 1062,
+          "line": 1113,
           "column": 4
         },
         "end": {
-          "line": 1088,
+          "line": 1139,
           "column": 5
         }
       },
@@ -586,11 +586,11 @@
     "getMakers": {
       "location": {
         "start": {
-          "line": 1095,
+          "line": 1146,
           "column": 4
         },
         "end": {
-          "line": 1097,
+          "line": 1148,
           "column": 5
         }
       },
@@ -616,11 +616,11 @@
     "getMaker": {
       "location": {
         "start": {
-          "line": 1108,
+          "line": 1159,
           "column": 4
         },
         "end": {
-          "line": 1113,
+          "line": 1164,
           "column": 5
         }
       },
@@ -652,11 +652,11 @@
     "getMakersForApp": {
       "location": {
         "start": {
-          "line": 1121,
+          "line": 1172,
           "column": 4
         },
         "end": {
-          "line": 1126,
+          "line": 1177,
           "column": 5
         }
       },
@@ -691,11 +691,11 @@
     "_getConfig": {
       "location": {
         "start": {
-          "line": 1131,
+          "line": 1182,
           "column": 4
         },
         "end": {
-          "line": 1133,
+          "line": 1184,
           "column": 5
         }
       },
@@ -713,11 +713,11 @@
     "getLibraries": {
       "location": {
         "start": {
-          "line": 1140,
+          "line": 1191,
           "column": 4
         },
         "end": {
-          "line": 1142,
+          "line": 1193,
           "column": 5
         }
       },
@@ -949,11 +949,11 @@
   "defer": {
     "location": {
       "start": {
-        "line": 1145,
+        "line": 1196,
         "column": 9
       },
       "end": {
-        "line": 1166,
+        "line": 1217,
         "column": 3
       }
     },

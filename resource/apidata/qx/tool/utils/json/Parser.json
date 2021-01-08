@@ -21,10 +21,6 @@
       "@description": [
         {
           "name": "@description",
-          "body": "<pre><code>*****************************************************************\nqooxdoo-compiler - node.js based replacement for the Qooxdoo python\ntoolchain\nhttps://github.com/qooxdoo/qooxdoo-compiler\nCopyright:\n  2011-2019 Zenesis Limited, http://www.zenesis.com\n  Vlad Trushin &lt;monospectr@mail.ru&gt; (https://github.com/vtrushin)\nLicense:\n  MIT: https://opensource.org/licenses/MIT\n  This software is provided under the same licensing terms as Qooxdoo,\n  please see the LICENSE file in the Qooxdoo project's top-level directory\n  for details.\nAuthors:\n</code></pre>\n<ul>\n<li>John Spackman (john.spackman<code>zenesis.com, </code>johnspackman)</li>\n<li>Vlad Trushin (monospectr<code>mail.ru, </code>vtrushin)\n<strong><em><em></em></strong><strong><em></em></em></strong><strong><em><em></em></strong><strong><em></em></em></strong><strong><em><em></em></strong><strong><em></em></em></strong><strong><em><em></em></strong><strong><em></em></em></strong><strong><em><em></em></strong></em>*</li>\n</ul>"
-        },
-        {
-          "name": "@description",
           "body": "<p>Parser, based on json-to-ast by Vlad trushin</p>"
         }
       ]

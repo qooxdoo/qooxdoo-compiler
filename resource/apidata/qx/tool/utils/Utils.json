@@ -357,20 +357,7 @@
           "column": 5
         }
       },
-      "jsdoc": {
-        "@description": [
-          {
-            "name": "@description",
-            "body": "<p>Function to test if an object is a plain object, i.e. is constructed</p>\n<ul>\n<li>by the built-in Object constructor and inherits directly from Object.prototype</li>\n<li>or null. Some built-in objects pass the test, e.g. Math which is a plain object</li>\n<li>and some host or exotic objects may pass also.\n*</li>\n<li>@param {} obj - value to test</li>\n<li>@returns {Boolean} true if passes tests, false otherwise</li>\n</ul>"
-          }
-        ],
-        "@see": [
-          {
-            "name": "@see",
-            "body": "https://stackoverflow.com/a/5878101/2979698"
-          }
-        ]
-      },
+      "jsdoc": {},
       "type": "function",
       "access": "public"
     },
@@ -822,7 +809,7 @@
       "abstract": false,
       "mixin": true,
       "inherited": true,
-      "access": "private",
+      "access": "protected",
       "overriddenFrom": "qx.core.MLogging",
       "jsdoc": {
         "@description": [
@@ -1672,7 +1659,7 @@
       "abstract": false,
       "mixin": true,
       "inherited": true,
-      "access": "private",
+      "access": "protected",
       "overriddenFrom": "qx.core.MObjectId",
       "jsdoc": {
         "@description": [
@@ -1871,7 +1858,7 @@
       "abstract": false,
       "mixin": true,
       "inherited": true,
-      "access": "private",
+      "access": "protected",
       "overriddenFrom": "qx.core.MObjectId",
       "jsdoc": {
         "@description": [

@@ -75,7 +75,7 @@
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__sourceMapOffsets": {
       "location": {
@@ -89,7 +89,7 @@
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "addEmbeddedJs": {
       "location": {

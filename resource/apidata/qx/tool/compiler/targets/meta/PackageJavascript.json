@@ -83,7 +83,7 @@
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "writeSourceCodeToStream": {
       "location": {

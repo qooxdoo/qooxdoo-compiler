@@ -86,7 +86,7 @@
         ]
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "install": {
       "location": {
@@ -271,7 +271,7 @@
         ]
       },
       "type": "function",
-      "access": "private"
+      "access": "protected"
     },
     "__getUriInfo": {
       "location": {
@@ -313,7 +313,7 @@
         ]
       },
       "type": "function",
-      "access": "private"
+      "access": "protected"
     },
     "__installFromRelease": {
       "location": {
@@ -372,7 +372,7 @@
         ]
       },
       "type": "function",
-      "access": "private"
+      "access": "protected"
     },
     "__installFromTree": {
       "location": {
@@ -428,7 +428,7 @@
         ]
       },
       "type": "function",
-      "access": "private"
+      "access": "protected"
     },
     "__installFromPath": {
       "location": {
@@ -487,7 +487,7 @@
         ]
       },
       "type": "function",
-      "access": "private"
+      "access": "protected"
     },
     "__updateInstalledLibraryData": {
       "location": {
@@ -550,7 +550,7 @@
         ]
       },
       "type": "function",
-      "access": "private"
+      "access": "protected"
     },
     "__installDependenciesFromPath": {
       "location": {
@@ -586,7 +586,7 @@
         ]
       },
       "type": "function",
-      "access": "private"
+      "access": "protected"
     },
     "__installDependenciesFromManifest": {
       "location": {
@@ -622,7 +622,7 @@
         ]
       },
       "type": "function",
-      "access": "private"
+      "access": "protected"
     },
     "__getHighestCompatibleVersion": {
       "location": {
@@ -674,7 +674,7 @@
         ]
       },
       "type": "function",
-      "access": "private"
+      "access": "protected"
     },
     "__installApplication": {
       "location": {
@@ -710,7 +710,7 @@
         ]
       },
       "type": "function",
-      "access": "private"
+      "access": "protected"
     },
     "__downloadLibrariesInLockfile": {
       "location": {
@@ -746,7 +746,7 @@
         ]
       },
       "type": "function",
-      "access": "private"
+      "access": "protected"
     },
     "__download": {
       "location": {
@@ -805,7 +805,7 @@
         ]
       },
       "type": "function",
-      "access": "private"
+      "access": "protected"
     },
     "getQxOwner": {
       "type": "function",

@@ -13,7 +13,7 @@
         "column": 0
       },
       "end": {
-        "line": 3681,
+        "line": 2664,
         "column": 3
       }
     },
@@ -34,7 +34,7 @@
         "column": 13
       },
       "end": {
-        "line": 237,
+        "line": 238,
         "column": 3
       }
     },
@@ -74,403 +74,417 @@
     "__analyser": {
       "location": {
         "start": {
-          "line": 241,
+          "line": 242,
           "column": 4
         },
         "end": {
-          "line": 241,
+          "line": 242,
           "column": 20
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__className": {
       "location": {
         "start": {
-          "line": 242,
+          "line": 243,
           "column": 4
         },
         "end": {
-          "line": 242,
+          "line": 243,
           "column": 21
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__numClassesDefined": {
       "location": {
         "start": {
-          "line": 243,
+          "line": 244,
           "column": 4
         },
         "end": {
-          "line": 243,
+          "line": 244,
           "column": 26
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__library": {
       "location": {
         "start": {
-          "line": 244,
+          "line": 245,
           "column": 4
         },
         "end": {
-          "line": 244,
+          "line": 245,
           "column": 19
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__requiredClasses": {
       "location": {
         "start": {
-          "line": 245,
+          "line": 246,
           "column": 4
         },
         "end": {
-          "line": 245,
+          "line": 246,
           "column": 27
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__environmentChecks": {
       "location": {
         "start": {
-          "line": 246,
+          "line": 247,
           "column": 4
         },
         "end": {
-          "line": 246,
+          "line": 247,
           "column": 29
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__requiredAssets": {
       "location": {
         "start": {
-          "line": 247,
+          "line": 248,
           "column": 4
         },
         "end": {
-          "line": 247,
+          "line": 248,
           "column": 26
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__translateMessageIds": {
       "location": {
         "start": {
-          "line": 248,
+          "line": 249,
           "column": 4
         },
         "end": {
-          "line": 248,
+          "line": 249,
           "column": 31
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__scope": {
       "location": {
         "start": {
-          "line": 249,
+          "line": 250,
           "column": 4
         },
         "end": {
-          "line": 249,
+          "line": 250,
           "column": 17
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__inDefer": {
       "location": {
         "start": {
-          "line": 250,
+          "line": 251,
           "column": 4
         },
         "end": {
-          "line": 250,
+          "line": 251,
           "column": 20
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__inConstruct": {
       "location": {
         "start": {
-          "line": 251,
+          "line": 252,
           "column": 4
         },
         "end": {
-          "line": 251,
+          "line": 252,
           "column": 24
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__taskQueue": {
       "location": {
         "start": {
-          "line": 252,
+          "line": 253,
           "column": 4
         },
         "end": {
-          "line": 252,
+          "line": 253,
           "column": 21
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__taskQueueDrains": {
       "location": {
         "start": {
-          "line": 253,
+          "line": 254,
           "column": 4
         },
         "end": {
-          "line": 253,
+          "line": 254,
           "column": 27
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__markers": {
       "location": {
         "start": {
-          "line": 254,
+          "line": 255,
           "column": 4
         },
         "end": {
-          "line": 254,
+          "line": 255,
           "column": 19
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__haveMarkersFor": {
       "location": {
         "start": {
-          "line": 255,
+          "line": 256,
           "column": 4
         },
         "end": {
-          "line": 255,
+          "line": 256,
           "column": 26
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__classMeta": {
       "location": {
         "start": {
-          "line": 256,
+          "line": 257,
           "column": 4
         },
         "end": {
-          "line": 256,
+          "line": 257,
           "column": 21
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__metaStack": {
       "location": {
         "start": {
-          "line": 257,
+          "line": 258,
           "column": 4
         },
         "end": {
-          "line": 257,
+          "line": 258,
           "column": 21
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__metaDefinitions": {
       "location": {
         "start": {
-          "line": 258,
+          "line": 259,
           "column": 4
         },
         "end": {
-          "line": 258,
+          "line": 259,
           "column": 27
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__fatalCompileError": {
       "location": {
         "start": {
-          "line": 259,
+          "line": 260,
           "column": 4
         },
         "end": {
-          "line": 259,
+          "line": 260,
           "column": 30
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__translations": {
       "location": {
         "start": {
-          "line": 260,
+          "line": 261,
           "column": 4
         },
         "end": {
-          "line": 260,
+          "line": 261,
           "column": 24
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__dbClassInfo": {
       "location": {
         "start": {
-          "line": 261,
+          "line": 262,
           "column": 4
         },
         "end": {
-          "line": 261,
+          "line": 262,
           "column": 23
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__hasDefer": {
       "location": {
         "start": {
-          "line": 262,
+          "line": 263,
           "column": 4
         },
         "end": {
-          "line": 262,
+          "line": 263,
           "column": 20
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__definingType": {
       "location": {
         "start": {
-          "line": 263,
+          "line": 264,
           "column": 4
         },
         "end": {
-          "line": 263,
+          "line": 264,
           "column": 24
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__sourceFilename": {
       "location": {
         "start": {
-          "line": 264,
+          "line": 265,
           "column": 4
         },
         "end": {
-          "line": 264,
+          "line": 265,
           "column": 26
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__taskQueueDrain": {
       "location": {
         "start": {
-          "line": 265,
+          "line": 266,
           "column": 4
         },
         "end": {
-          "line": 265,
+          "line": 266,
           "column": 26
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__globalSymbols": {
       "location": {
         "start": {
-          "line": 266,
+          "line": 267,
           "column": 4
         },
         "end": {
-          "line": 266,
+          "line": 267,
           "column": 25
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__privates": {
       "location": {
         "start": {
-          "line": 267,
+          "line": 268,
           "column": 4
         },
         "end": {
-          "line": 267,
+          "line": 268,
           "column": 20
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
-    "__externals": {
+    "__blockedPrivates": {
       "location": {
         "start": {
-          "line": 268,
+          "line": 269,
           "column": 4
         },
         "end": {
-          "line": 268,
-          "column": 21
+          "line": 269,
+          "column": 27
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
-    "_onTaskQueueDrain": {
+    "__externals": {
       "location": {
         "start": {
           "line": 270,
           "column": 4
         },
         "end": {
-          "line": 276,
+          "line": 270,
+          "column": 21
+        }
+      },
+      "type": "variable",
+      "access": "protected"
+    },
+    "_onTaskQueueDrain": {
+      "location": {
+        "start": {
+          "line": 272,
+          "column": 4
+        },
+        "end": {
+          "line": 278,
           "column": 5
         }
       },
@@ -480,11 +494,11 @@
     "_waitForTaskQueueDrain": {
       "location": {
         "start": {
-          "line": 278,
+          "line": 280,
           "column": 4
         },
         "end": {
-          "line": 284,
+          "line": 286,
           "column": 5
         }
       },
@@ -494,11 +508,11 @@
     "_queueTask": {
       "location": {
         "start": {
-          "line": 286,
+          "line": 288,
           "column": 4
         },
         "end": {
-          "line": 288,
+          "line": 290,
           "column": 5
         }
       },
@@ -508,11 +522,11 @@
     "getSourcePath": {
       "location": {
         "start": {
-          "line": 294,
+          "line": 296,
           "column": 4
         },
         "end": {
-          "line": 296,
+          "line": 298,
           "column": 5
         }
       },
@@ -538,11 +552,11 @@
     "getOutputPath": {
       "location": {
         "start": {
-          "line": 302,
+          "line": 304,
           "column": 4
         },
         "end": {
-          "line": 304,
+          "line": 306,
           "column": 5
         }
       },
@@ -568,11 +582,11 @@
     "load": {
       "location": {
         "start": {
-          "line": 312,
+          "line": 314,
           "column": 4
         },
         "end": {
-          "line": 420,
+          "line": 422,
           "column": 5
         }
       },
@@ -599,11 +613,11 @@
     "writeDbInfo": {
       "location": {
         "start": {
-          "line": 427,
+          "line": 429,
           "column": 4
         },
         "end": {
-          "line": 437,
+          "line": 439,
           "column": 5
         }
       },
@@ -627,11 +641,11 @@
     "_compileDbClassInfo": {
       "location": {
         "start": {
-          "line": 442,
+          "line": 444,
           "column": 4
         },
         "end": {
-          "line": 595,
+          "line": 597,
           "column": 5
         }
       },
@@ -649,11 +663,11 @@
     "getOuterClassMeta": {
       "location": {
         "start": {
-          "line": 600,
+          "line": 602,
           "column": 4
         },
         "end": {
-          "line": 608,
+          "line": 610,
           "column": 5
         }
       },
@@ -671,11 +685,11 @@
     "_babelClassPlugins": {
       "location": {
         "start": {
-          "line": 613,
+          "line": 615,
           "column": 4
         },
         "end": {
-          "line": 1802,
+          "line": 1822,
           "column": 5
         }
       },
@@ -693,11 +707,11 @@
     "__pushMeta": {
       "location": {
         "start": {
-          "line": 1810,
+          "line": 1830,
           "column": 4
         },
         "end": {
-          "line": 1825,
+          "line": 1845,
           "column": 5
         }
       },
@@ -719,16 +733,16 @@
         ]
       },
       "type": "function",
-      "access": "private"
+      "access": "protected"
     },
     "__popMeta": {
       "location": {
         "start": {
-          "line": 1830,
+          "line": 1850,
           "column": 4
         },
         "end": {
-          "line": 1841,
+          "line": 1861,
           "column": 5
         }
       },
@@ -741,16 +755,16 @@
         ]
       },
       "type": "function",
-      "access": "private"
+      "access": "protected"
     },
     "pushScope": {
       "location": {
         "start": {
-          "line": 1846,
+          "line": 1866,
           "column": 4
         },
         "end": {
-          "line": 1855,
+          "line": 1875,
           "column": 5
         }
       },
@@ -768,11 +782,11 @@
     "popScope": {
       "location": {
         "start": {
-          "line": 1860,
+          "line": 1880,
           "column": 4
         },
         "end": {
-          "line": 1878,
+          "line": 1898,
           "column": 5
         }
       },
@@ -790,11 +804,11 @@
     "isLoadScope": {
       "location": {
         "start": {
-          "line": 1885,
+          "line": 1905,
           "column": 4
         },
         "end": {
-          "line": 1887,
+          "line": 1907,
           "column": 5
         }
       },
@@ -820,11 +834,11 @@
     "hasDefer": {
       "location": {
         "start": {
-          "line": 1894,
+          "line": 1914,
           "column": 4
         },
         "end": {
-          "line": 1896,
+          "line": 1916,
           "column": 5
         }
       },
@@ -850,11 +864,11 @@
     "addDeclaration": {
       "location": {
         "start": {
-          "line": 1905,
+          "line": 1925,
           "column": 4
         },
         "end": {
-          "line": 1917,
+          "line": 1937,
           "column": 5
         }
       },
@@ -888,11 +902,11 @@
     "hasDeclaration": {
       "location": {
         "start": {
-          "line": 1926,
+          "line": 1946,
           "column": 4
         },
         "end": {
-          "line": 1937,
+          "line": 1957,
           "column": 5
         }
       },
@@ -926,11 +940,11 @@
     "addReference": {
       "location": {
         "start": {
-          "line": 1944,
+          "line": 1964,
           "column": 4
         },
         "end": {
-          "line": 1983,
+          "line": 2003,
           "column": 5
         }
       },
@@ -962,11 +976,11 @@
     "encodePrivate": {
       "location": {
         "start": {
-          "line": 1991,
+          "line": 2013,
           "column": 4
         },
         "end": {
-          "line": 2029,
+          "line": 2062,
           "column": 5
         }
       },
@@ -984,6 +998,20 @@
             "paramName": "name",
             "description": " symbol name",
             "type": "String"
+          },
+          {
+            "name": "@param",
+            "body": "isIdentifier {boolean} whether this is usage as an identifier (and not in a string literal)",
+            "paramName": "isIdentifier",
+            "description": " whether this is usage as an identifier (and not in a string literal)",
+            "type": "boolean"
+          },
+          {
+            "name": "@param",
+            "body": "location {Location} the location of the symbol",
+            "paramName": "location",
+            "description": " the location of the symbol",
+            "type": "Location"
           }
         ],
         "@return": [
@@ -1001,11 +1029,11 @@
     "deleteReference": {
       "location": {
         "start": {
-          "line": 2035,
+          "line": 2068,
           "column": 4
         },
         "end": {
-          "line": 2043,
+          "line": 2076,
           "column": 5
         }
       },
@@ -1031,11 +1059,11 @@
     "addExternal": {
       "location": {
         "start": {
-          "line": 2050,
+          "line": 2083,
           "column": 4
         },
         "end": {
-          "line": 2054,
+          "line": 2087,
           "column": 5
         }
       },
@@ -1062,11 +1090,11 @@
     "addIgnore": {
       "location": {
         "start": {
-          "line": 2060,
+          "line": 2093,
           "column": 4
         },
         "end": {
-          "line": 2078,
+          "line": 2111,
           "column": 5
         }
       },
@@ -1093,11 +1121,11 @@
     "isIgnored": {
       "location": {
         "start": {
-          "line": 2085,
+          "line": 2118,
           "column": 4
         },
         "end": {
-          "line": 2101,
+          "line": 2134,
           "column": 5
         }
       },
@@ -1132,11 +1160,11 @@
     "removeIgnore": {
       "location": {
         "start": {
-          "line": 2107,
+          "line": 2140,
           "column": 4
         },
         "end": {
-          "line": 2114,
+          "line": 2147,
           "column": 5
         }
       },
@@ -1163,11 +1191,11 @@
     "addEnvCheck": {
       "location": {
         "start": {
-          "line": 2122,
+          "line": 2155,
           "column": 4
         },
         "end": {
-          "line": 2153,
+          "line": 2197,
           "column": 5
         }
       },
@@ -1201,11 +1229,11 @@
     "addMarker": {
       "location": {
         "start": {
-          "line": 2162,
+          "line": 2206,
           "column": 4
         },
         "end": {
-          "line": 2216,
+          "line": 2260,
           "column": 5
         }
       },
@@ -1243,11 +1271,11 @@
     "_requireClass": {
       "location": {
         "start": {
-          "line": 2229,
+          "line": 2273,
           "column": 4
         },
         "end": {
-          "line": 2310,
+          "line": 2354,
           "column": 5
         }
       },
@@ -1290,11 +1318,11 @@
     "_requireAsset": {
       "location": {
         "start": {
-          "line": 2316,
+          "line": 2360,
           "column": 4
         },
         "end": {
-          "line": 2323,
+          "line": 2367,
           "column": 5
         }
       },
@@ -1320,11 +1348,11 @@
     "getAssets": {
       "location": {
         "start": {
-          "line": 2329,
+          "line": 2373,
           "column": 4
         },
         "end": {
-          "line": 2331,
+          "line": 2375,
           "column": 5
         }
       },
@@ -1350,11 +1378,11 @@
     "__findProperty": {
       "location": {
         "start": {
-          "line": 2341,
+          "line": 2385,
           "column": 4
         },
         "end": {
-          "line": 2354,
+          "line": 2398,
           "column": 5
         }
       },
@@ -1389,16 +1417,16 @@
         ]
       },
       "type": "function",
-      "access": "private"
+      "access": "protected"
     },
     "getRequiredClasses": {
       "location": {
         "start": {
-          "line": 2361,
+          "line": 2405,
           "column": 4
         },
         "end": {
-          "line": 2363,
+          "line": 2407,
           "column": 5
         }
       },
@@ -1424,11 +1452,11 @@
     "getUnresolvedSymbols": {
       "location": {
         "start": {
-          "line": 2370,
+          "line": 2414,
           "column": 4
         },
         "end": {
-          "line": 2372,
+          "line": 2416,
           "column": 5
         }
       },
@@ -1454,11 +1482,11 @@
     "getClassName": {
       "location": {
         "start": {
-          "line": 2378,
+          "line": 2422,
           "column": 4
         },
         "end": {
-          "line": 2380,
+          "line": 2424,
           "column": 5
         }
       },
@@ -1869,7 +1897,7 @@
       "abstract": false,
       "mixin": true,
       "inherited": true,
-      "access": "private",
+      "access": "protected",
       "overriddenFrom": "qx.core.MLogging",
       "jsdoc": {
         "@description": [
@@ -2719,7 +2747,7 @@
       "abstract": false,
       "mixin": true,
       "inherited": true,
-      "access": "private",
+      "access": "protected",
       "overriddenFrom": "qx.core.MObjectId",
       "jsdoc": {
         "@description": [
@@ -2918,7 +2946,7 @@
       "abstract": false,
       "mixin": true,
       "inherited": true,
-      "access": "private",
+      "access": "protected",
       "overriddenFrom": "qx.core.MObjectId",
       "jsdoc": {
         "@description": [
@@ -4757,11 +4785,11 @@
   "defer": {
     "location": {
       "start": {
-        "line": 2384,
+        "line": 2428,
         "column": 2
       },
       "end": {
-        "line": 2391,
+        "line": 2435,
         "column": 3
       }
     }
@@ -4770,11 +4798,11 @@
     "getSourcePath": {
       "location": {
         "start": {
-          "line": 2401,
+          "line": 2445,
           "column": 4
         },
         "end": {
-          "line": 2403,
+          "line": 2447,
           "column": 5
         }
       },
@@ -4810,11 +4838,11 @@
     "getOutputPath": {
       "location": {
         "start": {
-          "line": 2412,
+          "line": 2456,
           "column": 4
         },
         "end": {
-          "line": 2415,
+          "line": 2459,
           "column": 5
         }
       },
@@ -4850,11 +4878,11 @@
     "getNamespace": {
       "location": {
         "start": {
-          "line": 2422,
+          "line": 2466,
           "column": 4
         },
         "end": {
-          "line": 2425,
+          "line": 2469,
           "column": 5
         }
       },
@@ -4888,11 +4916,11 @@
     "JSX_OPTIONS": {
       "location": {
         "start": {
-          "line": 2436,
+          "line": 2480,
           "column": 4
         },
         "end": {
-          "line": 2439,
+          "line": 2483,
           "column": 5
         }
       },
@@ -4910,11 +4938,11 @@
     "DEFER_SAFE_SYMBOLS": {
       "location": {
         "start": {
-          "line": 2444,
+          "line": 2488,
           "column": 4
         },
         "end": {
-          "line": 2448,
+          "line": 2492,
           "column": 5
         }
       },
@@ -4932,11 +4960,11 @@
     "QX_GLOBALS": {
       "location": {
         "start": {
-          "line": 2453,
+          "line": 2497,
           "column": 4
         },
         "end": {
-          "line": 2464,
+          "line": 2508,
           "column": 5
         }
       },
@@ -4954,11 +4982,11 @@
     "COMMON_GLOBALS": {
       "location": {
         "start": {
-          "line": 2466,
+          "line": 2510,
           "column": 4
         },
         "end": {
-          "line": 2532,
+          "line": 2576,
           "column": 5
         }
       },
@@ -4968,11 +4996,11 @@
     "BROWSER_GLOBALS": {
       "location": {
         "start": {
-          "line": 2534,
+          "line": 2578,
           "column": 4
         },
         "end": {
-          "line": 2557,
+          "line": 2601,
           "column": 5
         }
       },
@@ -4982,11 +5010,11 @@
     "NODE_GLOBALS": {
       "location": {
         "start": {
-          "line": 2559,
+          "line": 2603,
           "column": 4
         },
         "end": {
-          "line": 2567,
+          "line": 2611,
           "column": 5
         }
       },
@@ -4996,11 +5024,11 @@
     "RHINO_GLOBALS": {
       "location": {
         "start": {
-          "line": 2569,
+          "line": 2613,
           "column": 4
         },
         "end": {
-          "line": 2572,
+          "line": 2616,
           "column": 5
         }
       },
@@ -5010,11 +5038,11 @@
     "RESERVED_WORDS": {
       "location": {
         "start": {
-          "line": 2574,
+          "line": 2618,
           "column": 4
         },
         "end": {
-          "line": 2574,
+          "line": 2618,
           "column": 24
         }
       },
@@ -5024,11 +5052,11 @@
     "ENVIRONMENT_CONSTANTS": {
       "location": {
         "start": {
-          "line": 2581,
+          "line": 2625,
           "column": 4
         },
         "end": {
-          "line": 2616,
+          "line": 2661,
           "column": 5
         }
       },
@@ -5037,28 +5065,6 @@
           {
             "name": "@description",
             "body": "<p>These are the constants which are answered by Qooxdoo qx.core.Environment; we use out own copy here and\n not the one available in qx.core.Environment._defaults because we need to use the version which is appropriate\n for the version of Qooxdoo being compiled, not the one that this CLI is compiled with</p>"
-          }
-        ]
-      },
-      "type": "variable",
-      "access": "public"
-    },
-    "ENVIRONMENT_CHECKS": {
-      "location": {
-        "start": {
-          "line": 2630,
-          "column": 4
-        },
-        "end": {
-          "line": 3678,
-          "column": 5
-        }
-      },
-      "jsdoc": {
-        "@description": [
-          {
-            "name": "@description",
-            "body": "<p>These are the standard environment checks made by Qooxdoo classes; this list allows us to map between\n the short names (eg \"os.version\") and the actual implementation, which is essential in order to calculate\n dependency information.  I have not found anywhere this is listed except in the comments for qx.core.Environment,\n and that table is converted into this list by ~/test/get-environment-defaults.html\n Note that our parser does try to observe the environment checks which are provided by each class and\n in theory this could be used to generate this list but that requires parsing absolutely every class\n in every library every time we compile, including test classes.  So if we have to have a lookup list, this\n is it!</p>"
           }
         ]
       },

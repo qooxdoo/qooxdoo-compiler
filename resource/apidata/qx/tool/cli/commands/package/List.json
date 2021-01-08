@@ -128,7 +128,7 @@
         ]
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__libraries": {
       "location": {
@@ -142,7 +142,7 @@
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__latestCompatible": {
       "location": {
@@ -156,7 +156,7 @@
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__createIndexes": {
       "location": {
@@ -195,7 +195,7 @@
         ]
       },
       "type": "function",
-      "access": "private"
+      "access": "protected"
     },
     "getQxOwner": {
       "type": "function",

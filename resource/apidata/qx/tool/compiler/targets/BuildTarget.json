@@ -13,16 +13,12 @@
         "column": 0
       },
       "end": {
-        "line": 128,
+        "line": 129,
         "column": 3
       }
     },
     "jsdoc": {
       "@description": [
-        {
-          "name": "@description",
-          "body": "<pre><code>*****************************************************************\nqooxdoo-compiler - node.js based replacement for the Qooxdoo python\ntoolchain\nhttps://github.com/qooxdoo/qooxdoo-compiler\nCopyright:\n  2011-2017 Zenesis Limited, http://www.zenesis.com\nLicense:\n  MIT: https://opensource.org/licenses/MIT\n  This software is provided under the same licensing terms as Qooxdoo,\n  please see the LICENSE file in the Qooxdoo project's top-level directory\n  for details.\nAuthors:\n</code></pre>\n<ul>\n<li>John Spackman (john.spackman<code>zenesis.com, </code>johnspackman)\n<strong><em><em></em></strong><strong><em></em></em></strong><strong><em><em></em></strong><strong><em></em></em></strong><strong><em><em></em></strong><strong><em></em></em></strong><strong><em><em></em></strong><strong><em></em></em></strong><strong><em><em></em></strong></em>*</li>\n</ul>"
-        },
         {
           "name": "@description",
           "body": "<p>Compiles a \"build\" application, minified and self contained application</p>"
@@ -140,6 +136,7 @@
       "name": "deployDir",
       "propertyType": "new",
       "nullable": true,
+      "transform": "_transformOutputDir",
       "allowNull": true,
       "check": "String"
     },
@@ -282,7 +279,7 @@
           "column": 4
         },
         "end": {
-          "line": 119,
+          "line": 120,
           "column": 5
         }
       },
@@ -695,7 +692,7 @@
       "abstract": false,
       "mixin": true,
       "inherited": true,
-      "access": "private",
+      "access": "protected",
       "overriddenFrom": "qx.core.MLogging",
       "jsdoc": {
         "@description": [
@@ -1545,7 +1542,7 @@
       "abstract": false,
       "mixin": true,
       "inherited": true,
-      "access": "private",
+      "access": "protected",
       "overriddenFrom": "qx.core.MObjectId",
       "jsdoc": {
         "@description": [
@@ -1744,7 +1741,7 @@
       "abstract": false,
       "mixin": true,
       "inherited": true,
-      "access": "private",
+      "access": "protected",
       "overriddenFrom": "qx.core.MObjectId",
       "jsdoc": {
         "@description": [

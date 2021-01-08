@@ -221,7 +221,7 @@
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "getQxOwner": {
       "type": "function",

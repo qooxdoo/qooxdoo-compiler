@@ -154,7 +154,7 @@
         ]
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__watcherReady": {
       "location": {
@@ -182,7 +182,7 @@
         ]
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__rebuildTimer": {
       "location": {
@@ -210,7 +210,7 @@
         ]
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__rebuilding": {
       "location": {
@@ -238,7 +238,7 @@
         ]
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__needsRebuild": {
       "location": {
@@ -266,7 +266,7 @@
         ]
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "startWatcher": {
       "location": {
@@ -422,7 +422,7 @@
         ]
       },
       "type": "function",
-      "access": "private"
+      "access": "protected"
     },
     "triggerRebuild": {
       "location": {
@@ -978,7 +978,7 @@
       "abstract": false,
       "mixin": true,
       "inherited": true,
-      "access": "private",
+      "access": "protected",
       "overriddenFrom": "qx.core.MLogging",
       "jsdoc": {
         "@description": [
@@ -1828,7 +1828,7 @@
       "abstract": false,
       "mixin": true,
       "inherited": true,
-      "access": "private",
+      "access": "protected",
       "overriddenFrom": "qx.core.MObjectId",
       "jsdoc": {
         "@description": [
@@ -2027,7 +2027,7 @@
       "abstract": false,
       "mixin": true,
       "inherited": true,
-      "access": "private",
+      "access": "protected",
       "overriddenFrom": "qx.core.MObjectId",
       "jsdoc": {
         "@description": [

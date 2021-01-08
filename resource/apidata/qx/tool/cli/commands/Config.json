@@ -70,7 +70,7 @@
         }
       },
       "type": "function",
-      "access": "private"
+      "access": "protected"
     },
     "__checkKey": {
       "location": {
@@ -84,7 +84,7 @@
         }
       },
       "type": "function",
-      "access": "private"
+      "access": "protected"
     },
     "__breakout": {
       "location": {
@@ -98,7 +98,7 @@
         }
       },
       "type": "function",
-      "access": "private"
+      "access": "protected"
     },
     "cmdSet": {
       "location": {

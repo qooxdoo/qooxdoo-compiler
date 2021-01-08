@@ -69,14 +69,7 @@
           "column": 40
         }
       },
-      "jsdoc": {
-        "@description": [
-          {
-            "name": "@description",
-            "body": "<p>*\n fired after deploying. With this event\n application can do aditional copying.\n The event data is an object with the following properties:\n targetDir  : {String}  The target dir of the build\n deployDir  : {String}  The output dir for the deployment\n argv       : {Object}  Arguments\n application: {Object}  application to build</p>"
-          }
-        ]
-      },
+      "jsdoc": {},
       "name": "afterDeploy",
       "type": "qx.event.type.Data"
     }
@@ -159,7 +152,7 @@
         }
       },
       "type": "function",
-      "access": "private"
+      "access": "protected"
     },
     "getQxOwner": {
       "type": "function",

@@ -82,7 +82,7 @@
         }
       },
       "type": "function",
-      "access": "private"
+      "access": "protected"
     },
     "__removeApplication": {
       "location": {
@@ -126,7 +126,7 @@
         ]
       },
       "type": "function",
-      "access": "private"
+      "access": "protected"
     },
     "getQxOwner": {
       "type": "function",

@@ -13,7 +13,7 @@
         "column": 0
       },
       "end": {
-        "line": 826,
+        "line": 849,
         "column": 3
       }
     },
@@ -110,6 +110,7 @@
       "propertyType": "new",
       "nullable": false,
       "init": "output",
+      "transform": "_transformOutputDir",
       "allowNull": false,
       "check": "String",
       "defaultValue": "output"
@@ -262,6 +263,7 @@
       "init": [
         "en"
       ],
+      "transform": "_transformLocales",
       "allowNull": false,
       "defaultValue": [
         "en"
@@ -468,11 +470,11 @@
     "checkEnvironment": {
       "location": {
         "start": {
-          "line": 161,
+          "line": 162,
           "column": 4
         },
         "end": {
-          "line": 161,
+          "line": 162,
           "column": 44
         }
       },
@@ -480,37 +482,123 @@
         "@description": [
           {
             "name": "@description",
-            "body": "<p>Fired after all enviroment data is collected\n  application {qx.tool.compiler.app.Application} the app\n  enviroment: {Object} enviroment data</p>"
+            "body": "<p>Fired after all enviroment data is collected, but before compilation begins; this\n is an  opportunity to adjust the environment for the target.  The event data contains:\n  application {qx.tool.compiler.app.Application} the app\n  enviroment: {Object} enviroment data</p>"
           }
         ]
       },
       "name": "checkEnvironment",
       "type": "qx.event.type.Data"
+    },
+    "writingApplication": {
+      "location": {
+        "start": {
+          "line": 169,
+          "column": 4
+        },
+        "end": {
+          "line": 169,
+          "column": 47
+        }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>Fired when an application is about to be serialized to disk; the appMeta is fully\n populated, and this is an opportunity to amend the meta data before it is serialized\n into files on disk</p>"
+          }
+        ]
+      },
+      "name": "writingApplication",
+      "type": "qx.event.type.Event"
+    },
+    "writtenApplication": {
+      "location": {
+        "start": {
+          "line": 174,
+          "column": 4
+        },
+        "end": {
+          "line": 174,
+          "column": 47
+        }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>Fired when an application has been serialized to disk</p>"
+          }
+        ]
+      },
+      "name": "writtenApplication",
+      "type": "qx.event.type.Event"
     }
   },
   "members": {
     "__pathMappings": {
       "location": {
         "start": {
-          "line": 166,
+          "line": 180,
           "column": 4
         },
         "end": {
-          "line": 166,
+          "line": 180,
           "column": 24
         }
       },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": ""
+          }
+        ],
+        "@type": [
+          {
+            "name": "@type",
+            "body": "{Map} maps filenames to uris"
+          }
+        ]
+      },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
+    },
+    "__appMeta": {
+      "location": {
+        "start": {
+          "line": 183,
+          "column": 4
+        },
+        "end": {
+          "line": 183,
+          "column": 19
+        }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": ""
+          }
+        ],
+        "@type": [
+          {
+            "name": "@type",
+            "body": "{qx.tool.compiler.targets.meta.ApplicationMeta} for the current application"
+          }
+        ]
+      },
+      "type": "variable",
+      "access": "protected"
     },
     "open": {
       "location": {
         "start": {
-          "line": 171,
+          "line": 188,
           "column": 4
         },
         "end": {
-          "line": 172,
+          "line": 189,
           "column": 5
         }
       },
@@ -528,11 +616,11 @@
     "_transformOutputDir": {
       "location": {
         "start": {
-          "line": 181,
+          "line": 198,
           "column": 4
         },
         "end": {
-          "line": 188,
+          "line": 205,
           "column": 5
         }
       },
@@ -572,11 +660,11 @@
     "getApplicationRoot": {
       "location": {
         "start": {
-          "line": 193,
+          "line": 210,
           "column": 4
         },
         "end": {
-          "line": 195,
+          "line": 212,
           "column": 5
         }
       },
@@ -594,11 +682,11 @@
     "getProjectDir": {
       "location": {
         "start": {
-          "line": 202,
+          "line": 219,
           "column": 4
         },
         "end": {
-          "line": 204,
+          "line": 221,
           "column": 5
         }
       },
@@ -622,11 +710,11 @@
     "_getOutputRootUri": {
       "location": {
         "start": {
-          "line": 209,
+          "line": 226,
           "column": 4
         },
         "end": {
-          "line": 213,
+          "line": 230,
           "column": 5
         }
       },
@@ -644,11 +732,11 @@
     "addPathMapping": {
       "location": {
         "start": {
-          "line": 222,
+          "line": 239,
           "column": 4
         },
         "end": {
-          "line": 228,
+          "line": 245,
           "column": 5
         }
       },
@@ -682,11 +770,11 @@
     "getPathMapping": {
       "location": {
         "start": {
-          "line": 237,
+          "line": 254,
           "column": 4
         },
         "end": {
-          "line": 252,
+          "line": 269,
           "column": 5
         }
       },
@@ -721,11 +809,11 @@
     "mapToUri": {
       "location": {
         "start": {
-          "line": 263,
+          "line": 280,
           "column": 4
         },
         "end": {
-          "line": 274,
+          "line": 291,
           "column": 5
         }
       },
@@ -768,11 +856,11 @@
     "_copyClassesToFile": {
       "location": {
         "start": {
-          "line": 276,
+          "line": 293,
           "column": 4
         },
         "end": {
-          "line": 284,
+          "line": 301,
           "column": 5
         }
       },
@@ -782,11 +870,11 @@
     "generateApplication": {
       "location": {
         "start": {
-          "line": 292,
+          "line": 309,
           "column": 4
         },
         "end": {
-          "line": 472,
+          "line": 490,
           "column": 5
         }
       },
@@ -820,11 +908,11 @@
     "_writeTranslations": {
       "location": {
         "start": {
-          "line": 479,
+          "line": 495,
           "column": 4
         },
         "end": {
-          "line": 496,
+          "line": 513,
           "column": 5
         }
       },
@@ -834,15 +922,6 @@
             "name": "@description",
             "body": "<p>Handles the output of translations and locales</p>"
           }
-        ],
-        "@param": [
-          {
-            "name": "@param",
-            "body": "appMeta {ApplicationMeta} compile data",
-            "paramName": "appMeta",
-            "description": " compile data",
-            "type": "ApplicationMeta"
-          }
         ]
       },
       "type": "function",
@@ -851,11 +930,11 @@
     "_transformLocales": {
       "location": {
         "start": {
-          "line": 505,
+          "line": 522,
           "column": 4
         },
         "end": {
-          "line": 517,
+          "line": 534,
           "column": 5
         }
       },
@@ -890,11 +969,11 @@
     "_writeLocales": {
       "location": {
         "start": {
-          "line": 529,
+          "line": 544,
           "column": 4
         },
         "end": {
-          "line": 568,
+          "line": 584,
           "column": 5
         }
       },
@@ -904,15 +983,6 @@
             "name": "@description",
             "body": "<p>Writes the required locale CLDR data, incorporating inheritance.  Note that locales in CLDR can\n have a \"parent locale\", where the locale inherits all settings from the parent except where explicitly\n set in the locale.  This is in addition to the inheritance between language and locale, eg where \"en<em>GB\"\n overrides settings from \"en\".  Qooxdoo client understands that if a setting is not provided in\n \"en</em>GB\" it must look to \"en\", but it does not understand the \"parent locale\" inheritance, so this\n method must flatten the \"parent locale\" inheritance.</p>"
           }
-        ],
-        "@param": [
-          {
-            "name": "@param",
-            "body": "appMeta {ApplicationMeta} compile data",
-            "paramName": "appMeta",
-            "description": " compile data",
-            "type": "ApplicationMeta"
-          }
         ]
       },
       "type": "function",
@@ -921,11 +991,11 @@
     "_writeAllTranslations": {
       "location": {
         "start": {
-          "line": 575,
+          "line": 589,
           "column": 4
         },
         "end": {
-          "line": 608,
+          "line": 623,
           "column": 5
         }
       },
@@ -935,15 +1005,6 @@
             "name": "@description",
             "body": "<p>Writes all translations</p>"
           }
-        ],
-        "@param": [
-          {
-            "name": "@param",
-            "body": "appMeta {ApplicationMeta} compile data",
-            "paramName": "appMeta",
-            "description": " compile data",
-            "type": "ApplicationMeta"
-          }
         ]
       },
       "type": "function",
@@ -952,11 +1013,11 @@
     "_writeRequiredTranslations": {
       "location": {
         "start": {
-          "line": 615,
+          "line": 628,
           "column": 4
         },
         "end": {
-          "line": 671,
+          "line": 685,
           "column": 5
         }
       },
@@ -966,15 +1027,6 @@
             "name": "@description",
             "body": "<p>Writes only those translations which are actually required</p>"
           }
-        ],
-        "@param": [
-          {
-            "name": "@param",
-            "body": "appMeta {ApplicationMeta} compile data",
-            "paramName": "appMeta",
-            "description": " compile data",
-            "type": "ApplicationMeta"
-          }
         ]
       },
       "type": "function",
@@ -983,11 +1035,11 @@
     "_writeApplication": {
       "location": {
         "start": {
-          "line": 678,
+          "line": 690,
           "column": 4
         },
         "end": {
-          "line": 725,
+          "line": 743,
           "column": 5
         }
       },
@@ -997,12 +1049,6 @@
             "name": "@description",
             "body": "<p>Writes the application</p>"
           }
-        ],
-        "@param": [
-          {
-            "name": "@param",
-            "body": "appMeta {qx.tool.compiler.targets.meta.ApplicationMeta}"
-          }
         ]
       },
       "type": "function",
@@ -1011,11 +1057,11 @@
     "_writeIndexHtml": {
       "location": {
         "start": {
-          "line": 730,
+          "line": 748,
           "column": 4
         },
         "end": {
-          "line": 824,
+          "line": 843,
           "column": 5
         }
       },
@@ -1029,6 +1075,20 @@
       },
       "type": "function",
       "access": "protected"
+    },
+    "getAppMeta": {
+      "location": {
+        "start": {
+          "line": 845,
+          "column": 4
+        },
+        "end": {
+          "line": 847,
+          "column": 5
+        }
+      },
+      "type": "function",
+      "access": "public"
     },
     "bind": {
       "type": "function",
@@ -1418,7 +1478,7 @@
       "abstract": false,
       "mixin": true,
       "inherited": true,
-      "access": "private",
+      "access": "protected",
       "overriddenFrom": "qx.core.MLogging",
       "jsdoc": {
         "@description": [
@@ -2268,7 +2328,7 @@
       "abstract": false,
       "mixin": true,
       "inherited": true,
-      "access": "private",
+      "access": "protected",
       "overriddenFrom": "qx.core.MObjectId",
       "jsdoc": {
         "@description": [
@@ -2467,7 +2527,7 @@
       "abstract": false,
       "mixin": true,
       "inherited": true,
-      "access": "private",
+      "access": "protected",
       "overriddenFrom": "qx.core.MObjectId",
       "jsdoc": {
         "@description": [

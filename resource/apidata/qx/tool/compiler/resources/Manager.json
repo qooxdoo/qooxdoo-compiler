@@ -13,7 +13,7 @@
         "column": 0
       },
       "end": {
-        "line": 455,
+        "line": 456,
         "column": 3
       }
     },
@@ -34,7 +34,7 @@
         "column": 13
       },
       "end": {
-        "line": 52,
+        "line": 53,
         "column": 3
       }
     },
@@ -57,11 +57,11 @@
     "__dbFilename": {
       "location": {
         "start": {
-          "line": 56,
+          "line": 57,
           "column": 4
         },
         "end": {
-          "line": 56,
+          "line": 57,
           "column": 22
         }
       },
@@ -74,16 +74,16 @@
         ]
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__db": {
       "location": {
         "start": {
-          "line": 59,
+          "line": 60,
           "column": 4
         },
         "end": {
-          "line": 59,
+          "line": 60,
           "column": 14
         }
       },
@@ -96,16 +96,16 @@
         ]
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__analyser": {
       "location": {
         "start": {
-          "line": 62,
+          "line": 63,
           "column": 4
         },
         "end": {
-          "line": 62,
+          "line": 63,
           "column": 20
         }
       },
@@ -118,16 +118,16 @@
         ]
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__librariesByResourceUri": {
       "location": {
         "start": {
-          "line": 65,
+          "line": 66,
           "column": 4
         },
         "end": {
-          "line": 65,
+          "line": 66,
           "column": 34
         }
       },
@@ -140,16 +140,16 @@
         ]
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__allResourceUris": {
       "location": {
         "start": {
-          "line": 68,
+          "line": 69,
           "column": 4
         },
         "end": {
-          "line": 68,
+          "line": 69,
           "column": 27
         }
       },
@@ -162,16 +162,16 @@
         ]
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__loaders": {
       "location": {
         "start": {
-          "line": 71,
+          "line": 72,
           "column": 4
         },
         "end": {
-          "line": 71,
+          "line": 72,
           "column": 19
         }
       },
@@ -184,16 +184,16 @@
         ]
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__converters": {
       "location": {
         "start": {
-          "line": 74,
+          "line": 75,
           "column": 4
         },
         "end": {
-          "line": 74,
+          "line": 75,
           "column": 22
         }
       },
@@ -206,16 +206,16 @@
         ]
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "loadDatabase": {
       "location": {
         "start": {
-          "line": 79,
+          "line": 80,
           "column": 4
         },
         "end": {
-          "line": 81,
+          "line": 82,
           "column": 5
         }
       },
@@ -233,11 +233,11 @@
     "saveDatabase": {
       "location": {
         "start": {
-          "line": 86,
+          "line": 87,
           "column": 4
         },
         "end": {
-          "line": 89,
+          "line": 90,
           "column": 5
         }
       },
@@ -255,11 +255,11 @@
     "getDatabase": {
       "location": {
         "start": {
-          "line": 96,
+          "line": 97,
           "column": 4
         },
         "end": {
-          "line": 98,
+          "line": 99,
           "column": 5
         }
       },
@@ -285,11 +285,11 @@
     "findLibraryForResource": {
       "location": {
         "start": {
-          "line": 107,
+          "line": 108,
           "column": 4
         },
         "end": {
-          "line": 117,
+          "line": 118,
           "column": 5
         }
       },
@@ -324,11 +324,11 @@
     "findLibrariesForResource": {
       "location": {
         "start": {
-          "line": 130,
+          "line": 131,
           "column": 4
         },
         "end": {
-          "line": 212,
+          "line": 213,
           "column": 5
         }
       },
@@ -363,11 +363,11 @@
     "findAllResources": {
       "location": {
         "start": {
-          "line": 218,
+          "line": 219,
           "column": 4
         },
         "end": {
-          "line": 308,
+          "line": 309,
           "column": 5
         }
       },
@@ -385,11 +385,11 @@
     "__addAsset": {
       "location": {
         "start": {
-          "line": 315,
+          "line": 316,
           "column": 4
         },
         "end": {
-          "line": 342,
+          "line": 343,
           "column": 5
         }
       },
@@ -411,16 +411,16 @@
         ]
       },
       "type": "function",
-      "access": "private"
+      "access": "protected"
     },
     "getAsset": {
       "location": {
         "start": {
-          "line": 351,
+          "line": 352,
           "column": 4
         },
         "end": {
-          "line": 369,
+          "line": 370,
           "column": 5
         }
       },
@@ -463,11 +463,11 @@
     "getAssetsForPaths": {
       "location": {
         "start": {
-          "line": 377,
+          "line": 378,
           "column": 4
         },
         "end": {
-          "line": 453,
+          "line": 454,
           "column": 5
         }
       },
@@ -886,7 +886,7 @@
       "abstract": false,
       "mixin": true,
       "inherited": true,
-      "access": "private",
+      "access": "protected",
       "overriddenFrom": "qx.core.MLogging",
       "jsdoc": {
         "@description": [
@@ -1736,7 +1736,7 @@
       "abstract": false,
       "mixin": true,
       "inherited": true,
-      "access": "private",
+      "access": "protected",
       "overriddenFrom": "qx.core.MObjectId",
       "jsdoc": {
         "@description": [
@@ -1935,7 +1935,7 @@
       "abstract": false,
       "mixin": true,
       "inherited": true,
-      "access": "private",
+      "access": "protected",
       "overriddenFrom": "qx.core.MObjectId",
       "jsdoc": {
         "@description": [

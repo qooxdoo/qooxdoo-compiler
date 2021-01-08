@@ -13,7 +13,7 @@
         "column": 0
       },
       "end": {
-        "line": 241,
+        "line": 243,
         "column": 3
       }
     },
@@ -82,7 +82,7 @@
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "addApplication": {
       "location": {
@@ -151,7 +151,7 @@
           "column": 4
         },
         "end": {
-          "line": 239,
+          "line": 241,
           "column": 5
         }
       },
@@ -1128,5 +1128,6 @@
       }
     }
   },
+  "events": {},
   "descendants": []
 }

@@ -410,6 +410,7 @@
       "name": "include",
       "propertyType": "new",
       "nullable": false,
+      "transform": "__transformArray",
       "allowNull": false,
       "check": "Array"
     },
@@ -435,6 +436,7 @@
       "name": "exclude",
       "propertyType": "new",
       "nullable": false,
+      "transform": "__transformArray",
       "allowNull": false,
       "check": "Array"
     },
@@ -460,6 +462,7 @@
       "name": "bundleInclude",
       "propertyType": "new",
       "nullable": true,
+      "transform": "__transformArray",
       "allowNull": true,
       "check": "Array"
     },
@@ -485,6 +488,7 @@
       "name": "bundleExclude",
       "propertyType": "new",
       "nullable": true,
+      "transform": "__transformArray",
       "allowNull": true,
       "check": "Array"
     },
@@ -584,7 +588,7 @@
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__parts": {
       "location": {
@@ -598,7 +602,7 @@
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__requiredLibs": {
       "location": {
@@ -612,7 +616,7 @@
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__fatalCompileErrors": {
       "location": {
@@ -626,7 +630,7 @@
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__classes": {
       "location": {
@@ -640,7 +644,7 @@
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__partsDeps": {
       "location": {
@@ -654,7 +658,7 @@
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "isBrowserApp": {
       "location": {
@@ -1084,7 +1088,7 @@
         ]
       },
       "type": "function",
-      "access": "private"
+      "access": "protected"
     },
     "_applyType": {
       "location": {
@@ -1132,7 +1136,7 @@
         ]
       },
       "type": "function",
-      "access": "private"
+      "access": "protected"
     },
     "bind": {
       "type": "function",
@@ -1522,7 +1526,7 @@
       "abstract": false,
       "mixin": true,
       "inherited": true,
-      "access": "private",
+      "access": "protected",
       "overriddenFrom": "qx.core.MLogging",
       "jsdoc": {
         "@description": [
@@ -2372,7 +2376,7 @@
       "abstract": false,
       "mixin": true,
       "inherited": true,
-      "access": "private",
+      "access": "protected",
       "overriddenFrom": "qx.core.MObjectId",
       "jsdoc": {
         "@description": [
@@ -2571,7 +2575,7 @@
       "abstract": false,
       "mixin": true,
       "inherited": true,
-      "access": "private",
+      "access": "protected",
       "overriddenFrom": "qx.core.MObjectId",
       "jsdoc": {
         "@description": [

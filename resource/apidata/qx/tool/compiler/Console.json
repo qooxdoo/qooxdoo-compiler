@@ -13,16 +13,12 @@
         "column": 0
       },
       "end": {
-        "line": 345,
+        "line": 354,
         "column": 3
       }
     },
     "jsdoc": {
       "@description": [
-        {
-          "name": "@description",
-          "body": "<pre><code>*****************************************************************\nqooxdoo-compiler - node.js based replacement for the Qooxdoo python\ntoolchain\nhttps://github.com/qooxdoo/qooxdoo-compiler\nCopyright:\n  2011-2017 Zenesis Limited, http://www.zenesis.com\nLicense:\n  MIT: https://opensource.org/licenses/MIT\n  This software is provided under the same licensing terms as Qooxdoo,\n  please see the LICENSE file in the Qooxdoo project's top-level directory\n  for details.\nAuthors:\n</code></pre>\n<ul>\n<li>John Spackman (john.spackman<code>zenesis.com, </code>johnspackman)\n<strong><em><em></em></strong><strong><em></em></em></strong><strong><em><em></em></strong><strong><em></em></em></strong><strong><em><em></em></strong><strong><em></em></em></strong><strong><em><em></em></strong><strong><em></em></em></strong><strong><em><em></em></strong></em>*</li>\n</ul>"
-        },
         {
           "name": "@description",
           "body": "<p>The Console handles output of compiler messages for the end user (i.e. not debugging output).\n The output is based around message IDs, which relate to translatable strings, plus arguments.</p>"
@@ -701,7 +697,7 @@
       "abstract": false,
       "mixin": true,
       "inherited": true,
-      "access": "private",
+      "access": "protected",
       "overriddenFrom": "qx.core.MLogging",
       "jsdoc": {
         "@description": [
@@ -1551,7 +1547,7 @@
       "abstract": false,
       "mixin": true,
       "inherited": true,
-      "access": "private",
+      "access": "protected",
       "overriddenFrom": "qx.core.MObjectId",
       "jsdoc": {
         "@description": [
@@ -1750,7 +1746,7 @@
       "abstract": false,
       "mixin": true,
       "inherited": true,
-      "access": "private",
+      "access": "protected",
       "overriddenFrom": "qx.core.MObjectId",
       "jsdoc": {
         "@description": [
@@ -3905,7 +3901,7 @@
         "column": 9
       },
       "end": {
-        "line": 213,
+        "line": 222,
         "column": 3
       }
     },
@@ -3915,25 +3911,25 @@
     "__INSTANCE": {
       "location": {
         "start": {
-          "line": 216,
+          "line": 225,
           "column": 4
         },
         "end": {
-          "line": 216,
+          "line": 225,
           "column": 20
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "getInstance": {
       "location": {
         "start": {
-          "line": 221,
+          "line": 230,
           "column": 4
         },
         "end": {
-          "line": 226,
+          "line": 235,
           "column": 5
         }
       },
@@ -3951,11 +3947,11 @@
     "print": {
       "location": {
         "start": {
-          "line": 233,
+          "line": 242,
           "column": 4
         },
         "end": {
-          "line": 235,
+          "line": 244,
           "column": 5
         }
       },
@@ -3982,11 +3978,11 @@
     "decode": {
       "location": {
         "start": {
-          "line": 243,
+          "line": 252,
           "column": 4
         },
         "end": {
-          "line": 245,
+          "line": 254,
           "column": 5
         }
       },
@@ -4021,11 +4017,11 @@
     "log": {
       "location": {
         "start": {
-          "line": 250,
+          "line": 259,
           "column": 4
         },
         "end": {
-          "line": 252,
+          "line": 261,
           "column": 5
         }
       },
@@ -4043,11 +4039,11 @@
     "debug": {
       "location": {
         "start": {
-          "line": 257,
+          "line": 266,
           "column": 4
         },
         "end": {
-          "line": 259,
+          "line": 268,
           "column": 5
         }
       },
@@ -4065,11 +4061,11 @@
     "info": {
       "location": {
         "start": {
-          "line": 264,
+          "line": 273,
           "column": 4
         },
         "end": {
-          "line": 266,
+          "line": 275,
           "column": 5
         }
       },
@@ -4087,11 +4083,11 @@
     "warn": {
       "location": {
         "start": {
-          "line": 271,
+          "line": 280,
           "column": 4
         },
         "end": {
-          "line": 273,
+          "line": 282,
           "column": 5
         }
       },
@@ -4109,11 +4105,11 @@
     "error": {
       "location": {
         "start": {
-          "line": 278,
+          "line": 287,
           "column": 4
         },
         "end": {
-          "line": 280,
+          "line": 289,
           "column": 5
         }
       },
@@ -4131,11 +4127,11 @@
     "MESSAGE_IDS": {
       "location": {
         "start": {
-          "line": 288,
+          "line": 297,
           "column": 4
         },
         "end": {
-          "line": 288,
+          "line": 297,
           "column": 19
         }
       },
@@ -4153,11 +4149,11 @@
     "addMessageIds": {
       "location": {
         "start": {
-          "line": 297,
+          "line": 306,
           "column": 4
         },
         "end": {
-          "line": 301,
+          "line": 310,
           "column": 5
         }
       },
@@ -4192,11 +4188,11 @@
     "decodeMarker": {
       "location": {
         "start": {
-          "line": 317,
+          "line": 326,
           "column": 4
         },
         "end": {
-          "line": 343,
+          "line": 352,
           "column": 5
         }
       },

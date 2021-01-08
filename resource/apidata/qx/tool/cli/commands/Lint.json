@@ -88,7 +88,7 @@
         ]
       },
       "type": "function",
-      "access": "private"
+      "access": "protected"
     },
     "__applyFixes": {
       "location": {
@@ -124,7 +124,7 @@
         ]
       },
       "type": "function",
-      "access": "private"
+      "access": "protected"
     },
     "getQxOwner": {
       "type": "function",

@@ -13,7 +13,7 @@
         "column": 0
       },
       "end": {
-        "line": 605,
+        "line": 616,
         "column": 3
       }
     },
@@ -22,10 +22,6 @@
         {
           "name": "@description",
           "body": "<p>Entry point for the CLI</p>"
-        },
-        {
-          "name": "@description",
-          "body": "<p>global window</p>"
         }
       ]
     }
@@ -238,7 +234,7 @@
         ]
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__librariesNotified": {
       "location": {
@@ -266,7 +262,7 @@
         ]
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__createYargs": {
       "location": {
@@ -275,7 +271,7 @@
           "column": 4
         },
         "end": {
-          "line": 98,
+          "line": 103,
           "column": 5
         }
       },
@@ -296,16 +292,16 @@
         ]
       },
       "type": "function",
-      "access": "private"
+      "access": "protected"
     },
     "__bootstrapArgv": {
       "location": {
         "start": {
-          "line": 104,
+          "line": 109,
           "column": 4
         },
         "end": {
-          "line": 121,
+          "line": 129,
           "column": 5
         }
       },
@@ -318,16 +314,16 @@
         ]
       },
       "type": "function",
-      "access": "private"
+      "access": "protected"
     },
     "__fullArgv": {
       "location": {
         "start": {
-          "line": 126,
+          "line": 134,
           "column": 4
         },
         "end": {
-          "line": 177,
+          "line": 185,
           "column": 5
         }
       },
@@ -340,16 +336,16 @@
         ]
       },
       "type": "function",
-      "access": "private"
+      "access": "protected"
     },
     "__notifyCommand": {
       "location": {
         "start": {
-          "line": 184,
+          "line": 192,
           "column": 4
         },
         "end": {
-          "line": 189,
+          "line": 197,
           "column": 5
         }
       },
@@ -362,16 +358,16 @@
         ]
       },
       "type": "function",
-      "access": "private"
+      "access": "protected"
     },
     "__notifyLibraries": {
       "location": {
         "start": {
-          "line": 196,
+          "line": 204,
           "column": 4
         },
         "end": {
-          "line": 206,
+          "line": 214,
           "column": 5
         }
       },
@@ -384,16 +380,16 @@
         ]
       },
       "type": "function",
-      "access": "private"
+      "access": "protected"
     },
     "processCommand": {
       "location": {
         "start": {
-          "line": 215,
+          "line": 223,
           "column": 4
         },
         "end": {
-          "line": 227,
+          "line": 235,
           "column": 5
         }
       },
@@ -420,11 +416,11 @@
     "getParsedArgs": {
       "location": {
         "start": {
-          "line": 234,
+          "line": 242,
           "column": 4
         },
         "end": {
-          "line": 236,
+          "line": 244,
           "column": 5
         }
       },
@@ -450,11 +446,11 @@
     "run": {
       "location": {
         "start": {
-          "line": 253,
+          "line": 261,
           "column": 4
         },
         "end": {
-          "line": 259,
+          "line": 267,
           "column": 5
         }
       },
@@ -472,11 +468,11 @@
     "__parseArgsImpl": {
       "location": {
         "start": {
-          "line": 264,
+          "line": 272,
           "column": 4
         },
         "end": {
-          "line": 487,
+          "line": 498,
           "column": 5
         }
       },
@@ -489,16 +485,16 @@
         ]
       },
       "type": "function",
-      "access": "private"
+      "access": "protected"
     },
     "__loadJs": {
       "location": {
         "start": {
-          "line": 495,
+          "line": 506,
           "column": 4
         },
         "end": {
-          "line": 514,
+          "line": 525,
           "column": 5
         }
       },
@@ -528,16 +524,16 @@
         ]
       },
       "type": "function",
-      "access": "private"
+      "access": "protected"
     },
     "getCompilerApi": {
       "location": {
         "start": {
-          "line": 521,
+          "line": 532,
           "column": 4
         },
         "end": {
-          "line": 523,
+          "line": 534,
           "column": 5
         }
       },
@@ -563,11 +559,11 @@
     "getCompileJsFilename": {
       "location": {
         "start": {
-          "line": 530,
+          "line": 541,
           "column": 4
         },
         "end": {
-          "line": 532,
+          "line": 543,
           "column": 5
         }
       },
@@ -593,11 +589,11 @@
     "getCompileJsonFilename": {
       "location": {
         "start": {
-          "line": 539,
+          "line": 550,
           "column": 4
         },
         "end": {
-          "line": 541,
+          "line": 552,
           "column": 5
         }
       },
@@ -623,11 +619,11 @@
     "isExplicitArg": {
       "location": {
         "start": {
-          "line": 551,
+          "line": 562,
           "column": 4
         },
         "end": {
-          "line": 556,
+          "line": 567,
           "column": 5
         }
       },
@@ -1047,7 +1043,7 @@
       "abstract": false,
       "mixin": true,
       "inherited": true,
-      "access": "private",
+      "access": "protected",
       "overriddenFrom": "qx.core.MLogging",
       "jsdoc": {
         "@description": [
@@ -1897,7 +1893,7 @@
       "abstract": false,
       "mixin": true,
       "inherited": true,
-      "access": "private",
+      "access": "protected",
       "overriddenFrom": "qx.core.MObjectId",
       "jsdoc": {
         "@description": [
@@ -2096,7 +2092,7 @@
       "abstract": false,
       "mixin": true,
       "inherited": true,
-      "access": "private",
+      "access": "protected",
       "overriddenFrom": "qx.core.MObjectId",
       "jsdoc": {
         "@description": [
@@ -3936,11 +3932,11 @@
     "compileJsFilename": {
       "location": {
         "start": {
-          "line": 560,
+          "line": 571,
           "column": 4
         },
         "end": {
-          "line": 560,
+          "line": 571,
           "column": 35
         }
       },
@@ -3950,11 +3946,11 @@
     "__instance": {
       "location": {
         "start": {
-          "line": 563,
+          "line": 574,
           "column": 4
         },
         "end": {
-          "line": 563,
+          "line": 574,
           "column": 20
         }
       },
@@ -3967,16 +3963,16 @@
         ]
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "getInstance": {
       "location": {
         "start": {
-          "line": 570,
+          "line": 581,
           "column": 4
         },
         "end": {
-          "line": 575,
+          "line": 586,
           "column": 5
         }
       },
@@ -4002,11 +3998,11 @@
     "addYargsCommands": {
       "location": {
         "start": {
-          "line": 584,
+          "line": 595,
           "column": 4
         },
         "end": {
-          "line": 603,
+          "line": 614,
           "column": 5
         }
       },

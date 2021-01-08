@@ -13,7 +13,7 @@
         "column": 0
       },
       "end": {
-        "line": 338,
+        "line": 388,
         "column": 3
       }
     }
@@ -32,15 +32,66 @@
     },
     "jsdoc": {}
   },
-  "events": {
-    "making": {
+  "properties": {
+    "debug": {
       "location": {
         "start": {
           "line": 38,
           "column": 4
         },
         "end": {
-          "line": 38,
+          "line": 41,
+          "column": 5
+        }
+      },
+      "name": "debug",
+      "propertyType": "new",
+      "init": false,
+      "check": "Boolean",
+      "defaultValue": false
+    },
+    "qxOwner": {
+      "type": "property",
+      "name": "qxOwner",
+      "abstract": false,
+      "mixin": true,
+      "access": "public",
+      "overriddenFrom": "qx.core.MObjectId",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>The owning object</p>"
+          }
+        ]
+      }
+    },
+    "qxObjectId": {
+      "type": "property",
+      "name": "qxObjectId",
+      "abstract": false,
+      "mixin": true,
+      "access": "public",
+      "overriddenFrom": "qx.core.MObjectId",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>{String} The ID of the object.</p>"
+          }
+        ]
+      }
+    }
+  },
+  "events": {
+    "making": {
+      "location": {
+        "start": {
+          "line": 45,
+          "column": 4
+        },
+        "end": {
+          "line": 45,
           "column": 35
         }
       },
@@ -50,11 +101,11 @@
     "remaking": {
       "location": {
         "start": {
-          "line": 39,
+          "line": 46,
           "column": 4
         },
         "end": {
-          "line": 39,
+          "line": 46,
           "column": 37
         }
       },
@@ -64,11 +115,11 @@
     "made": {
       "location": {
         "start": {
-          "line": 40,
+          "line": 47,
           "column": 4
         },
         "end": {
-          "line": 40,
+          "line": 47,
           "column": 33
         }
       },
@@ -78,11 +129,11 @@
     "configChanged": {
       "location": {
         "start": {
-          "line": 41,
+          "line": 48,
           "column": 4
         },
         "end": {
-          "line": 41,
+          "line": 48,
           "column": 42
         }
       },
@@ -94,165 +145,165 @@
     "__runningPromise": {
       "location": {
         "start": {
-          "line": 45,
+          "line": 52,
           "column": 4
         },
         "end": {
-          "line": 45,
+          "line": 52,
           "column": 26
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__applications": {
       "location": {
         "start": {
-          "line": 46,
+          "line": 53,
           "column": 4
         },
         "end": {
-          "line": 46,
+          "line": 53,
           "column": 24
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__watcherReady": {
       "location": {
         "start": {
-          "line": 47,
+          "line": 54,
           "column": 4
         },
         "end": {
-          "line": 47,
+          "line": 54,
           "column": 25
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__maker": {
       "location": {
         "start": {
-          "line": 48,
+          "line": 55,
           "column": 4
         },
         "end": {
-          "line": 48,
+          "line": 55,
           "column": 17
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__stats": {
       "location": {
         "start": {
-          "line": 49,
+          "line": 56,
           "column": 4
         },
         "end": {
-          "line": 49,
+          "line": 56,
           "column": 17
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__making": {
-      "location": {
-        "start": {
-          "line": 50,
-          "column": 4
-        },
-        "end": {
-          "line": 50,
-          "column": 18
-        }
-      },
-      "type": "variable",
-      "access": "private"
-    },
-    "__stopping": {
-      "location": {
-        "start": {
-          "line": 51,
-          "column": 4
-        },
-        "end": {
-          "line": 51,
-          "column": 21
-        }
-      },
-      "type": "variable",
-      "access": "private"
-    },
-    "__outOfDate": {
-      "location": {
-        "start": {
-          "line": 52,
-          "column": 4
-        },
-        "end": {
-          "line": 52,
-          "column": 21
-        }
-      },
-      "type": "variable",
-      "access": "private"
-    },
-    "__timerId": {
-      "location": {
-        "start": {
-          "line": 53,
-          "column": 4
-        },
-        "end": {
-          "line": 53,
-          "column": 19
-        }
-      },
-      "type": "variable",
-      "access": "private"
-    },
-    "__debounceChanges": {
-      "location": {
-        "start": {
-          "line": 54,
-          "column": 4
-        },
-        "end": {
-          "line": 54,
-          "column": 27
-        }
-      },
-      "type": "variable",
-      "access": "private"
-    },
-    "__configFilenames": {
-      "location": {
-        "start": {
-          "line": 55,
-          "column": 4
-        },
-        "end": {
-          "line": 55,
-          "column": 27
-        }
-      },
-      "type": "variable",
-      "access": "private"
-    },
-    "setConfigFilenames": {
       "location": {
         "start": {
           "line": 57,
           "column": 4
         },
         "end": {
-          "line": 63,
+          "line": 57,
+          "column": 18
+        }
+      },
+      "type": "variable",
+      "access": "protected"
+    },
+    "__stopping": {
+      "location": {
+        "start": {
+          "line": 58,
+          "column": 4
+        },
+        "end": {
+          "line": 58,
+          "column": 21
+        }
+      },
+      "type": "variable",
+      "access": "protected"
+    },
+    "__outOfDate": {
+      "location": {
+        "start": {
+          "line": 59,
+          "column": 4
+        },
+        "end": {
+          "line": 59,
+          "column": 21
+        }
+      },
+      "type": "variable",
+      "access": "protected"
+    },
+    "__makeTimerId": {
+      "location": {
+        "start": {
+          "line": 60,
+          "column": 4
+        },
+        "end": {
+          "line": 60,
+          "column": 23
+        }
+      },
+      "type": "variable",
+      "access": "protected"
+    },
+    "__debounceChanges": {
+      "location": {
+        "start": {
+          "line": 61,
+          "column": 4
+        },
+        "end": {
+          "line": 61,
+          "column": 27
+        }
+      },
+      "type": "variable",
+      "access": "protected"
+    },
+    "__configFilenames": {
+      "location": {
+        "start": {
+          "line": 62,
+          "column": 4
+        },
+        "end": {
+          "line": 62,
+          "column": 27
+        }
+      },
+      "type": "variable",
+      "access": "protected"
+    },
+    "setConfigFilenames": {
+      "location": {
+        "start": {
+          "line": 64,
+          "column": 4
+        },
+        "end": {
+          "line": 70,
           "column": 5
         }
       },
@@ -262,11 +313,11 @@
     "start": {
       "location": {
         "start": {
-          "line": 65,
+          "line": 72,
           "column": 4
         },
         "end": {
-          "line": 134,
+          "line": 150,
           "column": 5
         }
       },
@@ -276,11 +327,11 @@
     "stop": {
       "location": {
         "start": {
-          "line": 136,
+          "line": 152,
           "column": 4
         },
         "end": {
-          "line": 142,
+          "line": 158,
           "column": 5
         }
       },
@@ -290,58 +341,58 @@
     "__make": {
       "location": {
         "start": {
-          "line": 144,
+          "line": 160,
           "column": 4
         },
         "end": {
-          "line": 209,
+          "line": 236,
           "column": 5
         }
       },
       "type": "function",
-      "access": "private"
+      "access": "protected"
     },
     "__scheduleMake": {
       "location": {
         "start": {
-          "line": 211,
+          "line": 238,
           "column": 4
         },
         "end": {
-          "line": 221,
+          "line": 248,
           "column": 5
         }
       },
       "type": "function",
-      "access": "private"
+      "access": "protected"
     },
     "__onFileChange": {
       "location": {
         "start": {
-          "line": 223,
+          "line": 250,
           "column": 4
         },
         "end": {
-          "line": 318,
+          "line": 368,
           "column": 5
         }
       },
       "type": "function",
-      "access": "private"
+      "access": "protected"
     },
     "__onStop": {
       "location": {
         "start": {
-          "line": 320,
+          "line": 370,
           "column": 4
         },
         "end": {
-          "line": 322,
+          "line": 372,
           "column": 5
         }
       },
       "type": "function",
-      "access": "private"
+      "access": "protected"
     },
     "bind": {
       "type": "function",
@@ -731,7 +782,7 @@
       "abstract": false,
       "mixin": true,
       "inherited": true,
-      "access": "private",
+      "access": "protected",
       "overriddenFrom": "qx.core.MLogging",
       "jsdoc": {
         "@description": [
@@ -1581,7 +1632,7 @@
       "abstract": false,
       "mixin": true,
       "inherited": true,
-      "access": "private",
+      "access": "protected",
       "overriddenFrom": "qx.core.MObjectId",
       "jsdoc": {
         "@description": [
@@ -1780,7 +1831,7 @@
       "abstract": false,
       "mixin": true,
       "inherited": true,
-      "access": "private",
+      "access": "protected",
       "overriddenFrom": "qx.core.MObjectId",
       "jsdoc": {
         "@description": [
@@ -3614,16 +3665,106 @@
           }
         ]
       }
+    },
+    "getDebug": {
+      "type": "function",
+      "name": "getDebug",
+      "abstract": false,
+      "mixin": false,
+      "inherited": false,
+      "access": "public",
+      "property": "get",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Gets the (computed) value of the property <code>debug</code>.\n\nFor further details take a look at the property definition: {@link #debug}."
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "type": "Boolean",
+            "desc": "Returns the value for debug"
+          }
+        ]
+      }
+    },
+    "isDebug": {
+      "type": "function",
+      "name": "isDebug",
+      "abstract": false,
+      "mixin": false,
+      "inherited": false,
+      "access": "public",
+      "property": "is",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Gets the (computed) value of the property <code>debug</code>.\n\nFor further details take a look at the property definition: {@link #debug}."
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "type": "Boolean",
+            "desc": "Returns the value for debug"
+          }
+        ]
+      }
+    },
+    "setDebug": {
+      "type": "function",
+      "name": "setDebug",
+      "abstract": false,
+      "mixin": false,
+      "inherited": false,
+      "access": "public",
+      "property": "set",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Sets the user value of the property <code>debug</code>.\n\nFor further details take a look at the property definition: {@link #debug}."
+          }
+        ],
+        "@param": [
+          {
+            "name": "@param",
+            "type": "Boolean",
+            "paramName": "value",
+            "desc": "Value for debug"
+          }
+        ]
+      }
+    },
+    "resetDebug": {
+      "type": "function",
+      "name": "resetDebug",
+      "abstract": false,
+      "mixin": false,
+      "inherited": false,
+      "access": "public",
+      "property": "reset",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Resets the user value of the property <code>debug</code>.\n\nThe computed value falls back to the next available value e.g. appearance, init or inheritance value depending on the property configuration and value availability.\n\nFor further details take a look at the property definition: {@link #debug}."
+          }
+        ]
+      }
     }
   },
   "defer": {
     "location": {
       "start": {
-        "line": 325,
+        "line": 375,
         "column": 9
       },
       "end": {
-        "line": 337,
+        "line": 387,
         "column": 3
       }
     },

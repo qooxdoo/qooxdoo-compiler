@@ -17,14 +17,7 @@
         "column": 3
       }
     },
-    "jsdoc": {
-      "@description": [
-        {
-          "name": "@description",
-          "body": "<pre><code>*****************************************************************\n</code></pre>\n<p>qooxdoo - the new era of web development\n   http://qooxdoo.org\n   Copyright:\n     2017 Zenesis Ltd\n     2004-2008 1&amp;1 Internet AG, Germany, http://www.1und1.de\n   License:\n     MIT: https://opensource.org/licenses/MIT\n     See the LICENSE file in the project's top-level directory for details.\n   Authors:\n John Spackman (john.spackman<code>zenesis.com, </code>johnspackman)\n Sebastian Werner (wpbasti)\n    <strong><em><em></em></strong><strong><em></em></em></strong><strong><em><em></em></strong><strong><em></em></em></strong><strong><em><em></em></strong><strong><em></em></em></strong><strong><em><em></em></strong><strong><em></em></em></strong><strong><em><em></em></strong></em>*</p>"
-        }
-      ]
-    }
+    "jsdoc": {}
   },
   "type": "class",
   "statics": {
@@ -40,7 +33,7 @@
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "__LEVELS": {
       "location": {
@@ -54,7 +47,7 @@
         }
       },
       "type": "variable",
-      "access": "private"
+      "access": "protected"
     },
     "setMinLevel": {
       "location": {
