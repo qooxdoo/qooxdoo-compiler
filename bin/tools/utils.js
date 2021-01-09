@@ -196,13 +196,13 @@ fs.copyFileSync("bin/build/qx.cmd", "tmp/qx.cmd");
    *  it does not matter if they use source or build, just make sure it is up to date
    */
   console.log("Compiling source version");
-  result = await runCommand(".", "node", "./tmp/qx", "compile", "--clean", "--block-global-framework", "--verbose");
+  result = await runCommand(".", "node", "./tmp/qx", "compile", "--clean", "--verbose");
   if (result.exitCode) {
     process.exit(result.exitCode);
   }
 
   console.log("Compiling build version");
-  result = await runCommand(".", "node", "./tmp/qx", "compile", "--target=build", "--clean", "--block-global-framework", "--verbose");
+  result = await runCommand(".", "node", "./tmp/qx", "compile", "--target=build", "--clean", "--verbose");
   if (result.exitCode) {
     process.exit(result.exitCode);
   }
