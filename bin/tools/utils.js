@@ -140,7 +140,7 @@ async function safeDelete(filename) {
   }
 }
 
-async function bootstrapCompiler(version) {
+async function bootstrapCompiler(version, upgradeFramework) {
   let result;
 
   console.log("Deleting previous temporary compiler");
@@ -170,6 +170,10 @@ qx.Class.define("qx.tool.compiler.Version", {
 `;
 
   fs.writeFileSync("./source/class/qx/tool/compiler/Version.js", cls);
+  
+  if (upgradeFramework) {
+    await runCommand(".", "npm", "install", "@qooxdoo/framework");
+  }
   
   // Use the compiler in node_modules to compile a temporary version  
   console.log("Creating temporary compiler with known-good one");
@@ -220,3 +224,4 @@ module.exports = {
   fsPromises,
   promisify
 };
+

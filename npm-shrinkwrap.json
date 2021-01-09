@@ -1599,9 +1599,9 @@
       "integrity": "sha512-m5peROoedu+ry+sGISSnVyv6i6Z+j0c7Nvh0zSmQ5XezI+ttMGd8EEO31H+uimbd7S1doExcuWuzP0l1hP8cWg=="
     },
     "@qooxdoo/framework": {
-      "version": "6.0.0-beta-20210105-1518",
-      "resolved": "https://registry.npmjs.org/@qooxdoo/framework/-/framework-6.0.0-beta-20210105-1518.tgz",
-      "integrity": "sha512-hIwTVRx5G8jKDzaYUlpqlVg+SPi/IUWUfTXVdjiffph5mFv/nP2QPQClKotn1WAbbdRPef6FdE6wVQQvEJptow=="
+      "version": "6.0.0-beta-20210111-1106",
+      "resolved": "https://registry.npmjs.org/@qooxdoo/framework/-/framework-6.0.0-beta-20210111-1106.tgz",
+      "integrity": "sha512-HmAuvlyzgHVr9VYFh//Hy2oQMIr3FWDHTddaneNS7PJI1Uk1Gumhc4kDB98zsWAB03eHhRoA+CuTSvxxjPcUGw=="
     },
     "@sindresorhus/is": {
       "version": "0.14.0",

@@ -8,7 +8,15 @@ const fs = require("fs");
   if (!version) {
      version = require("./package.json").version;
   }
-  await utils.bootstrapCompiler(version);
+  let upgradeFramework = false;
+  if (process.argv.length > 2) {
+    if (process.argv[2] == "--upgrade-framework") {
+      upgradeFramework = true;
+    }
+  }
+  await utils.bootstrapCompiler(version, upgradeFramework);
   process.exit(0);
 })();
+
+
 
