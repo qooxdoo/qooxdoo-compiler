@@ -33,7 +33,7 @@
         }
       },
       "type": "variable",
-      "access": "protected"
+      "access": "private"
     },
     "__LEVELS": {
       "location": {
@@ -47,7 +47,7 @@
         }
       },
       "type": "variable",
-      "access": "protected"
+      "access": "private"
     },
     "setMinLevel": {
       "location": {

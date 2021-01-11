@@ -82,7 +82,7 @@
         }
       },
       "type": "variable",
-      "access": "protected"
+      "access": "private"
     },
     "addApplication": {
       "location": {

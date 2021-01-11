@@ -410,7 +410,7 @@
       "name": "include",
       "propertyType": "new",
       "nullable": false,
-      "transform": "__transformArray",
+      "transform": "__P_25_1",
       "allowNull": false,
       "check": "Array"
     },
@@ -436,7 +436,7 @@
       "name": "exclude",
       "propertyType": "new",
       "nullable": false,
-      "transform": "__transformArray",
+      "transform": "__P_25_1",
       "allowNull": false,
       "check": "Array"
     },
@@ -462,7 +462,7 @@
       "name": "bundleInclude",
       "propertyType": "new",
       "nullable": true,
-      "transform": "__transformArray",
+      "transform": "__P_25_1",
       "allowNull": true,
       "check": "Array"
     },
@@ -488,7 +488,7 @@
       "name": "bundleExclude",
       "propertyType": "new",
       "nullable": true,
-      "transform": "__transformArray",
+      "transform": "__P_25_1",
       "allowNull": true,
       "check": "Array"
     },
@@ -588,7 +588,7 @@
         }
       },
       "type": "variable",
-      "access": "protected"
+      "access": "private"
     },
     "__parts": {
       "location": {
@@ -602,7 +602,7 @@
         }
       },
       "type": "variable",
-      "access": "protected"
+      "access": "private"
     },
     "__requiredLibs": {
       "location": {
@@ -616,7 +616,7 @@
         }
       },
       "type": "variable",
-      "access": "protected"
+      "access": "private"
     },
     "__fatalCompileErrors": {
       "location": {
@@ -630,7 +630,7 @@
         }
       },
       "type": "variable",
-      "access": "protected"
+      "access": "private"
     },
     "__classes": {
       "location": {
@@ -644,7 +644,7 @@
         }
       },
       "type": "variable",
-      "access": "protected"
+      "access": "private"
     },
     "__partsDeps": {
       "location": {
@@ -658,7 +658,7 @@
         }
       },
       "type": "variable",
-      "access": "protected"
+      "access": "private"
     },
     "isBrowserApp": {
       "location": {
@@ -1088,7 +1088,7 @@
         ]
       },
       "type": "function",
-      "access": "protected"
+      "access": "private"
     },
     "_applyType": {
       "location": {
@@ -1136,7 +1136,7 @@
         ]
       },
       "type": "function",
-      "access": "protected"
+      "access": "private"
     },
     "bind": {
       "type": "function",
@@ -1526,7 +1526,7 @@
       "abstract": false,
       "mixin": true,
       "inherited": true,
-      "access": "protected",
+      "access": "private",
       "overriddenFrom": "qx.core.MLogging",
       "jsdoc": {
         "@description": [
@@ -2376,7 +2376,7 @@
       "abstract": false,
       "mixin": true,
       "inherited": true,
-      "access": "protected",
+      "access": "private",
       "overriddenFrom": "qx.core.MObjectId",
       "jsdoc": {
         "@description": [
@@ -2575,7 +2575,7 @@
       "abstract": false,
       "mixin": true,
       "inherited": true,
-      "access": "protected",
+      "access": "private",
       "overriddenFrom": "qx.core.MObjectId",
       "jsdoc": {
         "@description": [

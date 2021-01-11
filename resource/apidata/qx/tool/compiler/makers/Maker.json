@@ -65,7 +65,7 @@
       },
       "name": "dbFilename",
       "propertyType": "new",
-      "apply": "__applyDbFilename",
+      "apply": "__P_32_0",
       "nullable": true,
       "allowNull": true,
       "check": "String"
@@ -513,10 +513,7 @@
         ]
       },
       "type": "function",
-      "access": "protected",
-      "applyFor": [
-        "dbFilename"
-      ]
+      "access": "private"
     },
     "getAnalyser": {
       "location": {
@@ -1012,7 +1009,7 @@
       "abstract": false,
       "mixin": true,
       "inherited": true,
-      "access": "protected",
+      "access": "private",
       "overriddenFrom": "qx.core.MLogging",
       "jsdoc": {
         "@description": [
@@ -1862,7 +1859,7 @@
       "abstract": false,
       "mixin": true,
       "inherited": true,
-      "access": "protected",
+      "access": "private",
       "overriddenFrom": "qx.core.MObjectId",
       "jsdoc": {
         "@description": [
@@ -2061,7 +2058,7 @@
       "abstract": false,
       "mixin": true,
       "inherited": true,
-      "access": "protected",
+      "access": "private",
       "overriddenFrom": "qx.core.MObjectId",
       "jsdoc": {
         "@description": [

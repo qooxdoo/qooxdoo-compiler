@@ -52,7 +52,7 @@
       },
       "name": "target",
       "propertyType": "new",
-      "apply": "__applyTarget",
+      "apply": "__P_30_0",
       "nullable": false,
       "allowNull": false,
       "check": "qx.tool.compiler.targets.Target"
@@ -109,7 +109,7 @@
       },
       "name": "writeAllTranslations",
       "propertyType": "new",
-      "apply": "__applyWriteAllTranslations",
+      "apply": "__P_30_1",
       "nullable": false,
       "init": false,
       "allowNull": false,
@@ -222,10 +222,7 @@
         ]
       },
       "type": "function",
-      "access": "protected",
-      "applyFor": [
-        "target"
-      ]
+      "access": "private"
     },
     "__applyWriteAllTranslations": {
       "location": {
@@ -267,10 +264,7 @@
         ]
       },
       "type": "function",
-      "access": "protected",
-      "applyFor": [
-        "writeAllTranslations"
-      ]
+      "access": "private"
     },
     "_applyLocales": {
       "location": {
@@ -705,7 +699,7 @@
       "abstract": false,
       "mixin": true,
       "inherited": true,
-      "access": "protected",
+      "access": "private",
       "overriddenFrom": "qx.core.MLogging",
       "jsdoc": {
         "@description": [
@@ -1555,7 +1549,7 @@
       "abstract": false,
       "mixin": true,
       "inherited": true,
-      "access": "protected",
+      "access": "private",
       "overriddenFrom": "qx.core.MObjectId",
       "jsdoc": {
         "@description": [
@@ -1754,7 +1748,7 @@
       "abstract": false,
       "mixin": true,
       "inherited": true,
-      "access": "protected",
+      "access": "private",
       "overriddenFrom": "qx.core.MObjectId",
       "jsdoc": {
         "@description": [

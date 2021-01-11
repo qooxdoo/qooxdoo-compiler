@@ -336,7 +336,7 @@
         }
       },
       "type": "variable",
-      "access": "protected"
+      "access": "private"
     },
     "__makers": {
       "location": {
@@ -350,7 +350,7 @@
         }
       },
       "type": "variable",
-      "access": "protected"
+      "access": "private"
     },
     "__config": {
       "location": {
@@ -364,7 +364,7 @@
         }
       },
       "type": "variable",
-      "access": "protected"
+      "access": "private"
     },
     "__libraries": {
       "location": {
@@ -378,7 +378,7 @@
         }
       },
       "type": "variable",
-      "access": "protected"
+      "access": "private"
     },
     "__outputDirWasCreated": {
       "location": {
@@ -392,7 +392,7 @@
         }
       },
       "type": "variable",
-      "access": "protected"
+      "access": "private"
     },
     "process": {
       "location": {
@@ -545,7 +545,7 @@
         ]
       },
       "type": "function",
-      "access": "protected"
+      "access": "private"
     },
     "resolveTargetClass": {
       "location": {
