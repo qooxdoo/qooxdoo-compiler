@@ -393,8 +393,7 @@ Versions: @qooxdoo/compiler    v${qx.tool.compiler.Version.VERSION}
               m.shift();
               m = m.map(v => parseInt(v, 10));
               if (m[0] <= 1 && m[1] == 0 && m[2] < 15) {
-                qx.tool.compiler.Console.log("API Viewer is out of date and must be upgraded - please run 'qx package upgrade'");
-                process.exit(1);
+                qx.tool.compiler.Console.log("***********\n*********** API Viewer is out of date and must be upgraded - please run 'qx package update' and then 'qx package upgrade'\n***********");
               }
             }
           }
