@@ -387,6 +387,17 @@ Versions: @qooxdoo/compiler    v${qx.tool.compiler.Version.VERSION}
       if (lockfileContent.libraries) {
         config.packages = {};
         lockfileContent.libraries.forEach(function(library) {
+          if (library.uri == "qooxdoo/qxl.apiviewer") {
+            let m = library.repo_tag.match(/^v([0-9]+)\.([0-9]+)\.([0-9]+)$/);
+            if (m) {
+              m.shift();
+              m = m.map(v => parseInt(v, 10));
+              if (m[0] <= 1 && m[1] == 0 && m[2] < 15) {
+                qx.tool.compiler.Console.log("API Viewer is out of date and must be upgraded - please run 'qx package upgrade'");
+                process.exit(1);
+              }
+            }
+          }
           config.libraries.push(library.path);
           config.packages[library.uri] = library.path;
         });
