@@ -214,6 +214,13 @@
           "environment": {
             "$ref": "#/properties/environment"
           },
+          "preserveEnvironment": {
+            "description": "a list of environment settings that will be ignored for code elimination, ie settings which *must* be configured at runtime",
+            "type": "array", 
+            "items": {
+              "type": "string"
+            }
+          },
           "writeCompileInfo": {
             "description": "if true, the target will write a compile-info.json and resources.json into the application's output directory, containing the data structures required to generate an application",
             "type":"boolean"

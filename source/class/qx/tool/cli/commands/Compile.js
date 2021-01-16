@@ -846,6 +846,9 @@ Framework: v${await this.getUserQxVersion()} in ${await this.getUserQxPath()}`);
         if (targetConfig.environment) {
           target.setEnvironment(targetConfig.environment);
         }
+        if (targetConfig.preserveEnvironment) {
+          target.setPreserveEnvironment(targetConfig.preserveEnvironment);
+        }
 
         if (data["path-mappings"]) {
           for (var from in data["path-mappings"]) {

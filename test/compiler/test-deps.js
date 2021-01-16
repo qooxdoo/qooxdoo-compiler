@@ -22,9 +22,11 @@ async function createMaker() {
       environment: {
         envVar1: "ONE",
         envVar2: "TWO",
+        runtimeVar: "RUNTIMEVAR",
         "test.overridden4": "target",
         "test.overridden5": "target"
-      }
+      },
+      preserveEnvironment: [ "runtimeVar" ]
     }),
     locales: ["en"],
     writeAllTranslations: true,
@@ -280,6 +282,7 @@ test("Checks dependencies and environment settings", assert => {
         assert.ok(src.match(/var envVar2 = "222"/), "environment setting for envVar2");
         assert.ok(src.match(/var envVar3 = qx.core.Environment.get\("envVar3"\)/), "environment setting for envVar3");
         assert.ok(src.match(/var envVar4 = "four"/), "environment setting for envVar4");
+        assert.ok(src.match(/var runtimeVar = qx.core.Environment.get/), "environment setting for runtimeVar");
         assert.ok(src.match(/var envTestOverriden3 = "global"/), "environment setting for envTestOverriden3");
         assert.ok(src.match(/var envTestOverriden4 = "target"/), "environment setting for envTestOverriden4");
         assert.ok(src.match(/var envTestOverriden5 = "application"/), "environment setting for envTestOverriden5");

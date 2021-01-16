@@ -69,6 +69,7 @@ qx.Class.define("qx.tool.compiler.makers.AppMaker", {
      */
     async make() {
       var analyser = this.getAnalyser();
+      let target = this.getTarget();
       
       await this.fireEventAsync("making");
       this.setSuccess(null);
@@ -84,8 +85,17 @@ qx.Class.define("qx.tool.compiler.makers.AppMaker", {
           "qx.compiler.version": qx.tool.compiler.Version.VERSION
         },
         this.getEnvironment(),
-        this.getTarget().getDefaultEnvironment(),
-        this.getTarget().getEnvironment());
+        target.getDefaultEnvironment(),
+        target.getEnvironment());
+        
+      let preserve = target.getPreserveEnvironment();
+      if (preserve) {
+        let tmp = {};
+        preserve.forEach(key => tmp[key] = true);
+        preserve = tmp;
+      } else {
+        preserve = {};
+      }
 
       let appEnvironments = {};
       this.getApplications().forEach(app => {
@@ -113,7 +123,9 @@ qx.Class.define("qx.tool.compiler.makers.AppMaker", {
       this.getApplications().forEach(app => {
         let env = appEnvironments[app.toHashCode()];
         Object.keys(allAppEnv).forEach(key => {
-          if (allAppEnv[key].same) {
+          if (preserve[key]) {
+            env[key] = compileEnv[key];
+          } else if (allAppEnv[key].same) {
             delete env[key];
           } else if (env[key] === undefined) {
             env[key] = compileEnv[key];
@@ -123,7 +135,7 @@ qx.Class.define("qx.tool.compiler.makers.AppMaker", {
       
       // Cleanup to remove env that have been moved to the app 
       Object.keys(allAppEnv).forEach(key => {
-        if (allAppEnv[key].same) {
+        if (!preserve[key] && allAppEnv[key].same) {
           compileEnv[key] = allAppEnv[key].value;
         } else {
           delete compileEnv[key];
@@ -142,9 +154,9 @@ qx.Class.define("qx.tool.compiler.makers.AppMaker", {
       await qx.tool.utils.Utils.promisifyThis(analyser.initialScan, analyser);
       await analyser.updateEnvironmentData();
 
-      this.getTarget().setAnalyser(analyser);
+      target.setAnalyser(analyser);
       this.__applications.forEach(app => app.setAnalyser(analyser));
-      await this.getTarget().open();
+      await target.open();
       
       if (this.isOutputTypescript()) {
         analyser.getLibraries().forEach(library => {
@@ -169,7 +181,6 @@ qx.Class.define("qx.tool.compiler.makers.AppMaker", {
       await analyser.analyseClasses();
       
       await analyser.saveDatabase();
-      var target = this.getTarget();
       await this.fireEventAsync("writingApplications");
 
       // Detect which applications need to be recompiled by looking for classes recently compiled
