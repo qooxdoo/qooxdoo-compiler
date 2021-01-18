@@ -4,16 +4,23 @@ const utils = require("./bin/tools/utils");
 const fs = require("fs");
 
 (async function() {
-  let version = process.argv[2];  
+  let upgradeFramework = false;
+  let version = null;
+  for (let i = 2; i < process.argv.length; i++) {
+    let arg = process.argv[i];
+    if (arg == "--upgrade-framework") {
+      upgradeFramework = true;
+    } else if (arg.startsWith("--")) {
+      console.error("Invalid argument " + arg);
+    } else {
+      version = arg;
+    }
+  }
+  
   if (!version) {
      version = require("./package.json").version;
   }
-  let upgradeFramework = false;
-  if (process.argv.length > 2) {
-    if (process.argv[2] == "--upgrade-framework") {
-      upgradeFramework = true;
-    }
-  }
+  
   await utils.bootstrapCompiler(version, upgradeFramework);
   process.exit(0);
 })();
