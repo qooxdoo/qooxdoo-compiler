@@ -90,6 +90,11 @@ qx.Class.define("qx.tool.cli.Cli", {
           default: false,
           type: "boolean"
         })
+        .option("debug", {
+          describe: "enables debug output",
+          default: false,
+          type: "boolean"
+        })
         .option("quiet", {
           alias: "q",
           describe: "suppresses normal progress output to console",
@@ -126,6 +131,7 @@ Versions: @qooxdoo/compiler    v${qx.tool.compiler.Version.VERSION}
       let yargs = this.__createYargs()
         .usage(title);
       this.argv = yargs.argv;
+      qx.tool.cli.LogAppender.setMinLevel(this.argv.debug ? "debug" : "warn");
     },
 
     /**

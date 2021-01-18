@@ -81,6 +81,16 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
       inheritable: true,
       nullable: true
     },
+    
+    /**
+     * List of environment keys to preserve in code, ie reserve for runtime detection
+     * and exclude from code elimination
+     */
+    preserveEnvironment: {
+      init: null,
+      nullable: true,
+      check: "Array"
+    },
 
     /**
      * The analyser being generated
@@ -181,7 +191,7 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
     
     /** @type {qx.tool.compiler.targets.meta.ApplicationMeta} for the current application */
     __appMeta: null,
-
+    
     /**
      * Initialises the target, creating directories etc
      */
@@ -203,7 +213,7 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
       }
       return value;
     },
-
+    
     /**
      * Returns the root for applications
      */

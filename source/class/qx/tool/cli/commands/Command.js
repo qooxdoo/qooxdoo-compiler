@@ -32,9 +32,6 @@ qx.Class.define("qx.tool.cli.commands.Command", {
   construct: function(argv) {
     this.base(arguments);
     this.argv = argv;
-    if (argv.verbose) {
-      qx.tool.cli.LogAppender.setMinLevel("debug");
-    }
   },
 
   properties: {
