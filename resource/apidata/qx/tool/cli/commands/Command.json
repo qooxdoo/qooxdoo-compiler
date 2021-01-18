@@ -13,7 +13,7 @@
         "column": 0
       },
       "end": {
-        "line": 415,
+        "line": 412,
         "column": 3
       }
     },
@@ -34,7 +34,7 @@
         "column": 13
       },
       "end": {
-        "line": 38,
+        "line": 35,
         "column": 3
       }
     },
@@ -44,11 +44,11 @@
     "compilerApi": {
       "location": {
         "start": {
-          "line": 45,
+          "line": 42,
           "column": 4
         },
         "end": {
-          "line": 48,
+          "line": 45,
           "column": 5
         }
       },
@@ -109,11 +109,11 @@
     "argv": {
       "location": {
         "start": {
-          "line": 52,
+          "line": 49,
           "column": 4
         },
         "end": {
-          "line": 52,
+          "line": 49,
           "column": 14
         }
       },
@@ -123,11 +123,11 @@
     "compileJs": {
       "location": {
         "start": {
-          "line": 53,
+          "line": 50,
           "column": 4
         },
         "end": {
-          "line": 53,
+          "line": 50,
           "column": 19
         }
       },
@@ -137,11 +137,11 @@
     "process": {
       "location": {
         "start": {
-          "line": 55,
+          "line": 52,
           "column": 4
         },
         "end": {
-          "line": 73,
+          "line": 70,
           "column": 5
         }
       },
@@ -151,11 +151,11 @@
     "processArgs": {
       "location": {
         "start": {
-          "line": 83,
+          "line": 80,
           "column": 4
         },
         "end": {
-          "line": 85,
+          "line": 82,
           "column": 5
         }
       },
@@ -182,11 +182,11 @@
     "getProjectData": {
       "location": {
         "start": {
-          "line": 99,
+          "line": 96,
           "column": 4
         },
         "end": {
-          "line": 125,
+          "line": 122,
           "column": 5
         }
       },
@@ -212,11 +212,11 @@
     "getLibraryPath": {
       "location": {
         "start": {
-          "line": 133,
+          "line": 130,
           "column": 4
         },
         "end": {
-          "line": 139,
+          "line": 136,
           "column": 5
         }
       },
@@ -250,11 +250,11 @@
     "getApplicationPath": {
       "location": {
         "start": {
-          "line": 148,
+          "line": 145,
           "column": 4
         },
         "end": {
-          "line": 154,
+          "line": 151,
           "column": 5
         }
       },
@@ -288,11 +288,11 @@
     "getAppQxPath": {
       "location": {
         "start": {
-          "line": 160,
+          "line": 157,
           "column": 4
         },
         "end": {
-          "line": 187,
+          "line": 184,
           "column": 5
         }
       },
@@ -318,11 +318,11 @@
     "getGlobalQxPath": {
       "location": {
         "start": {
-          "line": 193,
+          "line": 190,
           "column": 4
         },
         "end": {
-          "line": 213,
+          "line": 210,
           "column": 5
         }
       },
@@ -348,11 +348,11 @@
     "getUserQxPath": {
       "location": {
         "start": {
-          "line": 220,
+          "line": 217,
           "column": 4
         },
         "end": {
-          "line": 223,
+          "line": 220,
           "column": 5
         }
       },
@@ -378,11 +378,11 @@
     "getUserQxVersion": {
       "location": {
         "start": {
-          "line": 230,
+          "line": 227,
           "column": 4
         },
         "end": {
-          "line": 234,
+          "line": 231,
           "column": 5
         }
       },
@@ -416,11 +416,11 @@
     "getLibraryVersion": {
       "location": {
         "start": {
-          "line": 241,
+          "line": 238,
           "column": 4
         },
         "end": {
-          "line": 254,
+          "line": 251,
           "column": 5
         }
       },
@@ -452,11 +452,11 @@
     "run": {
       "location": {
         "start": {
-          "line": 264,
+          "line": 261,
           "column": 4
         },
         "end": {
-          "line": 289,
+          "line": 286,
           "column": 5
         }
       },
@@ -498,11 +498,11 @@
     "exec": {
       "location": {
         "start": {
-          "line": 297,
+          "line": 294,
           "column": 4
         },
         "end": {
-          "line": 309,
+          "line": 306,
           "column": 5
         }
       },
@@ -537,11 +537,11 @@
     "getTemplateDir": {
       "location": {
         "start": {
-          "line": 315,
+          "line": 312,
           "column": 4
         },
         "end": {
-          "line": 319,
+          "line": 316,
           "column": 5
         }
       },
@@ -567,11 +567,11 @@
     "getNodeModuleDir": {
       "location": {
         "start": {
-          "line": 326,
+          "line": 323,
           "column": 4
         },
         "end": {
-          "line": 328,
+          "line": 325,
           "column": 5
         }
       },
@@ -597,11 +597,11 @@
     "isExplicitArg": {
       "location": {
         "start": {
-          "line": 338,
+          "line": 335,
           "column": 4
         },
         "end": {
-          "line": 343,
+          "line": 340,
           "column": 5
         }
       },
@@ -636,11 +636,11 @@
     "checkFilesToRename": {
       "location": {
         "start": {
-          "line": 351,
+          "line": 348,
           "column": 4
         },
         "end": {
-          "line": 359,
+          "line": 356,
           "column": 5
         }
       },
@@ -670,11 +670,11 @@
     "migrate": {
       "location": {
         "start": {
-          "line": 368,
+          "line": 365,
           "column": 4
         },
         "end": {
-          "line": 413,
+          "line": 410,
           "column": 5
         }
       },

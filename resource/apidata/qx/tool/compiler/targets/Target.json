@@ -13,7 +13,7 @@
         "column": 0
       },
       "end": {
-        "line": 849,
+        "line": 859,
         "column": 3
       }
     },
@@ -189,14 +189,39 @@
       "nullable": true,
       "allowNull": true
     },
-    "analyser": {
+    "preserveEnvironment": {
       "location": {
         "start": {
-          "line": 88,
+          "line": 89,
           "column": 4
         },
         "end": {
-          "line": 90,
+          "line": 93,
+          "column": 5
+        }
+      },
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "<p>List of environment keys to preserve in code, ie reserve for runtime detection\n and exclude from code elimination</p>"
+          }
+        ]
+      },
+      "name": "preserveEnvironment",
+      "propertyType": "new",
+      "nullable": true,
+      "allowNull": true,
+      "check": "Array"
+    },
+    "analyser": {
+      "location": {
+        "start": {
+          "line": 98,
+          "column": 4
+        },
+        "end": {
+          "line": 100,
           "column": 5
         }
       },
@@ -216,11 +241,11 @@
     "inlineExternalScripts": {
       "location": {
         "start": {
-          "line": 95,
+          "line": 105,
           "column": 4
         },
         "end": {
-          "line": 98,
+          "line": 108,
           "column": 5
         }
       },
@@ -241,11 +266,11 @@
     "locales": {
       "location": {
         "start": {
-          "line": 101,
+          "line": 111,
           "column": 4
         },
         "end": {
-          "line": 105,
+          "line": 115,
           "column": 5
         }
       },
@@ -272,11 +297,11 @@
     "i18nAsParts": {
       "location": {
         "start": {
-          "line": 108,
+          "line": 118,
           "column": 4
         },
         "end": {
-          "line": 112,
+          "line": 122,
           "column": 5
         }
       },
@@ -299,11 +324,11 @@
     "writeAllTranslations": {
       "location": {
         "start": {
-          "line": 115,
+          "line": 125,
           "column": 4
         },
         "end": {
-          "line": 119,
+          "line": 129,
           "column": 5
         }
       },
@@ -326,11 +351,11 @@
     "updatePoFiles": {
       "location": {
         "start": {
-          "line": 122,
+          "line": 132,
           "column": 4
         },
         "end": {
-          "line": 126,
+          "line": 136,
           "column": 5
         }
       },
@@ -353,11 +378,11 @@
     "libraryPoPolicy": {
       "location": {
         "start": {
-          "line": 129,
+          "line": 139,
           "column": 4
         },
         "end": {
-          "line": 132,
+          "line": 142,
           "column": 5
         }
       },
@@ -382,11 +407,11 @@
     "writeCompileInfo": {
       "location": {
         "start": {
-          "line": 138,
+          "line": 148,
           "column": 4
         },
         "end": {
-          "line": 142,
+          "line": 152,
           "column": 5
         }
       },
@@ -409,11 +434,11 @@
     "writeLibraryInfo": {
       "location": {
         "start": {
-          "line": 147,
+          "line": 157,
           "column": 4
         },
         "end": {
-          "line": 151,
+          "line": 161,
           "column": 5
         }
       },
@@ -470,11 +495,11 @@
     "checkEnvironment": {
       "location": {
         "start": {
-          "line": 162,
+          "line": 172,
           "column": 4
         },
         "end": {
-          "line": 162,
+          "line": 172,
           "column": 44
         }
       },
@@ -492,11 +517,11 @@
     "writingApplication": {
       "location": {
         "start": {
-          "line": 169,
+          "line": 179,
           "column": 4
         },
         "end": {
-          "line": 169,
+          "line": 179,
           "column": 47
         }
       },
@@ -514,11 +539,11 @@
     "writtenApplication": {
       "location": {
         "start": {
-          "line": 174,
+          "line": 184,
           "column": 4
         },
         "end": {
-          "line": 174,
+          "line": 184,
           "column": 47
         }
       },
@@ -538,11 +563,11 @@
     "__pathMappings": {
       "location": {
         "start": {
-          "line": 180,
+          "line": 190,
           "column": 4
         },
         "end": {
-          "line": 180,
+          "line": 190,
           "column": 24
         }
       },
@@ -566,11 +591,11 @@
     "__appMeta": {
       "location": {
         "start": {
-          "line": 183,
+          "line": 193,
           "column": 4
         },
         "end": {
-          "line": 183,
+          "line": 193,
           "column": 19
         }
       },
@@ -594,11 +619,11 @@
     "open": {
       "location": {
         "start": {
-          "line": 188,
+          "line": 198,
           "column": 4
         },
         "end": {
-          "line": 189,
+          "line": 199,
           "column": 5
         }
       },
@@ -616,11 +641,11 @@
     "_transformOutputDir": {
       "location": {
         "start": {
-          "line": 198,
+          "line": 208,
           "column": 4
         },
         "end": {
-          "line": 205,
+          "line": 215,
           "column": 5
         }
       },
@@ -660,11 +685,11 @@
     "getApplicationRoot": {
       "location": {
         "start": {
-          "line": 210,
+          "line": 220,
           "column": 4
         },
         "end": {
-          "line": 212,
+          "line": 222,
           "column": 5
         }
       },
@@ -682,11 +707,11 @@
     "getProjectDir": {
       "location": {
         "start": {
-          "line": 219,
+          "line": 229,
           "column": 4
         },
         "end": {
-          "line": 221,
+          "line": 231,
           "column": 5
         }
       },
@@ -710,11 +735,11 @@
     "_getOutputRootUri": {
       "location": {
         "start": {
-          "line": 226,
+          "line": 236,
           "column": 4
         },
         "end": {
-          "line": 230,
+          "line": 240,
           "column": 5
         }
       },
@@ -732,11 +757,11 @@
     "addPathMapping": {
       "location": {
         "start": {
-          "line": 239,
+          "line": 249,
           "column": 4
         },
         "end": {
-          "line": 245,
+          "line": 255,
           "column": 5
         }
       },
@@ -770,11 +795,11 @@
     "getPathMapping": {
       "location": {
         "start": {
-          "line": 254,
+          "line": 264,
           "column": 4
         },
         "end": {
-          "line": 269,
+          "line": 279,
           "column": 5
         }
       },
@@ -809,11 +834,11 @@
     "mapToUri": {
       "location": {
         "start": {
-          "line": 280,
+          "line": 290,
           "column": 4
         },
         "end": {
-          "line": 291,
+          "line": 301,
           "column": 5
         }
       },
@@ -856,11 +881,11 @@
     "_copyClassesToFile": {
       "location": {
         "start": {
-          "line": 293,
+          "line": 303,
           "column": 4
         },
         "end": {
-          "line": 301,
+          "line": 311,
           "column": 5
         }
       },
@@ -870,11 +895,11 @@
     "generateApplication": {
       "location": {
         "start": {
-          "line": 309,
+          "line": 319,
           "column": 4
         },
         "end": {
-          "line": 490,
+          "line": 500,
           "column": 5
         }
       },
@@ -908,11 +933,11 @@
     "_writeTranslations": {
       "location": {
         "start": {
-          "line": 495,
+          "line": 505,
           "column": 4
         },
         "end": {
-          "line": 513,
+          "line": 523,
           "column": 5
         }
       },
@@ -930,11 +955,11 @@
     "_transformLocales": {
       "location": {
         "start": {
-          "line": 522,
+          "line": 532,
           "column": 4
         },
         "end": {
-          "line": 534,
+          "line": 544,
           "column": 5
         }
       },
@@ -969,11 +994,11 @@
     "_writeLocales": {
       "location": {
         "start": {
-          "line": 544,
+          "line": 554,
           "column": 4
         },
         "end": {
-          "line": 584,
+          "line": 594,
           "column": 5
         }
       },
@@ -991,11 +1016,11 @@
     "_writeAllTranslations": {
       "location": {
         "start": {
-          "line": 589,
+          "line": 599,
           "column": 4
         },
         "end": {
-          "line": 623,
+          "line": 633,
           "column": 5
         }
       },
@@ -1013,11 +1038,11 @@
     "_writeRequiredTranslations": {
       "location": {
         "start": {
-          "line": 628,
+          "line": 638,
           "column": 4
         },
         "end": {
-          "line": 685,
+          "line": 695,
           "column": 5
         }
       },
@@ -1035,11 +1060,11 @@
     "_writeApplication": {
       "location": {
         "start": {
-          "line": 690,
+          "line": 700,
           "column": 4
         },
         "end": {
-          "line": 743,
+          "line": 753,
           "column": 5
         }
       },
@@ -1057,11 +1082,11 @@
     "_writeIndexHtml": {
       "location": {
         "start": {
-          "line": 748,
+          "line": 758,
           "column": 4
         },
         "end": {
-          "line": 843,
+          "line": 853,
           "column": 5
         }
       },
@@ -1079,11 +1104,11 @@
     "getAppMeta": {
       "location": {
         "start": {
-          "line": 845,
+          "line": 855,
           "column": 4
         },
         "end": {
-          "line": 847,
+          "line": 857,
           "column": 5
         }
       },
@@ -4712,6 +4737,72 @@
           {
             "name": "@description",
             "body": "Resets the user value of the property <code>defaultEnvironment</code>.\n\nThe computed value falls back to the next available value e.g. appearance, init or inheritance value depending on the property configuration and value availability.\n\nFor further details take a look at the property definition: {@link #defaultEnvironment}."
+          }
+        ]
+      }
+    },
+    "getPreserveEnvironment": {
+      "type": "function",
+      "name": "getPreserveEnvironment",
+      "abstract": false,
+      "mixin": false,
+      "inherited": false,
+      "access": "public",
+      "property": "get",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Gets the (computed) value of the property <code>preserveEnvironment</code>.\n\nFor further details take a look at the property definition: {@link #preserveEnvironment}."
+          }
+        ],
+        "@return": [
+          {
+            "name": "@return",
+            "type": "Array",
+            "desc": "Returns the value for preserveEnvironment"
+          }
+        ]
+      }
+    },
+    "setPreserveEnvironment": {
+      "type": "function",
+      "name": "setPreserveEnvironment",
+      "abstract": false,
+      "mixin": false,
+      "inherited": false,
+      "access": "public",
+      "property": "set",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Sets the user value of the property <code>preserveEnvironment</code>.\n\nFor further details take a look at the property definition: {@link #preserveEnvironment}."
+          }
+        ],
+        "@param": [
+          {
+            "name": "@param",
+            "type": "Array",
+            "paramName": "value",
+            "desc": "Value for preserveEnvironment"
+          }
+        ]
+      }
+    },
+    "resetPreserveEnvironment": {
+      "type": "function",
+      "name": "resetPreserveEnvironment",
+      "abstract": false,
+      "mixin": false,
+      "inherited": false,
+      "access": "public",
+      "property": "reset",
+      "jsdoc": {
+        "@description": [
+          {
+            "name": "@description",
+            "body": "Resets the user value of the property <code>preserveEnvironment</code>.\n\nThe computed value falls back to the next available value e.g. appearance, init or inheritance value depending on the property configuration and value availability.\n\nFor further details take a look at the property definition: {@link #preserveEnvironment}."
           }
         ]
       }
