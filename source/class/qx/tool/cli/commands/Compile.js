@@ -1042,7 +1042,7 @@ Framework: v${await this.getUserQxVersion()} in ${await this.getUserQxPath()}`);
           if (this.argv.download) {
             // but we're instructed to download the libraries
             if (this.argv.verbose) {
-              Console.info(`>>> Installing latest compatible version of required libraries...`);
+              Console.info(`>>> Installing latest compatible version of libraries ${urisToInstall.join(", ")}...`);
             }
             const installer = new qx.tool.cli.commands.package.Install({
               verbose: this.argv.verbose,
