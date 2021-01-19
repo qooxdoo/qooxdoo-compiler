@@ -13,7 +13,7 @@
         "column": 0
       },
       "end": {
-        "line": 358,
+        "line": 367,
         "column": 3
       }
     },
@@ -309,7 +309,7 @@
           "column": 4
         },
         "end": {
-          "line": 256,
+          "line": 265,
           "column": 5
         }
       },
@@ -350,11 +350,11 @@
     "getBootstrapCode": {
       "location": {
         "start": {
-          "line": 266,
+          "line": 275,
           "column": 4
         },
         "end": {
-          "line": 290,
+          "line": 299,
           "column": 5
         }
       },
@@ -403,11 +403,11 @@
     "generateForTarget": {
       "location": {
         "start": {
-          "line": 299,
+          "line": 308,
           "column": 4
         },
         "end": {
-          "line": 332,
+          "line": 341,
           "column": 5
         }
       },
@@ -442,11 +442,11 @@
     "generateForApplication": {
       "location": {
         "start": {
-          "line": 341,
+          "line": 350,
           "column": 4
         },
         "end": {
-          "line": 343,
+          "line": 352,
           "column": 5
         }
       },
