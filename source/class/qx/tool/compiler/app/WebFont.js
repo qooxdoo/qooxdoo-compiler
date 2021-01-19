@@ -229,25 +229,34 @@ qx.Class.define("qx.tool.compiler.app.WebFont", {
                 .components
                 .map(x => font.stringsForGlyph(x)[0])
                 .join("");
-              ligatureName[character.charCodeAt(0).toString(16)] = ligatureText;
+              var hexId = character.charCodeAt(0).toString(16);
+              if (ligatureName[hexId] == undefined)
+                ligatureName[hexId] = [ ligatureText ];
+              else
+                ligatureName[hexId].push(ligatureText);
             });
           });
         });
 
+        let defaultSize = this.getDefaultSize();
         font.characterSet.forEach(codePoint => {
           let glyph = font.glyphForCodePoint(codePoint);
-
-          let gName = glyph.name || ligatureName[codePoint.toString(16)];
-          if (!gName) {
+          if (glyph.path.commands.length < 1 && !glyph.layers) {
             return;
           }
-          if (glyph.path.commands.length > 0 || glyph.layers) {
+
+          const found = gName => {
             resources["@" + this.getName() + "/" + gName] = [
               Math.ceil(this.getDefaultSize() * glyph.advanceWidth / glyph.advanceHeight), // width
-              this.getDefaultSize(), // height
+              defaultSize, // height
               codePoint
             ];
-          }
+          };
+          if (glyph.name)
+            found(glyph.name);
+          var names = ligatureName[codePoint.toString(16)];
+          if (names)
+            names.forEach(found);
         }, this);
 
 
