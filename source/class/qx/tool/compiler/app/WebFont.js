@@ -230,10 +230,11 @@ qx.Class.define("qx.tool.compiler.app.WebFont", {
                 .map(x => font.stringsForGlyph(x)[0])
                 .join("");
               var hexId = character.charCodeAt(0).toString(16);
-              if (ligatureName[hexId] == undefined)
-                ligatureName[hexId] = [ ligatureText ];
-              else
-                ligatureName[hexId].push(ligatureText);
+              if (ligatureName[hexId] == undefined) {
+                ligatureName[hexId] = [ ligatureText ]; 
+              } else {
+                ligatureName[hexId].push(ligatureText); 
+              }
             });
           });
         });
@@ -252,11 +253,13 @@ qx.Class.define("qx.tool.compiler.app.WebFont", {
               codePoint
             ];
           };
-          if (glyph.name)
-            found(glyph.name);
+          if (glyph.name) {
+            found(glyph.name); 
+          }
           var names = ligatureName[codePoint.toString(16)];
-          if (names)
-            names.forEach(found);
+          if (names) {
+            names.forEach(found); 
+          }
         }, this);
 
 

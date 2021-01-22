@@ -30,12 +30,13 @@ qx.Class.define("qx.tool.compiler.resources.ScssIncludeConverter", {
   members: {
     matches(filename) {
       filename = path.basename(filename);
-      return filename[0] == '_' && filename.endsWith(".scss");
+      return filename[0] == "_" && filename.endsWith(".scss");
     },
     
     isDoNotCopy(filename) {
-      if (qx.tool.compiler.resources.ScssConverter.COPY_ORIGINAL_FILES)
-        return false;
+      if (qx.tool.compiler.resources.ScssConverter.COPY_ORIGINAL_FILES) {
+        return false; 
+      }
       return true;
     },
     

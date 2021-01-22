@@ -155,7 +155,6 @@ qx.Class.define("qx.tool.compiler.Console", {
   },
 
   defer: function(statics) {
-
     /*
      * Errors
      */

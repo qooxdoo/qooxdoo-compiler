@@ -394,7 +394,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
               t._addRequiredClass(depName);
             }
           }
-        } catch(err) {
+        } catch (err) {
           if (err.code === "ENOCLASSFILE") {
             qx.tool.compiler.Console.error(err.message);
           } else {
@@ -944,7 +944,7 @@ qx.Class.define("qx.tool.compiler.Analyser", {
             }
             if (dbMtime && dbMtime.getTime() == sourceStat.mtime.getTime()) {
               if (outputStat.mtime.getTime() >= sourceStat.mtime.getTime()) {
-                await t.fireDataEventAsync ("alreadyCompiledClass", { className: className, dbClassInfo: dbClassInfo });
+                await t.fireDataEventAsync("alreadyCompiledClass", { className: className, dbClassInfo: dbClassInfo });
                 return dbClassInfo;
               }
             }

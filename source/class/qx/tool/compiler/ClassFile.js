@@ -927,8 +927,9 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
             node.type == "NullLiteral") {
           if (typeof node.value == "string") {
             let isIdentifier = false;
-            if (isProperties && (jsonPath === "apply" || jsonPath === "transform"))
-              isIdentifier = true;
+            if (isProperties && (jsonPath === "apply" || jsonPath === "transform")) {
+              isIdentifier = true; 
+            }
             node.value = t.encodePrivate(node.value, isIdentifier, node.loc);
           }
           result = node.value;
