@@ -1494,7 +1494,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
                   } else {
                     t.__environmentChecks.provided[arg.value] = true;
                     if (!arg.value.startsWith(t.__className) &&
-                        !qx.tool.compiler.ClassFile.ENVIRONMENT_CONSTANTS.hasOwnProperty(arg.value)) {
+                        !Object.prototype.hasOwnProperty.call(qx.tool.compiler.ClassFile.ENVIRONMENT_CONSTANTS, arg.value)) {
                       let symbol = t.__library.getSymbolType(arg.value);
                       if (!symbol || symbol.symbolType != "environment") {
                         t.addMarker("environment.unreachable", path.node.loc, arg.value);
@@ -2176,7 +2176,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
       }
       t._requireClass("qx.core.Environment", { location: location });
       let info = t.__analyser.getSymbolType(name);
-      if (!qx.tool.compiler.ClassFile.ENVIRONMENT_CONSTANTS.hasOwnProperty(name)) {
+      if (!Object.prototype.hasOwnProperty.call(qx.tool.compiler.ClassFile.ENVIRONMENT_CONSTANTS, name)) {
         
         // Generally speaking, we try to have as few load dependencies as possible, and this
         // means that in a class' `.defer()` we will still allow for runtime loading.  However,
@@ -2641,7 +2641,6 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
       "qx.blankpage": "qx/static/blank.html",
       "qx.debug.databinding": false,
       "qx.debug.dispose": false,
-      "qx.nativeScrollBars": undefined,
       // generator optimization vectors
       "qx.optimization.basecalls": false,
       "qx.optimization.comments": false,

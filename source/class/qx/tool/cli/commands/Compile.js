@@ -164,11 +164,6 @@ qx.Class.define("qx.tool.cli.commands.Compile", {
         type: "boolean",
         default: false
       },
-      "write-compile-info": {
-        describe: "Write compiler information to the target",
-        type: "boolean",
-        default: false
-      },
       "write-library-info": {
         alias: "I",
         describe: "Write library information to the script, for reflection",

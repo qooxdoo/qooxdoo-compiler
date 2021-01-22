@@ -21,8 +21,6 @@
  * *********************************************************************** */
 
 var path = require("upath");
-var sass = require("node-sass");
-const fs = qx.tool.utils.Promisify.fs;
 
 qx.Class.define("qx.tool.compiler.resources.ScssIncludeConverter", {
   extend: qx.tool.compiler.resources.ResourceConverter,

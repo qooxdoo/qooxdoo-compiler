@@ -376,6 +376,7 @@ qx.Class.define("qx.tool.compiler.app.Library", {
             name: name 
           };
         }
+        return null;
       }
       
       let result = testEnvironment(this.__environmentChecks[name]);
@@ -386,7 +387,7 @@ qx.Class.define("qx.tool.compiler.app.Library", {
         let check = this.__environmentChecks[key];
         if (check.startsWith) {
           result = testEnvironment(check);
-          if (result != null) {
+          if (result !== null) {
             return result; 
           }
         }

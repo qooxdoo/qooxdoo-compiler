@@ -228,6 +228,7 @@ qx.Class.define("qx.tool.cli.Watch", {
             delete this.__makeNeedsRestart;
             return runIt();
           }
+          return null;
         });
 
       return this.__making = runIt();
@@ -243,6 +244,7 @@ qx.Class.define("qx.tool.cli.Watch", {
         clearTimeout(this.__makeTimerId);
       }
       this.__makeTimerId = setTimeout(() => this.__make());
+      return null;
     },
 
     __onFileChange(type, filename) {
@@ -331,6 +333,7 @@ qx.Class.define("qx.tool.cli.Watch", {
             delete dbc.restart;
             return runIt(dbc);
           }
+          return null;
         });
       
       let dbc = this.__debounceChanges[filename];
