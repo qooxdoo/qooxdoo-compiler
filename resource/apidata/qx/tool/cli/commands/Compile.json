@@ -13,7 +13,7 @@
         "column": 0
       },
       "end": {
-        "line": 1221,
+        "line": 1216,
         "column": 3
       }
     },
@@ -35,7 +35,7 @@
           "column": 4
         },
         "end": {
-          "line": 189,
+          "line": 184,
           "column": 5
         }
       },
@@ -45,11 +45,11 @@
     "getYargsCommand": {
       "location": {
         "start": {
-          "line": 191,
+          "line": 186,
           "column": 4
         },
         "end": {
-          "line": 197,
+          "line": 192,
           "column": 5
         }
       },
@@ -61,11 +61,11 @@
     "writingApplications": {
       "location": {
         "start": {
-          "line": 206,
+          "line": 201,
           "column": 4
         },
         "end": {
-          "line": 206,
+          "line": 201,
           "column": 48
         }
       },
@@ -83,11 +83,11 @@
     "writingApplication": {
       "location": {
         "start": {
-          "line": 214,
+          "line": 209,
           "column": 4
         },
         "end": {
-          "line": 214,
+          "line": 209,
           "column": 46
         }
       },
@@ -105,11 +105,11 @@
     "writtenApplication": {
       "location": {
         "start": {
-          "line": 224,
+          "line": 219,
           "column": 4
         },
         "end": {
-          "line": 224,
+          "line": 219,
           "column": 46
         }
       },
@@ -127,11 +127,11 @@
     "writtenApplications": {
       "location": {
         "start": {
-          "line": 236,
+          "line": 231,
           "column": 4
         },
         "end": {
-          "line": 236,
+          "line": 231,
           "column": 47
         }
       },
@@ -149,11 +149,11 @@
     "compilingClass": {
       "location": {
         "start": {
-          "line": 247,
+          "line": 242,
           "column": 4
         },
         "end": {
-          "line": 247,
+          "line": 242,
           "column": 42
         }
       },
@@ -171,11 +171,11 @@
     "compiledClass": {
       "location": {
         "start": {
-          "line": 257,
+          "line": 252,
           "column": 4
         },
         "end": {
-          "line": 257,
+          "line": 252,
           "column": 41
         }
       },
@@ -193,11 +193,11 @@
     "saveDatabase": {
       "location": {
         "start": {
-          "line": 265,
+          "line": 260,
           "column": 4
         },
         "end": {
-          "line": 265,
+          "line": 260,
           "column": 40
         }
       },
@@ -215,11 +215,11 @@
     "checkEnvironment": {
       "location": {
         "start": {
-          "line": 274,
+          "line": 269,
           "column": 4
         },
         "end": {
-          "line": 274,
+          "line": 269,
           "column": 44
         }
       },
@@ -237,11 +237,11 @@
     "making": {
       "location": {
         "start": {
-          "line": 279,
+          "line": 274,
           "column": 4
         },
         "end": {
-          "line": 279,
+          "line": 274,
           "column": 35
         }
       },
@@ -259,11 +259,11 @@
     "made": {
       "location": {
         "start": {
-          "line": 284,
+          "line": 279,
           "column": 4
         },
         "end": {
-          "line": 284,
+          "line": 279,
           "column": 33
         }
       },
@@ -281,11 +281,11 @@
     "minifyingApplication": {
       "location": {
         "start": {
-          "line": 294,
+          "line": 289,
           "column": 4
         },
         "end": {
-          "line": 294,
+          "line": 289,
           "column": 48
         }
       },
@@ -303,11 +303,11 @@
     "minifiedApplication": {
       "location": {
         "start": {
-          "line": 304,
+          "line": 299,
           "column": 4
         },
         "end": {
-          "line": 304,
+          "line": 299,
           "column": 47
         }
       },
@@ -327,11 +327,11 @@
     "__gauge": {
       "location": {
         "start": {
-          "line": 309,
+          "line": 304,
           "column": 4
         },
         "end": {
-          "line": 309,
+          "line": 304,
           "column": 17
         }
       },
@@ -341,11 +341,11 @@
     "__makers": {
       "location": {
         "start": {
-          "line": 310,
+          "line": 305,
           "column": 4
         },
         "end": {
-          "line": 310,
+          "line": 305,
           "column": 18
         }
       },
@@ -355,11 +355,11 @@
     "__config": {
       "location": {
         "start": {
-          "line": 311,
+          "line": 306,
           "column": 4
         },
         "end": {
-          "line": 311,
+          "line": 306,
           "column": 18
         }
       },
@@ -369,11 +369,11 @@
     "__libraries": {
       "location": {
         "start": {
-          "line": 312,
+          "line": 307,
           "column": 4
         },
         "end": {
-          "line": 312,
+          "line": 307,
           "column": 21
         }
       },
@@ -383,11 +383,11 @@
     "__outputDirWasCreated": {
       "location": {
         "start": {
-          "line": 313,
+          "line": 308,
           "column": 4
         },
         "end": {
-          "line": 313,
+          "line": 308,
           "column": 32
         }
       },
@@ -397,11 +397,11 @@
     "process": {
       "location": {
         "start": {
-          "line": 318,
+          "line": 313,
           "column": 4
         },
         "end": {
-          "line": 434,
+          "line": 429,
           "column": 5
         }
       },
@@ -429,11 +429,11 @@
     "_loadConfigAndStartMaking": {
       "location": {
         "start": {
-          "line": 441,
+          "line": 436,
           "column": 4
         },
         "end": {
-          "line": 556,
+          "line": 551,
           "column": 5
         }
       },
@@ -459,11 +459,11 @@
     "createMakersFromConfig": {
       "location": {
         "start": {
-          "line": 565,
+          "line": 560,
           "column": 4
         },
         "end": {
-          "line": 997,
+          "line": 992,
           "column": 5
         }
       },
@@ -495,11 +495,11 @@
     "__checkDependencies": {
       "location": {
         "start": {
-          "line": 1008,
+          "line": 1003,
           "column": 4
         },
         "end": {
-          "line": 1108,
+          "line": 1103,
           "column": 5
         }
       },
@@ -550,11 +550,11 @@
     "resolveTargetClass": {
       "location": {
         "start": {
-          "line": 1116,
+          "line": 1111,
           "column": 4
         },
         "end": {
-          "line": 1142,
+          "line": 1137,
           "column": 5
         }
       },
@@ -586,11 +586,11 @@
     "getMakers": {
       "location": {
         "start": {
-          "line": 1149,
+          "line": 1144,
           "column": 4
         },
         "end": {
-          "line": 1151,
+          "line": 1146,
           "column": 5
         }
       },
@@ -616,11 +616,11 @@
     "getMaker": {
       "location": {
         "start": {
-          "line": 1162,
+          "line": 1157,
           "column": 4
         },
         "end": {
-          "line": 1167,
+          "line": 1162,
           "column": 5
         }
       },
@@ -652,11 +652,11 @@
     "getMakersForApp": {
       "location": {
         "start": {
-          "line": 1175,
+          "line": 1170,
           "column": 4
         },
         "end": {
-          "line": 1180,
+          "line": 1175,
           "column": 5
         }
       },
@@ -691,11 +691,11 @@
     "_getConfig": {
       "location": {
         "start": {
-          "line": 1185,
+          "line": 1180,
           "column": 4
         },
         "end": {
-          "line": 1187,
+          "line": 1182,
           "column": 5
         }
       },
@@ -713,11 +713,11 @@
     "getLibraries": {
       "location": {
         "start": {
-          "line": 1194,
+          "line": 1189,
           "column": 4
         },
         "end": {
-          "line": 1196,
+          "line": 1191,
           "column": 5
         }
       },
@@ -949,11 +949,11 @@
   "defer": {
     "location": {
       "start": {
-        "line": 1199,
+        "line": 1194,
         "column": 9
       },
       "end": {
-        "line": 1220,
+        "line": 1215,
         "column": 3
       }
     },
