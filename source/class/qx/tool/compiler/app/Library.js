@@ -353,10 +353,10 @@ qx.Class.define("qx.tool.compiler.app.Library", {
 
       if (type) {
         return { 
-            symbolType: t.__knownSymbols[name], 
-            className: type == "class" ? name : null, 
-            name: name 
-          };
+          symbolType: t.__knownSymbols[name], 
+          className: type == "class" ? name : null, 
+          name: name 
+        };
       }
       
       function testEnvironment(check) {
@@ -376,6 +376,7 @@ qx.Class.define("qx.tool.compiler.app.Library", {
             name: name 
           };
         }
+        return null;
       }
       
       let result = testEnvironment(this.__environmentChecks[name]);
@@ -386,8 +387,9 @@ qx.Class.define("qx.tool.compiler.app.Library", {
         let check = this.__environmentChecks[key];
         if (check.startsWith) {
           result = testEnvironment(check);
-          if (result != null)
-            return result;
+          if (result !== null) {
+            return result; 
+          }
         }
       }
 

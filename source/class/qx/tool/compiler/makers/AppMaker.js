@@ -142,7 +142,7 @@ qx.Class.define("qx.tool.compiler.makers.AppMaker", {
         }
       });
 
-      await analyser.open()
+      await analyser.open();
       analyser.setEnvironment(compileEnv);
       if (!this.isNoErase() && analyser.isContextChanged()) {
         log.log("enviroment changed - delete output dir");
@@ -239,10 +239,10 @@ qx.Class.define("qx.tool.compiler.makers.AppMaker", {
       await this.fireDataEventAsync("writtenApplications", allAppInfos);
       if (this.isOutputTypescript()) {
         await (
-            new qx.tool.compiler.targets.TypeScriptWriter(target)
-              .set({ outputTo: this.getOutputTypescriptTo() })
-              .run()
-          );
+          new qx.tool.compiler.targets.TypeScriptWriter(target)
+            .set({ outputTo: this.getOutputTypescriptTo() })
+            .run()
+        );
       }
       
       await analyser.saveDatabase();

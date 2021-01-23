@@ -21,8 +21,6 @@
  * *********************************************************************** */
 
 var path = require("upath");
-var sass = require("node-sass");
-const fs = qx.tool.utils.Promisify.fs;
 
 qx.Class.define("qx.tool.compiler.resources.ScssIncludeConverter", {
   extend: qx.tool.compiler.resources.ResourceConverter,
@@ -30,12 +28,13 @@ qx.Class.define("qx.tool.compiler.resources.ScssIncludeConverter", {
   members: {
     matches(filename) {
       filename = path.basename(filename);
-      return filename[0] == '_' && filename.endsWith(".scss");
+      return filename[0] == "_" && filename.endsWith(".scss");
     },
     
     isDoNotCopy(filename) {
-      if (qx.tool.compiler.resources.ScssConverter.COPY_ORIGINAL_FILES)
-        return false;
+      if (qx.tool.compiler.resources.ScssConverter.COPY_ORIGINAL_FILES) {
+        return false; 
+      }
       return true;
     },
     

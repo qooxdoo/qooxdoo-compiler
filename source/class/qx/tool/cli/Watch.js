@@ -222,15 +222,14 @@ qx.Class.define("qx.tool.cli.Watch", {
           });
       }
       
-      const runIt = () => {
-        return make()
-          .then(() => {
-            if (this.__makeNeedsRestart) {
-              delete this.__makeNeedsRestart;
-              return runIt();
-            }
-          });
-      };
+      const runIt = () => make()
+        .then(() => {
+          if (this.__makeNeedsRestart) {
+            delete this.__makeNeedsRestart;
+            return runIt();
+          }
+          return null;
+        });
 
       return this.__making = runIt();
     },
@@ -245,6 +244,7 @@ qx.Class.define("qx.tool.cli.Watch", {
         clearTimeout(this.__makeTimerId);
       }
       this.__makeTimerId = setTimeout(() => this.__make());
+      return null;
     },
 
     __onFileChange(type, filename) {
@@ -327,15 +327,14 @@ qx.Class.define("qx.tool.cli.Watch", {
         }
       };
       
-      const runIt = dbc => {
-        return handleFileChange()
-          .then(() => {
-            if (dbc.restart) {
-              delete dbc.restart;
-              return runIt(dbc);
-            }
-          });
-      };
+      const runIt = dbc => handleFileChange()
+        .then(() => {
+          if (dbc.restart) {
+            delete dbc.restart;
+            return runIt(dbc);
+          }
+          return null;
+        });
       
       let dbc = this.__debounceChanges[filename];
       if (!dbc) {
