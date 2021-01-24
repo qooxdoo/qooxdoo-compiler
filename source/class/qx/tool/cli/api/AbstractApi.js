@@ -76,7 +76,7 @@ qx.Class.define("qx.tool.cli.api.AbstractApi", {
         this.loadNpmModule(module);
       }
       return require(mod);
-  },
+    },
     /**
       * 
       * install an npm module with 'npm install --no-save --no-package-lock' to the current library
