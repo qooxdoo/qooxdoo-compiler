@@ -13,7 +13,7 @@
         "column": 0
       },
       "end": {
-        "line": 387,
+        "line": 389,
         "column": 3
       }
     }
@@ -317,7 +317,7 @@
           "column": 4
         },
         "end": {
-          "line": 150,
+          "line": 152,
           "column": 5
         }
       },
@@ -327,11 +327,11 @@
     "stop": {
       "location": {
         "start": {
-          "line": 152,
+          "line": 154,
           "column": 4
         },
         "end": {
-          "line": 158,
+          "line": 160,
           "column": 5
         }
       },
@@ -341,11 +341,11 @@
     "__make": {
       "location": {
         "start": {
-          "line": 160,
+          "line": 162,
           "column": 4
         },
         "end": {
-          "line": 235,
+          "line": 237,
           "column": 5
         }
       },
@@ -355,11 +355,11 @@
     "__scheduleMake": {
       "location": {
         "start": {
-          "line": 237,
+          "line": 239,
           "column": 4
         },
         "end": {
-          "line": 248,
+          "line": 250,
           "column": 5
         }
       },
@@ -369,11 +369,11 @@
     "__onFileChange": {
       "location": {
         "start": {
-          "line": 250,
+          "line": 252,
           "column": 4
         },
         "end": {
-          "line": 367,
+          "line": 369,
           "column": 5
         }
       },
@@ -383,11 +383,11 @@
     "__onStop": {
       "location": {
         "start": {
-          "line": 369,
+          "line": 371,
           "column": 4
         },
         "end": {
-          "line": 371,
+          "line": 373,
           "column": 5
         }
       },
@@ -3760,11 +3760,11 @@
   "defer": {
     "location": {
       "start": {
-        "line": 374,
+        "line": 376,
         "column": 9
       },
       "end": {
-        "line": 386,
+        "line": 388,
         "column": 3
       }
     },
