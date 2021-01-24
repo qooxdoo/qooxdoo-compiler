@@ -13,7 +13,7 @@
         "column": 0
       },
       "end": {
-        "line": 92,
+        "line": 97,
         "column": 3
       }
     },
@@ -162,7 +162,7 @@
           "column": 4
         },
         "end": {
-          "line": 74,
+          "line": 79,
           "column": 5
         }
       },
@@ -189,11 +189,11 @@
     "loadNpmModule": {
       "location": {
         "start": {
-          "line": 81,
+          "line": 86,
           "column": 4
         },
         "end": {
-          "line": 88,
+          "line": 93,
           "column": 5
         }
       },

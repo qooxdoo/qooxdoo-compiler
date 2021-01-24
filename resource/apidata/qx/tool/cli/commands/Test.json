@@ -36,7 +36,7 @@
         },
         "end": {
           "line": 47,
-          "column": 41
+          "column": 40
         }
       },
       "jsdoc": {
@@ -138,9 +138,11 @@
       "name": "exitCode",
       "propertyType": "new",
       "event": "changeExitCode",
-      "nullable": true,
-      "allowNull": true,
-      "check": "Number"
+      "nullable": false,
+      "init": 0,
+      "allowNull": false,
+      "check": "Number",
+      "defaultValue": 0
     },
     "needsServer": {
       "location": {
