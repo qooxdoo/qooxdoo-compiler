@@ -107,8 +107,8 @@ qx.Class.define("qx.tool.cli.Watch", {
         }
       });
       if (this.isDebug()) {
-        qx.tool.compiler.Console.debug(`DEBUG: applications=${JSON.stringify(applications.map(d => d.application.getName()))}`);
-        qx.tool.compiler.Console.debug(`DEBUG: dirs=${JSON.stringify(dirs)}`);
+        qx.tool.compiler.Console.debug(`DEBUG: applications=${JSON.stringify(applications.map(d => d.application.getName()), 2)}`);
+        qx.tool.compiler.Console.debug(`DEBUG: dirs=${JSON.stringify(dirs, 2)}`);
       }
       var confirmed = [];
       Promise.all(dirs.map(dir => new Promise((resolve, reject) => {
@@ -131,7 +131,9 @@ qx.Class.define("qx.tool.cli.Watch", {
           });
         });
       }))).then(() => {
-        qx.tool.compiler.Console.debug(`DEBUG: confirmed=${JSON.stringify(confirmed)}`);
+        if (this.isDebug()) {
+          qx.tool.compiler.Console.debug(`DEBUG: confirmed=${JSON.stringify(confirmed, 2)}`);
+        }
         
         var watcher = this._watcher = chokidar.watch(confirmed, {
           //ignored: /(^|[\/\\])\../
@@ -284,7 +286,7 @@ qx.Class.define("qx.tool.cli.Watch", {
         let outOfDateAppNames = Object.keys(outOfDateApps);
         if (this.isDebug()) {
           if (outOfDateAppNames.length) {
-            Console.debug(`DEBUG: onFileChange: ${filename} impacted applications: ${JSON.stringify(outOfDateAppNames)}`);
+            Console.debug(`DEBUG: onFileChange: ${filename} impacted applications: ${JSON.stringify(outOfDateAppNames, 2)}`);
           }
         }
         
