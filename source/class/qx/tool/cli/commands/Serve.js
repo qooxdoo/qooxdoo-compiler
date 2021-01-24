@@ -73,6 +73,7 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
      * The event data is an object with the following properties: 
      *   server: the http server
      *   application: the used express server instance
+     *   outputdir: the qooxdoo app output dir
      */
     "beforeStart": "qx.event.type.Data",
     /**
@@ -189,7 +190,8 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
         let server = http.createServer(app);
         this.fireDataEvent("beforeStart", {
           server: server,
-          application: app
+          application: app,
+          outputdir: defaultMaker.getTarget().getOutputDir()
         });
         server.on("error", e => {
           if (e.code === "EADDRINUSE") {
