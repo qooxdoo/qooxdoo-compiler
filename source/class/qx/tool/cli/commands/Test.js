@@ -44,12 +44,12 @@ qx.Class.define("qx.tool.cli.commands.Test", {
      * The name of the file containing the compile config for the testrunner
      * defaults to "compile-test.json"
      */
-    CONFIG_FILENAME : "compile-test.json",
+    CONFIG_FILENAME: "compile-test.json",
 
     YARGS_BUILDER: {
       "fail-fast": {
         describe: "Exit on first failing test",
-        default: true,
+        default: false,
         type: "boolean"
       },
       "disable-webserver": {
@@ -59,11 +59,11 @@ qx.Class.define("qx.tool.cli.commands.Test", {
       }
     },
 
-    getYargsCommand: function() {
+    getYargsCommand: function () {
       return {
-        command   : "test",
-        describe  : "run test for current project",
-        builder   : (() => {
+        command: "test",
+        describe: "run test for current project",
+        builder: (() => {
           let res = Object.assign({},
             qx.tool.cli.commands.Compile.YARGS_BUILDER,
             qx.tool.cli.commands.Serve.YARGS_BUILDER,
@@ -95,7 +95,7 @@ qx.Class.define("qx.tool.cli.commands.Test", {
     this.addListener("changeExitCode", evt => {
       let exitCode = evt.getData();
       // overwrite error code only in case of errors
-      if (exitCode && argv.failFast) {
+      if ((exitCode !== 0) && argv.failFast) {
         process.exit(exitCode);
       }
     });
@@ -109,8 +109,8 @@ qx.Class.define("qx.tool.cli.commands.Test", {
     exitCode: {
       check: "Number",
       event: "changeExitCode",
-      nullable: true,
-      init: null
+      nullable: false,
+      init: 0
     },
 
     /**
@@ -134,7 +134,7 @@ qx.Class.define("qx.tool.cli.commands.Test", {
      * add a test object and listens for the change of exitCode property
      * @param {qx.tool.cli.api.Test} test
      */
-    addTest: function(test) {
+    addTest: function (test) {
       qx.core.Assert.assertInstance(test, qx.tool.cli.api.Test);
       test.addListenerOnce("changeExitCode", evt => {
         let exitCode = evt.getData();
@@ -147,7 +147,7 @@ qx.Class.define("qx.tool.cli.commands.Test", {
           qx.tool.compiler.Console.error(`Test '${test.getName()}' failed with exit code ${exitCode}.`);
         }
         // overwrite error code only in case of errors
-        if (exitCode) {
+        if (exitCode !== 0) {
           this.setExitCode(exitCode);
         }
       });
@@ -158,7 +158,7 @@ qx.Class.define("qx.tool.cli.commands.Test", {
     /**
      * @Override
      */
-    process: async function() {
+    process: async function () {
       this.argv.watch = false;
       this.argv["machine-readable"] = false;
       this.argv["feedback"] = false;
@@ -202,7 +202,7 @@ qx.Class.define("qx.tool.cli.commands.Test", {
       }
     },
 
-    __needsServer: function() {
+    __needsServer: function () {
       return !this.argv.disableWebserver && (this.getNeedsServer() || this.__tests.some(test => test.getNeedsServer()));
     }
   }

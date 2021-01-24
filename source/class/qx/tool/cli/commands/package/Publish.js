@@ -350,6 +350,7 @@ qx.Class.define("qx.tool.cli.commands.package.Publish", {
           qx.tool.compiler.Console.info(`Added GitHub topic '${topic}'.`);
         }
       }
+      await this.run("git", ["pull"]);
     },
 
     /**

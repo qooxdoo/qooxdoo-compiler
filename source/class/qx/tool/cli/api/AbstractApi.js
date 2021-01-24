@@ -66,11 +66,16 @@ qx.Class.define("qx.tool.cli.api.AbstractApi", {
      * @param module {String} module to check
      */
     require: function(module) {
-      let exists = fs.existsSync(path.join(process.cwd(), "node_modules", module));
+      let mod = path.join(process.cwd(), "node_modules");
+      if (!fs.existsSync(mod)) {
+        fs.mkdirSync(mod);
+      }        
+      mod = path.join(mod, module);
+      let exists = fs.existsSync(mod);
       if (!exists) {
         this.loadNpmModule(module);
-      }      
-      return require(module);
+      }
+      return require(mod);
     },
     /**
       * 
