@@ -13,7 +13,7 @@
         "column": 0
       },
       "end": {
-        "line": 220,
+        "line": 222,
         "column": 3
       }
     },
@@ -61,11 +61,11 @@
     "beforeStart": {
       "location": {
         "start": {
-          "line": 77,
+          "line": 78,
           "column": 4
         },
         "end": {
-          "line": 77,
+          "line": 78,
           "column": 39
         }
       },
@@ -73,7 +73,7 @@
         "@description": [
           {
             "name": "@description",
-            "body": "<p>Fired before server start\n The event data is an object with the following properties:\n   server: the http server\n   application: the used express server instance</p>"
+            "body": "<p>Fired before server start\n The event data is an object with the following properties:\n   server: the http server\n   application: the used express server instance\n   outputdir: the qooxdoo app output dir</p>"
           }
         ]
       },
@@ -83,11 +83,11 @@
     "afterStart": {
       "location": {
         "start": {
-          "line": 81,
+          "line": 82,
           "column": 4
         },
         "end": {
-          "line": 81,
+          "line": 82,
           "column": 39
         }
       },
@@ -107,11 +107,11 @@
     "_website": {
       "location": {
         "start": {
-          "line": 86,
+          "line": 87,
           "column": 4
         },
         "end": {
-          "line": 86,
+          "line": 87,
           "column": 18
         }
       },
@@ -135,11 +135,11 @@
     "process": {
       "location": {
         "start": {
-          "line": 91,
+          "line": 92,
           "column": 4
         },
         "end": {
-          "line": 107,
+          "line": 108,
           "column": 5
         }
       },
@@ -168,11 +168,11 @@
     "showStartpage": {
       "location": {
         "start": {
-          "line": 114,
+          "line": 115,
           "column": 4
         },
         "end": {
-          "line": 116,
+          "line": 117,
           "column": 5
         }
       },
@@ -190,11 +190,11 @@
     "runWebServer": {
       "location": {
         "start": {
-          "line": 121,
+          "line": 122,
           "column": 4
         },
         "end": {
-          "line": 207,
+          "line": 209,
           "column": 5
         }
       },
@@ -212,11 +212,11 @@
     "__showStartpage": {
       "location": {
         "start": {
-          "line": 209,
+          "line": 211,
           "column": 4
         },
         "end": {
-          "line": 209,
+          "line": 211,
           "column": 25
         }
       },
@@ -432,11 +432,11 @@
   "defer": {
     "location": {
       "start": {
-        "line": 214,
+        "line": 216,
         "column": 9
       },
       "end": {
-        "line": 219,
+        "line": 221,
         "column": 3
       }
     },
