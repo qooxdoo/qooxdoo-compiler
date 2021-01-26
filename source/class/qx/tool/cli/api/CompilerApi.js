@@ -29,19 +29,22 @@ const fs = qx.tool.utils.Promisify.fs;
  */
 qx.Class.define("qx.tool.cli.api.CompilerApi", {
   extend: qx.tool.cli.api.AbstractApi,
-  
-  construct: function() {
+
+  construct: function () {
     this.base(arguments);
     this.__libraryApis = {};
+    this.addListener("changeCommand", function () {
+      this.afterCommandLoaded(this.getCommand());
+    }, this);
   },
-  
+
   properties: {
     /** Default filename to load from */
     configFilename: {
       check: "String",
       nullable: false
     },
-    
+
     /** The current command */
     command: {
       init: null,
@@ -53,12 +56,20 @@ qx.Class.define("qx.tool.cli.api.CompilerApi", {
 
   members: {
     __libraryApis: null,
-    
+
+    /**
+     * Called after the command is loaded
+     * @param cmd {qx.tool.cli.commands.Command} current command
+     */
+    afterCommandLoaded(cmd) {
+      // Nothing
+    },
+
     /**
      * Register compiler tests
      * @param cmd {qx.tool.cli.commands.Command} current command
      */
-    async beforeTests (cmd) {
+    async beforeTests(cmd) {
       // Nothing
     },
 
@@ -72,10 +83,10 @@ qx.Class.define("qx.tool.cli.api.CompilerApi", {
      *           application: {Object}  application to build
      * @return {Promise<void>}
      */
-    async afterDeploy (data) {
+    async afterDeploy(data) {
       // Nothing
     },
-    
+
     /**
      * Loads the configuration data
      * 
@@ -90,7 +101,7 @@ qx.Class.define("qx.tool.cli.api.CompilerApi", {
       this.setConfiguration(config);
       return this.base(arguments);
     },
-    
+
     /**
      * Called after all libraries have been loaded and added to the compilation data
      */
@@ -99,7 +110,7 @@ qx.Class.define("qx.tool.cli.api.CompilerApi", {
         await arr[i].afterLibrariesLoaded();
       }
     },
-    
+
     /**
      * Adds a library configuration
      * 
@@ -109,7 +120,7 @@ qx.Class.define("qx.tool.cli.api.CompilerApi", {
       let dir = path.resolve(libraryApi.getRootDir());
       this.__libraryApis[dir] = libraryApi;
     },
-    
+
     /**
      * Returns an array of library configurations
      * 
