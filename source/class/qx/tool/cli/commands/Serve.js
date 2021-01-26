@@ -140,9 +140,9 @@ qx.Class.define("qx.tool.cli.commands.Serve", {
       if (!defaultMaker && (apps.length === 1)) {
         defaultMaker = firstMaker;
       }
-
+      
       this.__showStartpage = this.argv.showStartpage;
-      if (this.__showStartpage === null) {
+      if ((this.__showStartpage === undefined) || (this.__showStartpage === null)) {
         this.__showStartpage = defaultMaker === null;
       }
       var config = this._getConfig();
