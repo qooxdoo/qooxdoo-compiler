@@ -152,8 +152,6 @@ qx.Class.define("qx.test.compiler.jsdoc.Parser", {
       let text = `
     * *strong*
     * __emphasis__
-    * @light@              -> <code>light</code> 
-    * @light@  @light@            -> <code>light</code> <code>light</code>
     * {@link Resource}     -> link?
     * @ignore(qx.*)
     `;  
@@ -162,8 +160,19 @@ qx.Class.define("qx.test.compiler.jsdoc.Parser", {
       this.assert(test["@description"][0].body !== "");
       this.assert(test["@description"][0].body.includes("<strong>"));
       this.assert(test["@description"][0].body.includes("<em>"));
-      this.assert(test["@description"][0].body.includes("<code>light</code> <code>light</code>"));
       this.assert(test["@ignore"].length === 1);
+    },
+    
+    testHiResSyntax() {
+      let data = qx.tool.compiler.jsdoc.Parser.parseComment(
+        " *\n" + 
+        " * @asset(qx/test/webfonts/fontawesome-webfont.*)\n" + 
+        " * @asset(qx/icon/Tango/48/places/folder.png)\n" + 
+        " * @asset(qx/icon/Tango/32/places/folder.png)\n" +
+        " * @asset(qx/static/blank.gif)\n" +
+        " * @asset(qx/static/drawer.png)\n" +
+        " * @asset(qx/static/drawer@2x.png)");
+      this.assert(!!data["@asset"] && data["@asset"].length == 6);
     },
     
     testIgnore: function() {
@@ -184,7 +193,7 @@ qx.Class.define("qx.test.compiler.jsdoc.Parser", {
     testCheckMarkdown: function() {
       let text = `
     *
-    * The @qx.bom.rest@ package consists of only one class: {@link Resource}.
+    * The \`qx.bom.rest\` package consists of only one class: {@link Resource}.
     *
     * {@link Resource} allows to encapsulate the specifics of a REST interface.
     * Rather than requesting URLs with a specific HTTP method manually, a resource
@@ -194,31 +203,31 @@ qx.Class.define("qx.test.compiler.jsdoc.Parser", {
     * There is also {@link qx.io.rest.Resource} which uses {@link Resource} under the hood.
     * The main differences between them are:
     *
-    * * The event object available in the listeners (e.g. @success()@, @getSuccess()@ and @getError()@) is
+    * * The event object available in the listeners (e.g. \`success()\`, \`getSuccess()\` and \`getError()\`) is
     *   a native JavaScript object instead of a qooxdoo object ({@link qx.event.type.Rest}):
     * ** See {@link qx.io.rest.Resource} vs. {@link Resource}
-    * ** @event.getId()@ => @event.id@
-    * ** @event.getRequest()@ => @event.request@
-    * ** @event.getAction()@ => @event.action@
-    * ** @event.getData()@ => @event.response@
-    * ** @event.getPhase()@ => @---@ (see below)
-    * * Methods which allow request manipulation (e.g. @configureRequest()@) will operate on an
+    * ** \`event.getId()\` => \`event.id\`
+    * ** \`event.getRequest()\` => \`event.request\`
+    * ** \`event.getAction()\` => \`event.action\`
+    * ** \`event.getData()\` => \`event.response\`
+    * ** \`event.getPhase()\` => @---@ (see below)
+    * * Methods which allow request manipulation (e.g. \`configureRequest()\`) will operate on an
     *   instance of {@link qx.bom.request.SimpleXhr} instead of {@link qx.io.request.Xhr}
     *   (their API is similar but not identical)
-    * * The method @poll()@ returns no {@link qx.event.Timer} object. There are two new methods
-    *   (@stopPollByAction()@ and @restartPollByAction()@) available at {@link Resource}
+    * * The method \`poll()\` returns no {@link qx.event.Timer} object. There are two new methods
+    *   (\`stopPollByAction()\` and \`restartPollByAction()\`) available at {@link Resource}
     *   which replace the functionality provided by the Timer object.
     * * The phase support, which is a more elaborate version of readyState, is not available.
     *   So use readyState instead.
     * ** Phases (available only in {@link qx.io.rest.Resource}):
-    * *** @unsent@, @opened@, @sent@, @loading@, @load@, @success@
-    * *** @abort@, @timeout@, @statusError@
+    * *** \`unsent\`, \`opened\`, \`sent\`, \`loading\`, \`load\`, \`success\`
+    * *** \`abort\`, \`timeout\`, \`statusError\`
     * ** readyState (available in {@link Resource} and {@link qx.io.rest.Resource}):
-    * *** @UNSENT@
-    * *** @OPENED@
-    * *** @HEADERS_RECEIVED@
-    * *** @LOADING@
-    * *** @DONE@  
+    * *** \`UNSENT\`
+    * *** \`OPENED\`
+    * *** \`HEADERS_RECEIVED\`
+    * *** \`LOADING\`
+    * *** \`DONE\`  
         `;
       var test = qx.tool.compiler.jsdoc.Parser.parseComment(text);
       console.log(test["@description"][0].body);
