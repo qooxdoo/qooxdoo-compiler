@@ -172,7 +172,7 @@ qx.Class.define("qx.test.compiler.jsdoc.Parser", {
         " * @asset(qx/static/blank.gif)\n" +
         " * @asset(qx/static/drawer.png)\n" +
         " * @asset(qx/static/drawer@2x.png)");
-      this.assert(!!data["@asset"] && data["@asset"].length == 6);
+      this.assert(Boolean(data["@asset"] && data["@asset"].length == 6));
     },
     
     testIgnore: function() {
