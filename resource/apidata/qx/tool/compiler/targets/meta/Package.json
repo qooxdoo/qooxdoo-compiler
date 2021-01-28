@@ -803,9 +803,9 @@
         "@param": [
           {
             "name": "@param",
-            "body": "packages {Object} the `qx.$$packages` object data",
+            "body": "packages {Object} the <code>qx.$$packages</code> object data",
             "paramName": "packages",
-            "description": " the `qx.$$packages` object data",
+            "description": " the <code>qx.$$packages</code> object data",
             "type": "Object"
           }
         ]

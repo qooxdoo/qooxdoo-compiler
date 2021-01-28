@@ -257,7 +257,7 @@
         "@type": [
           {
             "name": "@type",
-            "body": "{Boolean} Whether libraries have had their `.load()` method called yet"
+            "body": "{Boolean} Whether libraries have had their <code>.load()</code> method called yet"
           }
         ]
       },
@@ -4023,9 +4023,9 @@
           },
           {
             "name": "@param",
-            "body": "classNames {String[]} array of class names, each of which is in the `packageName` package",
+            "body": "classNames {String[]} array of class names, each of which is in the <code>packageName</code> package",
             "paramName": "classNames",
-            "description": " array of class names, each of which is in the `packageName` package",
+            "description": " array of class names, each of which is in the <code>packageName</code> package",
             "type": "String[]"
           },
           {
