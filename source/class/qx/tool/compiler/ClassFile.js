@@ -927,8 +927,8 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
             node.type == "NullLiteral") {
           if (typeof node.value == "string") {
             let isIdentifier = false;
-            if (isProperties && (jsonPath === "apply" || jsonPath === "transform")) {
-              isIdentifier = true; 
+            if (isProperties && (jsonPath === "apply" || jsonPath === "transform" || jsonPath === "isEqual")) {
+              isIdentifier = true;
             }
             node.value = t.encodePrivate(node.value, isIdentifier, node.loc);
           }
@@ -1548,8 +1548,10 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
                   //expr = expandMemberExpression(t.__classMeta.className + ".$$members." + t.__classMeta.functionName + ".base.call");
                 } else if (t.__classMeta.functionName == "$$constructor") {
                   expr = expandMemberExpression(t.__classMeta.superClass + ".constructor.call");
-                } else {
+                } else if (t.__classMeta.className) {
                   expr = expandMemberExpression(t.__classMeta.className + ".prototype." + t.__classMeta.functionName + ".base.call");
+                } else {
+                  expr = expandMemberExpression(t.__classMeta.superClass + ".prototype." + t.__classMeta.functionName + ".call");
                 }
                 if (thisAlias) {
                   path.node.arguments[0] = types.identifier(thisAlias);
@@ -1581,7 +1583,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
                 path.replaceWith(callExpr);
                 
               } else if (name == "this.self") {
-                let expr = expandMemberExpression(t.__className);
+                let expr = expandMemberExpression(t.__classMeta.className);
                 path.replaceWith(expr);
                 
               } else if (name == "this.tr" || name == "this.marktr" || name == "qx.locale.Manager.tr" || name == "qx.locale.Manager.marktr") {
