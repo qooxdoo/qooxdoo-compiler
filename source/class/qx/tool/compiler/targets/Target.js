@@ -721,6 +721,7 @@ qx.Class.define("qx.tool.compiler.targets.Target", {
       await this._writeIndexHtml();
 
       if (!t.isWriteCompileInfo()) {
+        await this.fireEventAsync("writtenApplication");
         return;
       }
       

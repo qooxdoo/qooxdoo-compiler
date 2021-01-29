@@ -483,7 +483,7 @@ Framework: v${await this.getUserQxVersion()} in ${await this.getUserQxPath()}`);
           await this.fireDataEventAsync("writingApplication", appInfo);
         });
         target.addListener("writtenApplication", async () => {
-          await this.fireDataEventAsync("writingApplication", {
+          await this.fireDataEventAsync("writtenApplication", {
             maker,
             target,
             appMeta: target.getAppMeta()
