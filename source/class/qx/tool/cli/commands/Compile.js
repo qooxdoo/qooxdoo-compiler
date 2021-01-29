@@ -473,7 +473,7 @@ Framework: v${await this.getUserQxVersion()} in ${await this.getUserQxPath()}`);
         analyser.addListener("saveDatabase", e => this.dispatchEvent(e.clone()));
         target.addListener("checkEnvironment", e => this.dispatchEvent(e.clone()));
         let appInfos = [];
-        target.addListener("writingApplication", async () => {
+        maker.addListener("writingApplication", async () => {
           let appInfo = {
             maker,
             target,
@@ -482,8 +482,8 @@ Framework: v${await this.getUserQxVersion()} in ${await this.getUserQxPath()}`);
           appInfos.push(appInfo);
           await this.fireDataEventAsync("writingApplication", appInfo);
         });
-        target.addListener("writtenApplication", async () => {
-          await this.fireDataEventAsync("writingApplication", {
+        maker.addListener("writtenApplication", async () => {
+          await this.fireDataEventAsync("writtenApplication", {
             maker,
             target,
             appMeta: target.getAppMeta()
