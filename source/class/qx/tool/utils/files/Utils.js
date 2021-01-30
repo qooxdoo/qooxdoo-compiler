@@ -76,7 +76,7 @@ qx.Class.define("qx.tool.utils.files.Utils", {
             p = Promise.resolve();
           }
           return p.then(() => readdir(from)
-            .then(files => Promise.all(files.map(file => t.sync(from + "/" + file, to + "/" + file, filter)))));
+            .then(files => Promise.all(files.map(file => t.sync(path.join(from, file), path.join(to, file), filter)))));
         } else if (statFrom.isFile()) {
           return qx.Promise.resolve(filter ? filter(from, to) : true)
             .then(result => result && t.copyFile(from, to));
@@ -125,7 +125,7 @@ qx.Class.define("qx.tool.utils.files.Utils", {
           var rs = fs.createReadStream(from, { flags: "r", encoding: "binary" });
           var ws = fs.createWriteStream(to, { flags: "w", encoding: "binary" });
           rs.on("end", function() {
-            resolve();
+            resolve(from, to);
           });
           rs.on("error", reject);
           ws.on("error", reject);
