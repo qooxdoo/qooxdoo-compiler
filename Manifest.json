@@ -20,7 +20,7 @@
         "email": "Henner.Kollmann.gmx.de"
       }
     ],
-    "version": "1.0.0-beta"
+    "version": "1.0.0"
   },
   "provides": {
     "namespace": "qxcompiler",
@@ -30,7 +30,6 @@
     "translation": "source/translation"
   },
   "requires": {
-    "@qooxdoo/framework": "^6.0.0-beta",
-    "@qooxdoo/compiler": "^1.0.0-beta"
+    "@qooxdoo/framework": "^6.0.0"
   }
 }
