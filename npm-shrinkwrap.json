@@ -1,6 +1,6 @@
 {
   "name": "@qooxdoo/compiler",
-  "version": "1.0.0-beta",
+  "version": "1.0.0",
   "lockfileVersion": 1,
   "requires": true,
   "dependencies": {
@@ -1456,9 +1456,9 @@
       "integrity": "sha512-rMHOI0ZUanKYftOfYLfsU5gZyEvSe9kTSNV5alia/k+JvoklwwH7nTsyiMM8OsPwUsqfuVFWxqDuQhm9hN8TSQ=="
     },
     "@qooxdoo/framework": {
-      "version": "6.0.0-beta-20210128-1329",
-      "resolved": "https://registry.npmjs.org/@qooxdoo/framework/-/framework-6.0.0-beta-20210128-1329.tgz",
-      "integrity": "sha512-wG0WfIMSKv1kN4PgicKOaW/6dfUMBsGAI5iWVdWMznN6+S1BmZkB9P31Q/WRBa7IN8IsReT2rfULE1YcHzCWpQ=="
+      "version": "6.0.0",
+      "resolved": "https://registry.npmjs.org/@qooxdoo/framework/-/framework-6.0.0.tgz",
+      "integrity": "sha512-XHFxESvgfbZs266ZpgOBBLH5iOHkmhMivp0uaOt6QosUdpUibIHEnwRmem2utx9iTrCVgrDk5gylRtmes5LKuw=="
     },
     "@sindresorhus/is": {
       "version": "0.14.0",
