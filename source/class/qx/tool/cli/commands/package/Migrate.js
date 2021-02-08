@@ -202,7 +202,7 @@ qx.Class.define("qx.tool.cli.commands.package.Migrate", {
           !semver.satisfies(framework_version, framework_range)) {
           needFix = true;
           if (announceOnly) {
-            qx.tool.compiler.Console.warn("*** Framework and/or compiler dependencies in Manifest need to be updated.");
+            qx.tool.compiler.Console.warn(`*** Mismatch between installed framework version (${framework_version}) and/or compiler version (${compiler_version}) and the declared dependencies in the Manifest.`);
           } else {
             manifestModel
               .setValue("requires.@qooxdoo/compiler", "^" + compiler_version)
@@ -237,7 +237,7 @@ qx.Class.define("qx.tool.cli.commands.package.Migrate", {
       self.migrationInProcess = false;
       if (needFix) {
         if (announceOnly) {
-          qx.tool.compiler.Console.error(`*** Please run 'qx package migrate' to apply the changes. If you don't want this, downgrade to a previous version of the compiler.`);
+          qx.tool.compiler.Console.error(`*** Try executing 'qx package migrate' to apply the changes. Alternatively, upgrade or downgrade framework and/or compiler to match the library dependencies.`);
           process.exit(1);
         }
         qx.tool.compiler.Console.info("Migration completed.");
