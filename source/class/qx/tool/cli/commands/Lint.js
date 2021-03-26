@@ -40,11 +40,13 @@ qx.Class.define("qx.tool.cli.commands.Lint", {
           },
           "use-eslintrc": {
             describe: "Use the .eslintrc file for configuration, if it exists",
-            default: true
+            default: true,
+            type: "boolean"
           },
           "cache": {
             describe: "operate only on changed files",
-            default: false
+            default: false,
+            type: "boolean"
           },
           "warnAsError": {
             alias: "w",
