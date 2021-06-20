@@ -29,7 +29,12 @@ const layouts = require("metalsmith-layouts");
 const markdown = require("metalsmith-markdown");
 //const filenames = require("metalsmith-filenames");
 //var permalinks = require("metalsmith-permalinks");
-const sass = require("node-sass");
+/**
+ * @external(qx/tool/loadsass.js)
+ * @ignore(loadSass)
+ */
+/* global loadSass */
+const sass = loadSass();
 const chokidar = require("chokidar");
 
 // config

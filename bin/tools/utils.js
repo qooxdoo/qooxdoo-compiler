@@ -186,6 +186,7 @@ qx.Class.define("qx.tool.compiler.Version", {
   await fsPromises.writeFile("tmp/qx", 
 `#!/usr/bin/env node
 const path=require("path");
+require("../source/resource/qx/tool/loadsass.js");
 require(path.join(__dirname, "compiled", "node", "build", "compiler"));
 `, "utf8");
 fs.chmodSync("tmp/qx", "777");
