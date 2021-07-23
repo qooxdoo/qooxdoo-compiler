@@ -59,7 +59,8 @@
     "Promise.*",
     "require.*",
     "path.*",
-    "args.*"
+    "args.*",
+    "loadSass"
   ],
   "applications": [
     {

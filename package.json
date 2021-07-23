@@ -9,7 +9,8 @@
     "devtools": "node source/resource/qx/tool/bin/build-devtools",
     "website": "node source/resource/qx/tool/bin/build-website",
     "pretest": "node bootstrap-compiler --upgrade-framework",
-    "test": "node ./bin/build/qx lint --warnAsError && node ./bin/build/qx --block-global-framework test"
+    "test": "node ./bin/build/qx lint --warnAsError && node ./bin/build/qx --block-global-framework test",
+    "prepack": "node ./bin/known-good/qx deploy --clean"
   },
   "author": "John Spackman (johnspackman), Christian Boulanger (cboulanger), Henner Kollmann (hkollmann), and others",
   "version": "1.0.0",
@@ -84,11 +85,11 @@
     "metalsmith-markdown": "^1.3.0",
     "mkdirp": "^1.0.4",
     "node-fetch": "^2.6.0",
-    "node-sass": "^4.14.1",
     "object-hash": "^2.1.1",
     "ps-tree": "^1.2.0",
     "replace-in-file": "^5.0.0",
     "rimraf": "^3.0.2",
+    "sass": "^1.35.1",
     "semver": "^7.3.4",
     "set-value": "^3.0.2",
     "showdown": "^1.9.1",

@@ -28,7 +28,12 @@
 
 const fs = qx.tool.utils.Promisify.fs;
 const path = require("upath");
-const nodeSass = require("node-sass");
+/**
+ * @external(qx/tool/loadsass.js)
+ * @ignore(loadSass)
+ */
+/* global loadSass */
+const sass = loadSass();
 
 /**
  * @ignore(process)
@@ -79,7 +84,7 @@ qx.Class.define("qx.tool.compiler.resources.ScssFile", {
       let inputFileData = await this.loadSource(this.__filename, this.__library);
       
       await new qx.Promise((resolve, reject) => {
-        nodeSass.render({
+        sass.render({
           // Always have file so that the source map knows the name of the original
           file: this.__filename,
           
@@ -264,17 +269,17 @@ qx.Class.define("qx.tool.compiler.resources.ScssFile", {
       
       if (pathInfo) {
         if (pathInfo.externalUrl) {
-          return nodeSass.types.String("url(" + pathInfo.externalUrl + ")");
+          return sass.types.String("url(" + pathInfo.externalUrl + ")");
         }
         
         if (pathInfo.namespace) {
           let targetFile = path.relative(process.cwd(), path.join(this.__target.getOutputDir(), "resource", pathInfo.filename));
           let relative = path.relative(this.__outputDir, targetFile);
-          return nodeSass.types.String("url(" + relative + ")");
+          return sass.types.String("url(" + relative + ")");
         }
       }
       
-      return nodeSass.types.String("url(" + url + ")");
+      return sass.types.String("url(" + url + ")");
     }    
   }
 });
