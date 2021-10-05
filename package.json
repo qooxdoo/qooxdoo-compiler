@@ -91,7 +91,7 @@
     "rimraf": "^3.0.2",
     "sass": "^1.35.1",
     "semver": "^7.3.4",
-    "set-value": "^3.0.2",
+    "set-value": "^4.0.1",
     "showdown": "^1.9.1",
     "source-map": "^0.5.7",
     "tmp": "0.2.1",
