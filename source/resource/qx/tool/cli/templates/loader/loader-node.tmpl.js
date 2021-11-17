@@ -36,6 +36,9 @@
   } else {
     window.document = document = {
         readyState: "ready",
+        currentScript: {
+          src: new (require("url").URL)('file:' + __filename).href
+        },        
         createEvent: function() {
           return {
             initCustomEvent: function() {}
