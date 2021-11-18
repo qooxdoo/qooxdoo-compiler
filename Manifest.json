@@ -20,7 +20,7 @@
         "email": "Henner.Kollmann.gmx.de"
       }
     ],
-    "version": "1.0.3"
+    "version": "1.0.4"
   },
   "provides": {
     "namespace": "qxcompiler",
