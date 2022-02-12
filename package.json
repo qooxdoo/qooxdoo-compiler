@@ -13,7 +13,7 @@
     "prepack": "node ./bin/known-good/qx deploy --clean"
   },
   "author": "John Spackman (johnspackman), Christian Boulanger (cboulanger), Henner Kollmann (hkollmann), and others",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "keywords": [
     "qooxdoo",
     "compiler",
