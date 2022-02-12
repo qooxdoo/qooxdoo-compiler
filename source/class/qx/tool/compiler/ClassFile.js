@@ -1549,7 +1549,7 @@ qx.Class.define("qx.tool.compiler.ClassFile", {
                 } else if (t.__classMeta.functionName == "$$constructor") {
                   expr = expandMemberExpression(t.__classMeta.superClass + ".constructor.call");
                 } else if (t.__classMeta.className) {
-                  expr = expandMemberExpression(t.__classMeta.className + ".prototype." + t.__classMeta.functionName + ".base.call");
+                  expr = expandMemberExpression(t.__classMeta.className + ".superclass.prototype." + t.__classMeta.functionName + ".call");
                 } else {
                   expr = expandMemberExpression(t.__classMeta.superClass + ".prototype." + t.__classMeta.functionName + ".call");
                 }
