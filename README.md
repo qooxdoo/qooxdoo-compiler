@@ -1,3 +1,7 @@
+# PLEASE NOTE:: This project has since been incorporated into the main Qooxdoo Framework repo at https://github.com/qooxdoo/qooxdoo
+
+
+
 # Qooxdoo Compiler and Command Line Interface
 [![NPM Version][npm-image]][npm-url] 
 [![Gitter][gitter-image]][gitter-url]
